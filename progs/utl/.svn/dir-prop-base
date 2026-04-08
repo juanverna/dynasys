@@ -1,0 +1,17 @@
+K 10
+svn:ignore
+V 81
+*.r
+procore*.*
+*.i~
+*.p~
+*.w~
+*.log
+Copia*.*
+Thumbs.db
+debugger.pref
+null
+*.bak
+
+
+END

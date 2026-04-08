@@ -1,0 +1,973 @@
+&ANALYZE-SUSPEND _VERSION-NUMBER AB_v10r12
+&ANALYZE-RESUME
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CUSTOM _DEFINITIONS Procedure 
+/*------------------------------------------------------------------------
+    File        : 
+    Purpose     :
+
+    Syntax      :
+
+    Description :
+
+    Author(s)   :
+    Created     :
+    Notes       :
+  ----------------------------------------------------------------------*/
+/*          This .W file was created with the Progress AppBuilder.      */
+/*----------------------------------------------------------------------*/
+
+/* ***************************  Definitions  ************************** */
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-PREPROCESSOR-BLOCK 
+
+/* ********************  Preprocessor Definitions  ******************** */
+
+&Scoped-define PROCEDURE-TYPE Procedure
+&Scoped-define DB-AWARE no
+
+
+
+/* _UIB-PREPROCESSOR-BLOCK-END */
+&ANALYZE-RESUME
+
+
+/* ************************  Function Prototypes ********************** */
+
+&IF DEFINED(EXCLUDE-addmil) = 0 &THEN
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _FUNCTION-FORWARD addmil Procedure 
+FUNCTION addmil RETURNS INTEGER
+  ( h AS INT, mm AS INT )  FORWARD.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ENDIF
+
+&IF DEFINED(EXCLUDE-adur) = 0 &THEN
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _FUNCTION-FORWARD adur Procedure 
+FUNCTION adur RETURNS INTEGER
+  ( d AS CHAR, h AS CHAR )  FORWARD.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ENDIF
+
+&IF DEFINED(EXCLUDE-ahdec) = 0 &THEN
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _FUNCTION-FORWARD ahdec Procedure 
+FUNCTION ahdec RETURNS DECIMAL
+  ( h as int )  FORWARD.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ENDIF
+
+&IF DEFINED(EXCLUDE-ahmil) = 0 &THEN
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _FUNCTION-FORWARD ahmil Procedure 
+FUNCTION ahmil RETURNS INTEGER
+  ( h as decimal )  FORWARD.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ENDIF
+
+&IF DEFINED(EXCLUDE-aint) = 0 &THEN
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _FUNCTION-FORWARD aint Procedure 
+FUNCTION aint RETURNS INTEGER
+  ( hora AS CHAR )  FORWARD.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ENDIF
+
+&IF DEFINED(EXCLUDE-ajuh) = 0 &THEN
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _FUNCTION-FORWARD ajuh Procedure 
+FUNCTION ajuh RETURNS CHARACTER
+  ( hora AS CHAR )  FORWARD.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ENDIF
+
+&IF DEFINED(EXCLUDE-aturno) = 0 &THEN
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _FUNCTION-FORWARD aturno Procedure 
+FUNCTION aturno RETURNS CHARACTER
+  ( rango AS CHAR )  FORWARD.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ENDIF
+
+&IF DEFINED(EXCLUDE-diavalido) = 0 &THEN
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _FUNCTION-FORWARD diavalido Procedure 
+FUNCTION diavalido RETURNS DATE ( mes AS INT,
+                    dia AS INT,
+                    ano AS INT )  FORWARD.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ENDIF
+
+&IF DEFINED(EXCLUDE-EmailCheck) = 0 &THEN
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _FUNCTION-FORWARD EmailCheck Procedure 
+FUNCTION EmailCheck RETURNS LOGICAL (INPUT ipcEmail AS CHARACTER) FORWARD.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ENDIF
+
+&IF DEFINED(EXCLUDE-en_hora) = 0 &THEN
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _FUNCTION-FORWARD en_hora Procedure 
+FUNCTION en_hora RETURNS LOGICAL
+  ( rr AS CHAR , h AS CHAR )  FORWARD.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ENDIF
+
+&IF DEFINED(EXCLUDE-eshorac) = 0 &THEN
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _FUNCTION-FORWARD eshorac Procedure 
+FUNCTION eshorac RETURNS CHAR ( INPUT taux AS CHAR ) FORWARD.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ENDIF
+
+&IF DEFINED(EXCLUDE-es_habil) = 0 &THEN
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _FUNCTION-FORWARD es_habil Procedure 
+FUNCTION es_habil RETURNS LOGICAL
+  (  hoy AS DATE , validos AS CHAR  )  FORWARD.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ENDIF
+
+&IF DEFINED(EXCLUDE-isnum) = 0 &THEN
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _FUNCTION-FORWARD isnum Procedure 
+FUNCTION isnum RETURNS LOGICAL ( INPUT a AS CHAR ) FORWARD.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ENDIF
+
+&IF DEFINED(EXCLUDE-pr) = 0 &THEN
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _FUNCTION-FORWARD pr Procedure 
+FUNCTION pr RETURNS CHARACTER
+  ( pp AS CHAR )  FORWARD.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ENDIF
+
+&IF DEFINED(EXCLUDE-primerdia) = 0 &THEN
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _FUNCTION-FORWARD primerdia Procedure 
+FUNCTION primerdia RETURNS DATE
+  ( f AS DATE )  FORWARD.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ENDIF
+
+&IF DEFINED(EXCLUDE-resta_dia_habil) = 0 &THEN
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _FUNCTION-FORWARD resta_dia_habil Procedure 
+FUNCTION resta_dia_habil RETURNS DATE ( hoy AS DATE , i AS INT,validos AS CHAR ) FORWARD.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ENDIF
+
+&IF DEFINED(EXCLUDE-sumarmeses) = 0 &THEN
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _FUNCTION-FORWARD sumarmeses Procedure 
+FUNCTION sumarmeses RETURNS DATE
+    (fechaini AS DATE, meses AS INT ) FORWARD.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ENDIF
+
+&IF DEFINED(EXCLUDE-suma_dia_habil) = 0 &THEN
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _FUNCTION-FORWARD suma_dia_habil Procedure 
+FUNCTION suma_dia_habil RETURNS DATE ( hoy AS DATE , i AS INT,validos AS CHAR ) FORWARD.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ENDIF
+
+&IF DEFINED(EXCLUDE-tohex) = 0 &THEN
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _FUNCTION-FORWARD tohex Procedure 
+FUNCTION tohex RETURNS CHARACTER
+  ( vval AS INTEGER , digitos AS INTEGER )  FORWARD.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ENDIF
+
+&IF DEFINED(EXCLUDE-toint) = 0 &THEN
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _FUNCTION-FORWARD toint Procedure 
+FUNCTION toint RETURNS INTEGER
+  ( vHex AS CHARACTER )  FORWARD.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ENDIF
+
+&IF DEFINED(EXCLUDE-ultimodia) = 0 &THEN
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _FUNCTION-FORWARD ultimodia Procedure 
+FUNCTION ultimodia RETURNS DATE
+  ( f AS DATE )  FORWARD.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ENDIF
+
+&IF DEFINED(EXCLUDE-validahorario) = 0 &THEN
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _FUNCTION-FORWARD validahorario Procedure 
+FUNCTION validahorario RETURNS LOGICAL
+  ( hh AS CHAR,msg AS LOGICAL )  FORWARD.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ENDIF
+
+
+/* *********************** Procedure Settings ************************ */
+
+&ANALYZE-SUSPEND _PROCEDURE-SETTINGS
+/* Settings for THIS-PROCEDURE
+   Type: Procedure
+   Allow: 
+   Frames: 0
+   Add Fields to: Neither
+   Other Settings: CODE-ONLY
+ */
+&ANALYZE-RESUME _END-PROCEDURE-SETTINGS
+
+/* *************************  Create Window  ************************** */
+
+&ANALYZE-SUSPEND _CREATE-WINDOW
+/* DESIGN Window definition (used by the UIB) 
+  CREATE WINDOW Procedure ASSIGN
+         HEIGHT             = 14.76
+         WIDTH              = 60.
+/* END WINDOW DEFINITION */
+                                                                        */
+&ANALYZE-RESUME
+
+ 
+
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CUSTOM _MAIN-BLOCK Procedure 
+
+
+/* ***************************  Main Block  *************************** */
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+/* **********************  Internal Procedures  *********************** */
+
+&IF DEFINED(EXCLUDE-GetWindowHandle) = 0 &THEN
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE GetWindowHandle Procedure 
+PROCEDURE GetWindowHandle :
+/* DEFINE OUTPUT PARAMETER hWindow AS HANDLE NO-UNDO. */
+/* &IF DEFINED( WINDOW-NAME )  &THEN                  */
+/*     hWindow = {&WINDOW-NAME}:HANDLE.               */
+/* &ENDIF                                             */
+ END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ENDIF
+
+/* ************************  Function Implementations ***************** */
+
+&IF DEFINED(EXCLUDE-addmil) = 0 &THEN
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _FUNCTION addmil Procedure 
+FUNCTION addmil RETURNS INTEGER
+  ( h AS INT, mm AS INT ) :
+/*------------------------------------------------------------------------------
+  Purpose:  suma una cantidad de minutos a una hora en formato militar retorna formato militar
+    Notes:  
+------------------------------------------------------------------------------*/
+
+  RETURN ahmil(ahdec(h) + mm / 60).   /* Function return value. */
+
+END FUNCTION.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ENDIF
+
+&IF DEFINED(EXCLUDE-adur) = 0 &THEN
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _FUNCTION adur Procedure 
+FUNCTION adur RETURNS INTEGER
+  ( d AS CHAR, h AS CHAR ) :
+/*------------------------------------------------------------------------------
+  Purpose:  es desde hata
+    Notes:  
+------------------------------------------------------------------------------*/
+DEF VAR v AS DECIMAL NO-UNDO.
+v = ahdec( aint( h ) ) - ahdec( aint( d ) ).
+  RETURN INT( v * 60 ).
+   
+
+END FUNCTION.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ENDIF
+
+&IF DEFINED(EXCLUDE-ahdec) = 0 &THEN
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _FUNCTION ahdec Procedure 
+FUNCTION ahdec RETURNS DECIMAL
+  ( h as int ) :
+/*------------------------------------------------------------------------------
+  Purpose:  retorna la hora en forma decimal
+    Notes:  h en formato militar
+------------------------------------------------------------------------------*/
+
+  RETURN trunc(h / 100,0) +  ( h - trunc( h / 100,0 ) * 100) / 60.   
+ END FUNCTION.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ENDIF
+
+&IF DEFINED(EXCLUDE-ahmil) = 0 &THEN
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _FUNCTION ahmil Procedure 
+FUNCTION ahmil RETURNS INTEGER
+  ( h as decimal ) :
+/*------------------------------------------------------------------------------
+  Purpose:  retorna la hora en formato militar
+    Notes:  
+------------------------------------------------------------------------------*/
+
+  RETURN int(trunc( h , 0 ) * 100 + ( h - trunc( h , 0 ) ) * 60) .   
+END FUNCTION.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ENDIF
+
+&IF DEFINED(EXCLUDE-aint) = 0 &THEN
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _FUNCTION aint Procedure 
+FUNCTION aint RETURNS INTEGER
+  ( hora AS CHAR ) :
+/*------------------------------------------------------------------------------
+  Purpose: Retorna una hora en formato militar
+    Notes: hora es HH:MM 
+------------------------------------------------------------------------------*/
+
+DEFINE VAR i AS INT no-undo.
+    I = INT(replace(HORA,":","")) NO-ERROR.
+    RETURN int(STRING(i,"9999")).
+  
+
+END FUNCTION.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ENDIF
+
+&IF DEFINED(EXCLUDE-ajuh) = 0 &THEN
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _FUNCTION ajuh Procedure 
+FUNCTION ajuh RETURNS CHARACTER
+  ( hora AS CHAR ) :
+/*------------------------------------------------------------------------------
+  Purpose:  
+    Notes:  
+------------------------------------------------------------------------------*/
+DEF VAR i AS INT NO-UNDO.
+    IF LENGTH(HORA) <> 0 THEN DO:
+        i = INT(replace(HORA,":","")) NO-ERROR.
+        i = INT(replace(HORA,";","")) NO-ERROR.
+        IF INT(SUBstring(STRING(i,"9999"),1,2)) > 24 THEN
+            i = i - 2400.
+        RETURN SUBstring(STRING(i,"9999"),1,2) + ":" + SUBstring(STRING(i,"9999"),3,2).
+    END.
+END FUNCTION.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ENDIF
+
+&IF DEFINED(EXCLUDE-aturno) = 0 &THEN
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _FUNCTION aturno Procedure 
+FUNCTION aturno RETURNS CHARACTER
+  ( rango AS CHAR ) :
+/*------------------------------------------------------------------------------
+  Purpose:  Crea el turno a partir de un rango de horario
+    Notes:  los resultados posibles son **, M*,T* el segundo caracter puede variar en el futuro
+------------------------------------------------------------------------------*/
+DEFINE VAR hdesde AS CHAR.
+DEFINE VAR hhasta AS CHAR.
+DEFINE VAR hturno AS CHAR NO-UNDO.
+IF rango <> "" THEN DO:
+    IF NUM-ENTRIES(rango,";") = 1 THEN DO:
+        hturno = ?.
+        
+                        hdesde = ajuh(ENTRY(1,rango,":")) NO-ERROR.
+                        hhasta = ajuh(ENTRY(2,rango,":")) NO-ERROR.
+                      IF hdesde = ? OR hhasta = ? THEN RETURN ?.
+                      /*procesando las horas para convertirlas a turnos*/
+                       hturno = IF int(aint(hdesde)) < 1230 THEN "M*" ELSE "T*".
+                       IF INT(aint(hhasta)) > 1230 THEN 
+                               hturno = IF hturno BEGINS "M" then "**" ELSE hturno.
+    END.
+    ELSE IF aturno(ENTRY(1,rango,";")) <> aturno(ENTRY(2,rango,";")) THEN
+                    hturno = "**".
+END.
+  RETURN hturno.   /* Function return value. */
+
+END FUNCTION.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ENDIF
+
+&IF DEFINED(EXCLUDE-diavalido) = 0 &THEN
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _FUNCTION diavalido Procedure 
+FUNCTION diavalido RETURNS DATE ( mes AS INT,
+                    dia AS INT,
+                    ano AS INT ) :
+DEFINE VAR k AS INT NO-UNDO.
+DEFINE VAR dd AS DATE NO-UNDO.
+    DO k = 0 TO 3 BY -1 :
+     dd = DATE(mes,dia,ano) NO-ERROR.
+     IF NOT ERROR-STATUS:ERROR THEN LEAVE.      
+    END.
+    RETURN dd.
+END.
+/*retorna el dia habil anterior a la fecha pedida*/
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ENDIF
+
+&IF DEFINED(EXCLUDE-EmailCheck) = 0 &THEN
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _FUNCTION EmailCheck Procedure 
+FUNCTION EmailCheck RETURNS LOGICAL (INPUT ipcEmail AS CHARACTER):
+/************************************************************************
+         AUTHOR: Speedy Mercer 
+        WEBSITE: http://www.herohog.com
+         E-MAIL: code AT herohog.com
+          LEGAL: This program is provided for FREE. All I ask is that you give 
+                 credit where credit is due if you use it. 
+                 There is NO warranty either written or implied.
+           DATE: 8/17/2004
+          TAKES: An Email address
+        RETURNS: True if valid format, False if not
+          USAGE: {validateEmail.i}
+                 DISP EmailCheck("someone@spamthis.com"). 
+          NOTES: This validation DOES NOT 100% adhere to IPv6 and the RFCs
+                 as it makes the following assumptions:
+                 
+                 There will be no more than 1 "@".
+                 There must be at least one "!" if there are no "@".
+                 If quotes are used, they must be in pairs.
+                 If spaces are used they must be within quotes.
+                 The following chars are NOT allowed "<>{}~|/\;*".
+                 ASCII chars < 32 and > 126 are NOT allowed.
+                 The following chars can NOT be 1st OR last "@!.".
+******************************************************************************/
+
+   DEF VAR i AS INTEGER NO-UNDO.
+   
+   IF (INDEX(ipcEmail, "@") = 0                 /* Must have at least an AT sign OR ! */
+       AND 
+       INDEX(ipcEmail, "!") = 0)
+   OR INDEX(ipcEmail, "@") = 1                  /* AT sign can not be 1st char */
+   OR INDEX(ipcEmail, "@") = LENGTH(ipcEmail)   /* AT sign can not be last char */
+   OR (NUM-ENTRIES(ipcEmail, "@") <> 2          /* AT sign can only appear once unless using Bang */
+       AND
+       INDEX(ipcEmail, "!") = 0)
+   OR (INDEX(ipcEmail, ".") = 0                 /* Must have at least one Period OR Bang */
+       AND 
+       INDEX(ipcEmail, "!") = 0)
+   OR INDEX(ipcEmail, ".") = 1                  /* Period can not be 1st char */
+   OR INDEX(ipcEmail, ".") = LENGTH(ipcEmail)   /* Period can not be last char */
+   OR INDEX(ipcEmail, "!") = 1                  /* Bang can not be 1st char */
+   OR INDEX(ipcEmail, "!") = LENGTH(ipcEmail)   /* Bang can not be last char */
+   OR INDEX(ipcEmail, "<") <> 0                 /* Must NOT have a Less-Than sign */
+   OR INDEX(ipcEmail, ">") <> 0                 /* Must NOT have a Greater-Than sign */
+   OR INDEX(ipcEmail, "\") <> 0                 /* Must NOT have a back-slash */
+   OR INDEX(ipcEmail, "/") <> 0                 /* Must NOT have a front-slash */
+   OR INDEX(ipcEmail, ";") <> 0                 /* Must NOT have a semicolon */
+   OR INDEX(ipcEmail, ",") <> 0                 /* Must NOT have a comma */
+   OR INDEX(ipcEmail, "*") <> 0                 /* Must NOT have a asterisk */
+   OR INDEX(ipcEmail, "~~") <> 0                /* Must NOT have a ~ */
+   OR INDEX(ipcEmail, "~}") <> 0                /* Must NOT have a } */
+   OR INDEX(ipcEmail, "~{") <> 0                /* Must NOT have a { */
+   OR INDEX(ipcEmail, "|") <> 0                 /* Must NOT have a | */
+   OR (INDEX(ipcEmail, "'") > 0                 /* NO Quotes OR a pair of Quotes are OK */
+       AND 
+       NUM-ENTRIES(ipcEmail, "'") <> 3)
+   OR (INDEX(ipcEmail, '"') > 0                 /* NO Quotes OR a pair of Quotes are OK */
+       AND 
+       NUM-ENTRIES(ipcEmail, '"') <> 3)
+   OR (INDEX(ipcEmail, " ") > 0                 /* Spaces ONLY allows within quotes */
+       AND 
+       INDEX(ipcEmail, "'") > 0
+       AND 
+       NUM-ENTRIES(ipcEmail, "'") <> 3)
+   OR (INDEX(ipcEmail, " ") > 0                 /* Spaces ONLY allows within quotes */
+       AND 
+       INDEX(ipcEmail, '"') > 0
+       AND 
+       NUM-ENTRIES(ipcEmail, '"') <> 3)
+   OR (INDEX(ipcEmail, "@") <> 0                /* Must have a period OR Bang after the AT sign */
+       AND INDEX(ENTRY(2, ipcEmail, "@"), ".") = 0  
+       AND INDEX(ENTRY(2, ipcEmail, "@"), "!") = 0)
+   THEN RETURN FALSE.
+   ELSE DO i = 1 TO LENGTH(ipcEmail):           /* Check for invalid ASCII Characters */
+      IF ASC(SUBSTRING(ipcEmail, i, 1)) < 32
+      OR ASC(SUBSTRING(ipcEmail, i, 1)) > 126
+      THEN RETURN FALSE.
+   END.
+
+   /* If we made it this far, we are ok */
+   RETURN TRUE.
+END FUNCTION. /* EmailCheck */
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ENDIF
+
+&IF DEFINED(EXCLUDE-en_hora) = 0 &THEN
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _FUNCTION en_hora Procedure 
+FUNCTION en_hora RETURNS LOGICAL
+  ( rr AS CHAR , h AS CHAR ) :
+/*------------------------------------------------------------------------------
+  Purpose:  true si h esta en el rango horario
+    Notes: rr es del formato xxxx:yyyy;aaaa:bbbb 
+------------------------------------------------------------------------------*/
+  DEFINE VAR sr AS CHAR NO-UNDO.
+  DEFINE VAR i AS INT no-undo.
+  DEFINE VAR ad AS DECIMAL.
+  ad = ahdec( aint( h ) ).
+  DO i = 1 TO num-entries(rr,";") :
+    sr = ENTRY(i,rr,";").
+    IF ahdec( aint(entry(2 , sr , ":" ))) >= ad AND 
+       ahdec( aint(entry( 1 , sr , ":" ))) <= ad THEN RETURN TRUE.
+  END.
+
+  RETURN FALSE.   /* Function return value. */
+
+END FUNCTION.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ENDIF
+
+&IF DEFINED(EXCLUDE-eshorac) = 0 &THEN
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _FUNCTION eshorac Procedure 
+FUNCTION eshorac RETURNS CHAR ( INPUT taux AS CHAR ):
+    DEFINE VAR k AS INT NO-UNDO.
+    DEFINE VAR a AS INT NO-UNDO.
+    DEFINE VAR b AS INT NO-UNDO.
+    DEFINE VAR c AS CHAR NO-UNDO.
+    DEFINE VAR d AS CHAR NO-UNDO.
+
+
+    DO k = 1 TO NUM-ENTRIES(taux,";"):
+         /*   IF NUM-ENTRIES(ENTRY(k,SELF:INPUT-VALUE,";"),":") < 2 THEN DO:
+                MESSAGE "Fomato de hora invalido" SKIP
+                        "el formato es xxxx:yyyy;wwww:zzzz"
+                        VIEW-AS ALERT-BOX INFORMATION.
+            END.*/
+            IF NUM-ENTRIES(taux,":") > 2 AND NUM-ENTRIES(taux,";") < 2 THEN return "Error Horario esta mal el separador".
+            IF NUM-ENTRIES(ENTRY(k,taux,";"),":") < 2 THEN return "Error Horario es xxxx:yyyy;aaaa:bbbb".
+            c = ENTRY(1,ENTRY(k,taux,";"),":").
+            IF NOT isnum(c) OR length(c) <> 4 THEN RETURN "El valor " + c + " no es numerico".
+            d = ENTRY(2,ENTRY(k,taux,";"),":").
+            IF NOT isnum(d) OR length(d) <> 4 THEN RETURN "El valor " + d + " no es numerico".
+            a = INT(c) NO-ERROR .
+            b = INT(d) NO-ERROR .
+            IF a > 2359 THEN
+                     RETURN "El valor de " + c + " no es valido".
+            IF b > 2359 THEN 
+                     RETURN "El valor de " + d + " no es valido".
+            IF b = a THEN RETURN "En el valor " + ENTRY(k,taux,";") + " no hay rango".
+            IF b < a THEN RETURN "El valor " + ENTRY(k,taux,";") + " esta al revez".
+    END.
+            RETURN "".
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ENDIF
+
+&IF DEFINED(EXCLUDE-es_habil) = 0 &THEN
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _FUNCTION es_habil Procedure 
+FUNCTION es_habil RETURNS LOGICAL
+  (  hoy AS DATE , validos AS CHAR  ) :
+/*------------------------------------------------------------------------------
+  Purpose:  verifica que la fecha pasada sea habil
+    Notes:  
+------------------------------------------------------------------------------*/
+    IF INDEX(validos,string(WEEKDAY( hoy ),"9")) = 0 THEN RETURN FALSE.
+    FIND feriado WHERE feriado.fecha = hoy NO-LOCK NO-ERROR.
+    IF AVAILABLE feriado THEN RETURN false.
+    RETURN TRUE.
+END FUNCTION.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ENDIF
+
+&IF DEFINED(EXCLUDE-isnum) = 0 &THEN
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _FUNCTION isnum Procedure 
+FUNCTION isnum RETURNS LOGICAL ( INPUT a AS CHAR ):
+        DEFINE VAR k AS INT NO-UNDO.
+        DO k = 1 TO LENGTH(a):
+            IF INDEX( "0987654321", SUBSTRING(a,k,1)) = 0 THEN RETURN FALSE.
+        END.
+        RETURN TRUE.
+    END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ENDIF
+
+&IF DEFINED(EXCLUDE-pr) = 0 &THEN
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _FUNCTION pr Procedure 
+FUNCTION pr RETURNS CHARACTER
+  ( pp AS CHAR ) :
+/*------------------------------------------------------------------------------
+  Purpose: Cambia los caracters ° por escape, ideal impresoras 
+    Notes:  
+------------------------------------------------------------------------------*/
+      RETURN REPLACE (pp,"º",CHR(27)).
+END FUNCTION.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ENDIF
+
+&IF DEFINED(EXCLUDE-primerdia) = 0 &THEN
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _FUNCTION primerdia Procedure 
+FUNCTION primerdia RETURNS DATE
+  ( f AS DATE ) :
+/*------------------------------------------------------------------------------
+  Purpose:  
+    Notes:  
+------------------------------------------------------------------------------*/
+
+  RETURN DATE(MONTH(f),1,YEAR(f)).   /* Function return value. */
+
+END FUNCTION.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ENDIF
+
+&IF DEFINED(EXCLUDE-resta_dia_habil) = 0 &THEN
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _FUNCTION resta_dia_habil Procedure 
+FUNCTION resta_dia_habil RETURNS DATE ( hoy AS DATE , i AS INT,validos AS CHAR ):
+/*resta a la fecha del dia el numero indicado en i , solo dias habiles*/
+
+DEFINE VAR k AS INT NO-UNDO.
+DEFINE VAR senal AS LOGICAL NO-UNDO.
+DO WHILE k < i:
+    hoy = hoy - 1.
+    k = k + 1.
+    senal = FALSE.
+    REPEAT:
+        DO WHILE INDEX(validos,string(WEEKDAY( hoy ),"9")) = 0 :
+            hoy = hoy - 1.
+            senal = TRUE.
+            NEXT.
+        END.
+        REPEAT:
+            FIND feriado WHERE feriado.fecha = hoy NO-LOCK NO-ERROR.
+            IF NOT AVAILABLE feriado THEN LEAVE.
+            hoy = hoy - 1.
+            senal = TRUE.
+        END.
+        IF NOT senal THEN LEAVE.
+        senal = FALSE.
+    END.
+END.
+RETURN hoy.
+
+END FUNCTION.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ENDIF
+
+&IF DEFINED(EXCLUDE-sumarmeses) = 0 &THEN
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _FUNCTION sumarmeses Procedure 
+FUNCTION sumarmeses RETURNS DATE
+    (fechaini AS DATE, meses AS INT ):
+DEFINE VAR dia AS INT.
+DEFINE VAR mes AS INT.
+DEFINE VAR anio AS INT.
+DEFINE VAR ff AS DATE.
+DEFINE VAR k AS INT NO-UNDO.
+
+/*recortamos la cadena separandola en 
+ //tres variables de dia, mes y año*/
+dia = day(fechaini).
+mes = month(fechaini).
+anio = year(fechaini).
+ 
+ /*/Sumamos los meses requeridos*/
+
+ anio = anio + TRUNCATE( meses / 12 , 0).
+ mes = mes + ( meses MOD 12).
+ 
+ /*Comprobamos que al sumar no nos hayamos
+ //pasado del año, si es así incrementamos
+ //el año*/
+ if ( mes > 12)
+ THEN DO:
+  mes = mes - 12.
+  anio = anio + 1.
+ END.
+ 
+ ff = DATE( mes , dia , anio ) NO-ERROR.
+ IF ERROR-STATUS:ERROR THEN
+     DO k = dia TO 28 BY -1:
+         ff = DATE( mes , k , anio ) NO-ERROR.
+     END.
+ RETURN ff .
+ 
+ 
+END FUNCTION.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ENDIF
+
+&IF DEFINED(EXCLUDE-suma_dia_habil) = 0 &THEN
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _FUNCTION suma_dia_habil Procedure 
+FUNCTION suma_dia_habil RETURNS DATE ( hoy AS DATE , i AS INT,validos AS CHAR ):
+/*suma a la fecha del dia el numero indicado en i , solo dias habiles*/
+DEFINE VAR k AS INT NO-UNDO.
+DEFINE VAR j AS INT NO-UNDO.
+j = 1.
+k = 1.
+REPEAT:
+    IF  index(validos,string(WEEKDAY( hoy + j ),"9")) = 0 THEN DO:
+        j = j + 1.
+        NEXT.
+    END.
+    FIND feriado WHERE feriado.fecha = hoy + j NO-LOCK NO-ERROR.
+    IF AVAILABLE feriado THEN DO:
+         j = j + 1.
+         NEXT.
+     END.
+    IF k >= i THEN LEAVE.
+    j = j + 1.
+    k = k + 1.
+END.
+RETURN hoy + j.
+
+END FUNCTION.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ENDIF
+
+&IF DEFINED(EXCLUDE-tohex) = 0 &THEN
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _FUNCTION tohex Procedure 
+FUNCTION tohex RETURNS CHARACTER
+  ( vval AS INTEGER , digitos AS INTEGER ) :
+/*------------------------------------------------------------------------------
+  Purpose:  
+    Notes:  
+------------------------------------------------------------------------------*/
+     DEFINE VARIABLE vHEX AS CHARACTER.
+     DO WHILE TRUE ON STOP UNDO:
+       CASE INTEGER(vVal - (16 * (TRUNCATE(vVal / 16, 0)))):
+         WHEN 10 THEN vHEX = "a" + vHEX.
+         WHEN 11 THEN vHEX = "b" + vHEX.
+         WHEN 12 THEN vHEX = "c" + vHEX.
+         WHEN 13 THEN vHEX = "d" + vHEX.
+         WHEN 14 THEN vHEX = "e" + vHEX.
+         WHEN 15 THEN vHEX = "f" + vHEX.
+         OTHERWISE vHEX = STRING(vVal - (16 * (TRUNCATE(vVal / 16, 0)))) + vHEX.
+       END CASE.
+
+       vVal = TRUNCATE(vVal / 16, 0).
+
+       IF vVal = 0
+       THEN leave.
+
+     END.
+     
+  vhex = fill("0",digitos) + vhex. 
+  vhex = SUBSTRING(vhex,LENGTH(vhex) - digitos + 1 , digitos).
+  RETURN upper(vhex).
+
+END FUNCTION.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ENDIF
+
+&IF DEFINED(EXCLUDE-toint) = 0 &THEN
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _FUNCTION toint Procedure 
+FUNCTION toint RETURNS INTEGER
+  ( vHex AS CHARACTER ) :
+/*------------------------------------------------------------------------------
+  Purpose:  Retorna el valor entero de un hexadecimal
+    Notes:  
+------------------------------------------------------------------------------*/
+
+DEF VAR ii AS INT NO-UNDO.
+DEFINE VAR kk AS INT NO-UNDO.
+DEFINE VAR vVal AS INT NO-UNDO.
+vhex = TRIM(vHex).
+  DO ii = LENGTH(vhex)TO 1 BY -1 :
+      CASE  SUBSTR(vHex,ii,1) :
+          WHEN "A" THEN kk = 10.
+          WHEN "B" THEN kk = 11.
+          WHEN "C" THEN kk = 12.
+          WHEN "D" THEN kk = 13.
+          WHEN "E" THEN kk = 14.
+          WHEN "F" THEN kk = 15.
+          OTHERWISE kk = INT(SUBSTR(vHex,ii,1)).
+      END CASE.
+      vval = vval + kk * EXP(16,LENGTH(vhex) - ii).
+  END.
+  RETURN vval.   /* Function return value. */
+
+END FUNCTION.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ENDIF
+
+&IF DEFINED(EXCLUDE-ultimodia) = 0 &THEN
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _FUNCTION ultimodia Procedure 
+FUNCTION ultimodia RETURNS DATE
+  ( f AS DATE ) :
+/*------------------------------------------------------------------------------
+  Purpose: Ultimo dia del mes 
+    Notes:  
+------------------------------------------------------------------------------*/
+  DEFINE VAR ff AS DATE.
+  ff = DATE(MONTH(f),1,YEAR(f)) + 32.
+  ff = DATE(MONTH(ff),1,YEAR(ff)) - 1.
+  RETURN ff.   /* Function return value. */
+
+END FUNCTION.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ENDIF
+
+&IF DEFINED(EXCLUDE-validahorario) = 0 &THEN
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _FUNCTION validahorario Procedure 
+FUNCTION validahorario RETURNS LOGICAL
+  ( hh AS CHAR,msg AS LOGICAL ) :
+/*------------------------------------------------------------------------------
+  Purpose:  
+    Notes:  
+------------------------------------------------------------------------------*/
+DEFINE VAR a AS CHAR NO-UNDO.
+a = eshorac(hh).
+IF msg AND a <> "" THEN
+    MESSAGE a VIEW-AS ALERT-BOX ERROR.
+RETURN a="".
+END FUNCTION.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ENDIF
+

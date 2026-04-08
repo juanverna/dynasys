@@ -1,0 +1,5 @@
+find ficha where recid(ficha) = 22720.
+delete ficha.
+
+find ficha where recid(ficha) = 25121.
+delete ficha.

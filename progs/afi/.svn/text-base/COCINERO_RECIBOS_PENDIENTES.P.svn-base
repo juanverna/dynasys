@@ -1,0 +1,12 @@
+DEFINE VAR k AS INT NO-UNDO.
+FOR EACH sic.fac_header WHERE sic.fac_header.fecha >= 08/01/2010 AND  sic.fac_header.fecha <= 08/31/2010 AND
+ sic.fac_header.estado_2_impresion <> "I" AND sic.fac_header.estado_2_impresion <> "OT" AND NOT sic.fac_header.anulado AND sic.fac_header.tip_comprob BEGINS "F" AND nro_admin <> 0 BREAK BY fac_header.nro_admin :
+FIND sic.cliente WHERE sic.cliente.nro_cliente = sic.fac_header.nro_admin.
+/*FIND sic.fac_header WHERE sic.fac_header.nro_factura = sic.fac_header.nro_factura.
+sic.fac_header.estado_2_impresion = sic.fac_header.estado_2_impresion.*/
+k = k + 1.
+IF LAST-OF( fac_header.nro_admin )   THEN DO:
+DISPLAY cliente.cdg_cliente k.
+k = 0.
+END.
+END.

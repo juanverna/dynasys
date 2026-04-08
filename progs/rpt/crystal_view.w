@@ -1,0 +1,495 @@
+&ANALYZE-SUSPEND _VERSION-NUMBER AB_v10r12 GUI
+&ANALYZE-RESUME
+&Scoped-define WINDOW-NAME ghWindow
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CUSTOM _DEFINITIONS ghWindow 
+/*------------------------------------------------------------------------
+    File        : crystal/crystal_view.w
+    Purpose     : Simple Crystal viewer in the 4GL
+                  Wrapper around CrystalActiveXReportViewer
+
+    Progress Benelux (ede@progress.com)                                                                               
+  ----------------------------------------------------------------------*/
+CREATE WIDGET-POOL.
+
+/* Local Variable Definitions ---                                       */
+DEFINE VARIABLE gchCrystalViewer    AS COM-HANDLE     NO-UNDO.
+DEFINE VARIABLE gchReport           AS COM-HANDLE     NO-UNDO.
+DEFINE VARIABLE gcDeleteFilesOnExit AS CHARACTER  NO-UNDO.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-PREPROCESSOR-BLOCK 
+
+/* ********************  Preprocessor Definitions  ******************** */
+
+&Scoped-define PROCEDURE-TYPE Window
+&Scoped-define DB-AWARE no
+
+/* Name of designated FRAME-NAME and/or first browse and/or first query */
+&Scoped-define FRAME-NAME DEFAULT-FRAME
+
+/* Custom List Definitions                                              */
+/* List-1,List-2,List-3,List-4,List-5,List-6                            */
+
+/* _UIB-PREPROCESSOR-BLOCK-END */
+&ANALYZE-RESUME
+
+
+/* ************************  Function Prototypes ********************** */
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _FUNCTION-FORWARD setDeleteFilesOnExit ghWindow 
+FUNCTION setDeleteFilesOnExit RETURNS LOGICAL
+  ( pcFiles AS CHARACTER )  FORWARD.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+/* ***********************  Control Definitions  ********************** */
+
+/* Define the widget handle for the window                              */
+DEFINE VAR ghWindow AS WIDGET-HANDLE NO-UNDO.
+
+/* Menu Definitions                                                     */
+DEFINE SUB-MENU m_File 
+       MENU-ITEM m_Print        LABEL "Print ..."     
+       MENU-ITEM m_Print_Setup  LABEL "Print Setup ..."
+       MENU-ITEM m_Export       LABEL "Export ..."    
+       RULE
+       MENU-ITEM m_Exit         LABEL "Exit"          .
+
+DEFINE SUB-MENU m_Help 
+       MENU-ITEM m_About        LABEL "About"         .
+
+DEFINE MENU gmMenuBar MENUBAR
+       SUB-MENU  m_File         LABEL "File"          
+       SUB-MENU  m_Help         LABEL "Help"          .
+
+
+/* Definitions of handles for OCX Containers                            */
+DEFINE VARIABLE CtrlFrame AS WIDGET-HANDLE NO-UNDO.
+DEFINE VARIABLE chCtrlFrame AS COMPONENT-HANDLE NO-UNDO.
+
+/* Definitions of the field level widgets                               */
+
+/* ************************  Frame Definitions  *********************** */
+
+DEFINE FRAME DEFAULT-FRAME
+    WITH 1 DOWN NO-BOX KEEP-TAB-ORDER OVERLAY 
+         SIDE-LABELS NO-UNDERLINE THREE-D 
+         AT COL 1 ROW 1
+         SIZE 169 BY 28.48.
+
+
+/* *********************** Procedure Settings ************************ */
+
+&ANALYZE-SUSPEND _PROCEDURE-SETTINGS
+/* Settings for THIS-PROCEDURE
+   Type: Window
+   Allow: Basic,Browse,DB-Fields,Window,Query
+   Other Settings: COMPILE
+ */
+&ANALYZE-RESUME _END-PROCEDURE-SETTINGS
+
+/* *************************  Create Window  ************************** */
+
+&ANALYZE-SUSPEND _CREATE-WINDOW
+IF SESSION:DISPLAY-TYPE = "GUI":U THEN
+  CREATE WINDOW ghWindow ASSIGN
+         HIDDEN             = YES
+         TITLE              = "Report preview"
+         HEIGHT             = 28.48
+         WIDTH              = 160
+         MAX-HEIGHT         = 28.48
+         MAX-WIDTH          = 169
+         VIRTUAL-HEIGHT     = 28.48
+         VIRTUAL-WIDTH      = 169
+         RESIZE             = yes
+         SCROLL-BARS        = no
+         STATUS-AREA        = no
+         BGCOLOR            = ?
+         FGCOLOR            = ?
+         KEEP-FRAME-Z-ORDER = yes
+         THREE-D            = yes
+         MESSAGE-AREA       = no
+         SENSITIVE          = yes.
+ELSE {&WINDOW-NAME} = CURRENT-WINDOW.
+
+ASSIGN {&WINDOW-NAME}:MENUBAR    = MENU gmMenuBar:HANDLE.
+/* END WINDOW DEFINITION                                                */
+&ANALYZE-RESUME
+
+
+
+/* ***********  Runtime Attributes and AppBuilder Settings  *********** */
+
+&ANALYZE-SUSPEND _RUN-TIME-ATTRIBUTES
+/* SETTINGS FOR WINDOW ghWindow
+  VISIBLE,,RUN-PERSISTENT                                               */
+/* SETTINGS FOR FRAME DEFAULT-FRAME
+   FRAME-NAME                                                           */
+IF SESSION:DISPLAY-TYPE = "GUI":U AND VALID-HANDLE(ghWindow)
+THEN ghWindow:HIDDEN = no.
+
+/* _RUN-TIME-ATTRIBUTES-END */
+&ANALYZE-RESUME
+
+ 
+
+
+/* **********************  Create OCX Containers  ********************** */
+
+&ANALYZE-SUSPEND _CREATE-DYNAMIC
+
+&IF "{&OPSYS}" = "WIN32":U AND "{&WINDOW-SYSTEM}" NE "TTY":U &THEN
+
+CREATE CONTROL-FRAME CtrlFrame ASSIGN
+       FRAME           = FRAME DEFAULT-FRAME:HANDLE
+       ROW             = 1
+       COLUMN          = 1
+       HEIGHT          = 28.33
+       WIDTH           = 163
+       WIDGET-ID       = 2
+       HIDDEN          = no
+       SENSITIVE       = yes.
+/* CtrlFrame OCXINFO:CREATE-CONTROL from: {6F0892F7-0D44-41C3-BF07-7599873FAA04} type: CrystalActiveXReportViewer */
+
+&ENDIF
+
+&ANALYZE-RESUME /* End of _CREATE-DYNAMIC */
+
+
+/* ************************  Control Triggers  ************************ */
+
+&Scoped-define SELF-NAME ghWindow
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL ghWindow ghWindow
+ON END-ERROR OF ghWindow /* Report preview */
+OR ENDKEY OF {&WINDOW-NAME} ANYWHERE DO:
+  /* This case occurs when the user presses the "Esc" key.
+     In a persistently run window, just ignore this.  If we did not, the
+     application would exit. */
+  IF THIS-PROCEDURE:PERSISTENT THEN RETURN NO-APPLY.
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL ghWindow ghWindow
+ON WINDOW-CLOSE OF ghWindow /* Report preview */
+DO:
+  /* This event will close the window and terminate the procedure.  */
+  APPLY "CLOSE":U TO THIS-PROCEDURE.
+  RETURN NO-APPLY.
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL ghWindow ghWindow
+ON WINDOW-RESIZED OF ghWindow /* Report preview */
+DO:
+  RUN resizeWindow IN TARGET-PROCEDURE (?,?,?,?).
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME m_About
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL m_About ghWindow
+ON CHOOSE OF MENU-ITEM m_About /* About */
+DO:
+  RUN helpAbout IN TARGET-PROCEDURE.
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME m_Exit
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL m_Exit ghWindow
+ON CHOOSE OF MENU-ITEM m_Exit /* Exit */
+DO:
+  APPLY 'CLOSE':U TO THIS-PROCEDURE.
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME m_Export
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL m_Export ghWindow
+ON CHOOSE OF MENU-ITEM m_Export /* Export ... */
+DO:
+  gchReport:EXPORT(YES).
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME m_File
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL m_File ghWindow
+ON MENU-DROP OF MENU m_File /* File */
+DO:
+  MENU-ITEM m_print:SENSITIVE IN MENU gmMenuBar = VALID-HANDLE(gchReport).
+  MENU-ITEM m_print_setup:SENSITIVE IN MENU gmMenuBar = VALID-HANDLE(gchReport).
+  MENU-ITEM m_export:SENSITIVE IN MENU gmMenuBar = VALID-HANDLE(gchReport).
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME m_Print
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL m_Print ghWindow
+ON CHOOSE OF MENU-ITEM m_Print /* Print ... */
+DO:
+  gchCrystalViewer:PrintReport().
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME m_Print_Setup
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL m_Print_Setup ghWindow
+ON CHOOSE OF MENU-ITEM m_Print_Setup /* Print Setup ... */
+DO:
+  gchReport:PrinterSetup(0).
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&UNDEFINE SELF-NAME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CUSTOM _MAIN-BLOCK ghWindow 
+
+
+/* ***************************  Main Block  *************************** */
+
+/* Set CURRENT-WINDOW: this will parent dialog-boxes and frames.        */
+ASSIGN CURRENT-WINDOW                = {&WINDOW-NAME} 
+       THIS-PROCEDURE:CURRENT-WINDOW = {&WINDOW-NAME}.
+
+/* Make sure the user does not resize the window (mutch) bigger than the work area */
+ghWindow:MAX-WIDTH-PIXELS  = SESSION:WORK-AREA-WIDTH-PIXELS - 4.  
+ghWindow:MAX-HEIGHT-PIXELS = SESSION:WORK-AREA-HEIGHT-PIXELS - 24.
+
+/* The CLOSE event can be used from inside or outside the procedure to  */
+/* terminate it.                                                        */
+ON CLOSE OF THIS-PROCEDURE 
+DO:
+  RUN destroyObject.
+END.
+
+/* Best default for GUI applications is...                              */
+PAUSE 0 BEFORE-HIDE.
+
+/* Now enable the interface and wait for the exit condition.            */
+/* (NOTE: handle ERROR and END-KEY so cleanup code will always fire.    */
+MAIN-BLOCK:
+DO ON ERROR   UNDO MAIN-BLOCK, LEAVE MAIN-BLOCK
+   ON END-KEY UNDO MAIN-BLOCK, LEAVE MAIN-BLOCK:
+  RUN enable_UI.
+  RUN constructObject IN TARGET-PROCEDURE.
+  IF NOT THIS-PROCEDURE:PERSISTENT THEN
+    WAIT-FOR CLOSE OF THIS-PROCEDURE.
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+/* **********************  Internal Procedures  *********************** */
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE attachReport ghWindow 
+PROCEDURE attachReport :
+/*------------------------------------------------------------------------------
+  Public API to connect a report
+------------------------------------------------------------------------------*/
+  DEFINE INPUT  PARAMETER pchReport AS COM-HANDLE  NO-UNDO.
+  gchReport = pchReport.
+
+  ASSIGN
+    gchCrystalViewer:ReportSource          = gchReport.
+    gchCrystalViewer:ViewReport.
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE constructObject ghWindow 
+PROCEDURE constructObject :
+/*------------------------------------------------------------------------------
+  Constructor
+------------------------------------------------------------------------------*/
+  gchCrystalViewer = chCtrlFrame:CrystalActiveXReportViewer.
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE control_load ghWindow  _CONTROL-LOAD
+PROCEDURE control_load :
+/*------------------------------------------------------------------------------
+  Purpose:     Load the OCXs    
+  Parameters:  <none>
+  Notes:       Here we load, initialize and make visible the 
+               OCXs in the interface.                        
+------------------------------------------------------------------------------*/
+
+&IF "{&OPSYS}" = "WIN32":U AND "{&WINDOW-SYSTEM}" NE "TTY":U &THEN
+DEFINE VARIABLE UIB_S    AS LOGICAL    NO-UNDO.
+DEFINE VARIABLE OCXFile  AS CHARACTER  NO-UNDO.
+
+OCXFile = SEARCH( "crystal_view.wrx":U ).
+IF OCXFile = ? THEN
+  OCXFile = SEARCH(SUBSTRING(THIS-PROCEDURE:FILE-NAME, 1,
+                     R-INDEX(THIS-PROCEDURE:FILE-NAME, ".":U), "CHARACTER":U) + "wrx":U).
+
+IF OCXFile <> ? THEN
+DO:
+  ASSIGN
+    chCtrlFrame = CtrlFrame:COM-HANDLE
+    UIB_S = chCtrlFrame:LoadControls( OCXFile, "CtrlFrame":U)
+    CtrlFrame:NAME = "CtrlFrame":U
+  .
+  RUN initialize-controls IN THIS-PROCEDURE NO-ERROR.
+END.
+ELSE MESSAGE "crystal_view.wrx":U SKIP(1)
+             "The binary control file could not be found. The controls cannot be loaded."
+             VIEW-AS ALERT-BOX TITLE "Controls Not Loaded".
+
+&ENDIF
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE destroyObject ghWindow 
+PROCEDURE destroyObject :
+/*------------------------------------------------------------------------------
+  Destructor; used to cleanup
+------------------------------------------------------------------------------*/
+  DEFINE VARIABLE iFiles AS INTEGER    NO-UNDO.
+  IF VALID-HANDLE(gchReport) THEN
+    RELEASE OBJECT gchReport.
+  DO iFiles = 1 TO NUM-ENTRIES(gcDeleteFilesOnExit):
+    OS-DELETE VALUE(ENTRY(iFiles, gcDeleteFilesOnExit)).
+  END.
+  RUN disable_UI.
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE disable_UI ghWindow  _DEFAULT-DISABLE
+PROCEDURE disable_UI :
+/*------------------------------------------------------------------------------
+  Purpose:     DISABLE the User Interface
+  Parameters:  <none>
+  Notes:       Here we clean-up the user-interface by deleting
+               dynamic widgets we have created and/or hide 
+               frames.  This procedure is usually called when
+               we are ready to "clean-up" after running.
+------------------------------------------------------------------------------*/
+  /* Delete the WINDOW we created */
+  IF SESSION:DISPLAY-TYPE = "GUI":U AND VALID-HANDLE(ghWindow)
+  THEN DELETE WIDGET ghWindow.
+  IF THIS-PROCEDURE:PERSISTENT THEN DELETE PROCEDURE THIS-PROCEDURE.
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE enable_UI ghWindow  _DEFAULT-ENABLE
+PROCEDURE enable_UI :
+/*------------------------------------------------------------------------------
+  Purpose:     ENABLE the User Interface
+  Parameters:  <none>
+  Notes:       Here we display/view/enable the widgets in the
+               user-interface.  In addition, OPEN all queries
+               associated with each FRAME and BROWSE.
+               These statements here are based on the "Other 
+               Settings" section of the widget Property Sheets.
+------------------------------------------------------------------------------*/
+  RUN control_load.
+  VIEW FRAME DEFAULT-FRAME IN WINDOW ghWindow.
+  {&OPEN-BROWSERS-IN-QUERY-DEFAULT-FRAME}
+  VIEW ghWindow.
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE helpAbout ghWindow 
+PROCEDURE helpAbout :
+/*------------------------------------------------------------------------------
+  Help/About event trigger    
+------------------------------------------------------------------------------*/
+  MESSAGE
+    'Dynasys version 10' SKIP(1)
+    VIEW-AS ALERT-BOX INFORMATION.
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE resizeWindow ghWindow 
+PROCEDURE resizeWindow :
+/*------------------------------------------------------------------------------
+  Resize the preview window
+------------------------------------------------------------------------------*/
+
+  DEFINE INPUT  PARAMETER piLeft      AS INTEGER NO-UNDO.
+  DEFINE INPUT  PARAMETER piTop       AS INTEGER NO-UNDO.
+  DEFINE INPUT  PARAMETER piWidth     AS INTEGER NO-UNDO.
+  DEFINE INPUT  PARAMETER piHeight    AS INTEGER NO-UNDO.
+
+  IF piLeft <> ? THEN
+    {&WINDOW-NAME}:X = piLeft.
+  IF piTop <> ? THEN
+    {&WINDOW-NAME}:Y = piTop.
+  IF piWidth <> ? THEN
+    {&WINDOW-NAME}:WIDTH-PIXELS = piWidth.
+  IF piHeight <> ? THEN
+    {&WINDOW-NAME}:HEIGHT-PIXELS = piHeight.
+
+  ASSIGN
+    FRAME {&FRAME-NAME}:WIDTH-PIXELS   = {&WINDOW-NAME}:WIDTH-PIXELS
+    FRAME {&FRAME-NAME}:HEIGHT-PIXELS  = {&WINDOW-NAME}:HEIGHT-PIXELS
+    CtrlFrame:WIDTH-PIXELS             = FRAME {&FRAME-NAME}:WIDTH-PIXELS
+    CtrlFrame:HEIGHT-PIXELS            = FRAME {&FRAME-NAME}:HEIGHT-PIXELS
+    FRAME {&FRAME-NAME}:SCROLLABLE     = NO 
+    {&WINDOW-NAME}:SCROLLABLE          = NO  
+  NO-ERROR.
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+/* ************************  Function Implementations ***************** */
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _FUNCTION setDeleteFilesOnExit ghWindow 
+FUNCTION setDeleteFilesOnExit RETURNS LOGICAL
+  ( pcFiles AS CHARACTER ) :
+/*------------------------------------------------------------------------------
+  Purpose:  
+    Notes:  
+------------------------------------------------------------------------------*/
+  gcDeleteFilesOnExit = pcFiles.
+  RETURN YES.
+
+END FUNCTION.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+

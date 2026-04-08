@@ -1,0 +1,33 @@
+DEFINE VARIABLE v-fch_proceso AS DATE LABEL "Fecha Proceso".
+DEFINE VARIABLE sino AS LOGICAL INITIAL NO.
+
+MESSAGE "ESTE PROGRAMA BAJA TODA LA INFORMACION DEL DIA DE LA BASE DE DESPACHO A LA BASE"
+        "HISTORICA. INDIQUE SI DESEA CONTINUAR CON EL PROCESO"
+        VIEW-AS ALERT-BOX QUESTION BUTTONS YES-NO SET sino.
+
+IF NOT sino THEN QUIT.
+
+UPDATE v-fch_proceso 
+       WITH FRAME f-proc FONT 4 THREE-D SIDE-LABELS TITLE "Indique fecha" VIEW-AS DIALOG-BOX.
+
+IF CONNECTED('viva') THEN DISCONNECT viva.
+IF CONNECTED('despacho') THEN DISCONNECT despacho.
+
+connect -pf .\ambas.pf.
+
+IF CONNECTED('viva') AND CONNECTED('despacho')
+THEN DO:
+     RUN COPFICHS.P ( INPUT v-fch_proceso ).
+     DISCONNECT viva.
+     DISCONNECT despacho.
+     MESSAGE "COPIA TERMINADA" VIEW-AS ALERT-BOX MESSAGE.
+   
+END.
+ELSE DO:
+
+      MESSAGE "No pudo realizarse la conexion a las bases de datos"
+              VIEW-AS ALERT-BOX MESSAGE TITLE "Error de conexión".
+END.                 
+
+QUIT.
+

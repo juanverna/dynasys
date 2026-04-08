@@ -1,0 +1,992 @@
+&ANALYZE-SUSPEND _VERSION-NUMBER UIB_v8r12 GUI ADM1
+&ANALYZE-RESUME
+/* Connected Databases 
+          sic              PROGRESS
+*/
+&Scoped-define WINDOW-NAME CURRENT-WINDOW
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CUSTOM _DEFINITIONS V-table-Win 
+/*------------------------------------------------------------------------
+
+  File:
+
+  Description: from VIEWER.W - Template for SmartViewer Objects
+
+  Input Parameters:
+      <none>
+
+  Output Parameters:
+      <none>
+
+------------------------------------------------------------------------*/
+/*          This .W file was created with the Progress UIB.             */
+/*----------------------------------------------------------------------*/
+
+/* Create an unnamed pool to store all the widgets created 
+     by this procedure. This is a good default which assures
+     that this procedure's triggers and internal procedures 
+     will execute in this procedure's storage, and that proper
+     cleanup will occur on deletion of the procedure. */
+
+CREATE WIDGET-POOL.
+
+/* ***************************  Definitions  ************************** */
+
+/* Parameters Definitions ---                                           */
+
+/* Local Variable Definitions ---                                       */
+DEFINE VARIABLE n-color AS INTEGER.
+
+DEFINE VARIABLE h_window AS HANDLE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-PREPROCESSOR-BLOCK 
+
+/* ********************  Preprocessor Definitions  ******************** */
+
+&Scoped-define PROCEDURE-TYPE SmartViewer
+&Scoped-define DB-AWARE no
+
+&Scoped-define ADM-SUPPORTED-LINKS Record-Source,Record-Target,TableIO-Target
+
+/* Name of first Frame and/or Browse and/or first Query                 */
+&Scoped-define FRAME-NAME F-Main
+
+/* External Tables                                                      */
+&Scoped-define EXTERNAL-TABLES Tipocomprobante
+&Scoped-define FIRST-EXTERNAL-TABLE Tipocomprobante
+
+
+/* Need to scope the external tables to this procedure                  */
+DEFINE QUERY external_tables FOR Tipocomprobante.
+/* Standard List Definitions                                            */
+&Scoped-Define ENABLED-FIELDS Tipocomprobante.cdg_comprobante ~
+Tipocomprobante.cdg_ciclocomercial Tipocomprobante.afecta_cc ~
+Tipocomprobante.afecta_stock Tipocomprobante.dsc_comprobante ~
+Tipocomprobante.es_monetario Tipocomprobante.titulo_window ~
+Tipocomprobante.aplica_bonificaciones Tipocomprobante.aplica_impuestos ~
+Tipocomprobante.denominacion_impresa Tipocomprobante.admite_redondeo ~
+Tipocomprobante.rotulo Tipocomprobante.color_letra ~
+Tipocomprobante.admite_negativo Tipocomprobante.color_fondo ~
+Tipocomprobante.debita Tipocomprobante.usa_letra ~
+Tipocomprobante.tip_comprob Tipocomprobante.prefijo_contador ~
+Tipocomprobante.es_interno Tipocomprobante.prefijo_hojas ~
+Tipocomprobante.prefijo_programa Tipocomprobante.autonumerado ~
+Tipocomprobante.prefijo_ncopias Tipocomprobante.prefijo_formulario ~
+Tipocomprobante.reexpresa_movimiento Tipocomprobante.signo ~
+Tipocomprobante.requerir_cliente Tipocomprobante.requerir_proveedor ~
+Tipocomprobante.requerir_contracaja Tipocomprobante.presupuestado ~
+Tipocomprobante.tipo_mov 
+&Scoped-define ENABLED-TABLES Tipocomprobante
+&Scoped-define FIRST-ENABLED-TABLE Tipocomprobante
+&Scoped-Define ENABLED-OBJECTS RECT-90 RECT-91 RECT-92 RECT-93 
+&Scoped-Define DISPLAYED-FIELDS Tipocomprobante.cdg_comprobante ~
+Tipocomprobante.cdg_ciclocomercial Tipocomprobante.afecta_cc ~
+Tipocomprobante.afecta_stock Tipocomprobante.dsc_comprobante ~
+Tipocomprobante.es_monetario Tipocomprobante.titulo_window ~
+Tipocomprobante.aplica_bonificaciones Tipocomprobante.aplica_impuestos ~
+Tipocomprobante.denominacion_impresa Tipocomprobante.admite_redondeo ~
+Tipocomprobante.rotulo Tipocomprobante.color_letra ~
+Tipocomprobante.admite_negativo Tipocomprobante.color_fondo ~
+Tipocomprobante.debita Tipocomprobante.usa_letra ~
+Tipocomprobante.tip_comprob Tipocomprobante.prefijo_contador ~
+Tipocomprobante.es_interno Tipocomprobante.prefijo_hojas ~
+Tipocomprobante.prefijo_programa Tipocomprobante.autonumerado ~
+Tipocomprobante.prefijo_ncopias Tipocomprobante.prefijo_formulario ~
+Tipocomprobante.reexpresa_movimiento Tipocomprobante.signo ~
+Tipocomprobante.requerir_cliente Tipocomprobante.requerir_proveedor ~
+Tipocomprobante.requerir_contracaja Tipocomprobante.presupuestado ~
+Tipocomprobante.tipo_mov Tipocomprobante.tipo_recibo ~
+Tipocomprobante.leyenda 
+&Scoped-define DISPLAYED-TABLES Tipocomprobante
+&Scoped-define FIRST-DISPLAYED-TABLE Tipocomprobante
+&Scoped-Define DISPLAYED-OBJECTS v-comprobante 
+
+/* Custom List Definitions                                              */
+/* ADM-CREATE-FIELDS,ADM-ASSIGN-FIELDS,List-3,List-4,List-5,List-6      */
+&Scoped-define ADM-ASSIGN-FIELDS Tipocomprobante.tipo_recibo ~
+Tipocomprobante.leyenda 
+&Scoped-define List-4 Tipocomprobante.leyenda 
+
+/* _UIB-PREPROCESSOR-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _XFTR "Foreign Keys" V-table-Win _INLINE
+/* Actions: ? adm/support/keyedit.w ? ? ? */
+/* STRUCTURED-DATA
+<KEY-OBJECT>
+THIS-PROCEDURE
+</KEY-OBJECT>
+<FOREIGN-KEYS>
+</FOREIGN-KEYS> 
+<EXECUTING-CODE>
+**************************
+* Set attributes related to FOREIGN KEYS
+*/
+RUN set-attribute-list (
+    'Keys-Accepted = "",
+     Keys-Supplied = ""':U).
+/**************************
+</EXECUTING-CODE> */   
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+/* ***********************  Control Definitions  ********************** */
+
+
+/* Definitions of the field level widgets                               */
+DEFINE BUTTON btn_nextcolorfondo 
+     IMAGE-UP FILE "adeicon\next-au":U
+     LABEL "btn_nextmes" 
+     SIZE 4 BY 1.
+
+DEFINE BUTTON btn_nextcolorletra 
+     IMAGE-UP FILE "adeicon\next-au":U
+     LABEL "btn_nextmes" 
+     SIZE 4 BY 1.
+
+DEFINE BUTTON btn_prevcolorfondo 
+     IMAGE-UP FILE "adeicon\prev-au":U
+     LABEL "btn_prevcolorletra 2" 
+     SIZE 4 BY 1.
+
+DEFINE BUTTON btn_prevcolorletra 
+     IMAGE-UP FILE "adeicon\prev-au":U
+     LABEL "Button 44" 
+     SIZE 4 BY 1.
+
+DEFINE VARIABLE v-comprobante AS CHARACTER FORMAT "X(256)":U 
+     LABEL "Muestra" 
+     VIEW-AS FILL-IN 
+     SIZE 31 BY 1
+     FONT 6 NO-UNDO.
+
+DEFINE RECTANGLE RECT-90
+     EDGE-PIXELS 2 GRAPHIC-EDGE  NO-FILL   
+     SIZE 113 BY 12.14.
+
+DEFINE RECTANGLE RECT-91
+     EDGE-PIXELS 2 GRAPHIC-EDGE  NO-FILL   
+     SIZE 78 BY 3.57.
+
+DEFINE RECTANGLE RECT-92
+     EDGE-PIXELS 2 GRAPHIC-EDGE  NO-FILL   
+     SIZE 78 BY 1.19.
+
+DEFINE RECTANGLE RECT-93
+     EDGE-PIXELS 2 GRAPHIC-EDGE  NO-FILL   
+     SIZE 34 BY 5.
+
+
+/* ************************  Frame Definitions  *********************** */
+
+DEFINE FRAME F-Main
+     Tipocomprobante.cdg_comprobante AT ROW 1.48 COL 20 COLON-ALIGNED
+          VIEW-AS FILL-IN 
+          SIZE 14 BY 1
+          BGCOLOR 15 FGCOLOR 9 
+     Tipocomprobante.cdg_ciclocomercial AT ROW 1.48 COL 43 COLON-ALIGNED FORMAT "X(50)"
+          VIEW-AS COMBO-BOX INNER-LINES 5
+          LIST-ITEM-PAIRS "Despacho","Despacho",
+                     "Ventas","Ventas",
+                     "Compras","Compras",
+                     "Proveedores","Proveedores",
+                     "Inventario","Inventario",
+                     "Tesoreria","Tesoreria",
+                     "Produccion","Produccion"
+          DROP-DOWN-LIST
+          SIZE 43 BY 1
+          BGCOLOR 15 FGCOLOR 9 
+     Tipocomprobante.afecta_cc AT ROW 1.48 COL 92
+          VIEW-AS TOGGLE-BOX
+          SIZE 18 BY .76
+     Tipocomprobante.afecta_stock AT ROW 2.33 COL 92
+          VIEW-AS TOGGLE-BOX
+          SIZE 18 BY .76
+     Tipocomprobante.dsc_comprobante AT ROW 2.62 COL 20 COLON-ALIGNED
+          VIEW-AS FILL-IN 
+          SIZE 66 BY 1
+          BGCOLOR 15 FGCOLOR 9 
+     Tipocomprobante.es_monetario AT ROW 3.19 COL 92
+          VIEW-AS TOGGLE-BOX
+          SIZE 16 BY .76
+     Tipocomprobante.titulo_window AT ROW 3.81 COL 20 COLON-ALIGNED
+          VIEW-AS FILL-IN 
+          SIZE 66 BY 1
+          BGCOLOR 15 FGCOLOR 9 
+     Tipocomprobante.aplica_bonificaciones AT ROW 4.05 COL 92
+          VIEW-AS TOGGLE-BOX
+          SIZE 18 BY .76
+     Tipocomprobante.aplica_impuestos AT ROW 4.91 COL 92
+          VIEW-AS TOGGLE-BOX
+          SIZE 18 BY .76
+     Tipocomprobante.denominacion_impresa AT ROW 5 COL 20 COLON-ALIGNED
+          LABEL "Ley. Documento" FORMAT "X(35)"
+          VIEW-AS FILL-IN 
+          SIZE 66 BY 1
+          BGCOLOR 15 FGCOLOR 9 
+     Tipocomprobante.admite_redondeo AT ROW 5.76 COL 92 WIDGET-ID 6
+          LABEL "Admite Redondeo"
+          VIEW-AS TOGGLE-BOX
+          SIZE 21 BY .81
+     Tipocomprobante.rotulo AT ROW 6.24 COL 20 COLON-ALIGNED
+          LABEL "Rótulo Pantalla"
+          VIEW-AS FILL-IN 
+          SIZE 31 BY 1
+          BGCOLOR 15 FGCOLOR 9 
+     Tipocomprobante.color_letra AT ROW 6.24 COL 72 COLON-ALIGNED
+          VIEW-AS FILL-IN 
+          SIZE 6 BY 1
+          BGCOLOR 15 FGCOLOR 9 
+     btn_prevcolorletra AT ROW 6.24 COL 80
+     btn_nextcolorletra AT ROW 6.24 COL 84
+     Tipocomprobante.admite_negativo AT ROW 6.67 COL 92
+          VIEW-AS TOGGLE-BOX
+          SIZE 20 BY .76
+     v-comprobante AT ROW 7.43 COL 20 COLON-ALIGNED
+     Tipocomprobante.color_fondo AT ROW 7.43 COL 72 COLON-ALIGNED
+          VIEW-AS FILL-IN 
+          SIZE 6 BY 1
+          BGCOLOR 15 FGCOLOR 9 
+     btn_prevcolorfondo AT ROW 7.43 COL 80
+     btn_nextcolorfondo AT ROW 7.43 COL 84
+     Tipocomprobante.debita AT ROW 7.52 COL 92
+          VIEW-AS TOGGLE-BOX
+          SIZE 12 BY .76
+     Tipocomprobante.usa_letra AT ROW 8.38 COL 92
+          VIEW-AS TOGGLE-BOX
+          SIZE 14 BY .76
+     Tipocomprobante.tip_comprob AT ROW 8.62 COL 20 COLON-ALIGNED
+          LABEL "Tipo Compbte."
+          VIEW-AS FILL-IN 
+          SIZE 14 BY 1
+          BGCOLOR 15 FGCOLOR 9 
+     Tipocomprobante.prefijo_contador AT ROW 8.62 COL 72 COLON-ALIGNED
+          VIEW-AS FILL-IN 
+          SIZE 14 BY 1 TOOLTIP "Parámetro que indica el contador de este comprobante"
+          BGCOLOR 15 FGCOLOR 9 
+    WITH 1 DOWN NO-BOX KEEP-TAB-ORDER OVERLAY 
+         SIDE-LABELS NO-UNDERLINE THREE-D 
+         AT COL 1 ROW 1 SCROLLABLE .
+
+/* DEFINE FRAME statement is approaching 4K Bytes.  Breaking it up   */
+DEFINE FRAME F-Main
+     Tipocomprobante.es_interno AT ROW 9.24 COL 92
+          VIEW-AS TOGGLE-BOX
+          SIZE 15 BY .76
+     Tipocomprobante.prefijo_hojas AT ROW 9.81 COL 20 COLON-ALIGNED
+          VIEW-AS FILL-IN 
+          SIZE 14 BY 1 TOOLTIP "Parametro que indica si el comprobante se imprime en hojas sueltas"
+          BGCOLOR 15 FGCOLOR 9 
+     Tipocomprobante.prefijo_programa AT ROW 9.81 COL 72 COLON-ALIGNED
+          LABEL "Prefijo Progama Impresión"
+          VIEW-AS FILL-IN 
+          SIZE 14 BY 1 TOOLTIP "Prefijo de los progamas de impresión de comprobantes"
+          BGCOLOR 15 FGCOLOR 9 
+     Tipocomprobante.autonumerado AT ROW 10.1 COL 92
+          VIEW-AS TOGGLE-BOX
+          SIZE 18 BY .76
+     Tipocomprobante.prefijo_ncopias AT ROW 11 COL 20 COLON-ALIGNED
+          VIEW-AS FILL-IN 
+          SIZE 14 BY 1 TOOLTIP "Parametro que indica la cantidad de copias de este comprobante"
+          BGCOLOR 15 FGCOLOR 9 
+     Tipocomprobante.prefijo_formulario AT ROW 11 COL 72 COLON-ALIGNED
+          VIEW-AS FILL-IN 
+          SIZE 14 BY 1 TOOLTIP "Prefijo que indica el parametro del numero de rutina de impresión"
+          BGCOLOR 15 FGCOLOR 9 
+     Tipocomprobante.reexpresa_movimiento AT ROW 11 COL 92
+          LABEL "Reexpresa Mov."
+          VIEW-AS TOGGLE-BOX
+          SIZE 20 BY .76
+     Tipocomprobante.signo AT ROW 12.19 COL 100 NO-LABEL
+          VIEW-AS RADIO-SET HORIZONTAL
+          RADIO-BUTTONS 
+                    "+", 1,
+"-", -1
+          SIZE 12 BY .62
+     Tipocomprobante.requerir_cliente AT ROW 14.81 COL 5
+          VIEW-AS TOGGLE-BOX
+          SIZE 20 BY .81
+     Tipocomprobante.requerir_proveedor AT ROW 14.81 COL 26
+          VIEW-AS TOGGLE-BOX
+          SIZE 24 BY .81
+     Tipocomprobante.requerir_contracaja AT ROW 14.81 COL 50
+          VIEW-AS TOGGLE-BOX
+          SIZE 27 BY .81
+     Tipocomprobante.presupuestado AT ROW 14.81 COL 82 NO-LABEL
+          VIEW-AS RADIO-SET VERTICAL
+          RADIO-BUTTONS 
+                    "Real", "",
+"Es Reserva", "R":U,
+"Es Presupuestado", "P":U
+          SIZE 29 BY 3.33
+     Tipocomprobante.tipo_mov AT ROW 16 COL 5 NO-LABEL
+          VIEW-AS RADIO-SET HORIZONTAL
+          RADIO-BUTTONS 
+                    "Ingreso", "I":U,
+"Egreso", "E":U,
+"Transferencia", "T":U
+          SIZE 53 BY .71
+     Tipocomprobante.tipo_recibo AT ROW 17.43 COL 5 NO-LABEL
+          VIEW-AS RADIO-SET HORIZONTAL
+          RADIO-BUTTONS 
+                    "Recibo", "R":U,
+"Prerecibo", "P":U,
+"Recibo a Confirmar", "C":U,
+"Ninguno", ""
+          SIZE 68 BY .71
+     Tipocomprobante.leyenda AT ROW 18.62 COL 1 NO-LABEL
+          VIEW-AS EDITOR SCROLLBAR-VERTICAL
+          SIZE 113 BY 2.91
+          BGCOLOR 15 FGCOLOR 9 
+     "Signo:" VIEW-AS TEXT
+          SIZE 7 BY .62 AT ROW 12.19 COL 92
+     "     Parametros exclusivos de las transacciones de Tesorería" VIEW-AS TEXT
+          SIZE 76 BY 1 AT ROW 13.62 COL 2
+          BGCOLOR 5 FGCOLOR 15 
+     "  Movimiento de Stock" VIEW-AS TEXT
+          SIZE 32 BY 1 AT ROW 13.62 COL 81
+          BGCOLOR 5 FGCOLOR 15 
+    WITH 1 DOWN NO-BOX KEEP-TAB-ORDER OVERLAY 
+         SIDE-LABELS NO-UNDERLINE THREE-D 
+         AT COL 1 ROW 1 SCROLLABLE .
+
+/* DEFINE FRAME statement is approaching 4K Bytes.  Breaking it up   */
+DEFINE FRAME F-Main
+     RECT-90 AT ROW 1 COL 1
+     RECT-91 AT ROW 13.38 COL 1
+     RECT-92 AT ROW 17.19 COL 1
+     RECT-93 AT ROW 13.38 COL 80
+    WITH 1 DOWN NO-BOX KEEP-TAB-ORDER OVERLAY 
+         SIDE-LABELS NO-UNDERLINE THREE-D 
+         AT COL 1 ROW 1 SCROLLABLE .
+
+
+/* *********************** Procedure Settings ************************ */
+
+&ANALYZE-SUSPEND _PROCEDURE-SETTINGS
+/* Settings for THIS-PROCEDURE
+   Type: SmartViewer
+   External Tables: sic.Tipocomprobante
+   Allow: Basic,DB-Fields
+   Frames: 1
+   Add Fields to: EXTERNAL-TABLES
+   Other Settings: PERSISTENT-ONLY COMPILE
+ */
+
+/* This procedure should always be RUN PERSISTENT.  Report the error,  */
+/* then cleanup and return.                                            */
+IF NOT THIS-PROCEDURE:PERSISTENT THEN DO:
+  MESSAGE "{&FILE-NAME} should only be RUN PERSISTENT.":U
+          VIEW-AS ALERT-BOX ERROR BUTTONS OK.
+  RETURN.
+END.
+
+&ANALYZE-RESUME _END-PROCEDURE-SETTINGS
+
+/* *************************  Create Window  ************************** */
+
+&ANALYZE-SUSPEND _CREATE-WINDOW
+/* DESIGN Window definition (used by the UIB) 
+  CREATE WINDOW V-table-Win ASSIGN
+         HEIGHT             = 20.62
+         WIDTH              = 113.6.
+/* END WINDOW DEFINITION */
+                                                                        */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CUSTOM _INCLUDED-LIB V-table-Win 
+/* ************************* Included-Libraries *********************** */
+
+{src/adm/method/viewer.i}
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+
+
+/* ***********  Runtime Attributes and AppBuilder Settings  *********** */
+
+&ANALYZE-SUSPEND _RUN-TIME-ATTRIBUTES
+/* SETTINGS FOR WINDOW V-table-Win
+  VISIBLE,,RUN-PERSISTENT                                               */
+/* SETTINGS FOR FRAME F-Main
+   NOT-VISIBLE Size-to-Fit                                              */
+ASSIGN 
+       FRAME F-Main:SCROLLABLE       = FALSE
+       FRAME F-Main:HIDDEN           = TRUE.
+
+/* SETTINGS FOR TOGGLE-BOX Tipocomprobante.admite_redondeo IN FRAME F-Main
+   EXP-LABEL                                                            */
+/* SETTINGS FOR BUTTON btn_nextcolorfondo IN FRAME F-Main
+   NO-ENABLE                                                            */
+/* SETTINGS FOR BUTTON btn_nextcolorletra IN FRAME F-Main
+   NO-ENABLE                                                            */
+/* SETTINGS FOR BUTTON btn_prevcolorfondo IN FRAME F-Main
+   NO-ENABLE                                                            */
+/* SETTINGS FOR BUTTON btn_prevcolorletra IN FRAME F-Main
+   NO-ENABLE                                                            */
+/* SETTINGS FOR COMBO-BOX Tipocomprobante.cdg_ciclocomercial IN FRAME F-Main
+   EXP-FORMAT                                                           */
+/* SETTINGS FOR FILL-IN Tipocomprobante.denominacion_impresa IN FRAME F-Main
+   EXP-LABEL EXP-FORMAT                                                 */
+/* SETTINGS FOR EDITOR Tipocomprobante.leyenda IN FRAME F-Main
+   NO-ENABLE 2 4                                                        */
+/* SETTINGS FOR FILL-IN Tipocomprobante.prefijo_programa IN FRAME F-Main
+   EXP-LABEL                                                            */
+/* SETTINGS FOR TOGGLE-BOX Tipocomprobante.reexpresa_movimiento IN FRAME F-Main
+   EXP-LABEL                                                            */
+/* SETTINGS FOR FILL-IN Tipocomprobante.rotulo IN FRAME F-Main
+   EXP-LABEL                                                            */
+/* SETTINGS FOR RADIO-SET Tipocomprobante.tipo_recibo IN FRAME F-Main
+   NO-ENABLE 2                                                          */
+/* SETTINGS FOR FILL-IN Tipocomprobante.tip_comprob IN FRAME F-Main
+   EXP-LABEL                                                            */
+/* SETTINGS FOR FILL-IN v-comprobante IN FRAME F-Main
+   NO-ENABLE                                                            */
+/* _RUN-TIME-ATTRIBUTES-END */
+&ANALYZE-RESUME
+
+
+/* Setting information for Queries and Browse Widgets fields            */
+
+&ANALYZE-SUSPEND _QUERY-BLOCK FRAME F-Main
+/* Query rebuild information for FRAME F-Main
+     _Options          = "NO-LOCK"
+     _Query            is NOT OPENED
+*/  /* FRAME F-Main */
+&ANALYZE-RESUME
+
+ 
+
+
+
+/* ************************  Control Triggers  ************************ */
+
+&Scoped-define SELF-NAME btn_nextcolorfondo
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL btn_nextcolorfondo V-table-Win
+ON CHOOSE OF btn_nextcolorfondo IN FRAME F-Main /* btn_nextmes */
+DO:
+  n-color = Tipocomprobante.color_fondo:INPUT-VALUE + 1.
+  IF n-color = 16 THEN n-color = 0.
+  DISPLAY n-color @ Tipocomprobante.color_fondo
+      WITH FRAME {&FRAME-NAME}.
+  v-comprobante:BGCOLOR = n-color.
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME btn_nextcolorletra
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL btn_nextcolorletra V-table-Win
+ON CHOOSE OF btn_nextcolorletra IN FRAME F-Main /* btn_nextmes */
+DO:
+  n-color = Tipocomprobante.color_letra:INPUT-VALUE + 1.
+  IF n-color = 16 THEN n-color = 0.
+  DISPLAY n-color @ Tipocomprobante.color_letra
+      WITH FRAME {&FRAME-NAME}.
+  v-comprobante:FGCOLOR = n-color.
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME btn_prevcolorfondo
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL btn_prevcolorfondo V-table-Win
+ON CHOOSE OF btn_prevcolorfondo IN FRAME F-Main /* btn_prevcolorletra 2 */
+DO:
+  n-color = Tipocomprobante.color_fondo:INPUT-VALUE - 1.
+  IF n-color = -1 THEN n-color = 15.
+  DISPLAY n-color @ Tipocomprobante.color_fondo
+      WITH FRAME {&FRAME-NAME}.
+  v-comprobante:BGCOLOR = n-color.
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME btn_prevcolorletra
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL btn_prevcolorletra V-table-Win
+ON CHOOSE OF btn_prevcolorletra IN FRAME F-Main /* Button 44 */
+DO:
+  n-color = Tipocomprobante.color_letra:INPUT-VALUE - 1.
+  IF n-color = -1 THEN n-color = 15.
+  DISPLAY n-color @ Tipocomprobante.color_letra
+      WITH FRAME {&FRAME-NAME}.
+  v-comprobante:FGCOLOR = n-color.
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME Tipocomprobante.color_fondo
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL Tipocomprobante.color_fondo V-table-Win
+ON LEAVE OF Tipocomprobante.color_fondo IN FRAME F-Main /* Color Fondo */
+DO:
+  v-comprobante:BGCOLOR = SELF:INPUT-VALUE.
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME Tipocomprobante.color_letra
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL Tipocomprobante.color_letra V-table-Win
+ON LEAVE OF Tipocomprobante.color_letra IN FRAME F-Main /* Color Letra */
+DO:
+  v-comprobante:FGCOLOR = SELF:INPUT-VALUE.
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME Tipocomprobante.requerir_cliente
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL Tipocomprobante.requerir_cliente V-table-Win
+ON VALUE-CHANGED OF Tipocomprobante.requerir_cliente IN FRAME F-Main /* Requerir Cliente */
+DO:
+  IF Tipocomprobante.requerir_cliente:SCREEN-VALUE IN FRAME {&FRAME-NAME} = "YES" THEN
+     ENABLE  Tipocomprobante.tipo_recibo WITH FRAME {&FRAME-NAME}.
+  ELSE
+  DO:
+     DISABLE Tipocomprobante.tipo_recibo WITH FRAME {&FRAME-NAME}.
+     ASSIGN Tipocomprobante.tipo_recibo:SCREEN-VALUE IN FRAME {&FRAME-NAME} = "".
+  END.
+
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME Tipocomprobante.rotulo
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL Tipocomprobante.rotulo V-table-Win
+ON LEAVE OF Tipocomprobante.rotulo IN FRAME F-Main /* Rótulo Pantalla */
+DO:
+  v-comprobante:SCREEN-VALUE = SELF:SCREEN-VALUE.
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&UNDEFINE SELF-NAME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CUSTOM _MAIN-BLOCK V-table-Win 
+
+
+/* ***************************  Main Block  *************************** */
+
+  &IF DEFINED(UIB_IS_RUNNING) <> 0 &THEN          
+    RUN dispatch IN THIS-PROCEDURE ('initialize':U).        
+  &ENDIF         
+  
+  /************************ INTERNAL PROCEDURES ********************/
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+/* **********************  Internal Procedures  *********************** */
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE adm-row-available V-table-Win  _ADM-ROW-AVAILABLE
+PROCEDURE adm-row-available :
+/*------------------------------------------------------------------------------
+  Purpose:     Dispatched to this procedure when the Record-
+               Source has a new row available.  This procedure
+               tries to get the new row (or foriegn keys) from
+               the Record-Source and process it.
+  Parameters:  <none>
+------------------------------------------------------------------------------*/
+
+  /* Define variables needed by this internal procedure.             */
+  {src/adm/template/row-head.i}
+
+  /* Create a list of all the tables that we need to get.            */
+  {src/adm/template/row-list.i "Tipocomprobante"}
+
+  /* Get the record ROWID's from the RECORD-SOURCE.                  */
+  {src/adm/template/row-get.i}
+
+  /* FIND each record specified by the RECORD-SOURCE.                */
+  {src/adm/template/row-find.i "Tipocomprobante"}
+
+  /* Process the newly available records (i.e. display fields,
+     open queries, and/or pass records on to any RECORD-TARGETS).    */
+  {src/adm/template/row-end.i}
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE disable_UI V-table-Win  _DEFAULT-DISABLE
+PROCEDURE disable_UI :
+/*------------------------------------------------------------------------------
+  Purpose:     DISABLE the User Interface
+  Parameters:  <none>
+  Notes:       Here we clean-up the user-interface by deleting
+               dynamic widgets we have created and/or hide 
+               frames.  This procedure is usually called when
+               we are ready to "clean-up" after running.
+------------------------------------------------------------------------------*/
+  /* Hide all frames. */
+  HIDE FRAME F-Main.
+  IF THIS-PROCEDURE:PERSISTENT THEN DELETE PROCEDURE THIS-PROCEDURE.
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE inicia_combo V-table-Win 
+PROCEDURE inicia_combo :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+
+  DEFINE VARIABLE ok AS LOGICAL.
+  DEFINE VARIABLE lista AS CHARACTER.
+
+  DO WITH FRAME {&FRAME-NAME}:
+      
+     {levantacombo.i &TABLA=Ciclo_comercial &NOMBRE=dsc_ciclocomercial &CODIGO=cdg_ciclocomercial &OBJETO=sic.Tipocomprobante.cdg_ciclocomercial }
+  END.          
+  
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE local-add-record V-table-Win 
+PROCEDURE local-add-record :
+/*------------------------------------------------------------------------------
+  Purpose:     Override standard ADM method
+  Notes:       
+------------------------------------------------------------------------------*/
+
+  /* Code placed here will execute PRIOR to standard behavior. */
+
+  /* Dispatch standard ADM method.                             */
+  RUN dispatch IN THIS-PROCEDURE ( INPUT 'add-record':U ) .
+
+  /* Code placed here will execute AFTER standard behavior.    */
+
+  DO WITH FRAME {&FRAME-NAME}:
+      v-comprobante:FGCOLOR = ?.
+      v-comprobante:BGCOLOR = ?.
+      v-comprobante:SCREEN-VALUE = "".
+  END.
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE local-assign-statement V-table-Win 
+PROCEDURE local-assign-statement :
+/*------------------------------------------------------------------------------
+  Purpose:     Override standard ADM method
+  Notes:       
+------------------------------------------------------------------------------*/
+
+  /* Code placed here will execute PRIOR to standard behavior. */
+
+   DEFINE VARIABLE hubo_error AS LOGICAL.
+
+   DO WITH FRAME {&FRAME-NAME}:
+       
+       IF Tipocomprobante.cdg_comprobante:SCREEN-VALUE = ""
+       THEN DO:
+            RUN ponmensj.p ( INPUT "CBTE002").
+            RETURN ERROR.
+       END.
+        
+       IF Tipocomprobante.prefijo_contador:SCREEN-VALUE = ""
+       THEN DO:
+            RUN ponmensj.p ( INPUT "CBTE003").
+            RETURN ERROR.
+       END.
+       
+       IF Tipocomprobante.tip_comprob:SCREEN-VALUE = ""
+       THEN DO:
+            RUN ponmensj.p ( INPUT "CBTE004").
+            RETURN ERROR.
+       END.
+       
+       IF Tipocomprobante.prefijo_programa:SCREEN-VALUE = ""
+       THEN DO:
+            RUN ponmensj.p ( INPUT "CBTE005").
+            RETURN ERROR.
+       END.
+
+       IF Tipocomprobante.requerir_cliente:INPUT-VALUE OR 
+          Tipocomprobante.requerir_proveedor:INPUT-VALUE OR
+          Tipocomprobante.requerir_contracaja:INPUT-VALUE
+       THEN DO:
+           IF ( Tipocomprobante.requerir_cliente:INPUT-VALUE AND 
+                Tipocomprobante.requerir_proveedor:INPUT-VALUE ) OR
+              ( Tipocomprobante.requerir_cliente:INPUT-VALUE AND 
+                Tipocomprobante.requerir_contracaja:INPUT-VALUE ) OR
+              ( Tipocomprobante.requerir_proveedor:INPUT-VALUE AND 
+                Tipocomprobante.requerir_contracaja:INPUT-VALUE )
+           THEN DO:
+               RUN ponmensj.p ( INPUT "CBTE006").
+               RETURN ERROR.
+           END.
+       END.
+
+   END.
+
+  RUN valida_tip_comprob(OUTPUT hubo_error).
+  IF hubo_error THEN
+  DO:
+      RUN ponmensj.p ( INPUT "CBTE106").
+      RETURN ERROR.
+  END.
+   
+  /* Dispatch standard ADM method.                             */
+  RUN dispatch IN THIS-PROCEDURE ( INPUT 'assign-statement':U ) .
+
+  /* Code placed here will execute AFTER standard behavior.    */
+
+  {findempresa.i}
+
+  Tipocomprobante.cdg_empresa = Empresa.cdg_empresa.
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE local-delete-record V-table-Win 
+PROCEDURE local-delete-record :
+/*------------------------------------------------------------------------------
+  Purpose:     Override standard ADM method
+  Notes:       
+------------------------------------------------------------------------------*/
+
+  /* Code placed here will execute PRIOR to standard behavior. */
+
+   DEFINE VARIABLE baja_no AS LOGICAL.
+   DEFINE VARIABLE archivo AS CHARACTER  NO-UNDO.
+   RUN vlb-tipocomprobante.p ( INPUT ROWID(Tipocomprobante), 
+                               OUTPUT baja_no,
+                               OUTPUT archivo).
+   IF baja_no 
+   THEN DO:
+       /*  RUN PONMENSJ.P ( "IREF001" ). */
+        MESSAGE "El Tipo de Comprobante esta siendo utilizado en la tabla "  archivo
+            VIEW-AS ALERT-BOX INFO BUTTONS OK.
+        RETURN ERROR.
+   END.        
+
+  /* Dispatch standard ADM method.                             */
+  RUN dispatch IN THIS-PROCEDURE ( INPUT 'delete-record':U ) .
+
+  /* Code placed here will execute AFTER standard behavior.    */
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE local-disable-fields V-table-Win 
+PROCEDURE local-disable-fields :
+/*------------------------------------------------------------------------------
+  Purpose:     Override standard ADM method
+  Notes:       
+------------------------------------------------------------------------------*/
+
+  /* Code placed here will execute PRIOR to standard behavior. */
+  DISABLE {&List-4} WITH FRAME {&FRAME-NAME}.
+  /* Dispatch standard ADM method.                             */
+  RUN dispatch IN THIS-PROCEDURE ( INPUT 'disable-fields':U ) .
+
+  /* Code placed here will execute AFTER standard behavior.    */
+
+  ASSIGN
+      btn_nextcolorfondo:SENSITIVE IN FRAME {&FRAME-NAME} = NO 
+      btn_nextcolorletra:SENSITIVE IN FRAME {&FRAME-NAME} = NO 
+      btn_prevcolorfondo:SENSITIVE IN FRAME {&FRAME-NAME} = NO 
+      btn_prevcolorletra:SENSITIVE IN FRAME {&FRAME-NAME} = NO.
+
+  DISABLE Tipocomprobante.tipo_recibo WITH FRAME {&FRAME-NAME}.
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE local-display-fields V-table-Win 
+PROCEDURE local-display-fields :
+/*------------------------------------------------------------------------------
+  Purpose:     Override standard ADM method
+  Notes:       
+------------------------------------------------------------------------------*/
+
+  /* Code placed here will execute PRIOR to standard behavior. */
+
+  /* Dispatch standard ADM method.                             */
+  RUN dispatch IN THIS-PROCEDURE ( INPUT 'display-fields':U ) .
+
+  /* Code placed here will execute AFTER standard behavior.    */
+
+  IF AVAILABLE Tipocomprobante
+  THEN DO:
+      v-comprobante = Tipocomprobante.rotulo.
+      v-comprobante:FGCOLOR IN FRAME {&FRAME-NAME} = Tipocomprobante.color_letra.
+      v-comprobante:BGCOLOR IN FRAME {&FRAME-NAME} = Tipocomprobante.color_fondo.
+      IF VALID-HANDLE(h_window)
+          THEN RUN habilitar_tesoreria IN h_window ( INPUT Tipocomprobante.cdg_ciclocomercial = "TESORERIA" ).
+  END.
+  ELSE DO:
+      v-comprobante = "".
+      RUN habilitar_tesoreria IN h_window ( INPUT NO ).
+  END.
+  DISPLAY v-comprobante 
+          WITH FRAME {&FRAME-NAME}.
+
+
+
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE local-enable-fields V-table-Win 
+PROCEDURE local-enable-fields :
+/*------------------------------------------------------------------------------
+  Purpose:     Override standard ADM method
+  Notes:       
+------------------------------------------------------------------------------*/
+
+  /* Code placed here will execute PRIOR to standard behavior. */
+
+  /* Dispatch standard ADM method.                             */
+  RUN dispatch IN THIS-PROCEDURE ( INPUT 'enable-fields':U ) .
+
+  /* Code placed here will execute AFTER standard behavior.    */
+
+  ENABLE {&List-4} WITH FRAME {&FRAME-NAME}.
+  ASSIGN
+      btn_nextcolorfondo:SENSITIVE IN FRAME {&FRAME-NAME} = YES 
+      btn_nextcolorletra:SENSITIVE IN FRAME {&FRAME-NAME} = YES 
+      btn_prevcolorfondo:SENSITIVE IN FRAME {&FRAME-NAME} = YES 
+      btn_prevcolorletra:SENSITIVE IN FRAME {&FRAME-NAME} = YES.
+
+ IF Tipocomprobante.requerir_cliente:SCREEN-VALUE IN FRAME {&FRAME-NAME} = "YES" THEN
+     ENABLE  Tipocomprobante.tipo_recibo WITH FRAME {&FRAME-NAME}.
+  ELSE
+     DISABLE Tipocomprobante.tipo_recibo WITH FRAME {&FRAME-NAME}.
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE local-initialize V-table-Win 
+PROCEDURE local-initialize :
+/*------------------------------------------------------------------------------
+  Purpose:     Override standard ADM method
+  Notes:       
+------------------------------------------------------------------------------*/
+
+  /* Code placed here will execute PRIOR to standard behavior. */
+
+   DEFINE VARIABLE ch_window AS CHARACTER.
+   RUN get-link-handle IN adm-broker-hdl
+       ( INPUT THIS-PROCEDURE, INPUT "Container-Source", OUTPUT ch_window).
+   h_window = WIDGET-HANDLE(ch_window).
+
+  RUN inicia_combo.
+
+  /* Dispatch standard ADM method.                             */
+  RUN dispatch IN THIS-PROCEDURE ( INPUT 'initialize':U ) .
+
+  /* Code placed here will execute AFTER standard behavior.    */
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE send-records V-table-Win  _ADM-SEND-RECORDS
+PROCEDURE send-records :
+/*------------------------------------------------------------------------------
+  Purpose:     Send record ROWID's for all tables used by
+               this file.
+  Parameters:  see template/snd-head.i
+------------------------------------------------------------------------------*/
+
+  /* Define variables needed by this internal procedure.               */
+  {src/adm/template/snd-head.i}
+
+  /* For each requested table, put it's ROWID in the output list.      */
+  {src/adm/template/snd-list.i "Tipocomprobante"}
+
+  /* Deal with any unexpected table requests before closing.           */
+  {src/adm/template/snd-end.i}
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE state-changed V-table-Win 
+PROCEDURE state-changed :
+/* -----------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+-------------------------------------------------------------*/
+  DEFINE INPUT PARAMETER p-issuer-hdl AS HANDLE    NO-UNDO.
+  DEFINE INPUT PARAMETER p-state      AS CHARACTER NO-UNDO.
+
+  CASE p-state:
+      /* Object instance CASEs can go here to replace standard behavior
+         or add new cases. */
+      {src/adm/template/vstates.i}
+  END CASE.
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE valida_tip_comprob V-table-Win 
+PROCEDURE valida_tip_comprob :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+DEFINE OUTPUT PARAMETER hubo_error AS LOGICAL    NO-UNDO.
+
+DEFINE VARIABLE largo AS INTEGER    NO-UNDO.
+
+hubo_error = NO.
+largo = LENGTH(Tipocomprobante.tip_comprob:SCREEN-VALUE IN FRAME {&FRAME-NAME}).
+
+
+IF Tipocomprobante.usa_letra:SCREEN-VALUE IN FRAME {&FRAME-NAME} = "yes" THEN
+   largo = largo + 1.
+IF largo > 3 THEN
+   hubo_error = YES.
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+

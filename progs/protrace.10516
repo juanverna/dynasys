@@ -1,0 +1,132 @@
+=====================================================
+PROGRESS stack trace as of Fri Apr 17 09:50:42 2020
+=====================================================
+Startup parameters:
+-pf C:\Progress102\OpenEdge\startup.pf,-cpinternal ISO8859-1,-cpstream ISO8859-1,-cpcoll Spanish9,-cpcase Basic,-d dmy,-numsep 46,-numdec 44,(end .pf),-p largar.p,-db c:\bases\dynasys102,-ld sic,-T c:\temp,-basekey INI,-ininame c:\dynasys10\procs\dynasys10.ini,-s 200,-inp 8192,-nb 150,-l 4000,-bibufs 25,-q,-rr
+
+Exception code: C0000005 ACCESS_VIOLATION
+Fault address:  1013DE36 01:0013CE36 C:\Progress102\OpenEdge\bin\prow32.dll
+
+Registers:
+EAX:00000000
+EBX:02096FA0
+ECX:00000000
+EDX:00000001
+ESI:00000000
+EDI:00000000
+CS:EIP:0023:1013DE36
+SS:ESP:002B:0018E17C  EBP:02096FC8
+DS:002B  ES:002B  FS:0053  GS:002B
+Flags:00210202
+
+Call Stack:
+Address   Frame
+1013DE36  00000000  DllStartup+C69A6
+1029BAFD  00000000  pam_get_item+96B1D
+1033DF21  00000000  dbut_stnclr+11
+1048140B  00000000  wwProxInterfaceReadIcon+3EB3B
+10299E3E  00000000  pam_get_item+94E5E
+1029CFEF  00000000  pam_get_item+9800F
+102B16BD  00000000  pam_get_item+AC6DD
+1027940D  00000000  pam_get_item+7442D
+
+
+** ABL Stack Trace **
+
+--> USER-INTERFACE-TRIGGER b.w (.\PAU\b.r) at line 3801
+
+** Persistent procedures/Classes **
+
+Handle  File Name
+001944  .\rpt\crystal_view.r
+001938  .\rpt\crystal_view.r
+001930  .\tes\b-caja_valor.r
+001926  .\tes\b-valores_rendicion.r
+001922  .\tes\b-comprobante_rendicion-adm.r
+001918  .\afi\b-rendicion_adm.r
+001916  .\PAU\v-resumen.r
+001593  .\PAU\b.r
+001447  .\PAU\q-domicilio.r
+001436  .\bas\p-updspa.r
+001432  .\fac\b-cliente_contacto.r
+001430  .\fac\v-cliente_contacto_sindir.r
+001428  .\PAU\vo-administraciones.r
+001417  .\bas\p-updspa.r
+001406  .\bas\p-updspa.r
+001404  .\opr\v-canal.r
+001400  .\opr\b-canal.r
+001398  .\PAU\v-administrador.r
+001393  .\PAU\b-administracion.r
+001390  C:\Progress102\OpenEdge\gui\adm\objects\folder.r
+001387  .\PAU\w-administraciones.r
+001266  .\bas\p-soloedita.r
+001261  .\cpy\v-tarea-red11.r
+001258  .\cpy\v-temp_tarea1.r
+001256  .\cpy\v-tarea-red2.r
+001255  .\PAU\q-cliente.r
+001247  .\bas\p-soloedita.r
+001242  .\cpy\v-tarea-redsolotel.r
+001239  .\cpy\v-temp_tarea1.r
+001231  .\cpy\b-tareas-red.r
+001227  C:\Progress102\OpenEdge\gui\adm\objects\folder.r
+001224  C:\Progress102\OpenEdge\gui\adm\objects\broker.r
+001039  .\bas\pure4gltv.r
+001021  .\bas\sfavoritos.r
+001013  C:\Progress102\OpenEdge\gui\adm2\containr.r
+001011  C:\Progress102\OpenEdge\gui\adm2\visual.r
+001006  C:\Progress102\OpenEdge\gui\adm2\smart.r
+001002  .\bas\Winfunc.r
+001001  .\bas\Windows.r
+
+//=====================================================
+PROGRESS stack trace as of Fri Apr 17 09:50:43 2020
+//=====================================================
+Exception code: C0000005 ACCESS_VIOLATION
+Fault address:  1013DE36 01:0013CE36 C:\Progress102\OpenEdge\bin\prow32.dll
+
+Registers:
+EAX:00000000
+EBX:02096FA0
+ECX:00000000
+EDX:00000001
+ESI:00000000
+EDI:00000000
+CS:EIP:0023:1013DE36
+SS:ESP:002B:0018E300  EBP:02096FC8
+DS:002B  ES:002B  FS:0053  GS:002B
+Flags:00210202
+
+Call Stack:
+Address   Frame
+1013DE36  0018E30C  DllStartup+C69A6
+102B9514  0018E314  pam_get_item+B4534
+1013BE31  0018E354  DllStartup+C49A1
+10252520  0018E39C  pam_get_item+4D540
+10467782  0018E450  wwProxInterfaceReadIcon+24EB2
+104997D1  0018E50C  utConvertToIx+7861
+02186530  0018E604  0001:00005530 c:\PROGRE~1\OpenEdge\bin\prox.dll
+721E030A  0018E6AC  Ordinal4036+1F9
+72210AA4  0018E700  Ordinal2797+91
+72210B18  0018E714  Ordinal2795+19
+72210E54  0018E738  Ordinal2794+232
+7221131B  0018E758  Ordinal4788+3A
+72163B7D  0018E7E4  Ordinal5163+41A
+72163687  0018E80C  Ordinal6374+2E
+7220D42D  0018E834  Ordinal6370+12F
+0235AB6F  0018E8CC  DllUnregisterServer+934F
+7216A2B9  0018E8F0  Ordinal1578+40
+0235C796  0018E91C  DllUnregisterServer+AF76
+76B362FA  0018E948  gapfnScSendMessage+332
+76B36D3A  0018E9C0  GetThreadDesktop+D7
+76B40D3F  0018E9F8  GetClientRect+C5
+76B40D65  0018EA18  CallWindowProcW+1B
+1046D941  0018EA80  wwProxInterfaceReadIcon+2B071
+76B4A04D  0018EAA8  ExcludeUpdateRgn+146
+7C28098C  0018ED2C  0001:0002F98C C:\Windows\system32\MFC71U.DLL
+76B36D3A  0018ED70  GetThreadDesktop+D7
+76B36CE9  0018EDA4  GetThreadDesktop+86
+76B377C4  0018EE04  CharPrevW+138
+76B3788A  0018EE14  DispatchMessageW+F
+7C283587  0018EE24  0001:00032587 C:\Windows\system32\MFC71U.DLL
+7C256E6C  0018EEA8  0001:00005E6C C:\Windows\system32\MFC71U.DLL
+

@@ -1,0 +1,21 @@
+INPUT FROM c:\p20111001.txt NO-ECHO.
+DEFINE TEMP-TABLE tt
+FIELD nn AS INT.
+DEFINE VAR nro AS INT.
+DEFINE VAR p1 AS DECIMAL.
+DEFINE VAR p AS DECIMAL.
+REPEAT :
+    SET nro p.
+    FIND contrato_hd WHERE contrato_hd.nro_contrato = nro.
+    FIND cliente OF contrato_hd.
+    FIND tt WHERE tt.nn = cliente.nro_admin NO-ERROR.
+    IF NOT AVAILABLE tt THEN DO:
+        CREATE tt.
+        ASSIGN tt.nn = cliente.nro_admin.
+    END.
+    END.
+OUTPUT TO c:\admaumentos.txt.
+FOR EACH tt:
+FIND cliente WHERE cliente.nro_cliente = nn.
+export cliente.nom_cli cliente.direccion cliente.cdg_postal cliente.localidad .
+END.

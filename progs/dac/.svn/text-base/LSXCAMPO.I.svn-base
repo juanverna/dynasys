@@ -1,0 +1,163 @@
+/*===================================================================================*/
+/*  Emite el listado de servicios prestados agrupados por algun campo codificado     */
+/*===================================================================================*/
+
+DEFINE VARIABLE tr  AS INTEGER.
+DEFINE VARIABLE ctr AS CHARACTER LABEL "T.Resp.".
+DEFINE VARIABLE que_{&TABLA} LIKE {&TABLA}.{&CODIGO-TABLA} LABEL "{&TABLA}".
+DEFINE VARIABLE chr_{&TABLA} LIKE {&TABLA}.{&NOMBRE-TABLA}.
+
+{defvarcolores.i}
+
+DEFINE VARIABLE  hms_despacho     AS CHARACTER COLUMN-LABEL "Hora!Despacho".
+DEFINE VARIABLE  hms_salbase      AS CHARACTER COLUMN-LABEL "Salida!de Base".
+DEFINE VARIABLE  hms_demsalbas    AS CHARACTER COLUMN-LABEL "Demora!Sal.Base".
+DEFINE VARIABLE  hms_arrdom       AS CHARACTER COLUMN-LABEL "Arribo!Domic.".
+DEFINE VARIABLE  hms_disponible   AS CHARACTER COLUMN-LABEL "Hora!Disponible". 
+DEFINE VARIABLE  hms_tieocup      AS CHARACTER COLUMN-LABEL "Tiempo!Ocupac.".
+DEFINE VARIABLE  hms_tieres       AS CHARACTER COLUMN-LABEL "Tiempo!Respta.".
+
+DEFINE VARIABLE tot_fichas   AS INTEGER.
+
+DEFINE FRAME frm-titulo HEADER
+  que_empresa 
+  "{&TITULO-LST}" AT 42 
+  "Pagina:" AT 101 PAGE-NUMBER FORMAT ">9" AT 108
+  SKIP
+  "Empresas:"
+  lista_empresas
+  des_fecha AT 42
+  "al"
+  has_fecha
+  fecha_lis AT 101
+  SKIP
+  chr_{&TABLA} AT 42
+  hora_lis AT 101
+  SKIP(1)
+  WITH WIDTH 132 FRAME frm-titulo TOP-ONLY PAGE-TOP STREAM-IO.
+
+FORM
+  Ficha.fch_alta 
+  Ficha.num_ficha 
+  Ficha.cdg_tipoemr VIEW-AS FILL-IN
+  Ficha.hms_alta 
+  hms_despacho
+  hms_salbase
+  hms_demsalbas
+  hms_arrdom
+  hms_disponible
+  hms_tieocup
+  hms_tieres
+  Ficha.cdg_movil       COLUMN-LABEL "Mov"
+  Ficha.cdg_proveedor   COLUMN-LABEL "(M)"
+  Ficha.cdg_destino     COLUMN-LABEL "Dst"
+  Ficha.cdg_cliente     COLUMN-LABEL "(W)"
+  WITH WIDTH 232 DOWN CENTERED FRAME frm-listado USE-TEXT STREAM-IO.
+
+UPDATE des_fecha has_fecha que_{&TABLA} lista_empresas
+       WITH FRAME aa SIDE-LABELS THREE-D VIEW-AS DIALOG-BOX WIDTH 90
+            TITLE "Ingrese parametros del listado {&TITULO-LST}".
+
+{setvarimpre.i}
+
+FIND {&TABLA} WHERE {&TABLA}.{&CODIGO-TABLA} = que_{&TABLA} NO-LOCK.
+ASSIGN chr_{&TABLA} = {&TABLA}.{&NOMBRE-TABLA}.
+
+{drsalida.i "65"} /* Direcciona la salida de impresión */
+
+FOR EACH Ficha 
+    WHERE Ficha.fch_alta <= has_fecha 
+      AND Ficha.fch_alta >= des_fecha
+      AND Ficha.{&CODIGO-FICHA} = que_{&TABLA}
+      AND LOOKUP(Ficha.cdg_empresa,lista_empresas) <> 0 
+      AND Ficha.cdg_destino <> "A" NO-LOCK 
+      BREAK BY Ficha.fch_alta 
+            BY Ficha.cdg_tipoemr
+            BY Ficha.num_ficha WITH FRAME f-datos:
+
+    VIEW FRAME frm-titulo.
+
+    hms_despacho      = STRING(Ficha.hor_despacho,"HH:MM:SS").
+    hms_salbase       = STRING(Ficha.hor_salbase,"HH:MM:SS").
+    hms_demsalbas     = IF Ficha.hor_salbase > Ficha.hor_despacho 
+                           THEN STRING(Ficha.hor_salbase - Ficha.hor_despacho,"HH:MM:SS")
+                           ELSE STRING(86400 + Ficha.hor_salbase - Ficha.hor_despacho,"HH:MM:SS").
+    hms_arrdom        = STRING(Ficha.hor_arrdom,"HH:MM:SS").
+    hms_disponible    = STRING(Ficha.hor_disponible,"HH:MM:SS").
+    hms_tieocup       = IF Ficha.hor_disponible > Ficha.hor_arrdom
+                           THEN STRING(Ficha.hor_disponible - Ficha.hor_arrdom,"HH:MM:SS")
+                           ELSE STRING(86400 + Ficha.hor_disponible - Ficha.hor_arrdom,"HH:MM:SS").
+    hms_tieres        = IF Ficha.hor_arrdom > Ficha.hor_alta
+                           THEN STRING(Ficha.hor_arrdom - Ficha.hor_alta,"HH:MM:SS")
+                           ELSE STRING(86400 + Ficha.hor_arrdom - Ficha.hor_alta,"HH:MM:SS").
+
+    tot_fichas = tot_fichas + 1.
+
+    DISPLAY Ficha.fch_alta   WHEN FIRST-OF(Ficha.fch_alta)
+            Ficha.cdg_tipoemr VIEW-AS FILL-IN
+            Ficha.num_ficha 
+            Ficha.hms_alta 
+            hms_despacho
+            hms_salbase
+            hms_demsalbas
+            hms_arrdom
+            hms_disponible
+            hms_tieocup
+            hms_tieres
+            Ficha.cdg_movil 
+            Ficha.cdg_proveedor 
+            Ficha.cdg_destino 
+            Ficha.cdg_cliente 
+            WITH FRAME frm-listado.
+            
+    DOWN WITH FRAME frm-listado.        
+END.            
+
+UNDERLINE
+      Ficha.fch_alta
+      Ficha.cdg_tipoemr
+      Ficha.num_ficha 
+      Ficha.hms_alta 
+      hms_despacho
+      hms_salbase
+      hms_demsalbas
+      hms_arrdom
+      hms_disponible
+      hms_tieocup
+      hms_tieres
+      Ficha.cdg_movil 
+      Ficha.cdg_proveedor 
+      Ficha.cdg_destino 
+      Ficha.cdg_cliente 
+      WITH FRAME frm-listado.
+
+DISPLAY
+      tot_fichas @ Ficha.num_ficha
+      "TOTAL"    @ Ficha.fch_alta
+      WITH FRAME frm-listado.
+
+UNDERLINE
+      Ficha.fch_alta
+      Ficha.cdg_tipoemr
+      Ficha.num_ficha 
+      Ficha.hms_alta 
+      hms_despacho
+      hms_salbase
+      hms_demsalbas
+      hms_arrdom
+      hms_disponible
+      hms_tieocup
+      hms_tieres
+      Ficha.cdg_movil 
+      Ficha.cdg_proveedor 
+      Ficha.cdg_destino 
+      Ficha.cdg_cliente 
+      WITH FRAME frm-listado.
+
+OUTPUT CLOSE.
+
+   /* Visualiza en pantalla el archivo de salida */
+
+RUN veresult.w ( INPUT  arch_salida ,  /* Archivo */
+                 INPUT 8 ).            /* FONT a utilizar por default */               
+            

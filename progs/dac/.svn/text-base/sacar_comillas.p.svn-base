@@ -1,0 +1,8 @@
+for each ficha where fch_alta = 02/28/01:
+
+   if substring(nombre_pac,1,1) = '"'
+      then nombre_pac = substring(nombre_pac,2).
+      
+   if substring(nombre_pac,length(nombre_pac),1) = '"'
+      then nombre_pac = substring(nombre_pac, 1 , length(nombre_pac) - 1 ).
+      

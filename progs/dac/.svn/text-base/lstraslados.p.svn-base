@@ -1,0 +1,45 @@
+DEFINE VAR v-param AS CHAR.
+DEFINE VAR v-filtr AS CHAR.
+
+DEFINE VAR chdesde AS CHAR.
+DEFINE VAR chhasta AS CHAR.
+DEFINE VAR filtr   AS CHAR.
+
+DEFINE VAR desde AS DATE LABEL "Desde".
+DEFINE VAR hasta AS DATE LABEL "Hasta".
+
+UPDATE desde hasta SKIP WITH SIDE-LABELS FRAME
+    a VIEW-AS DIALOG-BOX THREE-D TITLE "Indique fechas".
+
+RUN rbfecha.p (INPUT desde, OUTPUT chdesde).
+RUN rbfecha.p (INPUT hasta, OUTPUT chhasta).
+
+v-param = "desde = " + STRING(desde,"99/99/99") + "~n" +
+          "hasta = " + STRING(hasta,"99/99/99") + "~n".
+
+v-filtr = "fch_alta >= " + chdesde + " AND " +
+          "fch_alta <= " + chhasta + " AND derivada = NO".
+
+RUN exreport.p (INPUT "raséc.prl",
+                INPUT "Traslados-con",
+                INPUT v-filtr,
+                INPUT "D",
+                INPUT SESSION:PRINTER-NAME,
+                INPUT v-param).
+
+MESSAGE "¡Todavía sigo pensando!" VIEW-AS ALERT-BOX WARNING TITLE "Aunque no lo creas...".
+
+v-filtr = "fch_alta >= " + chdesde + " AND " +
+          "fch_alta <= " + chhasta + " AND " +
+          "derivada = NO AND " +
+          "cdg_destino <> 'a' AND Ficha.cdg_hospital ='' AND " +
+          "(cdg_destino = 'x' OR cdg_destino = 'b' " +
+          "OR cdg_destino = 'c' OR cdg_destino = 'e' " +
+          "OR cdg_destino = 'l' OR cdg_destino = 'm' OR cdg_tipoemr = '4')".
+
+RUN exreport.p (INPUT ".\raséc.prl",
+                INPUT "Traslados-sin",
+                INPUT v-filtr,
+                INPUT "D",
+                INPUT SESSION:PRINTER-NAME,
+                INPUT v-param).

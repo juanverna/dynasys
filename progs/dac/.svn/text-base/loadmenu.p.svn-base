@@ -1,0 +1,5 @@
+INPUT FROM ".\procs\menu.txt".
+REPEAT:
+  CREATE Menu.
+  IMPORT DELIMITER "," Menu.
+END.  

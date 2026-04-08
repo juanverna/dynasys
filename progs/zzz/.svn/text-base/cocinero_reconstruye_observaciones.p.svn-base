@@ -1,0 +1,70 @@
+/*revision de fecha de las observaciones*/
+DEFINE TEMP-TABLE tttexto 
+    FIELD tfecha AS DATETIME LABEL "Fecha" FORMAT "99/99/9999 HH:MM"
+    FIELD tusuario AS CHAR LABEL "Usuario" FORMAT "X(12)"
+    FIELD ttexto  LIKE tarea.descripcion
+    INDEX por_fecha tfecha DESCENDING.
+
+
+PROCEDURE armatexto:
+ DEFINE INPUT PARAMETER p-texto AS CHARACTER.
+  DEFINE VAR gformat AS char NO-UNDO.
+  DEFINE VAR i AS INT NO-UNDO.
+  DEFINE VAR ttemp AS CHAR NO-UNDO.
+
+  DEFINE VAR brw AS HANDLE NO-UNDO.
+DEFINE VAR tempfecha AS DATETIME NO-UNDO.
+  /*armamos temptable con el texto*/
+    gformat = SESSION:DATE-FORMAT.
+    
+    /*
+    El separador de registro "·" y el separador de campo "|".
+    */
+    EMPTY TEMP-TABLE tttexto.
+    IF NUM-ENTRIES(p-texto , "|" ) = 1  THEN DO: /*es la version monoobservacion*/
+        CREATE tttexto.
+        SESSION:DATE-FORMAT = "ymd".
+        ASSIGN tttexto.tfecha = tarea.fecha_alta
+               tttexto.tusuario = "Desconocido"   
+               tttexto.ttexto = p-texto NO-ERROR.
+    END.
+    ELSE 
+    DO i = 1 TO NUM-ENTRIES(p-texto , "·" ):
+        ttemp = ENTRY( i , p-texto, "·" ).
+        IF NUM-ENTRIES(ttemp,"|") <> 3 THEN NEXT.
+        
+        SESSION:DATE-FORMAT = "ymd".
+        tempfecha = DATETIME( ENTRY(1,ttemp,"|")) NO-ERROR.
+        IF ERROR-STATUS:ERROR THEN DO:
+            SESSION:DATE-FORMAT = "dmy".
+            tempfecha = DATETIME( ENTRY(1,ttemp,"|")) NO-ERROR.
+            IF ERROR-STATUS:ERROR THEN DO:
+                SESSION:DATE-FORMAT = "ymd".
+                MESSAGE "Error en la conversion de los datos observacion" skip
+                        "avise inmediatamente " skip
+                         "[" ENTRY(1,ttemp,"|") "]" VIEW-AS ALERT-BOX ERROR.
+                UNDO, NEXT.
+            END.
+        END.
+        FIND tttexto WHERE tttexto.tfecha = tempfecha NO-ERROR.
+        IF NOT AVAILABLE tttexto THEN DO:
+            CREATE tttexto.
+            ASSIGN tttexto.tfecha = tempfecha
+                   tttexto.tusuario = ENTRY(2,ttemp,"|").   
+                   tttexto.ttexto = REPLACE(ENTRY(3,ttemp,"|"),CHR(13),chr(9)) NO-ERROR.
+        END.
+    END.
+    SESSION:DATE-FORMAT = gformat.
+END.
+FOR EACH tarea:
+    SESSION:DATE-FORMAT = "dmy".
+    RUN armatexto(tarea.descripcion).
+    SESSION:DATE-FORMAT = "ymd".
+    tarea.descripcion = "".
+    FOR EACH TTtexto:
+          tarea.descripcion = tarea.descripcion + (IF length(TRIM(tarea.descripcion)) > 0 THEN "·" ELSE "") + string(tttexto.tfecha) + "|" + tttexto.tusuario +
+                    "|" + tttexto.ttexto.
+    END.
+    
+
+END.

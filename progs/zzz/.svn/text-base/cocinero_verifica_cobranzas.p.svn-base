@@ -1,0 +1,48 @@
+
+DEFINE BUFFER administrador FOR cliente.
+DEFINE VAR p-vencimiento AS DATE.
+DEFINE VAR prest AS CHAR.
+DEFINE VAR daux AS DATE.
+DEFINE VAR cc AS LOGICAL.
+DEFINE VAR ce AS LOGICAL.
+DEFINE VAR fmin AS DATE NO-UNDO.
+DEFINE VAR fmax AS DATE NO-UNDO.
+{findempresa.i}
+p-vencimiento = DATE( MONTH( TODAY ) , 1 , YEAR( TODAY )).
+p-vencimiento = DATE( MONTH( p-vencimiento + 32 ),1,YEAR( p-vencimiento + 31 )).
+p-vencimiento = p-vencimiento - 1.
+
+/*borrar los eventos no asignados anteriores*/
+FIND tipo_evento WHERE tipo_evento.cdg_tipo_evento = "CO".
+FOR EACH evento OF tipo_evento WHERE frealizado = ? AND ( fasignado = ? OR fasignado < TODAY ) AND NOT anulado:
+    DELETE evento.
+END.
+FOR EACH Administrador  
+    WHERE  CAN-DO(Administrador.lista_empresas,empresa.cdg_empresa):
+
+prest="FECHAC".
+    FIND restriccion OF tipo_evento WHERE restriccion.cdg_restriccion = prest NO-LOCK NO-ERROR.
+    IF NOT AVAILABLE restriccion THEN DO:
+        MESSAGE "No se encuentra restriccion " + prest VIEW-AS ALERT-BOX.
+    END.
+    FIND cliente_restriccion OF administrador 
+          WHERE cliente_restriccion.nro_restriccion = restriccion.nro_restriccion NO-LOCK NO-ERROR.
+    IF available cliente_restriccion THEN do:
+            daux = DATE(ENTRY(2,cliente_restriccion.valor,"|")) NO-ERROR.
+
+            IF daux <> ? THEN DO:
+                IF daux > TODAY THEN DO:
+                        fmin = daux.
+                        fmax = daux.
+                        ce = true.
+                    
+                    FIND FIRST tarea WHERE tarea.cdg_tipotarea="C" AND tarea.estado = "A" AND tarea.nro_admin = administrador.nro_cliente NO-ERROR.
+                    IF AVAILABLE tarea THEN next.
+                    FIND FIRST evento WHERE evento.nro_cliente = administrador.nro_cliente AND (fasignado=? OR MONTH(fasignado) = MONTH(TODAY)) AND NOT anulado 
+AND evento.nro_tipo_evento = tipo_evento.nro_tipo_evento NO-LOCK NO-ERROR.
+                    IF AVAILABLE evento THEN next.
+                    DISPLAY administrador.cdg_cliente daux.       
+                END.
+            END.
+    END.
+END. 

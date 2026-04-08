@@ -1,0 +1,15 @@
+IF CAN-FIND(FIRST Empresa WHERE Empresa.cdg_empresa = "T" )
+THEN DO:
+    lista_empresas = "T,".
+    FOR EACH Empresa WHERE Empresa.cdg_empresa <> "T":
+        lista_empresas = lista_empresas + Empresa.cdg_empresa + ",".
+    END.
+    lista_empresas = SUBSTRING(lista_empresas,1,LENGTH(lista_empresas) - 1 ).
+END.
+ELSE DO:
+    lista_empresas = "".
+    FOR EACH Empresa:
+        lista_empresas = lista_empresas + Empresa.cdg_empresa + ",".
+    END.
+    lista_empresas = SUBSTRING(lista_empresas,1,LENGTH(lista_empresas) - 1 ).
+END.

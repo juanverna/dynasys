@@ -1,0 +1,48 @@
+      eeeeee
+       DEFINE VAR k AS INT NO-UNDO.
+       DEFINE VAR cc AS INT NO-UNDO.
+       UPDATE cc.
+       FIND contrato_hd WHERE contrato_hd.nro_contrato = cc NO-LOCK NO-ERROR.
+       IF NOT AVAILABLE contrato_hd THEN RETURN.
+       FIND cliente OF contrato_hd.
+       FIND cliente_otros_datos OF cliente NO-ERROR.
+       DO k = 1 TO contrato_hd.numero_eventos:
+           FIND FIRST evento WHERE evento.origen = "contrato" AND evento.nro_identificacion = contrato_hd.nro_contrato NO-ERROR.
+           IF NOT AVAILABLE evento THEN  DO:
+              CREATE evento.
+              ASSIGN 
+                  evento.origen = "CONTRATO"
+                  Evento.Duracion = IF contrato_hd.nro_tipo_evento = 1 THEN 90 ELSE 240
+                  Evento.FAsignado = ?
+                  Evento.FRealizado = ?
+                  Evento.FCreado = TODAY
+                  evento.fmin = date(month(contrato_hd.rige_desde),1,YEAR(contrato_hd.rige_desde))
+                  evento.fmax = date(month(contrato_hd.rige_desde),30,YEAR(contrato_hd.rige_desde))
+                  Evento.nro_evento = NEXT-VALUE(proximo_evento)
+                  Evento.nro_evento_padre = 0
+                  Evento.nro_identificacion = contrato_hd.nro_contrato
+                  Evento.Recursos = ""
+                  evento.sub_evento = k
+                  evento.evaluar = true
+                  evento.nro_cliente = contrato_hd.nro_cliente
+                  Evento.nro_tipo_evento = contrato_hd.nro_tipo_evento
+                  evento.observacion = contrato_hd.observacion
+                  evento.leyenda = ""
+                  evento.reminder = contrato_hd.reminder
+                  Evento.dreminder = contrato_hd.dreminder.
+                  FIND FIRST cliente_otros_datos of cliente NO-LOCK NO-ERROR.
+                  /********************************
+                  PERDON PERO NO SE ME OCURRE NADA MEJOR
+                  ********************************/
+                  IF contrato_hd.nro_tipo_evento = 3 THEN DO:
+                  
+                      IF AVAILABLE cliente_otros_datos AND contrato_hd.nro_tipo_evento <> 1 THEN DO:
+                        evento.leyenda = evento.leyenda + ( IF evento.leyenda <> "" THEN "-" ELSE "" ) +  cliente_otros_datos.observacion.
+                        evento.leyenda = evento.leyenda + ( IF evento.leyenda <> "" THEN "-" ELSE "" ) +  IF cliente_otros_datos.tanques <> 0 THEN "Tanques:" + string(cliente_otros_datos.tanques) ELSE "".
+                      END.
+                  END. /*si ya se es un asco!!!!*/
+           END.
+       END.
+       FOR EACH evento WHERE evento.origen = "contrato" AND evento.nro_identificacion = contrato_hd.nro_contrato:
+           Evento.nro_tipo_evento = contrato_hd.nro_tipo_evento .
+       END.

@@ -1,0 +1,19 @@
+{tt2xls.i}
+DEFINE VAR periodo AS INT.
+DEFINE TEMP-TABLE tt
+FIELDS periodo AS INT FORMAT "999999"
+FIELDS cant AS INT.
+
+FOR EACH evento_protocolo WHERE estado = "I" BREAK BY fecha_analisis :
+    FIND tt WHERE tt.periodo = YEAR(fecha_analisis) * 100 + MONTH(fecha_analisis) NO-ERROR.
+    IF NOT AVAILABLE tt THEN DO:
+            CREATE tt.
+            tt.periodo = YEAR(fecha_analisis) * 100 + MONTH(fecha_analisis).
+    END.
+    tt.cant = tt.cant + 1.
+END.
+RUN pTT2XLS                                                              
+  ( INPUT TEMP-TABLE tt:DEFAULT-BUFFER-HANDLE,                       
+    INPUT 'c:\a.xls',                                               
+    INPUT 'PageSetup:PrintGridlines=Y|PageSetup:PrintTitleRows=$1:$1' ). 
+

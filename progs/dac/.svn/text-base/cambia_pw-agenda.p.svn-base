@@ -1,0 +1,57 @@
+/*==========================================================================================*/
+/*                     CAMBIA EL PASSWROD DE UNA AGENDA TELEFONICA                          */
+/*==========================================================================================*/
+
+DEFINE INPUT PARAMETER rid_agenda AS ROWID.
+
+DEFINE VARIABLE pw-1   AS CHARACTER.
+DEFINE VARIABLE pw-2   AS CHARACTER.
+DEFINE VARIABLE pw-old AS CHARACTER.
+
+FORM 
+   pw-old BLANK  AT ROW 1.75 COL 15 COLON-ALIGNED
+          VIEW-AS FILL-IN 
+          SIZE 12 BY .75
+          BGCOLOR 15 FGCOLOR 1 
+          LABEL "Actual"
+   pw-1   BLANK  AT ROW 2.75 COL 15 COLON-ALIGNED
+          VIEW-AS FILL-IN 
+          SIZE 12 BY .75
+          BGCOLOR 15 FGCOLOR 1 
+          LABEL "Nuevo"
+   pw-2   BLANK  AT ROW 3.75 COL 15 COLON-ALIGNED
+          VIEW-AS FILL-IN 
+          SIZE 12 BY .75
+          BGCOLOR 15 FGCOLOR 1 
+          NO-LABEL
+   SKIP(1)       
+   WITH FRAME f-password SIDE-LABELS THREE-D TITLE "Indique claves" VIEW-AS DIALOG-BOX
+        WIDTH 40.
+
+FIND FIRST Agenda WHERE ROWID(Agenda) = rid_agenda EXCLUSIVE-LOCK.
+
+DO:
+
+    UPDATE 
+        pw-old 
+        pw-1   
+        pw-2
+        WITH FRAME f-password.
+
+    IF ENCODE(pw-old) <> Agenda.clave
+    THEN DO:
+         MESSAGE "Clave Incorrecta" VIEW-AS ALERT-BOX ERROR TITLE "ERROR".
+         UNDO,RETRY.
+    END.
+    ELSE DO:
+         IF pw-1 <> pw-2
+         THEN DO:
+              MESSAGE "Claves nuevas no coinciden" VIEW-AS ALERT-BOX ERROR TITLE "ERROR".
+              UNDO,RETRY.
+         END.
+         ELSE DO:
+             Agenda.clave = ENCODE(pw-1).
+              MESSAGE "La Clave ha sido cambiada" VIEW-AS ALERT-BOX MESSAGE TITLE "Clave Aceptada".
+         END. 
+    END.
+END.

@@ -1,0 +1,20 @@
+FOR EACH  sub_header_vta WHERE sub_header_vta.fecha >= 01/01/2011 AND sub_header_vta.fecha <= 01/31/2011:
+    FOR EACH sub_detalle_vta OF sub_header_vta:
+        DELETE sub_detalle_vta.
+    END.
+    DELETE sub_header_vta.
+END.
+
+FOR EACH fac_header WHERE fac_header.fecha >= 01/01/2011 AND fac_header.fecha <= 01/31/2011:
+    FIND tipocomprobante OF fac_header NO-LOCK NO-ERROR.
+    IF NOT AVAILABLE tipocomprobante THEN
+            IF prf_comprob = 1 THEN fac_header.cdg_comprobante = "FACTUCLI" .
+    ELSE "FACTUCLM".
+    RUN reimputar_comprobante_cliente.p (ROWID(fac_header)).
+END.
+
+
+
+
+
+

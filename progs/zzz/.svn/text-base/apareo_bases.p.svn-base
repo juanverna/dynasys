@@ -1,0 +1,7 @@
+FOR EACH paulista.evento WHERE paulista.evento.refevento <> 0 AND NOT paulista.evento.anulado :
+FIND sic.evento WHERE sic.evento.nro_evento = paulista.evento.nro_evento NO-ERROR.
+IF NOT AVAILABLE sic.evento THEN DO:
+        CREATE sic.evento.
+        RAW-TRANSFER paulista.evento TO sic.evento.
+END.
+END.

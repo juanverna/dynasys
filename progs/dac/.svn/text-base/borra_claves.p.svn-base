@@ -1,0 +1,3 @@
+FOR EACH Empleado EXCLUSIVE-LOCK:
+    matricula = ENCODE("").
+END.    

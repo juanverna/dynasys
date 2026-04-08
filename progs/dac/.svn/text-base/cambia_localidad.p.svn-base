@@ -1,0 +1,12 @@
+def var desde like localidad.cdg_localidad column-label  "Desde!Codigo".
+def var hasta like localidad.cdg_localidad column-label  "Desde!Codigo".
+def var c as integer column-label  "Cambios!Hechos".
+repeat:
+  update desde hasta.
+  c = 0.
+  for each hospital where cdg_localidad = "X" + desde:
+      cdg_localidad = hasta.
+      c = c + 1.
+  end.
+  display c column-label "cambios".
+end .

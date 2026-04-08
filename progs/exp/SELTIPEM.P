@@ -1,0 +1,9 @@
+&GLOBAL-DEFINE TABLA           Tipo_embarque
+&GLOBAL-DEFINE CODIGO          cdg_embarque  
+&GLOBAL-DEFINE NOMBRE          descripcion
+&GLOBAL-DEFINE TITULO-BROWSE   Seleccione el Tipo de Embarque o ingrese nombre
+&GLOBAL-DEFINE TITULO-FRAME    Seleccion de Tipos de Embarque
+&GLOBAL-DEFINE PROCESO         ACBRWTEM
+&GLOBAL-DEFINE ULT_REGISTRO    ult_tipo_embarque
+
+{SELBROWS.I}

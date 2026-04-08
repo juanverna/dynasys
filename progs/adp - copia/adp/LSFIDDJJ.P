@@ -1,0 +1,223 @@
+/*============================================================================================*/
+/*                     EMITE EL LISTADO DE LAS DECLARACIONES DE GANANCIAS                     */
+/*============================================================================================*/
+
+DEFINE INPUT PARAMETER p-rid_empleado   AS ROWID.
+DEFINE INPUT PARAMETER p-ano            AS INTEGER.
+
+{VRSHARED.I}
+{VPERSINM.I}
+
+{DFVRNEMP.I }
+{DFVARSEL.I }
+
+DEFINE VARIABLE todos       AS LOGICAL.     
+DEFINE VARIABLE nm          AS INTEGER.     
+DEFINE VARIABLE j           AS INTEGER.     
+DEFINE VARIABLE fecha_lis   AS DATE.     
+DEFINE VARIABLE hora_lis    AS CHARACTER.
+DEFINE VARIABLE titulo_lst  AS CHARACTER FORMAT "X(50)".
+DEFINE VARIABLE titulo_det  AS CHARACTER FORMAT "X(50)".
+DEFINE VARIABLE que_empresa LIKE Empresa.nombre.
+DEFINE VARIABLE arch_salida AS CHARACTER.
+
+DEFINE VARIABLE v-nomrubro AS CHARACTER FORMAT "X(15)" LABEL "Rubro DD JJ".
+DEFINE VARIABLE v-importe  AS DECIMAL FORMAT "->>>>>>9.99" EXTENT 12
+       LABEL "Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre".
+
+DEFINE TEMP-TABLE Ficha-ddjj
+  FIELD nro_empleado         LIKE Empleado-ddjj.nro_empleado
+  FIELD ano                  LIKE Empleado-ddjj.ano                 EXTENT 12
+  FIELD a-favor-dgi          LIKE Empleado-ddjj.a-favor-dgi         EXTENT 12
+  FIELD a-favor-empi         LIKE Empleado-ddjj.a-favor-empi        EXTENT 12
+  FIELD aportes              LIKE Empleado-ddjj.aportes             EXTENT 12
+  FIELD conyuge              LIKE Empleado-ddjj.conyuge             EXTENT 12
+  FIELD difer12              LIKE Empleado-ddjj.difer12             EXTENT 12
+  FIELD difer34              LIKE Empleado-ddjj.difer34             EXTENT 12
+  FIELD difer56              LIKE Empleado-ddjj.difer56             EXTENT 12 
+  FIELD donaciones           LIKE Empleado-ddjj.donaciones          EXTENT 12
+  FIELD especial             LIKE Empleado-ddjj.especial            EXTENT 12
+  FIELD ganancias            LIKE Empleado-ddjj.ganancias           EXTENT 12
+  FIELD ganancias_netas      LIKE Empleado-ddjj.ganancias_netas     EXTENT 12
+  FIELD ganancias_otras      LIKE Empleado-ddjj.ganancias_otras     EXTENT 12
+  FIELD hijos                LIKE Empleado-ddjj.hijos               EXTENT 12
+  FIELD movilidad            LIKE Empleado-ddjj.movilidad           EXTENT 12
+  FIELD no-imponible         LIKE Empleado-ddjj.no-imponible        EXTENT 12
+  FIELD obrasoc              LIKE Empleado-ddjj.obrasoc             EXTENT 12
+  FIELD otras                LIKE Empleado-ddjj.otras               EXTENT 12
+  FIELD otras-cargas         LIKE Empleado-ddjj.otras-cargas        EXTENT 12
+  FIELD promocion            LIKE Empleado-ddjj.promocion           EXTENT 12
+  FIELD seguros              LIKE Empleado-ddjj.seguros             EXTENT 12
+  FIELD sepelios             LIKE Empleado-ddjj.sepelios            EXTENT 12
+  FIELD total1               LIKE Empleado-ddjj.total1              EXTENT 12
+  FIELD total2               LIKE Empleado-ddjj.total2              EXTENT 12
+  FIELD total6               LIKE Empleado-ddjj.total6              EXTENT 12
+  FIELD total9               LIKE Empleado-ddjj.total9              EXTENT 12
+  FIELD total_impuesto       LIKE Empleado-ddjj.total_impuesto      EXTENT 12
+  FIELD total_retenido       LIKE Empleado-ddjj.total_retenido      EXTENT 12.
+
+{WGLISTAR.I}
+
+DEFINE FRAME frm-titulo HEADER
+  que_empresa FORMAT "X(25)"
+  titulo_lst AT 60
+  "Página:" AT 150 PAGE-NUMBER FORMAT ">9" AT 158
+  SKIP  
+  fecha_lis       
+  titulo_det AT 60  
+  hora_lis AT 150
+  SKIP(1)
+  WITH WIDTH 196 FRAME frm-titulo PAGE-TOP USE-TEXT STREAM-IO.
+
+DEFINE FRAME frm-listado
+  v-nomrubro
+  v-importe [  1 ]  
+  v-importe [  2 ]  
+  v-importe [  3 ]  
+  v-importe [  4 ]  
+  v-importe [  5 ]  
+  v-importe [  6 ]  
+  v-importe [  7 ]  
+  v-importe [  8 ]  
+  v-importe [  9 ]  
+  v-importe [ 10 ]  
+  v-importe [ 11 ]  
+  v-importe [ 12 ]  
+  WITH WIDTH 196 FRAME frm-listado USE-TEXT STREAM-IO DOWN.
+
+/*=================================================================================*/
+/*                          B L O Q U E   P R I N C I P A L                        */
+/*=================================================================================*/
+
+{SETIMPRE.I}
+
+RUN LISTAR.
+
+/*=================================================================================*/
+/*                           P R O C E D I M I E N T O S                           */
+/*=================================================================================*/
+
+PROCEDURE LISTAR:
+       
+  FIND Empresa WHERE ROWID(Empresa) = act_empresa NO-LOCK.
+  que_empresa = Empresa.nombre.
+
+  fecha_lis = TODAY.
+  hora_lis = STRING(TIME,"HH:MM:SS").
+  PAUSE 0.
+  mensaje = "    Procesando ...".        
+  DISPLAY mensaje WITH FRAME frm-espere.
+  
+  arch_salida = dire_tmp + "lsfiddjj.txt".
+  OUTPUT TO VALUE(arch_salida) PAGED.
+  RUN PONE_CODIGO ( INPUT "CARTA,SET17CPI,HORIZONT" ).
+
+  VIEW FRAME frm-titulo.
+  FIND Empleado WHERE ROWID(Empleado) = p-rid_empleado NO-LOCK.
+  titulo_lst = "Ficha de Retenciones 4a. Categoria".
+  titulo_det = STRING(Empleado.nro_legajo) + " - " + 
+               Empleado.nombre + " - Año " + STRING(p-ano,"9999").
+  CREATE Ficha-ddjj.
+  ASSIGN Ficha-ddjj.nro_empleado = Empleado.nro_empleado. 
+
+  nm = 0.
+  FOR EACH Empleado-ddjj OF Empleado 
+      WHERE Empleado-ddjj.ano = p-ano 
+        AND Empleado-ddjj.sec_liquidacion <> 0 NO-LOCK,
+            Liquidacion OF Empleado-ddjj NO-LOCK
+            BREAK BY Liquidacion.n_periodo 
+                  BY Empleado-ddjj.sec_liquidacion:
+
+      /*nm = Liquidacion.n_periodo.*/
+
+      IF FIRST(Liquidacion.n_periodo) 
+         THEN  nm = 1.
+         ELSE  nm = nm + 1.
+
+      ASSIGN
+          Ficha-ddjj.a-favor-dgi      [ nm ] = Ficha-ddjj.a-favor-dgi      [ nm ] + Empleado-ddjj.a-favor-dgi     
+          Ficha-ddjj.a-favor-empi     [ nm ] = Ficha-ddjj.a-favor-dgi      [ nm ] + Empleado-ddjj.a-favor-empi    
+          Ficha-ddjj.aportes          [ nm ] = Ficha-ddjj.aportes          [ nm ] + Empleado-ddjj.aportes         
+          Ficha-ddjj.conyuge          [ nm ] = Ficha-ddjj.conyuge          [ nm ] + Empleado-ddjj.conyuge         
+          Ficha-ddjj.difer12          [ nm ] = Ficha-ddjj.difer12          [ nm ] + Empleado-ddjj.difer12         
+          Ficha-ddjj.difer34          [ nm ] = Ficha-ddjj.difer34          [ nm ] + Empleado-ddjj.difer34         
+          Ficha-ddjj.difer56          [ nm ] = Ficha-ddjj.difer56          [ nm ] + Empleado-ddjj.difer56          
+          Ficha-ddjj.donaciones       [ nm ] = Ficha-ddjj.donaciones       [ nm ] + Empleado-ddjj.donaciones      
+          Ficha-ddjj.especial         [ nm ] = Ficha-ddjj.especial         [ nm ] + Empleado-ddjj.especial        
+          Ficha-ddjj.ganancias        [ nm ] = Ficha-ddjj.ganancias        [ nm ] + Empleado-ddjj.ganancias       
+          Ficha-ddjj.ganancias_netas  [ nm ] = Ficha-ddjj.ganancias_netas  [ nm ] + Empleado-ddjj.ganancias_netas 
+          Ficha-ddjj.ganancias_otras  [ nm ] = Ficha-ddjj.ganancias_otras  [ nm ] + Empleado-ddjj.ganancias_otras 
+          Ficha-ddjj.hijos            [ nm ] = Ficha-ddjj.hijos            [ nm ] + Empleado-ddjj.hijos           
+          Ficha-ddjj.movilidad        [ nm ] = Ficha-ddjj.movilidad        [ nm ] + Empleado-ddjj.movilidad       
+          Ficha-ddjj.no-imponible     [ nm ] = Ficha-ddjj.no-imponible     [ nm ] + Empleado-ddjj.no-imponible       
+          Ficha-ddjj.obrasoc          [ nm ] = Ficha-ddjj.obrasoc          [ nm ] + Empleado-ddjj.obrasoc         
+          Ficha-ddjj.otras            [ nm ] = Ficha-ddjj.otras            [ nm ] + Empleado-ddjj.otras           
+          Ficha-ddjj.otras-cargas     [ nm ] = Ficha-ddjj.otras-cargas     [ nm ] + Empleado-ddjj.otras-cargas    
+          Ficha-ddjj.promocion        [ nm ] = Ficha-ddjj.promocion        [ nm ] + Empleado-ddjj.promocion       
+          Ficha-ddjj.seguros          [ nm ] = Ficha-ddjj.seguros          [ nm ] + Empleado-ddjj.seguros         
+          Ficha-ddjj.sepelios         [ nm ] = Ficha-ddjj.sepelios         [ nm ] + Empleado-ddjj.sepelios        
+          Ficha-ddjj.total1           [ nm ] = Ficha-ddjj.total1           [ nm ] + Empleado-ddjj.total1          
+          Ficha-ddjj.total2           [ nm ] = Ficha-ddjj.total2           [ nm ] + Empleado-ddjj.total2          
+          Ficha-ddjj.total6           [ nm ] = Ficha-ddjj.total6           [ nm ] + Empleado-ddjj.total6          
+          Ficha-ddjj.total9           [ nm ] = Ficha-ddjj.total9           [ nm ] + Empleado-ddjj.total9          
+          Ficha-ddjj.total_impuesto   [ nm ] = Ficha-ddjj.total_impuesto   [ nm ] + Empleado-ddjj.total_impuesto  
+          Ficha-ddjj.total_retenido   [ nm ] = Ficha-ddjj.total_retenido   [ nm ] + Empleado-ddjj.total_retenido.
+
+  END.   
+
+  {prvaddjj.i "Esta Entidad   "  "Ficha-ddjj.ganancias  "} 
+  {prvaddjj.i "Otras Entidades"  "Ficha-ddjj.ganancias_otras "} 
+  {sbryddjj.i}
+  {prvaddjj.i "Total 1        "  "Ficha-ddjj.total1      "} 
+  {sbryddjj.i}
+  {prvaddjj.i "Aportes        "  "Ficha-ddjj.aportes    "} 
+  {prvaddjj.i "Obra Soc       "  "Ficha-ddjj.obrasoc     "} 
+  {prvaddjj.i "Seguros        "  "Ficha-ddjj.seguros     "} 
+  {prvaddjj.i "Sepelios       "  "Ficha-ddjj.sepelios    "} 
+  {prvaddjj.i "Movilidad      "  "Ficha-ddjj.movilidad   "} 
+  {prvaddjj.i "Otras          "  "Ficha-ddjj.otras       "} 
+  {sbryddjj.i}
+  {prvaddjj.i "Total 2        "  "Ficha-ddjj.total2      "} 
+  {sbryddjj.i}
+  {prvaddjj.i "Dif. 1 y 2     "  "Ficha-ddjj.difer12    "} 
+  {sbryddjj.i}
+  {prvaddjj.i "Donaciones     "  "Ficha-ddjj.donaciones "} 
+  {sbryddjj.i}
+  {prvaddjj.i "Dif. 3 y 4     "  "Ficha-ddjj.difer34    "} 
+  {sbryddjj.i}
+  {prvaddjj.i "Deducc.Especial"  "Ficha-ddjj.especial   "} 
+  {prvaddjj.i "No Imponible   "  "Ficha-ddjj.no-imponible"} 
+  {prvaddjj.i "Conyuge        "  "Ficha-ddjj.conyuge    "} 
+  {prvaddjj.i "Hijos          "  "Ficha-ddjj.hijos       "} 
+  {prvaddjj.i "Otras Cargas   "  "Ficha-ddjj.otras-cargas"} 
+  {sbryddjj.i}
+  {prvaddjj.i "Total 6        "  "Ficha-ddjj.total6      "} 
+  {sbryddjj.i}
+  {prvaddjj.i "Dif. 5 y 6     "  "Ficha-ddjj.difer56    "} 
+  {sbryddjj.i}
+  {prvaddjj.i "Ganancias Netas"  "Ficha-ddjj.ganancias_netas"} 
+  {sbryddjj.i}
+  {prvaddjj.i "Total Retenido "  "Ficha-ddjj.total_retenido"}
+  {prvaddjj.i "Promocion      "  "Ficha-ddjj.promocion   "} 
+  {sbryddjj.i}
+  {prvaddjj.i "Total 9        "  "Ficha-ddjj.total9      "} 
+  {sbryddjj.i}
+  {prvaddjj.i "Total Impuesto "  "Ficha-ddjj.total_impuesto"} 
+  {sbryddjj.i}
+  {prvaddjj.i "A Favor DGI    "  "Ficha-ddjj.a-favor-dgi"} 
+  {sbryddjj.i}
+  {prvaddjj.i "A Favor Empl.  "  "Ficha-ddjj.a-favor-dgi"} 
+  {sbryddjj.i}
+
+
+  OUTPUT CLOSE.
+  PAUSE 0.
+  HIDE FRAME frm-espere.
+
+  RUN veresult.w ( INPUT arch_salida,
+                   INPUT 2 ).
+
+END PROCEDURE.  
+
+{CODIMPRE.I}
+

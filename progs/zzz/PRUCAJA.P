@@ -1,0 +1,9 @@
+COMPILE prcaj194.p SAVE.
+find first caj_header.
+/*
+for each caja-imputacion where caja-imputacion.nro_transaccion = caj_header.nro_transaccion:
+ nro_obra = 3.
+end. 
+update caj_header.observacion.
+*/
+run prcaj194.p ( rowid(caj_header)).

@@ -1,0 +1,219 @@
+/*=================================================================================*/
+/*                     LISTADO DE MOVIMIENTOS DETALLADOS DE CAJA                   */
+/*=================================================================================*/
+
+DEFINE INPUT PARAMETER rid_caja  AS ROWID.
+DEFINE INPUT PARAMETER des_fecha LIKE Caj_header.fecha.
+DEFINE INPUT PARAMETER has_fecha LIKE Caj_header.fecha.
+DEFINE INPUT PARAMETER todos_mov AS LOGICAL.
+DEFINE INPUT PARAMETER in_eg_all AS CHARACTER.
+
+{VPERSINM.I}
+{VRSHARED.I }
+{dfvarimp.i }
+{calculareicaja.i}
+
+DEFINE VARIABLE que_caja  LIKE Caj_header.cdg_caja LABEL "Caja Nro.".
+
+DEFINE VARIABLE fecha_fr    AS CHARACTER.
+DEFINE VARIABLE hora_fr     AS CHARACTER.
+DEFINE VARIABLE que_fecha   AS CHARACTER.
+DEFINE VARIABLE que_comprob AS CHARACTER FORMAT "X(12)".
+DEFINE VARIABLE pri_mes      AS DATE.
+DEFINE VARIABLE que_ano      AS INTEGER.
+DEFINE VARIABLE que_mes      AS INTEGER.
+DEFINE VARIABLE que_dia      AS INTEGER.
+DEFINE VARIABLE ant_ano      AS INTEGER.
+DEFINE VARIABLE ant_mes      AS INTEGER.
+DEFINE VARIABLE ingreso      AS DECIMAL FORMAT ">,>>>,>>9.99" LABEL "Ingresos".
+DEFINE VARIABLE egreso       AS DECIMAL FORMAT ">,>>>,>>9.99" LABEL "Egresos".
+DEFINE VARIABLE saldo        AS DECIMAL FORMAT "->,>>>,>>9.99" LABEL "Saldo".
+DEFINE VARIABLE tot_ingreso  AS DECIMAL FORMAT ">,>>>,>>9.99" LABEL "Ingresos".
+DEFINE VARIABLE tot_egreso   AS DECIMAL FORMAT ">,>>>,>>9.99" LABEL "Egresos".
+DEFINE VARIABLE tot_saldo    AS DECIMAL FORMAT "->,>>>,>>9.99" LABEL "Saldo".
+DEFINE VARIABLE lst_e        AS DECIMAL FORMAT ">,>>>,>>9.99".
+DEFINE VARIABLE lst_i        AS DECIMAL FORMAT ">,>>>,>>9.99".
+
+{WGLISTAR.I}
+
+DEFINE FRAME frm-titulo HEADER
+  que_empresa 
+  "Movimientos de la Caja" AT 60 
+  que_caja FORMAT ">>9"  
+  "Pagina:" AT 132 PAGE-NUMBER FORMAT ">9" AT 139
+  SKIP  
+  fecha_lis   
+  "del" AT 60
+  des_fecha
+  "al" 
+  has_fecha 
+  hora_lis AT 132
+  SKIP(1)
+  WITH WIDTH 151 FRAME frm-titulo TOP-ONLY PAGE-TOP STREAM-IO.
+
+DEFINE FRAME frm-listado
+  que_fecha                 COLUMN-LABEL "Fecha"
+  que_comprob               COLUMN-LABEL "Comprobante"
+  /*
+  Caj_header.fecha          COLUMN-LABEL "Fecha"
+  Caj_header.tip_comprob    COLUMN-LABEL "Cmp"
+  Caj_header.nro_comprob    COLUMN-LABEL "Numero"
+  */
+  Caj_header.estado         NO-LABEL
+  Caj_header.observacion    FORMAT "X(23)"
+  lst_i                     COLUMN-LABEL "Ingresos"
+  lst_e                     COLUMN-LABEL "Egresos"
+  saldo
+  Rubro.abrevia
+  Caj_detalle.importe 
+  Caj_detalle.observacion   FORMAT "X(33)"
+  WITH WIDTH 151 DOWN CENTERED FRAME frm-listado USE-TEXT STREAM-IO.
+
+/*=================================================================================*/
+/*                          B L O Q U E   P R I N C I P A L                        */
+/*=================================================================================*/
+
+{SETIMPRE.I}
+
+FIND Empresa WHERE ROWID(Empresa) = act_empresa NO-LOCK.
+que_empresa = Empresa.nombre.
+  
+RUN LISTAR.
+
+/*=================================================================================*/
+/*                          P R O C E D I M I E N T O S                            */
+/*=================================================================================*/
+
+PROCEDURE LISTAR:
+
+  FIND Caja WHERE ROWID(Caja) = rid_caja NO-LOCK.
+  que_caja = Caja.cdg_caja.
+  PAUSE 0.
+  mensaje = "    Procesando ...".        
+  DISPLAY mensaje WITH FRAME frm-espere.
+
+  
+  RUN CALCULAR_EI ( caja.cdg_caja, des_fecha , 0,consolidado, empresa.cdg_empresa , OUTPUT egreso, OUTPUT ingreso).
+  saldo = ingreso - egreso.
+  tot_ingreso = ingreso.
+  tot_egreso  = egreso.
+
+  {dirprinfile.i &LIN-PAG=72}
+/*
+  OUTPUT TO VALUE (dire_tmp + "lscajmdt.txt") PAGED.
+*/ 
+  RUN PONE_CODIGO ( INPUT "SET17CPI,CARTA,HORIZONT" ).
+
+  FOR EACH  Caj_header OF Caja
+      WHERE Caj_header.fecha >= des_fecha 
+      AND   Caj_header.fecha <= has_fecha
+      AND ( Caj_header.estado <> "A" OR todos_mov ) 
+      BREAK BY(Caj_header.fecha) BY Caj_header.nro_transaccion
+      WITH FRAME frm-listado:
+      
+      VIEW FRAME frm-titulo.
+      IF FIRST(Caj_header.fecha) 
+      THEN DO:
+         DISPLAY "Saldo anterior" @ Caj_header.observacion 
+                  saldo
+                  WITH FRAME frm-listado.
+         DOWN WITH FRAME frm-listado.
+      END.   
+      
+      que_fecha = SUBSTRING(STRING(Caj_header.fecha),1,5).
+      que_comprob = Caj_header.tip_comprob + " " + STRING(Caj_header.nro_comprob,"ZZZZZZZ9").
+      lst_e = Caj_header.importe.
+      lst_i = lst_e.
+
+      IF Caj_header.estado <> "A"
+      THEN DO:
+         IF Caj_header.tipo_mov = "I" 
+         THEN DO:
+            ingreso = ingreso + Caj_header.importe.
+            tot_ingreso = tot_ingreso + Caj_header.importe.
+         END.  
+         IF Caj_header.tipo_mov = "E" 
+         THEN DO:
+            egreso  = egreso  + Caj_header.importe.
+            tot_egreso = tot_egreso  + Caj_header.importe.
+         END.   
+         saldo = ingreso - egreso.
+      END.   
+
+      FOR EACH Caj_detalle OF Caj_header,
+              EACH Rubro OF Caj_detalle BREAK BY Caj_detalle.nro_transaccion:
+      
+          DISPLAY que_fecha       WHEN FIRST-OF(Caj_header.fecha) AND FIRST-OF(Caj_detalle.nro_transaccion)
+                  que_comprob     WHEN FIRST-OF(Caj_detalle.nro_transaccion)
+                  /*
+                  Caj_header.fecha    WHEN FIRST-OF(Caj_header.fecha) AND FIRST-OF(Caj_detalle.nro_transaccion)
+                  Caj_header.tip_comprob WHEN FIRST-OF(Caj_detalle.nro_transaccion)
+                  Caj_header.nro_comprob WHEN FIRST-OF(Caj_detalle.nro_transaccion)
+                  */
+                  Caj_header.estado NO-LABEL WHEN FIRST-OF(Caj_detalle.nro_transaccion)
+                  Caj_header.observacion WHEN FIRST-OF(Caj_detalle.nro_transaccion)
+                  lst_i WHEN Caj_header.tipo_mov = "I" AND FIRST-OF(Caj_detalle.nro_transaccion)
+                  lst_e WHEN Caj_header.tipo_mov = "E" AND FIRST-OF(Caj_detalle.nro_transaccion)
+                  saldo WHEN Caj_header.estado <> "A" AND FIRST-OF(Caj_detalle.nro_transaccion)
+                  Rubro.abrevia
+                  Caj_detalle.importe 
+                  Caj_detalle.observacion
+                  WITH FRAME frm-listado.
+                  
+          DOWN WITH FRAME frm-listado.         
+                  
+      END.   
+  END.
+  
+  UNDERLINE Caj_header.observacion 
+            lst_i
+            lst_e
+            saldo
+            WITH FRAME frm-listado STREAM-IO.  
+
+  DISPLAY "Totales del periodo"  @ Caj_header.observacion
+          ingreso @ lst_i
+          egreso  @ lst_e
+          saldo 
+          WITH FRAME frm-listado STREAM-IO.  
+  DOWN WITH FRAME frm-listado.
+
+  UNDERLINE Caj_header.observacion 
+            lst_i
+            lst_e
+            saldo
+            WITH FRAME frm-listado STREAM-IO.  
+
+  tot_saldo = tot_ingreso - tot_egreso.
+  
+  DISPLAY "Totales al " + STRING(has_fecha) @ Caj_header.observacion
+          tot_ingreso     @ lst_i
+          tot_egreso      @ lst_e
+          tot_saldo       @ saldo
+          WITH FRAME frm-listado STREAM-IO.
+  DOWN WITH FRAME frm-listado.
+  
+  DISPLAY " " @ que_fecha WITH FRAME frm-listado STREAM-IO.
+          
+  OUTPUT CLOSE.
+  PAUSE 0.
+  HIDE FRAME frm-espere.
+  RUN veresult.w ( INPUT arch_salida,
+                   INPUT 22 ).
+
+END PROCEDURE.  
+
+
+PROCEDURE PONER_SESION.
+
+  CURRENT-WINDOW:TITLE   = titulo_w.
+  /*
+  CURRENT-WINDOW:MENUBAR = MENU Principal:HANDLE.
+  MENU Principal:SENSITIVE = YES.
+  */
+  STATUS INPUT "Ingrese datos o presione Esc para salir del programa.".
+
+END PROCEDURE.
+
+{CODIMPRE.I}
+ 

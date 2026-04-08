@@ -1,0 +1,152 @@
+/*====================================================================================*/
+/*                 EMISION DE UNA FACTURA EN REEMPLAZO DE OTRA                        */
+/*====================================================================================*/
+
+DEFINE INPUT PARAMETER p-tip_comprob LIKE Fac_header.tip_comprob.
+DEFINE INPUT PARAMETER p-tip_nuevo   LIKE Fac_header.tip_comprob.
+DEFINE INPUT PARAMETER p-prf_comprob LIKE Fac_header.prf_comprob.
+DEFINE INPUT PARAMETER p-prf_nuevo   LIKE Fac_header.prf_comprob.
+DEFINE INPUT PARAMETER p-des_nrocomp LIKE Fac_header.nro_comprob.
+DEFINE INPUT PARAMETER p-has_nrocomp LIKE Fac_header.nro_comprob.
+
+/*====================================================================================*/
+/*                             VARIABLES Y BUFFERS                                    */
+/*====================================================================================*/
+
+DEFINE TEMP-TABLE T-Fac_header             LIKE Fac_header.
+DEFINE TEMP-TABLE T-Fac_detalle            LIKE Fac_detalle.
+DEFINE TEMP-TABLE T-Registrable-factura    LIKE Registrable-factura.
+DEFINE TEMP-TABLE T-Sub_header_vta         LIKE Sub_header_vta.
+DEFINE TEMP-TABLE T-Sub_detalle_vta        LIKE Sub_detalle_vta.
+DEFINE TEMP-TABLE T-Fac_header-bon         LIKE Fac_header-bon.
+DEFINE TEMP-TABLE T-Fac_detalle-bon        LIKE Fac_detalle-bon.
+DEFINE TEMP-TABLE T-Fac_header_impuesto    LIKE Fac_header_impuesto.
+DEFINE TEMP-TABLE T-Fac_detalle_impuesto   LIKE Fac_detalle_impuesto.
+
+/*====================================================================================*/
+/*                                BLOQUE PRINCIPAL                                    */
+/*====================================================================================*/
+
+{findempresa.i}
+
+DO TRANSACTION:
+
+    FOR EACH Fac_header 
+        WHERE Fac_header.cdg_empresa  = Empresa.cdg_empresa
+          AND Fac_header.tip_comprob  = p-tip_comprob
+          AND Fac_header.prf_comprob  = p-prf_comprob
+          AND Fac_header.nro_comprob  <= p-has_nrocomp
+          AND Fac_header.nro_comprob  >= p-des_nrocomp
+              EXCLUSIVE-LOCK:
+    
+        RUN generar_nueva_factura.
+        RUN anular_factura_anterior.
+        RUN actualizar_remito.
+
+    END.
+
+END.
+
+/*====================================================================================*/
+/*                            P R O C E D I M I E N T O S                             */
+/*====================================================================================*/
+
+PROCEDURE generar_nueva_factura:
+
+    CREATE T-Fac_header.
+    BUFFER-COPY Fac_header TO T-Fac_header
+        ASSIGN T-Fac_header.nro_factura  = 0
+               T-Fac_header.tip_comprob  = p-tip_nuevo
+               T-Fac_header.anulado      = NO
+               T-Fac_header.estado       = "E"
+               T-Fac_header.prf_comprob  = p-prf_nuevo.
+
+    FOR EACH Fac_detalle OF Fac_header NO-LOCK:
+        
+        FIND Articulo OF Fac_detalle NO-LOCK.
+        CREATE T-Fac_detalle.
+        BUFFER-COPY Fac_detalle TO T-Fac_detalle
+            ASSIGN T-Fac_detalle.nro_factura = T-Fac_header.nro_factura
+                   T-Fac_detalle.detallada   = Articulo.detallada.
+                   
+        FOR EACH Fac_detalle-bon OF Fac_detalle NO-LOCK:
+            
+            CREATE T-Fac_detalle-bon.
+            BUFFER-COPY Fac_detalle-bon TO T-Fac_detalle-bon
+                ASSIGN T-Fac_detalle-bon.nro_factura = T-Fac_header.nro_factura.
+        END.               
+
+    END.               
+
+    FOR EACH Fac_header-bon OF Fac_header NO-LOCK:
+        
+        CREATE T-Fac_header-bon.
+        BUFFER-COPY Fac_header-bon TO T-Fac_header-bon
+            ASSIGN T-Fac_header-bon.nro_factura = T-Fac_header.nro_factura.
+                   
+    END.               
+
+    FOR EACH Fac_header_impuesto OF Fac_header NO-LOCK:
+        
+        CREATE T-Fac_header_impuesto.
+        BUFFER-COPY Fac_header_impuesto TO T-Fac_header_impuesto
+            ASSIGN T-Fac_header_impuesto.nro_factura = T-Fac_header.nro_factura.
+                   
+    END.               
+
+    FOR EACH Fac_detalle_impuesto OF Fac_header NO-LOCK:
+        
+        CREATE T-Fac_detalle_impuesto.
+        BUFFER-COPY Fac_detalle_impuesto TO T-Fac_detalle_impuesto
+            ASSIGN T-Fac_detalle_impuesto.nro_factura = T-Fac_header.nro_factura.
+                   
+    END.               
+
+    RUN emitir_comprobante_cliente.p ( INPUT TABLE T-Fac_header,
+                                       INPUT TABLE T-Fac_detalle,
+                                       INPUT TABLE T-Registrable-factura,
+                                       INPUT TABLE T-Sub_header_vta,
+                                       INPUT TABLE T-Sub_detalle_vta,
+                                       INPUT TABLE T-Fac_header-bon,
+                                       INPUT TABLE T-Fac_detalle-bon,
+                                       INPUT TABLE T-Fac_header_impuesto,
+                                       INPUT TABLE T-Fac_detalle_impuesto).
+
+END PROCEDURE.
+
+PROCEDURE anular_factura_anterior:
+
+    FIND Sub_header_vta 
+         WHERE Sub_header_vta.cdg_empresa = Fac_header.cdg_empresa 
+           AND Sub_header_vta.tip_comprob = Fac_header.tip_comprob 
+           AND Sub_header_vta.prf_comprob = Fac_header.prf_comprob
+           AND Sub_header_vta.nro_comprob = Fac_header.nro_comprob
+               EXCLUSIVE-LOCK NO-ERROR.
+
+    IF AVAILABLE Sub_header_vta THEN Sub_header_vta.anulado = YES.
+
+    FOR EACH Cta_cte
+         WHERE Cta_cte.nro_cliente = Fac_header.nro_cliente
+           AND Cta_cte.cdg_empresa = Fac_header.cdg_empresa
+           AND Cta_cte.nro_comprob = Fac_header.nro_comprob 
+           AND Cta_cte.prf_comprob = Fac_header.prf_comprob
+           AND Cta_cte.tip_comprob = Fac_header.tip_comprob 
+               EXCLUSIVE-LOCK:
+
+               DELETE Cta_cte.
+
+    END.
+
+    Fac_header.anulado = YES.
+
+END PROCEDURE.
+
+PROCEDURE actualizar_remito:
+
+    FIND Rem_header WHERE Rem_header.nro_remito = Fac_header.nro_remito EXCLUSIVE-LOCK NO-ERROR.
+    IF AVAILABLE Rem_header
+       THEN ASSIGN Rem_header.nro_factura = T-Fac_header.nro_factura.
+
+END PROCEDURE.
+
+

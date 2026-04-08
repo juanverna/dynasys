@@ -1,0 +1,6 @@
+FOR EACH Tarea:
+    DELETE tarea.
+        END.
+        FOR EACH proyecto:
+    DELETE proyecto.
+END.

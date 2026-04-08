@@ -1,0 +1,22 @@
+limpieza diaria 3:3AM C:\Progress\OpenEdge\bin\prowin32.exe -b -p regenera_agenda_recursos.p  -db c:\bases\dyn35user -ld sic  -U BATCH -P batch -T c:\temp 
+-basekey "INI" -ininame c:\dynasys10\procs\dynasys10.ini -s 200 -inp 8192 -rr
+
+C:\Progress102\OpenEdge\bin\prowin32.exe -b -p regenera_agenda_recursos.p  -db dynasys102 -S 2500 -ld sic  -U BATCH -P batch -T c:\temp -basekey "INI" -ininame c:\dynasys10\procs\dynasys10.ini -s 200 -inp 8192 -rr
+
+generatareatanques mensual dia 1 de cada mes C:\Progress\OpenEdge\bin\prowin32.exe  -b -p genera_tareas_Tanques.p -db dynasys102 -S 2500 -ld sic  -U BATCH -P batch -T c:\temp -basekey "INI" -ininame c:\dynasys10\procs\dynasys10.ini -s 200 -inp 8192 -nb 200
+
+entregafacturas diaria 7am C:\Progress\OpenEdge\bin\prowin32.exe  -b -p genera_evento_entrega_fac.p -db dynasys102 -S 2500 -ld sic  -U BATCH -P batch -T c:\temp -basekey "INI" -ininame c:\dynasys10\procs\dynasys10.ini -s 200 -inp 8192 -rr
+
+cobranzas diaria 6 am C:\Progress\OpenEdge\bin\prowin32.exe -b -p gen_tarea_cobranzas.p  -db dynasys102 -S 2500 -ld sic  -U BATCH -P batch -T c:\temp -basekey INI -ininame c:\dynasys10\procs\dynasys10.ini -s 200 -inp 8192 -nb 200
+
+analisis diaria desde 7 a 18 cada 10 min C:\Progress\OpenEdge\bin\prowin32.exe  -b -p gen_evento_protocolo.p -db dynasys102 -S 2500 -ld sic  -U BATCH -P batch -T c:\temp -basekey "INI" -ininame c:\dynasys10\procs\dynasys10.ini -s 200 -inp 8192
+
+datosclientes diaria C:\Progress\OpenEdge\bin\prowin32.exe -b -p gen_datos_clientes.p -db dynasys102 -S 2500 -ld sic  -U BATCH -P batch -T c:\temp -basekey "INI" -ininame c:\dynasys10\procs\dynasys10.ini -s 200 -inp 8192 -rr
+
+confirmaTanques diaria desde 7 as 18 cada 30 min C:\Progress\OpenEdge\bin\prowin32.exe -b -p gen_confirmaciontanques.p -db dynasys102 -S 2500 -ld sic  -U BATCH -P batch -T c:\temp -basekey "INI" -ininame c:\dynasys10\procs\dynasys10.ini -s 200 -inp 8192 -rr
+
+desasignarrealizados diaria 3:10 am C:\Progress\OpenEdge\bin\prowin32.exe -b -p desasignareventosnorealizados.p  -db dynasys102 -S 2500 -ld sic  -U BATCH -P batch -T c:\temp -basekey "INI" -ininame c:\dynasys10\procs\dynasys10.ini -s 200 -inp 8192 -rr
+
+bkpbases diaria 1am C:\dynasys10\procs\ibkp.cmd
+
+bkpexcel diaria "C:\wproceso\2.TANQUES\TANQUES AGENDAS\#AGENDA AÑO EN CURSO\BKUP_AGENDAS.BAT"

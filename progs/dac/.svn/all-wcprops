@@ -1,0 +1,2339 @@
+K 25
+svn:wc:ra_dav:version-url
+V 35
+/svn/Paulista/!svn/ver/20/progs/dac
+END
+disahora.i
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dac/disahora.i
+END
+PROGRESS.INI
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/1/progs/dac/PROGRESS.INI
+END
+arreglaotraslado.p
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/Paulista/!svn/ver/1/progs/dac/arreglaotraslado.p
+END
+dbFficha.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dac/dbFficha.p
+END
+imprimir_agenda.p
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/dac/imprimir_agenda.p
+END
+b-diagno.w
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dac/b-diagno.w
+END
+b-tcolor.w
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dac/b-tcolor.w
+END
+quecolor.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dac/quecolor.p
+END
+nodeHandle.i
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/1/progs/dac/nodeHandle.i
+END
+runcal.w
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/svn/Paulista/!svn/ver/1/progs/dac/runcal.w
+END
+lstraslados.p
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/1/progs/dac/lstraslados.p
+END
+runcardsp.p
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/Paulista/!svn/ver/1/progs/dac/runcardsp.p
+END
+hlptabl2.i
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dac/hlptabl2.i
+END
+w-cambio_guardia.w
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/Paulista/!svn/ver/1/progs/dac/w-cambio_guardia.w
+END
+b-ocupacion_moviles.w
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/Paulista/!svn/ver/1/progs/dac/b-ocupacion_moviles.w
+END
+b-cobert.w
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dac/b-cobert.w
+END
+disahora2.i
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/Paulista/!svn/ver/1/progs/dac/disahora2.i
+END
+b-programacion_servicios.wrx
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/Paulista/!svn/ver/1/progs/dac/b-programacion_servicios.wrx
+END
+sensithora.i
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/1/progs/dac/sensithora.i
+END
+v-rng_verimporte.w
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/Paulista/!svn/ver/1/progs/dac/v-rng_verimporte.w
+END
+nodeLabel.i
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/Paulista/!svn/ver/1/progs/dac/nodeLabel.i
+END
+b-sistemas.w
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/1/progs/dac/b-sistemas.w
+END
+v-nro_despacho.w
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/dac/v-nro_despacho.w
+END
+v-filtro_despacho.w
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/Paulista/!svn/ver/1/progs/dac/v-filtro_despacho.w
+END
+VEREPETI.P
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dac/VEREPETI.P
+END
+b-situacion.w
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/1/progs/dac/b-situacion.w
+END
+calcular_lapso.p
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/dac/calcular_lapso.p
+END
+b-despacho.wrx
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/Paulista/!svn/ver/1/progs/dac/b-despacho.wrx
+END
+w-motivo-1.w
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/1/progs/dac/w-motivo-1.w
+END
+w-cardsp.w
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dac/w-cardsp.w
+END
+lsdemoras.p
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/Paulista/!svn/ver/1/progs/dac/lsdemoras.p
+END
+tgwficha.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dac/tgwficha.p
+END
+varestad.i
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dac/varestad.i
+END
+runagenda.p
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/Paulista/!svn/ver/1/progs/dac/runagenda.p
+END
+borrarid.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dac/borrarid.p
+END
+backuptxt.p
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/Paulista/!svn/ver/1/progs/dac/backuptxt.p
+END
+inithora.i
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dac/inithora.i
+END
+v-situacion.w
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/1/progs/dac/v-situacion.w
+END
+W-PROVED.W
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dac/W-PROVED.W
+END
+ponehora.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dac/ponehora.p
+END
+rundac.p
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/svn/Paulista/!svn/ver/1/progs/dac/rundac.p
+END
+seltraslado.p
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/1/progs/dac/seltraslado.p
+END
+w-fchpen.w
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dac/w-fchpen.w
+END
+mensaje_padron_ucrem.p
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/Paulista/!svn/ver/1/progs/dac/mensaje_padron_ucrem.p
+END
+b-obs-episodio.w
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/dac/b-obs-episodio.w
+END
+cambia_pw.p
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/Paulista/!svn/ver/1/progs/dac/cambia_pw.p
+END
+runmnclientes.p
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/Paulista/!svn/ver/1/progs/dac/runmnclientes.p
+END
+LSCMOVIL.P
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dac/LSCMOVIL.P
+END
+importafichas.p
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/Paulista/!svn/ver/1/progs/dac/importafichas.p
+END
+asgtiemenu.i
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/1/progs/dac/asgtiemenu.i
+END
+v-tiempos.w
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/Paulista/!svn/ver/1/progs/dac/v-tiempos.w
+END
+runmnparametros.p
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/dac/runmnparametros.p
+END
+d-aviso-sistemas.w
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/Paulista/!svn/ver/1/progs/dac/d-aviso-sistemas.w
+END
+borra_claves.p
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/Paulista/!svn/ver/1/progs/dac/borra_claves.p
+END
+llenahms.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dac/llenahms.p
+END
+sensithorasi.i
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/Paulista/!svn/ver/1/progs/dac/sensithorasi.i
+END
+lscntinc.i
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dac/lscntinc.i
+END
+cargaempresas.i
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/Paulista/!svn/ver/1/progs/dac/cargaempresas.i
+END
+w-afiliados.w
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/1/progs/dac/w-afiliados.w
+END
+w-anexoliqtraslprov.w
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/Paulista/!svn/ver/1/progs/dac/w-anexoliqtraslprov.w
+END
+w-manfic.w
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dac/w-manfic.w
+END
+disvecprome.i
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/1/progs/dac/disvecprome.i
+END
+lscosegu.i
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dac/lscosegu.i
+END
+displaypromedios.i
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/Paulista/!svn/ver/1/progs/dac/displaypromedios.i
+END
+b-obsdsp.w
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dac/b-obsdsp.w
+END
+runtraslados.p
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/Paulista/!svn/ver/1/progs/dac/runtraslados.p
+END
+inicia_sistema.p
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/dac/inicia_sistema.p
+END
+rep-descend.i
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/1/progs/dac/rep-descend.i
+END
+selcolor.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dac/selcolor.p
+END
+mensaje_padron.p
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/dac/mensaje_padron.p
+END
+b-notas-motivo.w
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/dac/b-notas-motivo.w
+END
+asighora.i
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dac/asighora.i
+END
+d-infserv-f.w
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/1/progs/dac/d-infserv-f.w
+END
+runrecepcion.p
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/Paulista/!svn/ver/1/progs/dac/runrecepcion.p
+END
+DESPACHO.PF
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/Paulista/!svn/ver/1/progs/dac/DESPACHO.PF
+END
+formtitulo.i
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/1/progs/dac/formtitulo.i
+END
+cambia_pw-agenda.p
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/Paulista/!svn/ver/1/progs/dac/cambia_pw-agenda.p
+END
+listaobjetos.p
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/Paulista/!svn/ver/1/progs/dac/listaobjetos.p
+END
+rlclimotivo.p
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/1/progs/dac/rlclimotivo.p
+END
+v-tp-lista.w
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/1/progs/dac/v-tp-lista.w
+END
+runordentraslados.p
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/Paulista/!svn/ver/1/progs/dac/runordentraslados.p
+END
+sacar_comillas.p
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/dac/sacar_comillas.p
+END
+localizar_moviles.p
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/Paulista/!svn/ver/1/progs/dac/localizar_moviles.p
+END
+w-convenios.w
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/1/progs/dac/w-convenios.w
+END
+prufacserv.p
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/1/progs/dac/prufacserv.p
+END
+movercolor.i
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/1/progs/dac/movercolor.i
+END
+d-serxprov.w
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/1/progs/dac/d-serxprov.w
+END
+v-interndsp.w
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/1/progs/dac/v-interndsp.w
+END
+c-expexc.w
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dac/c-expexc.w
+END
+v-lismotivo-movil.w
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/Paulista/!svn/ver/1/progs/dac/v-lismotivo-movil.w
+END
+Impagend.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dac/Impagend.p
+END
+valida_run.p
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/1/progs/dac/valida_run.p
+END
+c-transferir_ordenes.w
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/Paulista/!svn/ver/1/progs/dac/c-transferir_ordenes.w
+END
+nodeNormal.i
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/1/progs/dac/nodeNormal.i
+END
+abrefichas.p
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/1/progs/dac/abrefichas.p
+END
+b-st_episodios.w
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/dac/b-st_episodios.w
+END
+v-ctl_convenio.w
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/dac/v-ctl_convenio.w
+END
+liquidartraslado.i
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/Paulista/!svn/ver/1/progs/dac/liquidartraslado.i
+END
+b-demora.w
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dac/b-demora.w
+END
+v-rng-diagnostico.w
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/Paulista/!svn/ver/1/progs/dac/v-rng-diagnostico.w
+END
+hlpvarbl.i
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dac/hlpvarbl.i
+END
+borracnt.i
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dac/borracnt.i
+END
+Consumos.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dac/Consumos.p
+END
+nodePrivate.i
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/1/progs/dac/nodePrivate.i
+END
+v-diagno.w
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dac/v-diagno.w
+END
+contarveces.p
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/1/progs/dac/contarveces.p
+END
+runafiliados.p
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/Paulista/!svn/ver/1/progs/dac/runafiliados.p
+END
+b-bases.w
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/svn/Paulista/!svn/ver/1/progs/dac/b-bases.w
+END
+v-cumplimiento-orden.w
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/Paulista/!svn/ver/1/progs/dac/v-cumplimiento-orden.w
+END
+v-rng-movil.w
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/1/progs/dac/v-rng-movil.w
+END
+d-tiempo.w
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dac/d-tiempo.w
+END
+charlog.w
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/svn/Paulista/!svn/ver/1/progs/dac/charlog.w
+END
+v-movil-kilometros.w
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/Paulista/!svn/ver/1/progs/dac/v-movil-kilometros.w
+END
+inithora2.i
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/Paulista/!svn/ver/1/progs/dac/inithora2.i
+END
+v-cobert.w
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dac/v-cobert.w
+END
+w-mensaj.w
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dac/w-mensaj.w
+END
+v-ctl_abocerr.w
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/Paulista/!svn/ver/1/progs/dac/v-ctl_abocerr.w
+END
+copihms.i
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/svn/Paulista/!svn/ver/1/progs/dac/copihms.i
+END
+b-preguntas.w
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/1/progs/dac/b-preguntas.w
+END
+drerrores.i
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/Paulista/!svn/ver/1/progs/dac/drerrores.i
+END
+selcodcolores.p
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/Paulista/!svn/ver/1/progs/dac/selcodcolores.p
+END
+txncontrol.i
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/1/progs/dac/txncontrol.i
+END
+v-diaria.w
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dac/v-diaria.w
+END
+w-serxprov.w
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/1/progs/dac/w-serxprov.w
+END
+nodeLevel.i
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/Paulista/!svn/ver/1/progs/dac/nodeLevel.i
+END
+b-recepcion.wrx
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/Paulista/!svn/ver/1/progs/dac/b-recepcion.wrx
+END
+v-bases.w
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/svn/Paulista/!svn/ver/1/progs/dac/v-bases.w
+END
+drerrlog.i
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dac/drerrlog.i
+END
+v-nom_movil.w
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/1/progs/dac/v-nom_movil.w
+END
+disprome.i
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dac/disprome.i
+END
+d-hlpfecha.wrx
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/Paulista/!svn/ver/1/progs/dac/d-hlpfecha.wrx
+END
+v-partido.w
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/Paulista/!svn/ver/1/progs/dac/v-partido.w
+END
+v-primer-turno.w
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/dac/v-primer-turno.w
+END
+nodeState.i
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/Paulista/!svn/ver/1/progs/dac/nodeState.i
+END
+CALENDAR.W
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dac/CALENDAR.W
+END
+cerocosegurec.i
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/Paulista/!svn/ver/1/progs/dac/cerocosegurec.i
+END
+lsestcolor.i
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/1/progs/dac/lsestcolor.i
+END
+b-movgua.w
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dac/b-movgua.w
+END
+runaltaepisodios.p
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/Paulista/!svn/ver/1/progs/dac/runaltaepisodios.p
+END
+selcodtraslados.p
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/dac/selcodtraslados.p
+END
+tradtabl.i
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dac/tradtabl.i
+END
+v-llamin.w
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dac/v-llamin.w
+END
+runvencimientos.p
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/dac/runvencimientos.p
+END
+runreclamos.p
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/1/progs/dac/runreclamos.p
+END
+w-prubus.w
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dac/w-prubus.w
+END
+gndisquet.i
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/Paulista/!svn/ver/1/progs/dac/gndisquet.i
+END
+CARGACOLORES.I
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/Paulista/!svn/ver/1/progs/dac/CARGACOLORES.I
+END
+selbases.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dac/selbases.p
+END
+selsituacion.p
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/Paulista/!svn/ver/1/progs/dac/selsituacion.p
+END
+ls_consumos.p
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/1/progs/dac/ls_consumos.p
+END
+d-derivar_incidente.w
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/Paulista/!svn/ver/1/progs/dac/d-derivar_incidente.w
+END
+lsdetxorigen.p
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/Paulista/!svn/ver/1/progs/dac/lsdetxorigen.p
+END
+b-movil_localidad.w
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/Paulista/!svn/ver/1/progs/dac/b-movil_localidad.w
+END
+asighora2.i
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/Paulista/!svn/ver/1/progs/dac/asighora2.i
+END
+v-rng-base.w
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/1/progs/dac/v-rng-base.w
+END
+b-movil_color.w
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/Paulista/!svn/ver/1/progs/dac/b-movil_color.w
+END
+v-rng-localidad.w
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/dac/v-rng-localidad.w
+END
+runmnproveedores.p
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/Paulista/!svn/ver/1/progs/dac/runmnproveedores.p
+END
+runmnbases.p
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/1/progs/dac/runmnbases.p
+END
+runmnsituacion.p
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/dac/runmnsituacion.p
+END
+b-instrucciones.w
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/dac/b-instrucciones.w
+END
+Resumen.p
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/svn/Paulista/!svn/ver/1/progs/dac/Resumen.p
+END
+mensaje_padron_urmed.p
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/Paulista/!svn/ver/1/progs/dac/mensaje_padron_urmed.p
+END
+lsxcamp2.i
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dac/lsxcamp2.i
+END
+f-intern.w
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dac/f-intern.w
+END
+v-btn_traer.w
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/1/progs/dac/v-btn_traer.w
+END
+ver_obs_ucrem.p
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/Paulista/!svn/ver/1/progs/dac/ver_obs_ucrem.p
+END
+w-auditoria.w
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/1/progs/dac/w-auditoria.w
+END
+acuveccolor.i
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/1/progs/dac/acuveccolor.i
+END
+v-rng-sepsubcon.w
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/dac/v-rng-sepsubcon.w
+END
+pruficha.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dac/pruficha.p
+END
+copalltab.p
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/Paulista/!svn/ver/1/progs/dac/copalltab.p
+END
+b-mensaj.w
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dac/b-mensaj.w
+END
+d-conectar_bases.w
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/Paulista/!svn/ver/1/progs/dac/d-conectar_bases.w
+END
+lsinfserv.i
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/Paulista/!svn/ver/1/progs/dac/lsinfserv.i
+END
+v-obsdsp.w
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dac/v-obsdsp.w
+END
+w-dspcrr.w
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dac/w-dspcrr.w
+END
+b-hospital.w
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/1/progs/dac/b-hospital.w
+END
+v-dspvar.w
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dac/v-dspvar.w
+END
+v-intern.w
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dac/v-intern.w
+END
+w-exp_estamed.w
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/Paulista/!svn/ver/1/progs/dac/w-exp_estamed.w
+END
+b-movil.w
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/svn/Paulista/!svn/ver/1/progs/dac/b-movil.w
+END
+w-cliaud.w
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dac/w-cliaud.w
+END
+4GLDATE.I
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/svn/Paulista/!svn/ver/1/progs/dac/4GLDATE.I
+END
+w-serxmov.w
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/Paulista/!svn/ver/1/progs/dac/w-serxmov.w
+END
+b-parametro.w
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/1/progs/dac/b-parametro.w
+END
+sensithorahms.i
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/Paulista/!svn/ver/1/progs/dac/sensithorahms.i
+END
+reimprim-1.p
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/1/progs/dac/reimprim-1.p
+END
+hlpvariable.i
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/1/progs/dac/hlpvariable.i
+END
+v-rng-unoporhoja.w
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/Paulista/!svn/ver/1/progs/dac/v-rng-unoporhoja.w
+END
+q-cobert.w
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dac/q-cobert.w
+END
+lsservic.i
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dac/lsservic.i
+END
+parempres.i
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/Paulista/!svn/ver/1/progs/dac/parempres.i
+END
+selhospital.p
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/1/progs/dac/selhospital.p
+END
+v-motivo.w
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dac/v-motivo.w
+END
+b-filtro_despacho.w
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/Paulista/!svn/ver/1/progs/dac/b-filtro_despacho.w
+END
+traslados.p
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/Paulista/!svn/ver/1/progs/dac/traslados.p
+END
+osprint.p
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/svn/Paulista/!svn/ver/1/progs/dac/osprint.p
+END
+ddesend.i
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/svn/Paulista/!svn/ver/1/progs/dac/ddesend.i
+END
+w-expcli.w
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dac/w-expcli.w
+END
+pone0act.i
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dac/pone0act.i
+END
+b-movil-kilometros.w
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/Paulista/!svn/ver/1/progs/dac/b-movil-kilometros.w
+END
+b-moviles-con-situa.w
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/Paulista/!svn/ver/1/progs/dac/b-moviles-con-situa.w
+END
+sumacoseguro.i
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/Paulista/!svn/ver/1/progs/dac/sumacoseguro.i
+END
+selpartido.p
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/1/progs/dac/selpartido.p
+END
+dbwficha.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dac/dbwficha.p
+END
+enabhora.i
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dac/enabhora.i
+END
+w-anexoliqtraslados.w
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/Paulista/!svn/ver/1/progs/dac/w-anexoliqtraslados.w
+END
+runbusficha.p
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/1/progs/dac/runbusficha.p
+END
+b-partidos.w
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/1/progs/dac/b-partidos.w
+END
+runimprimir_agenda.p
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/Paulista/!svn/ver/1/progs/dac/runimprimir_agenda.p
+END
+v-ejecutar.w
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/1/progs/dac/v-ejecutar.w
+END
+rundespa.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dac/rundespa.p
+END
+v-demora.w
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dac/v-demora.w
+END
+REIMPRIM.P
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dac/REIMPRIM.P
+END
+runxml.p
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/svn/Paulista/!svn/ver/1/progs/dac/runxml.p
+END
+lsfichas.i
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dac/lsfichas.i
+END
+despachomt.p
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/1/progs/dac/despachomt.p
+END
+selmovil.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dac/selmovil.p
+END
+d-serxmov.w
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/Paulista/!svn/ver/1/progs/dac/d-serxmov.w
+END
+v-ctl_salto.w
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/1/progs/dac/v-ctl_salto.w
+END
+p-multiple.w
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/1/progs/dac/p-multiple.w
+END
+p-despanel.w
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/1/progs/dac/p-despanel.w
+END
+w-expprv.w
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dac/w-expprv.w
+END
+w-nuegua.w
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dac/w-nuegua.w
+END
+ocupaciones.i
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/1/progs/dac/ocupaciones.i
+END
+loadmenu.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dac/loadmenu.p
+END
+creaobsv.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dac/creaobsv.p
+END
+disveccolor.i
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/1/progs/dac/disveccolor.i
+END
+lsocumedico.p
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/1/progs/dac/lsocumedico.p
+END
+defvarcoseguro.i
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/dac/defvarcoseguro.i
+END
+tgfficha.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dac/tgfficha.p
+END
+v-movil-motivo.w
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/dac/v-movil-motivo.w
+END
+LSXCAMPO.I
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dac/LSXCAMPO.I
+END
+calculapso.i
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/1/progs/dac/calculapso.i
+END
+w-abmpartidos.w
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/Paulista/!svn/ver/1/progs/dac/w-abmpartidos.w
+END
+lstieres.i
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dac/lstieres.i
+END
+c-bushospital.w
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/Paulista/!svn/ver/1/progs/dac/c-bushospital.w
+END
+separar_base.p
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/Paulista/!svn/ver/1/progs/dac/separar_base.p
+END
+v-que-movil.w
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/1/progs/dac/v-que-movil.w
+END
+v-audita-ficha.w
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/dac/v-audita-ficha.w
+END
+lstieres.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dac/lstieres.p
+END
+cambiabases.p
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/1/progs/dac/cambiabases.p
+END
+v-rng-archivo-lee.w
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/Paulista/!svn/ver/1/progs/dac/v-rng-archivo-lee.w
+END
+B-TEMAS.W
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/svn/Paulista/!svn/ver/1/progs/dac/B-TEMAS.W
+END
+showguar.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dac/showguar.p
+END
+disphora.i
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dac/disphora.i
+END
+actualiza_sistema.p
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/Paulista/!svn/ver/1/progs/dac/actualiza_sistema.p
+END
+chrreclamos.p
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/1/progs/dac/chrreclamos.p
+END
+calcula_vencimiento.p
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/Paulista/!svn/ver/1/progs/dac/calcula_vencimiento.p
+END
+lsservicios.p
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/1/progs/dac/lsservicios.p
+END
+v-lst-traslados.w
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/dac/v-lst-traslados.w
+END
+cambiar_zonas.p
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/Paulista/!svn/ver/1/progs/dac/cambiar_zonas.p
+END
+runimpagend.p
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/1/progs/dac/runimpagend.p
+END
+seldemor.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dac/seldemor.p
+END
+rundespacho.p
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/1/progs/dac/rundespacho.p
+END
+c-busficha.w
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/1/progs/dac/c-busficha.w
+END
+runproces.p
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/Paulista/!svn/ver/1/progs/dac/runproces.p
+END
+runprint.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dac/runprint.p
+END
+q-motivo.w
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dac/q-motivo.w
+END
+lsestadi2.i
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/Paulista/!svn/ver/1/progs/dac/lsestadi2.i
+END
+getvalor.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dac/getvalor.p
+END
+v-problm-min.w
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/Paulista/!svn/ver/1/progs/dac/v-problm-min.w
+END
+nodeNumber.i
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/1/progs/dac/nodeNumber.i
+END
+v-obsrec.w
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dac/v-obsrec.w
+END
+seteacapital.i
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/Paulista/!svn/ver/1/progs/dac/seteacapital.i
+END
+runclauson.p
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/1/progs/dac/runclauson.p
+END
+w-propiedades_inet.w
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/Paulista/!svn/ver/1/progs/dac/w-propiedades_inet.w
+END
+v-obscardsp.w
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/1/progs/dac/v-obscardsp.w
+END
+despachof.p
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/Paulista/!svn/ver/1/progs/dac/despachof.p
+END
+ponechar.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dac/ponechar.p
+END
+d-busfic.w
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dac/d-busfic.w
+END
+w-anxtrasporden.w
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/dac/w-anxtrasporden.w
+END
+lsguardia.i
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/Paulista/!svn/ver/1/progs/dac/lsguardia.i
+END
+asighoraunk.i
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/1/progs/dac/asighoraunk.i
+END
+v-audfic.w
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dac/v-audfic.w
+END
+v-prueba-suma.wrx
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/dac/v-prueba-suma.wrx
+END
+selcodlocalidad.p
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/dac/selcodlocalidad.p
+END
+q-fchpen.w
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dac/q-fchpen.w
+END
+cambia_localidad.p
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/Paulista/!svn/ver/1/progs/dac/cambia_localidad.p
+END
+w-camgua.w
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dac/w-camgua.w
+END
+runmnstepisod.p
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/Paulista/!svn/ver/1/progs/dac/runmnstepisod.p
+END
+b-ordenes-observadas.w
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/Paulista/!svn/ver/1/progs/dac/b-ordenes-observadas.w
+END
+d-editaopciones.w
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/dac/d-editaopciones.w
+END
+v-lst-localidades.w
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/Paulista/!svn/ver/1/progs/dac/v-lst-localidades.w
+END
+b-zonas.w
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/svn/Paulista/!svn/ver/1/progs/dac/b-zonas.w
+END
+d-actualizar_botones.w
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/Paulista/!svn/ver/1/progs/dac/d-actualizar_botones.w
+END
+runllamados.p
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/1/progs/dac/runllamados.p
+END
+b-movil-persona.w
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/dac/b-movil-persona.w
+END
+v-interface-xml.wrx
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/Paulista/!svn/ver/1/progs/dac/v-interface-xml.wrx
+END
+d-tomar_hora.w
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/Paulista/!svn/ver/1/progs/dac/d-tomar_hora.w
+END
+b-respuestas.w
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/Paulista/!svn/ver/1/progs/dac/b-respuestas.w
+END
+b-ordenes.w
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/Paulista/!svn/ver/1/progs/dac/b-ordenes.w
+END
+tbcolores.i
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/Paulista/!svn/ver/1/progs/dac/tbcolores.i
+END
+v-dspenc.w
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dac/v-dspenc.w
+END
+nodeSelected.i
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/Paulista/!svn/ver/1/progs/dac/nodeSelected.i
+END
+v-mensaj.w
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dac/v-mensaj.w
+END
+b-locali.w
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dac/b-locali.w
+END
+TreeView4GL.ocx
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/Paulista/!svn/ver/1/progs/dac/TreeView4GL.ocx
+END
+w-prueba-suma.w
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/Paulista/!svn/ver/1/progs/dac/w-prueba-suma.w
+END
+selcober.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dac/selcober.p
+END
+lsaudita.i
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dac/lsaudita.i
+END
+factraslados.i
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/Paulista/!svn/ver/1/progs/dac/factraslados.i
+END
+v-lismotivo.w
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/1/progs/dac/v-lismotivo.w
+END
+detxtipo.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dac/detxtipo.p
+END
+v-dspire.w
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dac/v-dspire.w
+END
+v-problm-dia.w
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/Paulista/!svn/ver/1/progs/dac/v-problm-dia.w
+END
+lsestadi.i
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dac/lsestadi.i
+END
+selarchivo-lee.p
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/dac/selarchivo-lee.p
+END
+w-dsppen.w
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dac/w-dsppen.w
+END
+v-movil-persona.w
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/dac/v-movil-persona.w
+END
+runplanes.p
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/Paulista/!svn/ver/1/progs/dac/runplanes.p
+END
+discolor.i
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dac/discolor.i
+END
+ponehoyturno.p
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/Paulista/!svn/ver/1/progs/dac/ponehoyturno.p
+END
+PRFICDSP.P
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dac/PRFICDSP.P
+END
+b-novfecha.w
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/1/progs/dac/b-novfecha.w
+END
+RUNTELEF.P
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dac/RUNTELEF.P
+END
+conectar_auxiliares.p
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/Paulista/!svn/ver/1/progs/dac/conectar_auxiliares.p
+END
+runmntablas.p
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/1/progs/dac/runmntablas.p
+END
+b-movil-motivo.w
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/dac/b-movil-motivo.w
+END
+displaytotales.i
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/dac/displaytotales.i
+END
+percha10082.p
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/1/progs/dac/percha10082.p
+END
+lsepisodios.p
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/1/progs/dac/lsepisodios.p
+END
+habilitar_moviles.p
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/Paulista/!svn/ver/1/progs/dac/habilitar_moviles.p
+END
+defvarimpre.i
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/1/progs/dac/defvarimpre.i
+END
+v-texto_nota.w
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/Paulista/!svn/ver/1/progs/dac/v-texto_nota.w
+END
+d-conetar_bases.w
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/dac/d-conetar_bases.w
+END
+ver_version.p
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/1/progs/dac/ver_version.p
+END
+bajada.p
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/svn/Paulista/!svn/ver/1/progs/dac/bajada.p
+END
+w-prupro.w
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dac/w-prupro.w
+END
+b-estado_moviles.w
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/Paulista/!svn/ver/1/progs/dac/b-estado_moviles.w
+END
+b-modulos.w
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/Paulista/!svn/ver/1/progs/dac/b-modulos.w
+END
+v-dspisl.w
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dac/v-dspisl.w
+END
+w-bases.w
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/svn/Paulista/!svn/ver/1/progs/dac/w-bases.w
+END
+ponehms.p
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/svn/Paulista/!svn/ver/1/progs/dac/ponehms.p
+END
+V-cliaud.w
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dac/V-cliaud.w
+END
+d-rngcol.w
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dac/d-rngcol.w
+END
+runguardias.p
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/1/progs/dac/runguardias.p
+END
+COPIBASE.P
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dac/COPIBASE.P
+END
+v-busfic.w
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dac/v-busfic.w
+END
+importa-loc.p
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/1/progs/dac/importa-loc.p
+END
+seldiagn.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dac/seldiagn.p
+END
+defvarcolores.i
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/Paulista/!svn/ver/1/progs/dac/defvarcolores.i
+END
+acumularcolores.i
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/dac/acumularcolores.i
+END
+w-cobert.w
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dac/w-cobert.w
+END
+enabhora2.i
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/Paulista/!svn/ver/1/progs/dac/enabhora2.i
+END
+b-movil_situacion.w
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/Paulista/!svn/ver/1/progs/dac/b-movil_situacion.w
+END
+setvarimpre.i
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/1/progs/dac/setvarimpre.i
+END
+w-prulock.w
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/Paulista/!svn/ver/1/progs/dac/w-prulock.w
+END
+v-prueba-suma.w
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/Paulista/!svn/ver/1/progs/dac/v-prueba-suma.w
+END
+v-traer_dato.w
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/Paulista/!svn/ver/1/progs/dac/v-traer_dato.w
+END
+formcnt.i
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/svn/Paulista/!svn/ver/1/progs/dac/formcnt.i
+END
+validahms.i
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/Paulista/!svn/ver/1/progs/dac/validahms.i
+END
+Prficcom.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dac/Prficcom.p
+END
+w-anexotraslados.w
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/Paulista/!svn/ver/1/progs/dac/w-anexotraslados.w
+END
+b-causas.w
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dac/b-causas.w
+END
+v-obs-episodio.w
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/dac/v-obs-episodio.w
+END
+runlsxdespa.p
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/1/progs/dac/runlsxdespa.p
+END
+v-dspint.w
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dac/v-dspint.w
+END
+v-rng-color.w
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/1/progs/dac/v-rng-color.w
+END
+w-cmpfic.w
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dac/w-cmpfic.w
+END
+cerocosegutot.i
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/Paulista/!svn/ver/1/progs/dac/cerocosegutot.i
+END
+selmodis.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dac/selmodis.p
+END
+Lsxcoseg.i
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dac/Lsxcoseg.i
+END
+v-hora_memo.w
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/1/progs/dac/v-hora_memo.w
+END
+queryfichas.p
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/1/progs/dac/queryfichas.p
+END
+cambia_disponible.p
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/Paulista/!svn/ver/1/progs/dac/cambia_disponible.p
+END
+CONTAFIC.P
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dac/CONTAFIC.P
+END
+w-anxtraspsinies.w
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/Paulista/!svn/ver/1/progs/dac/w-anxtraspsinies.w
+END
+VECESTAD.I
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dac/VECESTAD.I
+END
+findfichacli.i
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/Paulista/!svn/ver/1/progs/dac/findfichacli.i
+END
+v-movil_color.w
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/Paulista/!svn/ver/1/progs/dac/v-movil_color.w
+END
+dumpfich.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dac/dumpfich.p
+END
+deshascolor.i
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/1/progs/dac/deshascolor.i
+END
+acucolor.i
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dac/acucolor.i
+END
+lsxcampo2.i
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/Paulista/!svn/ver/1/progs/dac/lsxcampo2.i
+END
+b-guardi.w
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dac/b-guardi.w
+END
+v-busfic-seg.w
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/Paulista/!svn/ver/1/progs/dac/v-busfic-seg.w
+END
+runcarga.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dac/runcarga.p
+END
+asgtiemp.i
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dac/asgtiemp.i
+END
+b-moviles.w
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/Paulista/!svn/ver/1/progs/dac/b-moviles.w
+END
+v-lismotivoprov.w
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/dac/v-lismotivoprov.w
+END
+lssercod.i
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dac/lssercod.i
+END
+detxorigen.p
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/1/progs/dac/detxorigen.p
+END
+runlsxrecep.p
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/1/progs/dac/runlsxrecep.p
+END
+rep-ascend.i
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/1/progs/dac/rep-ascend.i
+END
+InetIHS.lib
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/Paulista/!svn/ver/1/progs/dac/InetIHS.lib
+END
+w-altaepisodios.w
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/dac/w-altaepisodios.w
+END
+d-helpcolor.w
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/1/progs/dac/d-helpcolor.w
+END

@@ -1,0 +1,124 @@
+/*=================================================================================*/
+/*              LISTADO DE VALORES X ALGUN CAMPO EN PARTICULAR                     */
+/*=================================================================================*/
+
+DEFINE INPUT PARAMETER des_fecha      LIKE Caj_header.fecha.
+DEFINE INPUT PARAMETER has_fecha      LIKE Caj_header.fecha.
+DEFINE INPUT PARAMETER p-estados      AS CHARACTER.
+DEFINE INPUT PARAMETER p-rubro        AS CHAR.
+DEFINE INPUT PARAMETER v-consolidado  AS LOGICAL.
+
+/*=================================================================================*/
+/*                      F R A M E S   Y   V A R I A B L E S                        */
+/*=================================================================================*/
+
+{VRSHARED.I }
+{dfvarimp.i}
+
+DEFINE VARIABLE hubo_cheque           AS LOGICAL.
+DEFINE VARIABLE estados_pedidos       AS CHARACTER LABEL "Estados" FORMAT "X(25)".
+DEFINE VARIABLE total                 LIKE Valor.importe.
+DEFINE VARIABLE totalp                 LIKE Valor.importe.
+
+{WGLISTAR.I}
+
+DEFINE FRAME frm-titulo HEADER
+        que_empresa 
+        "{&TITULO-LS}" AT 65
+        "Página:" AT 153 PAGE-NUMBER FORMAT ">9" AT 160
+        SKIP  
+        fecha_lis   
+        "del" AT 65
+        des_fecha
+        "al" 
+        has_fecha 
+        hora_lis AT 160
+        SKIP
+        "Estados solicitados:" AT 65
+        estados_pedidos
+        SKIP(1)
+        WITH WIDTH 180 FRAME frm-titulo TOP-ONLY PAGE-TOP STREAM-IO.
+
+DEFINE FRAME frm-listado
+        {&CORTE-FR}
+        Valor.cdg_empresa       COLUMN-LABEL "E" FORMAT "X"
+        {&CAMPOS-FR}
+        totalp                   COLUMN-LABEL "Parcial!Acum."
+        total                   COLUMN-LABEL "Total!Acum."
+        Cliente.cdg_cliente     COLUMN-LABEL "Cód!Cli"
+        Cliente.nom_cliente        COLUMN-LABEL "Razón!Social"
+        WITH WIDTH 180 DOWN CENTERED FRAME frm-listado USE-TEXT STREAM-IO.
+
+/*=================================================================================*/
+/*                          B L O Q U E   P R I N C I P A L                        */
+/*=================================================================================*/
+
+{findempresa.i}
+que_empresa = Empresa.nombre.
+  
+RUN LISTAR.
+
+/*=================================================================================*/
+/*                          P R O C E D I M I E N T O S                            */
+/*=================================================================================*/
+
+PROCEDURE LISTAR:
+  
+  estados_pedidos = p-estados.
+
+  PAUSE 0.
+  mensaje = "    Procesando ...".        
+  DISPLAY mensaje WITH FRAME frm-espere.
+
+  {dirprinfile.i} 
+
+  hubo_cheque = NO.
+  FOR EACH  Valor NO-LOCK
+      WHERE ( Valor.cdg_empresa = Empresa.cdg_empresa OR v-consolidado )
+      AND CAN-DO(string(valor.cdg_rubro),p-rubro) 
+      AND CAN-DO (Usuario.lista_empresas,Valor.cdg_empresa)
+        AND {&CORTE-POR}  >= des_fecha 
+        AND {&CORTE-POR}  <= has_fecha
+      BREAK BY {&ORDEN-POR}  BY {&CORTE-POR} 
+      WITH FRAME frm-listado:
+
+      IF FIRST-OF({&ORDEN-POR}) THEN totalp = 0.0.
+      VIEW FRAME frm-titulo.
+      IF CAN-DO(estados_pedidos,STRING(Valor.estado,"99"))
+      THEN DO:
+         FIND Cliente OF Valor NO-LOCK NO-ERROR.  
+         FIND banco OF valor NO-LOCK NO-ERROR.
+         total = total + Valor.importe.
+         totalp = totalp + Valor.importe.
+
+
+         DISPLAY {&CORTE-POR}  /*WHEN FIRST-OF( {&CORTE-POR} ) OR NOT hubo_cheque*/
+                 Valor.cdg_empresa
+                 {&CAMPOS-LS}
+                 totalp 
+                 total
+                 Cliente.cdg_cliente          WHEN AVAILABLE Cliente
+                 Cliente.nom_cliente          WHEN AVAILABLE Cliente
+                 WITH FRAME frm-listado.
+         DOWN WITH FRAME frm-listado.
+         hubo_cheque = YES.
+      END.
+            
+  END.
+  
+  UNDERLINE   {&CORTE-POR}
+              Valor.cdg_empresa
+              {&CAMPOS-LS} 
+              totalp
+              total
+              Cliente.cdg_cliente
+              Cliente.nom_cliente       
+              WITH FRAME frm-listado STREAM-IO.  
+
+  OUTPUT CLOSE.
+  PAUSE 0.
+  HIDE FRAME frm-espere.
+  RUN veresult.w ( INPUT arch_salida,
+                   INPUT 22 ).
+     
+END PROCEDURE. 

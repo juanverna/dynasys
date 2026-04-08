@@ -1,0 +1,7 @@
+DEFINE STREAM Salida.
+
+OUTPUT STREAM Salida TO "c:\desa\log.txt".
+PUT STREAM Salida UNFORMATTED "HOLA " + STRING(TIME,"HH:MM:SS:"). 
+OUTPUT STREAM SALIDA CLOSE.
+
+message "trigger" view-as alert-box message.

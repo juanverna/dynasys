@@ -1,0 +1,2 @@
+
+   IF AVAILABLE {1} THEN {&TABLA-MAESTRA}.{3} = {1}.{2}.

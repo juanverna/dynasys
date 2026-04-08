@@ -1,0 +1,32 @@
+/*Eventos sin vecinos a menos de una distancia*/
+DEFINE VAR pdist AS INT INITIAL 700 NO-UNDO.
+DEFINE VAR pperiodo AS INT INITIAL 200911 NO-UNDO.
+DEFINE BUFFER bevento FOR evento.
+DEFINE VAR X1 AS DECIMAL NO-UNDO.
+DEFINE VAR Y1 AS DECIMAL NO-UNDO.
+DEFINE VAR ddist AS INT.
+DEFINE VAR nn AS CHAR FORMAT "X(50)".
+
+{geolibrary.i}
+
+otro:
+FOR EACH evento WHERE evento.periodo > pperiodo AND NOT evento.anulado AND
+evento.nro_tipo_evento  = 1 BY evento.nro_evento :
+  FIND cliente OF evento NO-LOCK NO-ERROR.
+IF NOT AVAILABLE cliente THEN MESSAGE cliente.direccion.
+X1 = cliente.geoX.
+Y1 = cliente.geoY.
+nn = cliente.direccion.
+  FOR EACH bevento WHERE evento.periodo > pperiodo AND NOT evento.anulado AND
+evento.nro_cliente <> bevento.nro_cliente AND
+evento.nro_tipo_evento  = 1:
+        FIND cliente OF bevento NO-LOCK NO-ERROR.
+IF NOT AVAILABLE cliente THEN MESSAGE bevento.nro_identificacion.
+   ddist = distGeodesicaUTM(cliente.geoX , cliente.geoY ,
+                        X1,Y1).     
+IF ddist < pdist THEN
+   undo,NEXT otro.
+  END.
+
+DISPLAY nn evento.nro_identificacion.
+END.

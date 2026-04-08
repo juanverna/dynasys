@@ -1,0 +1,100 @@
+/*=================================================================================*/
+/*  LISTA TODOS LOS COMPROBANTES SALDADOS ENTRE 2 FECHAS PARA UNA MONEDA           */
+/*=================================================================================*/
+
+DEFINE INPUT PARAMETER des_codigo  LIKE Proveedor.cdg_proveedor.
+DEFINE INPUT PARAMETER has_codigo  LIKE Proveedor.cdg_proveedor.
+
+/*=================================================================================*/
+/*                              VARIABLES Y FRAMES                                 */
+/*=================================================================================*/
+
+{VPERSINM.I}
+{VRSHARED.I}
+{dfvarimp.i}
+{WGLISTAR.I}
+
+
+DEFINE FRAME frm-titulo HEADER
+  que_empresa
+  "Maestro de Proveedores" AT 48
+  "Página:" AT 111 PAGE-NUMBER FORMAT ">>9" AT 118
+  SKIP
+  fecha_lis
+  hora_lis AT 111
+  SKIP(1)
+  WITH WIDTH 130 FRAME frm-titulo TOP-ONLY PAGE-TOP STREAM-IO.
+
+DEFINE FRAME frm-listado
+  Proveedor.cdg_Proveedor       COLUMN-LABEL "Código" FORMAT "x(8)"
+  Proveedor.nombre              COLUMN-LABEL "Razón Social" FORMAT "X(40)"
+  Proveedor.cuit                COLUMN-LABEL "Cuit" FORMAT "X(15)"
+  Domicilio_prv.direccion       COLUMN-LABEL "Direcciòn" FORMAT "X(30)"
+  Domicilio_prv.localidad       COLUMN-LABEL "Localidad" FORMAT "X(20)"
+  Domicilio_prv.cdg_postal      COLUMN-LABEL "C.Postal" FORMAT "X(12)"
+  Domicilio_prv.telefono        COLUMN-LABEL "Telefonos" FORMAT "X(25)"
+  WITH WIDTH 170 DOWN CENTERED FRAME frm-listado USE-TEXT STREAM-IO.
+
+
+/*=================================================================================*/
+/*                          B L O Q U E   P R I N C I P A L                        */
+/*=================================================================================*/
+
+RUN LISTAR_TODO.
+RETURN.
+
+/*=================================================================================*/
+/*                          P R O C E D I M I E N T O S                            */
+/*=================================================================================*/
+
+PROCEDURE LISTAR_TODO:
+
+ 
+  {findempresa.i}
+  que_empresa = Empresa.nombre.
+
+  {dirprinfile.i}
+  
+  OPEN QUERY qry_proveedor 
+        FOR EACH Proveedor NO-LOCK WHERE Proveedor.cdg_proveedor >= des_codigo
+             AND Proveedor.cdg_proveedor <= has_codigo
+             AND Proveedor.titular_oxp_sino = FALSE
+              BY Proveedor.cdg_proveedor.  
+  GET FIRST qry_proveedor.
+  DO WHILE AVAILABLE Proveedor:
+     VIEW FRAME frm-titulo.
+     RUN LISTAR.
+     GET NEXT qry_proveedor.
+  END.   
+
+  OUTPUT CLOSE.
+  RUN veresult.w ( INPUT arch_salida,
+                   INPUT 22).
+
+END PROCEDURE.
+
+PROCEDURE LISTAR:
+
+FIND FIRST Domicilio_prv OF Proveedor NO-LOCK NO-ERROR.
+
+        DISPLAY
+                Proveedor.cdg_Proveedor  
+                Proveedor.nombre
+                Proveedor.cuit 
+                WITH FRAME frm-listado.
+        IF NOT AVAILABLE Domicilio_prv THEN
+        DOWN WITH FRAME frm-listado.
+
+        IF AVAILABLE Domicilio_prv THEN DO:
+            DISPLAY
+                Domicilio_prv.direccion 
+                Domicilio_prv.localidad
+                Domicilio_prv.cdg_postal 
+                Domicilio_prv.telefono
+                    WITH FRAME frm-listado.
+           DOWN WITH FRAME frm-listado.
+
+        END.
+
+
+END PROCEDURE.

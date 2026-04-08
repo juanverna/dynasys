@@ -1,0 +1,1781 @@
+K 25
+svn:wc:ra_dav:version-url
+V 35
+/svn/Paulista/!svn/ver/39/progs/tes
+END
+b-cheques_depositados.w
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/Paulista/!svn/ver/1/progs/tes/b-cheques_depositados.w
+END
+w-rubro_caja.w
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/Paulista/!svn/ver/1/progs/tes/w-rubro_caja.w
+END
+b-cheques_cuenta.w
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/Paulista/!svn/ver/1/progs/tes/b-cheques_cuenta.w
+END
+lsvaloresxproveedor.p
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/Paulista/!svn/ver/1/progs/tes/lsvaloresxproveedor.p
+END
+w-lscajmov.w
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/1/progs/tes/w-lscajmov.w
+END
+armaestd.i
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/tes/armaestd.i
+END
+b-banco_sucursal.w
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/Paulista/!svn/ver/1/progs/tes/b-banco_sucursal.w
+END
+w-lsdebitosxcuenta.w
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/Paulista/!svn/ver/1/progs/tes/w-lsdebitosxcuenta.w
+END
+v-control_movbancarios.w
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/Paulista/!svn/ver/1/progs/tes/v-control_movbancarios.w
+END
+w-consulta_valoresxempresa.w
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/Paulista/!svn/ver/1/progs/tes/w-consulta_valoresxempresa.w
+END
+b-banco_sin_conciliar.w
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/Paulista/!svn/ver/1/progs/tes/b-banco_sin_conciliar.w
+END
+w-alta-rendicion.w
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/Paulista/!svn/ver/1/progs/tes/w-alta-rendicion.w
+END
+lsmovrub.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/tes/lsmovrub.p
+END
+lsprogramacion_pagos.p
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/Paulista/!svn/ver/1/progs/tes/lsprogramacion_pagos.p
+END
+lsvalprv.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/tes/lsvalprv.p
+END
+b-valores_cedidos_caja.w
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/Paulista/!svn/ver/1/progs/tes/b-valores_cedidos_caja.w
+END
+w-cobranza_x_cobrador.w
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/Paulista/!svn/ver/1/progs/tes/w-cobranza_x_cobrador.w
+END
+emitir_movimiento_tesoreria.p
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/Paulista/!svn/ver/1/progs/tes/emitir_movimiento_tesoreria.p
+END
+gndebrch.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/tes/gndebrch.p
+END
+generar_xml_movimientos_bancarios.p
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/Paulista/!svn/ver/1/progs/tes/generar_xml_movimientos_bancarios.p
+END
+w-asnbco.w
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/tes/w-asnbco.w
+END
+v-chequ-1e.w
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/1/progs/tes/v-chequ-1e.w
+END
+b-empresas_caja.w
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/tes/b-empresas_caja.w
+END
+oqrycheq.i
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/tes/oqrycheq.i
+END
+acredita_todos.p
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/tes/acredita_todos.p
+END
+oqryche2.i
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/tes/oqryche2.i
+END
+lschequesxfdepos.p
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/Paulista/!svn/ver/1/progs/tes/lschequesxfdepos.p
+END
+d-detalle_imputacion.w
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/Paulista/!svn/ver/1/progs/tes/d-detalle_imputacion.w
+END
+w-consulta_valores.w
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/Paulista/!svn/ver/1/progs/tes/w-consulta_valores.w
+END
+acumcaja.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/tes/acumcaja.p
+END
+emimcaja.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/tes/emimcaja.p
+END
+lsegresos.p
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/Paulista/!svn/ver/1/progs/tes/lsegresos.p
+END
+v-rng-estadovalores.w
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/Paulista/!svn/ver/16/progs/tes/v-rng-estadovalores.w
+END
+v-extracto_conciliacion.w
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/Paulista/!svn/ver/1/progs/tes/v-extracto_conciliacion.w
+END
+v-lista_estadocheque.w
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/Paulista/!svn/ver/1/progs/tes/v-lista_estadocheque.w
+END
+lscheqpen.p
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/Paulista/!svn/ver/1/progs/tes/lscheqpen.p
+END
+selcuenta_banco.p
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/tes/selcuenta_banco.p
+END
+w-acreditar_cheques.w
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/Paulista/!svn/ver/1/progs/tes/w-acreditar_cheques.w
+END
+v-rng-rubro.w
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/1/progs/tes/v-rng-rubro.w
+END
+HLPRNCTABCO.I
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/1/progs/tes/HLPRNCTABCO.I
+END
+b-valores_rendicion.w
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/Paulista/!svn/ver/1/progs/tes/b-valores_rendicion.w
+END
+v-esp_estadocheque.w
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/Paulista/!svn/ver/1/progs/tes/v-esp_estadocheque.w
+END
+v-leyenda_banco.w
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/tes/v-leyenda_banco.w
+END
+q-cobrador.w
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/1/progs/tes/q-cobrador.w
+END
+v-id-caja.w
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/Paulista/!svn/ver/1/progs/tes/v-id-caja.w
+END
+v-id-cuenta_bancaria.w
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/Paulista/!svn/ver/1/progs/tes/v-id-cuenta_bancaria.w
+END
+d-depositar_efectivo.w
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/Paulista/!svn/ver/1/progs/tes/d-depositar_efectivo.w
+END
+d-crear_movbanco.w
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/Paulista/!svn/ver/1/progs/tes/d-crear_movbanco.w
+END
+lsvaloresxcampo.i
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/Paulista/!svn/ver/16/progs/tes/lsvaloresxcampo.i
+END
+crearfila.i
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/Paulista/!svn/ver/1/progs/tes/crearfila.i
+END
+procvalr.i
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/tes/procvalr.i
+END
+anular_movcaja.p
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/tes/anular_movcaja.p
+END
+b-caja.w
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/svn/Paulista/!svn/ver/1/progs/tes/b-caja.w
+END
+b-rendicion_dt.w
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/tes/b-rendicion_dt.w
+END
+b-comprobante_rendicion.w
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/Paulista/!svn/ver/1/progs/tes/b-comprobante_rendicion.w
+END
+v-banco.w
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/svn/Paulista/!svn/ver/1/progs/tes/v-banco.w
+END
+v-tp-mov.w
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/tes/v-tp-mov.w
+END
+w-cajas.w
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/svn/Paulista/!svn/ver/1/progs/tes/w-cajas.w
+END
+lschequesxcampo.i
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/Paulista/!svn/ver/16/progs/tes/lschequesxcampo.i
+END
+lsasncaj.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/tes/lsasncaj.p
+END
+v-esp-cuenta_bancaria.w
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/Paulista/!svn/ver/1/progs/tes/v-esp-cuenta_bancaria.w
+END
+b-valores_depositados.w
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/Paulista/!svn/ver/1/progs/tes/b-valores_depositados.w
+END
+v-par-cashflow.w
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/tes/v-par-cashflow.w
+END
+v-que-cuenta_bancaria.w
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/Paulista/!svn/ver/1/progs/tes/v-que-cuenta_bancaria.w
+END
+lsasientos_caja.p
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/tes/lsasientos_caja.p
+END
+w-rlvaloresxproveedor.w
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/Paulista/!svn/ver/1/progs/tes/w-rlvaloresxproveedor.w
+END
+b-cuenta-bancaria.w
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/Paulista/!svn/ver/1/progs/tes/b-cuenta-bancaria.w
+END
+w-lsmovcta.w
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/1/progs/tes/w-lsmovcta.w
+END
+w-rlvaloresxfecha.w
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/Paulista/!svn/ver/16/progs/tes/w-rlvaloresxfecha.w
+END
+lschqaaa.i
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/tes/lschqaaa.i
+END
+lspagos.p
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/svn/Paulista/!svn/ver/1/progs/tes/lspagos.p
+END
+lschequesxfsalida.p
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/Paulista/!svn/ver/1/progs/tes/lschequesxfsalida.p
+END
+d-valores_movimientoant.w
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/Paulista/!svn/ver/1/progs/tes/d-valores_movimientoant.w
+END
+w-lsresrubro.w
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/Paulista/!svn/ver/1/progs/tes/w-lsresrubro.w
+END
+anulcaja.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/tes/anulcaja.p
+END
+calcular_fecha_valor.p
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/Paulista/!svn/ver/1/progs/tes/calcular_fecha_valor.p
+END
+w-lsasnbco.w
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/1/progs/tes/w-lsasnbco.w
+END
+w-lscashflow.w
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/Paulista/!svn/ver/1/progs/tes/w-lscashflow.w
+END
+d-selcomprobante_caja.w
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/Paulista/!svn/ver/1/progs/tes/d-selcomprobante_caja.w
+END
+lsciebco.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/tes/lsciebco.p
+END
+w-lspagos.w
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/Paulista/!svn/ver/1/progs/tes/w-lspagos.w
+END
+lsmovbco.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/tes/lsmovbco.p
+END
+lsvaloresxfsalid.p
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/Paulista/!svn/ver/16/progs/tes/lsvaloresxfsalid.p
+END
+w-rlchequesxfecha.w
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/Paulista/!svn/ver/1/progs/tes/w-rlchequesxfecha.w
+END
+selbanco.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/tes/selbanco.p
+END
+opqrybco.i
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/tes/opqrybco.i
+END
+imprimir_movcaja.p
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/Paulista/!svn/ver/1/progs/tes/imprimir_movcaja.p
+END
+scrngbco.i
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/tes/scrngbco.i
+END
+w-consulta_movimientos.w
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/Paulista/!svn/ver/1/progs/tes/w-consulta_movimientos.w
+END
+calcular_comprobante_caja.p
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/Paulista/!svn/ver/1/progs/tes/calcular_comprobante_caja.p
+END
+v-movimiento_bancario.w
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/Paulista/!svn/ver/1/progs/tes/v-movimiento_bancario.w
+END
+tgcheque.i
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/tes/tgcheque.i
+END
+v-id-cobrador.w
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/Paulista/!svn/ver/1/progs/tes/v-id-cobrador.w
+END
+d-muestra_cheque.w
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/Paulista/!svn/ver/1/progs/tes/d-muestra_cheque.w
+END
+b-extracto_conciliado.w
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/Paulista/!svn/ver/1/progs/tes/b-extracto_conciliado.w
+END
+v-esp_estadovalor.w
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/Paulista/!svn/ver/1/progs/tes/v-esp_estadovalor.w
+END
+v-conciliacion.w
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/tes/v-conciliacion.w
+END
+calcsald.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/tes/calcsald.p
+END
+v-ranfch.w
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/tes/v-ranfch.w
+END
+lsrendiciones_x_fechacarga.p
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/Paulista/!svn/ver/16/progs/tes/lsrendiciones_x_fechacarga.p
+END
+v-banco_sucursal.w
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/Paulista/!svn/ver/1/progs/tes/v-banco_sucursal.w
+END
+prcaj000.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/tes/prcaj000.p
+END
+b-rubro.w
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/svn/Paulista/!svn/ver/1/progs/tes/b-rubro.w
+END
+d-selcarteraval.w
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/tes/d-selcarteraval.w
+END
+creacaja_imputacion.p
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/Paulista/!svn/ver/16/progs/tes/creacaja_imputacion.p
+END
+v-cheque.w
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/tes/v-cheque.w
+END
+lschequesxcuenta.p
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/Paulista/!svn/ver/1/progs/tes/lschequesxcuenta.p
+END
+w-lsmovrub.w
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/1/progs/tes/w-lsmovrub.w
+END
+b-deposito_hd.w
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/37/progs/tes/b-deposito_hd.w
+END
+comparo_ctacte_factura.p
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/Paulista/!svn/ver/1/progs/tes/comparo_ctacte_factura.p
+END
+b-comprobante_rendicion-adm.w
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/Paulista/!svn/ver/1/progs/tes/b-comprobante_rendicion-adm.w
+END
+haceasie.i
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/tes/haceasie.i
+END
+b-campos_modelocheque.w
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/Paulista/!svn/ver/1/progs/tes/b-campos_modelocheque.w
+END
+v-rubro.w
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/svn/Paulista/!svn/ver/1/progs/tes/v-rubro.w
+END
+imprimir_lote_cheques_armado.i
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/Paulista/!svn/ver/1/progs/tes/imprimir_lote_cheques_armado.i
+END
+w-cheques_cuenta.w
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/Paulista/!svn/ver/1/progs/tes/w-cheques_cuenta.w
+END
+d-detalle_valorant.w
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/Paulista/!svn/ver/1/progs/tes/d-detalle_valorant.w
+END
+lsvalaaa.i
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/tes/lsvalaaa.i
+END
+w-acreditar_cedidos_caja.w
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/Paulista/!svn/ver/1/progs/tes/w-acreditar_cedidos_caja.w
+END
+b-ctabco.w
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/tes/b-ctabco.w
+END
+imprimir_lote_cheques.i
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/Paulista/!svn/ver/1/progs/tes/imprimir_lote_cheques.i
+END
+lisccbco.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/tes/lisccbco.p
+END
+terminal.w
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/tes/terminal.w
+END
+v-tip-movcaj.w
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/Paulista/!svn/ver/1/progs/tes/v-tip-movcaj.w
+END
+fecheque.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/tes/fecheque.p
+END
+lscobros.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/tes/lscobros.p
+END
+w-lotes_de_cheques.w
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/Paulista/!svn/ver/1/progs/tes/w-lotes_de_cheques.w
+END
+q-valor.w
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/svn/Paulista/!svn/ver/1/progs/tes/q-valor.w
+END
+lsinventario_cheques.p
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/Paulista/!svn/ver/1/progs/tes/lsinventario_cheques.p
+END
+lscobranzas_x_fechacarga.p
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/Paulista/!svn/ver/1/progs/tes/lscobranzas_x_fechacarga.p
+END
+selrubro.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/tes/selrubro.p
+END
+v-que_fechavalor.w
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/Paulista/!svn/ver/1/progs/tes/v-que_fechavalor.w
+END
+hlprnbco.i
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/tes/hlprnbco.i
+END
+selconcj.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/tes/selconcj.p
+END
+lscajmdt.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/tes/lscajmdt.p
+END
+b-valoresxempresa.w
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/Paulista/!svn/ver/1/progs/tes/b-valoresxempresa.w
+END
+b-movimientos_bancarios.w
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/Paulista/!svn/ver/1/progs/tes/b-movimientos_bancarios.w
+END
+prcaj001.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/tes/prcaj001.p
+END
+w-acreditar_cedidos_caj.w
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/Paulista/!svn/ver/1/progs/tes/w-acreditar_cedidos_caj.w
+END
+hlprubro.i
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/tes/hlprubro.i
+END
+vlb-rubro_caja.p
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/tes/vlb-rubro_caja.p
+END
+w-extracto_bancario.w
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/Paulista/!svn/ver/1/progs/tes/w-extracto_bancario.w
+END
+prchq330.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/tes/prchq330.p
+END
+v-extracto.w
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/1/progs/tes/v-extracto.w
+END
+q-cuenta_bancaria.w
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/Paulista/!svn/ver/1/progs/tes/q-cuenta_bancaria.w
+END
+lscashflow.p
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/1/progs/tes/lscashflow.p
+END
+lschqlibrado.p
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/Paulista/!svn/ver/1/progs/tes/lschqlibrado.p
+END
+w-lsasncaj.w
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/1/progs/tes/w-lsasncaj.w
+END
+b-movimientos_caja.w
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/Paulista/!svn/ver/1/progs/tes/b-movimientos_caja.w
+END
+q-cheque.w
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/tes/q-cheque.w
+END
+w-rendicion.w
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/1/progs/tes/w-rendicion.w
+END
+cierrbco.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/tes/cierrbco.p
+END
+c-movimiento_tesoreria.w
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/Paulista/!svn/ver/1/progs/tes/c-movimiento_tesoreria.w
+END
+b-caj_header.w
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/Paulista/!svn/ver/1/progs/tes/b-caj_header.w
+END
+lsvaloresxfemision.p
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/Paulista/!svn/ver/16/progs/tes/lsvaloresxfemision.p
+END
+v-rng-caja.w
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/1/progs/tes/v-rng-caja.w
+END
+v-orden_cheques.w
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/tes/v-orden_cheques.w
+END
+lsresrub.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/tes/lsresrub.p
+END
+verranctabco.i
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/Paulista/!svn/ver/1/progs/tes/verranctabco.i
+END
+w-acreditar_cedidos.w
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/Paulista/!svn/ver/1/progs/tes/w-acreditar_cedidos.w
+END
+d-detalle_valor.w
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/tes/d-detalle_valor.w
+END
+creacheque.p
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/1/progs/tes/creacheque.p
+END
+ranproch.i
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/tes/ranproch.i
+END
+saldoleoo.p
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/Paulista/!svn/ver/1/progs/tes/saldoleoo.p
+END
+v-programacion_pagos.w
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/Paulista/!svn/ver/1/progs/tes/v-programacion_pagos.w
+END
+w-modelocheque.w
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/tes/w-modelocheque.w
+END
+q-mostrar_cheque.w
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/Paulista/!svn/ver/1/progs/tes/q-mostrar_cheque.w
+END
+anuldepos.p
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/Paulista/!svn/ver/1/progs/tes/anuldepos.p
+END
+w-lscobranzas.w
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/Paulista/!svn/ver/1/progs/tes/w-lscobranzas.w
+END
+w-consulta_depositos.w
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/Paulista/!svn/ver/1/progs/tes/w-consulta_depositos.w
+END
+PRCAJ724.P
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/tes/PRCAJ724.P
+END
+autoconciliar.p
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/Paulista/!svn/ver/1/progs/tes/autoconciliar.p
+END
+verrabco.i
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/tes/verrabco.i
+END
+selctbco.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/tes/selctbco.p
+END
+w-lschequesxcuenta.w
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/Paulista/!svn/ver/1/progs/tes/w-lschequesxcuenta.w
+END
+b-deposito_x_cuenta.w
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/Paulista/!svn/ver/1/progs/tes/b-deposito_x_cuenta.w
+END
+w-lsingresos.w
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/Paulista/!svn/ver/1/progs/tes/w-lsingresos.w
+END
+b-deposito_dt.w
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/Paulista/!svn/ver/1/progs/tes/b-deposito_dt.w
+END
+v-leyenda_extracto.w
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/Paulista/!svn/ver/1/progs/tes/v-leyenda_extracto.w
+END
+prchq314.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/tes/prchq314.p
+END
+b-chequeras.w
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/1/progs/tes/b-chequeras.w
+END
+b-deposito_hd1.w
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/39/progs/tes/b-deposito_hd1.w
+END
+q-moneda.w
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/tes/q-moneda.w
+END
+lscajmovdet.p
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/1/progs/tes/lscajmovdet.p
+END
+b-programacion_pagos_tes.w
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/Paulista/!svn/ver/1/progs/tes/b-programacion_pagos_tes.w
+END
+resurendcob.p
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/1/progs/tes/resurendcob.p
+END
+tgctabco.i
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/tes/tgctabco.i
+END
+v-deshas_cuenta.w
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/tes/v-deshas_cuenta.w
+END
+w-lsegresos.w
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/1/progs/tes/w-lsegresos.w
+END
+v-modelocheque.w
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/tes/v-modelocheque.w
+END
+lsdeposito.p
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/37/progs/tes/lsdeposito.p
+END
+w-lscajmovdet.w
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/Paulista/!svn/ver/1/progs/tes/w-lscajmovdet.w
+END
+lschequesxfacredita.p
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/Paulista/!svn/ver/1/progs/tes/lschequesxfacredita.p
+END
+lsvaloresxfrecep.p
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/Paulista/!svn/ver/16/progs/tes/lsvaloresxfrecep.p
+END
+sumarizar_cheques_por_caja.p
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/Paulista/!svn/ver/1/progs/tes/sumarizar_cheques_por_caja.p
+END
+lsmovctaant.p
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/1/progs/tes/lsmovctaant.p
+END
+anular_conciliacion.p
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/Paulista/!svn/ver/1/progs/tes/anular_conciliacion.p
+END
+v-esp-caja.w
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/1/progs/tes/v-esp-caja.w
+END
+fecvalor.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/tes/fecvalor.p
+END
+r.p
+K 25
+svn:wc:ra_dav:version-url
+V 38
+/svn/Paulista/!svn/ver/1/progs/tes/r.p
+END
+w-lsresasn.w
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/1/progs/tes/w-lsresasn.w
+END
+v-ctabco.w
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/tes/v-ctabco.w
+END
+w-lscobranzas_x_fechacarga.w
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/Paulista/!svn/ver/1/progs/tes/w-lscobranzas_x_fechacarga.w
+END
+d-valores_movimiento.w
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/Paulista/!svn/ver/13/progs/tes/d-valores_movimiento.w
+END
+b-extracto_sin_conciliar.w
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/Paulista/!svn/ver/1/progs/tes/b-extracto_sin_conciliar.w
+END
+w-rlasientos_caja.w
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/Paulista/!svn/ver/1/progs/tes/w-rlasientos_caja.w
+END
+b-extracto.w
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/1/progs/tes/b-extracto.w
+END
+selncaja.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/tes/selncaja.p
+END
+runactchequ.p
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/1/progs/tes/runactchequ.p
+END
+crear_valores.p
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/Paulista/!svn/ver/1/progs/tes/crear_valores.p
+END
+b-valores_cedidos.w
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/Paulista/!svn/ver/1/progs/tes/b-valores_cedidos.w
+END
+c-cnsext.w
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/tes/c-cnsext.w
+END
+w-programar_pagos.w
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/Paulista/!svn/ver/1/progs/tes/w-programar_pagos.w
+END
+emimcaja-suc.p
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/Paulista/!svn/ver/1/progs/tes/emimcaja-suc.p
+END
+b-rendicion.w
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/1/progs/tes/b-rendicion.w
+END
+d-actdtcaj.w
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/1/progs/tes/d-actdtcaj.w
+END
+lisexbco.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/tes/lisexbco.p
+END
+hlpncaja.i
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/tes/hlpncaja.i
+END
+lschequespendientes.p
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/Paulista/!svn/ver/1/progs/tes/lschequespendientes.p
+END
+lscajmov.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/tes/lscajmov.p
+END
+lsdebitosxcuenta.p
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/Paulista/!svn/ver/1/progs/tes/lsdebitosxcuenta.p
+END
+vlb-cuenta_bancaria.p
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/Paulista/!svn/ver/1/progs/tes/vlb-cuenta_bancaria.p
+END
+w-bancos.w
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/tes/w-bancos.w
+END
+dtlmovcaja.p
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/1/progs/tes/dtlmovcaja.p
+END
+v-rendicion.w
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/1/progs/tes/v-rendicion.w
+END
+anular_deposito_bancario.p
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/Paulista/!svn/ver/1/progs/tes/anular_deposito_bancario.p
+END
+w-conciliar_extracto.w
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/Paulista/!svn/ver/1/progs/tes/w-conciliar_extracto.w
+END
+v-cuenta-bancaria.w
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/Paulista/!svn/ver/1/progs/tes/v-cuenta-bancaria.w
+END
+hlpncaj2.i
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/tes/hlpncaj2.i
+END
+d-selcarteraval(antes).w
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/Paulista/!svn/ver/1/progs/tes/d-selcarteraval(antes).w
+END
+d-crear_extracto.w
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/Paulista/!svn/ver/1/progs/tes/d-crear_extracto.w
+END
+prcaj194.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/tes/prcaj194.p
+END
+emichequ.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/tes/emichequ.p
+END
+LSCHQCTA.P
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/tes/LSCHQCTA.P
+END
+q-caja.w
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/svn/Paulista/!svn/ver/1/progs/tes/q-caja.w
+END
+c-movimiento_tesoreria-old.w
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/Paulista/!svn/ver/1/progs/tes/c-movimiento_tesoreria-old.w
+END
+desaplicar.p
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/1/progs/tes/desaplicar.p
+END
+w-conciliar_manual.w
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/Paulista/!svn/ver/1/progs/tes/w-conciliar_manual.w
+END
+w-lsresrub.w
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/1/progs/tes/w-lsresrub.w
+END
+lsmovbcoall.p
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/1/progs/tes/lsmovbcoall.p
+END
+v-caj_header.w
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/Paulista/!svn/ver/1/progs/tes/v-caj_header.w
+END
+w-rlvaloresxcliente.w
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/Paulista/!svn/ver/1/progs/tes/w-rlvaloresxcliente.w
+END
+w-imprimir_cheques.w
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/Paulista/!svn/ver/1/progs/tes/w-imprimir_cheques.w
+END
+w-consulta_depositos_xcuenta.w
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/Paulista/!svn/ver/1/progs/tes/w-consulta_depositos_xcuenta.w
+END
+rangobco.i
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/tes/rangobco.i
+END
+lschqeda.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/tes/lschqeda.p
+END
+lsingresos.p
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/1/progs/tes/lsingresos.p
+END
+emitir_movcaja.p
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/tes/emitir_movcaja.p
+END
+chequman.i
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/tes/chequman.i
+END
+b-imprimir_cheques.w
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/Paulista/!svn/ver/1/progs/tes/b-imprimir_cheques.w
+END
+v-id-cuenta_conciliacion.w
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/Paulista/!svn/ver/1/progs/tes/v-id-cuenta_conciliacion.w
+END
+b-modelocheque.w
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/tes/b-modelocheque.w
+END
+cierrarendicion.p
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/tes/cierrarendicion.p
+END
+q-ctabco.w
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/tes/q-ctabco.w
+END
+w-acreditar_valores.w
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/Paulista/!svn/ver/1/progs/tes/w-acreditar_valores.w
+END
+lsvaloresxfacred.p
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/Paulista/!svn/ver/16/progs/tes/lsvaloresxfacred.p
+END
+v-id-moneda.w
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/1/progs/tes/v-id-moneda.w
+END
+b-cuenta_banco.w
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/tes/b-cuenta_banco.w
+END
+modoscompensacion.i
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/Paulista/!svn/ver/1/progs/tes/modoscompensacion.i
+END
+b-valor.w
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/svn/Paulista/!svn/ver/1/progs/tes/b-valor.w
+END
+w-asncaja.w
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/Paulista/!svn/ver/1/progs/tes/w-asncaja.w
+END
+c-depositar_valores.w
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/Paulista/!svn/ver/1/progs/tes/c-depositar_valores.w
+END
+b-extrac.w
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/tes/b-extrac.w
+END
+b-recibos-rendicion.w
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/Paulista/!svn/ver/1/progs/tes/b-recibos-rendicion.w
+END
+ranctabco.i
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/Paulista/!svn/ver/1/progs/tes/ranctabco.i
+END
+b-caja_valor.w
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/Paulista/!svn/ver/1/progs/tes/b-caja_valor.w
+END
+w-cuenta-bancaria.w
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/Paulista/!svn/ver/1/progs/tes/w-cuenta-bancaria.w
+END
+b-bancos.w
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/tes/b-bancos.w
+END
+v-valor.w
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/svn/Paulista/!svn/ver/1/progs/tes/v-valor.w
+END
+lispgpro.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/tes/lispgpro.p
+END
+lscobranza_x_cobrador.p
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/Paulista/!svn/ver/1/progs/tes/lscobranza_x_cobrador.p
+END
+lschqprv.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/tes/lschqprv.p
+END
+lsvaloresxfdepos.p
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/Paulista/!svn/ver/1/progs/tes/lsvaloresxfdepos.p
+END
+lsmovcambio.p
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/1/progs/tes/lsmovcambio.p
+END
+calculareicaja.i
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/tes/calculareicaja.i
+END
+listcheq.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/tes/listcheq.p
+END
+lschequesxfemision.p
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/Paulista/!svn/ver/1/progs/tes/lschequesxfemision.p
+END
+w-valoresafecha.w
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/tes/w-valoresafecha.w
+END
+v-id-moneda_tes.w
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/tes/v-id-moneda_tes.w
+END
+d-extraer_efectivo.w
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/Paulista/!svn/ver/1/progs/tes/d-extraer_efectivo.w
+END
+w-lsmovcambio.w
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/Paulista/!svn/ver/1/progs/tes/w-lsmovcambio.w
+END
+lsmovcta.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/tes/lsmovcta.p
+END
+v-par-asncaja.w
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/Paulista/!svn/ver/1/progs/tes/v-par-asncaja.w
+END
+b-banco_conciliado.w
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/Paulista/!svn/ver/1/progs/tes/b-banco_conciliado.w
+END
+prcheques.p
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/Paulista/!svn/ver/1/progs/tes/prcheques.p
+END
+v-valores_caja.w
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/tes/v-valores_caja.w
+END
+lsasnbco.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/tes/lsasnbco.p
+END
+selsucur.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/tes/selsucur.p
+END
+w-movimientos_bancarios.w
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/Paulista/!svn/ver/1/progs/tes/w-movimientos_bancarios.w
+END
+lsvaloresxcliente.p
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/Paulista/!svn/ver/1/progs/tes/lsvaloresxcliente.p
+END
+v-chequera.w
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/1/progs/tes/v-chequera.w
+END
+v-campo_modelo.w
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/tes/v-campo_modelo.w
+END
+v-caja.w
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/svn/Paulista/!svn/ver/1/progs/tes/v-caja.w
+END
+d-muestra_valor.w
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/tes/d-muestra_valor.w
+END
+conciliar_extracto.p
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/Paulista/!svn/ver/1/progs/tes/conciliar_extracto.p
+END
+vlb-caja.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/tes/vlb-caja.p
+END

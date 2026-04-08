@@ -1,0 +1,30 @@
+/*=============================================================================================*/
+/*     DADO UN VALOR DE DATO DETERMINADO, CUENTA LA CANTIDAD DE OCURRENCIAS DEL MISMO          */
+/*=============================================================================================*/
+
+DEFINE INPUT  PARAMETER p-cadena    AS CHARACTER.
+DEFINE INPUT  PARAMETER p-rotulo    AS CHARACTER.
+DEFINE OUTPUT PARAMETER p-jotaesima AS INTEGER.
+
+DEFINE VARIABLE p1                  AS INTEGER.
+DEFINE VARIABLE p2                  AS INTEGER.
+DEFINE VARIABLE k                   AS INTEGER.
+DEFINE VARIABLE straux              AS CHARACTER.
+
+      /* Averiguamos la posicion de comienzo del valor en el string de entrada */
+
+straux = p-cadena.
+p-jotaesima = 0.
+DO WHILE straux <> "":
+    p1 = INDEX(straux,"<" + p-rotulo + ">").
+    IF p1 <> 0 
+    THEN DO:
+         p2 = INDEX(straux,"</" + p-rotulo + ">").
+         straux = SUBSTRING(straux,p2 + LENGTH("</" + p-rotulo + ">")).
+         p-jotaesima = p-jotaesima + 1.
+    END.
+    ELSE DO:
+         straux = "".
+    END.     
+END.
+

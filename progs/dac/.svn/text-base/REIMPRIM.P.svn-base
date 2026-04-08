@@ -1,0 +1,17 @@
+DEFINE VARIABLE que_ficha LIKE Ficha.num_ficha.
+REPEAT:
+   UPDATE que_ficha FGCOLOR 0 BGCOLOR 15
+          WITH SIDE-LABELS THREE-D FGCOLOR 0 BGCOLOR 8 1 DOWN
+                
+               VIEW-AS DIALOG-BOX WIDTH 45 TITLE "Indique Ficha a reimprimir".
+   FIND Ficha WHERE Ficha.num_ficha = que_ficha NO-LOCK NO-ERROR.
+   IF AVAILABLE Ficha 
+   THEN DO: 
+        RUN PRFICHAD.P ( INPUT ROWID(Ficha) ).
+   END.
+   ELSE DO:
+        MESSAGE "No existe la ficha indicada"
+                VIEW-AS ALERT-BOX WARNING TITLE "Ficha NO hallada".
+   END.                  
+END.   
+                              

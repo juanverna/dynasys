@@ -1,0 +1,17 @@
+DEFINE BUFFER btarea FOR tarea.
+FIND tipo_evento WHERE tipo_evento.cdg_tipo_evento = "LT".
+FOR EACH evento OF tipo_evento WHERE  NOT evento.anulado AND NOT Evento.trae_libro AND evento.frealizado <> ? BY evento.frealizado DESCENDING:
+FIND tarea OF evento WHERE tarea.cdg_tipotarea = "J" AND tarea.estado <> "D" NO-LOCK NO-ERROR.
+FIND btarea OF evento WHERE tarea.cdg_tipotarea = "H" AND tarea.estado <> "D" NO-LOCK NO-ERROR.
+/*FOR each btarea OF evento WHERE tarea.cdg_tipotarea = "J" AND tarea.estado <> "D" AND ROWID(btarea) <> ROWID(tarea):*/
+IF AVAILABLE tarea THEN NEXT.
+DISPLAY evento.nro_evento
+        evento.frealizado
+        tarea.nro_tarea WHEN AVAILABLE tarea
+        tarea.estado WHEN AVAILABLE tarea.
+        
+/*DELETE btarea.
+END.*/
+
+
+END.

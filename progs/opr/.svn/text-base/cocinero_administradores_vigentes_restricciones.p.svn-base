@@ -1,0 +1,46 @@
+/*restricciones de administradores con contratos vigentes*/
+{tt2xls.i}
+DEFINE VAR p-has_fecha AS DATE NO-UNDO.
+    DEFINE VAR p-des_fecha AS DATE NO-UNDO.
+    DEFINE VAR p-fecha AS DATE NO-UNDO.
+    DEFINE VAR p-des_punto        AS INTEGER INITIAL 0.  
+    DEFINE var p-has_punto        AS INTEGER INITIAL 999. 
+DEFINE TEMP-TABLE tt
+FIELD cdg_cliente LIKE cliente.cdg_cliente
+FIELD nom_cliente LIKE Cliente.nom_cliente
+FIELD valor1 AS CHAR FORMAT "X(80)"
+FIELD valor2 AS CHAR FORMAT "X(80)"
+FIELD totdeuda AS DECIMAL LABEL "DEUDA".
+    p-fecha = today.
+    p-des_fecha = p-fecha.
+    p-has_fecha = 01/01/3000.
+
+DEFINE BUFFER administrador FOR cliente.
+
+FOR EACH Contrato_hd NO-LOCK
+    WHERE ( Contrato_hd.cant_periodos = 0  OR contrato_hd.resto_periodos <> 0 ) AND contrato_hd.estado = "A" AND
+     not Contrato_hd.anulado and  contrato_hd.fecha_baja = ?, FIRST cliente OF contrato_hd, administrador WHERE administrador.nro_cliente = cliente.nro_adminis BREAK BY 
+    administrador.cdg_cliente :
+IF FIRST-OF(administrador.cdg_cliente) THEN DO:
+    FIND tt WHERE tt.cdg_cliente = administrador.cdg_cliente NO-ERROR.
+    IF NOT AVAILABLE tt THEN DO:
+       CREATE tt.
+       ASSIGN tt.cdg_cliente = administrador.cdg_cliente
+              tt.nom_cliente = administrador.nom_cliente.
+              RUN deuda_administracion-corte.p ( administrador.nro_cliente, TODAY , OUTPUT tt.totdeuda ).
+    END.
+    FOR EACH cliente_restriccion OF administrador:
+        FIND FIRST restriccion OF cliente_restriccion NO-ERROR.
+            tt.valor1 = (IF tt.valor1 = "" THEN "" ELSE tt.valor1 + ",") + (IF AVAILABLE restriccion THEN restriccion.cdg_restriccion ELSE "ERROR" ) + "[" + cliente_restriccion.valor + "]".
+    END.
+END.
+   /* FOR EACH contrato_restriccion WHERE contrato_hd.nro_contrato = contrato_restriccion.nro_contrato:
+        FIND FIRST restriccion OF contrato_restriccion NO-ERROR.
+            tt.valor2 = (IF tt.valor2 = "" THEN "" ELSE tt.valor2 + ",") + (IF AVAILABLE restriccion THEN restriccion.cdg_restriccion ELSE "ERROR" ) + ":" + contrato_restriccion.valor.
+    END.*/
+    
+END.
+    RUN pTT2XLS                                                              
+      ( INPUT TEMP-TABLE tt:DEFAULT-BUFFER-HANDLE,                       
+        INPUT 'c:\temp\rest.xls',                                               
+        INPUT 'PageSetup:PrintGridlines=Y|PageSetup:PrintTitleRows=$1:$1' ).     

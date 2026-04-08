@@ -1,0 +1,18 @@
+/*========================================================================================*/
+/*               MUESTRA UNA VENTANA QUE PERMITE SELECCIONAR UN ARCHIVO                   */
+/*========================================================================================*/
+
+DEFINE INPUT-OUTPUT PARAMETER v-archivo AS CHARACTER.
+DEFINE OUTPUT PARAMETER puso_ok         AS LOGICAL.
+
+SYSTEM-DIALOG GET-FILE v-archivo
+      FILTERS "Archivos de Texto (*.TXT)" "*.txt"
+      INITIAL-FILTER 1
+      MUST-EXIST 
+      DEFAULT-EXTENSION ".txt"
+      INITIAL-DIR ".\" 
+      RETURN-TO-START-DIR 
+      TITLE "Seleccione el archivo a leer (2)" 
+      USE-FILENAME
+      UPDATE puso_ok.
+

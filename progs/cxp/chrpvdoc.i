@@ -1,0 +1,1018 @@
+/*=================================================================================*/
+/*                                                                                 */
+/*                      C O M I E N Z O   D E   S E C C I O N                      */
+/*                                                                                 */
+/*               DEFINICIONES LOCALES:VARIABLES, FRAMES, Y SUBMENUES               */
+/*                                                                                 */
+/*=================================================================================*/
+/*                                                                                 */
+&IF {&SECCION} = "DEFINICIONES"
+&THEN
+/*                                                                                 */
+/*---------------------------------------------------------------------------------*/
+
+DEFINE BUFFER B-Opg_detalle         FOR Opg_detalle.
+DEFINE BUFFER B-Cta_cte_prv         FOR Cta_cte_prv.
+DEFINE BUFFER B-Sub_header_prv      FOR Sub_header_prv.
+DEFINE BUFFER B-Sub_detalle_prv     FOR Sub_detalle_prv.
+
+DEFINE NEW SHARED TEMP-TABLE T-Sub_header_prv    LIKE Sub_header_prv.
+DEFINE NEW SHARED TEMP-TABLE T-Sub_detalle_prv   LIKE Sub_detalle_prv.
+
+DEFINE VARIABLE ant_proveedor       AS ROWID.
+DEFINE VARIABLE v-tip_comprob       LIKE Opg_header.tip_comprob.
+DEFINE VARIABLE v-prx_comprob       LIKE Parametro.cdg_parametro.
+DEFINE VARIABLE saldo_importe       LIKE Opg_detalle.importe.
+DEFINE VARIABLE prop_importe        LIKE Opg_detalle.importe.
+
+&ENDIF
+
+/*=================================================================================*/
+/*                           F I N   D E   S E C C I O N                           */
+/*=================================================================================*/
+
+/*=================================================================================*/
+/*                                                                                 */
+/*                      C O M I E N Z O   D E   S E C C I O N                      */
+/*                                                                                 */
+/*                           FRAME PRINCIPAL DEL DOCUMENTO                         */
+/*                                                                                 */
+/*=================================================================================*/
+/*                                                                                 */
+&IF {&SECCION} = "FRAME_PPAL"
+&THEN
+/*                                                                                 */
+/*---------------------------------------------------------------------------------*/
+
+     Opg_header.tip_comprob AT ROW 2.5 COL 12 COLON-ALIGNED
+          VIEW-AS FILL-IN 
+          SIZE 7 BY .65
+          FGCOLOR fe_c BGCOLOR be_c
+          LABEL "Comproban&te"
+     Opg_header.prf_comprob AT ROW 2.5 COL 20 COLON-ALIGNED NO-LABEL
+          VIEW-AS FILL-IN 
+          SIZE 5.78 BY .65
+          FGCOLOR fe_c BGCOLOR be_c
+     Opg_header.nro_comprob AT ROW 2.5 COL 27 COLON-ALIGNED NO-LABEL
+          VIEW-AS FILL-IN 
+          SIZE 7 BY .65
+          FGCOLOR fe_c BGCOLOR be_c
+     Opg_header.fecha AT ROW 2.5 COL 42 COLON-ALIGNED
+          VIEW-AS FILL-IN 
+          SIZE 12 BY .65
+          FGCOLOR fe_c BGCOLOR be_c
+     ver NO-LABEL FGCOLOR fg_c
+     Opg_header.anulado                                        FGCOLOR fg_c
+     SKIP(0.1)
+     Proveedor.cdg_proveedor AT ROW 3.5 COL 12 COLON-ALIGNED
+          LABEL "Pro&veedor"
+          VIEW-AS FILL-IN 
+          SIZE 7 BY .65
+          FGCOLOR fe_c BGCOLOR be_c
+     Proveedor.nombre   AT ROW 3.5 COL 20 COLON-ALIGNED
+          NO-LABEL
+          VIEW-AS FILL-IN 
+          SIZE 29 BY .65
+          FGCOLOR fg_c BGCOLOR bg_c
+     Opg_header.imp_neto  AT ROW 3.5 COL 70 COLON-ALIGNED
+          LABEL "Neto"
+          VIEW-AS FILL-IN 
+          SIZE 9 BY .65
+          FGCOLOR fg_c BGCOLOR bg_c
+     SKIP(0.1)
+     Condicion_impos.cdg_condiva  AT ROW 4.5 COL 12 COLON-ALIGNED
+          VIEW-AS FILL-IN 
+          SIZE 7 BY .65
+          FGCOLOR fe_c BGCOLOR be_c
+     Condicion_impos.texto_iva   AT ROW 4.5 COL 20 COLON-ALIGNED
+          NO-LABEL
+          VIEW-AS FILL-IN 
+          SIZE 29 BY .65
+          FGCOLOR fg_c BGCOLOR bg_c
+     Opg_header.imp_total  AT ROW 4.5 COL 70 COLON-ALIGNED
+          VIEW-AS FILL-IN 
+          SIZE 9 BY .65
+          FGCOLOR fg_c BGCOLOR bg_c
+     SKIP(0.1)
+     Condicion_vent.cdg_cndventa  AT ROW 5.5 COL 12 COLON-ALIGNED
+          VIEW-AS FILL-IN 
+          SIZE 7 BY .65
+          FGCOLOR fe_c BGCOLOR be_c
+          LABEL "&C.Venta"
+     Condicion_vent.descripcion    AT ROW 5.5 COL 20 COLON-ALIGNED
+          NO-LABEL
+          VIEW-AS FILL-IN 
+          SIZE 29 BY .65
+          FGCOLOR fg_c BGCOLOR bg_c
+     Opg_header.imp_pesos  AT ROW 5.5 COL 70 COLON-ALIGNED
+          VIEW-AS FILL-IN 
+          SIZE 9 BY .65
+          FGCOLOR fg_c BGCOLOR bg_c
+     SKIP(0.1)
+     Imputacion.cdg_imputacion    AT ROW 6.5 COL 12 COLON-ALIGNED
+          VIEW-AS FILL-IN 
+          SIZE 7 BY .65
+          FGCOLOR fe_c BGCOLOR be_c
+          LABEL "Conce&pto"
+     Imputacion.dsc_imputacion   AT ROW 6.5 COL 20 COLON-ALIGNED
+          NO-LABEL
+          VIEW-AS FILL-IN 
+          SIZE 29 BY .65
+          FGCOLOR fg_c BGCOLOR bg_c
+     Opg_header.imp_difcambio  AT ROW 6.5 COL 70 COLON-ALIGNED
+          VIEW-AS FILL-IN 
+          SIZE 9 BY .65
+          FGCOLOR fg_c BGCOLOR bg_c
+     SKIP(0.1)
+     Moneda.cdg_moneda    AT ROW 7.5 COL 12 COLON-ALIGNED
+          VIEW-AS FILL-IN 
+          SIZE 7 BY .65
+          FGCOLOR fe_c BGCOLOR be_c
+          LABEL "&Moneda" 
+     Moneda.descripcion   AT ROW 7.5 COL 20 COLON-ALIGNED
+          NO-LABEL
+          VIEW-AS FILL-IN 
+          SIZE 29 BY .65
+          FGCOLOR fg_c BGCOLOR bg_c
+     Opg_header.cambio  AT ROW 7.5 COL 70 COLON-ALIGNED
+          VIEW-AS FILL-IN 
+          SIZE 9 BY .65
+          FGCOLOR fg_c BGCOLOR bg_c
+
+     Opg_header.cdg_tiporetgan  AT ROW 8.5 COL 12 COLON-ALIGNED
+          LABEL "&Actividad"
+          VIEW-AS FILL-IN 
+          SIZE 7 BY .65
+          FGCOLOR fe_c BGCOLOR be_c
+     Tipo_actividad.nom_tipactiv  AT ROW 8.5 COL 20 COLON-ALIGNED NO-LABEL
+          VIEW-AS FILL-IN 
+          SIZE 29 BY .65
+          FGCOLOR fg_c BGCOLOR bg_c 
+
+     Cta_cte_prv.tip_comprob AT ROW 9.5 COL 12 COLON-ALIGNED
+          LABEL "&Aplicacion" 
+          VIEW-AS FILL-IN 
+          SIZE 5 BY .75
+          BGCOLOR be_c FGCOLOR fe_c 
+     Cta_cte_prv.prf_comprob AT ROW 9.5 COL 18 COLON-ALIGNED
+          NO-LABEL
+          VIEW-AS FILL-IN 
+          SIZE 5 BY .75
+          BGCOLOR be_c FGCOLOR fe_c 
+     Cta_cte_prv.nro_comprob AT ROW 9.5 COL 24 COLON-ALIGNED
+          NO-LABEL
+          VIEW-AS FILL-IN 
+          SIZE 9 BY .75
+          BGCOLOR be_c FGCOLOR fe_c 
+     Cta_cte_prv.nro_vencimiento AT ROW 9.5 COL 34 COLON-ALIGNED
+          NO-LABEL
+          VIEW-AS FILL-IN 
+          SIZE 5 BY .75
+          BGCOLOR be_c FGCOLOR fe_c 
+     Opg_header.tipo_pago FGCOLOR fg_c
+
+&ENDIF
+
+/*=================================================================================*/
+/*                           F I N   D E   S E C C I O N                           */
+/*=================================================================================*/
+
+/*=================================================================================*/
+/*                                                                                 */
+/*                      C O M I E N Z O   D E   S E C C I O N                      */
+/*                                                                                 */
+/*                                      MENUES                                     */
+/*                                                                                 */
+/*=================================================================================*/
+/*                                                                                 */
+&IF {&SECCION} = "MENUES"
+&THEN
+/*                                                                                 */
+/*---------------------------------------------------------------------------------*/
+          
+/* ------------------------------------------------------------------------
+                              S U B M E N U E S 
+   ------------------------------------------------------------------------  */
+
+DEFINE MENU  Principal MENUBAR
+   MENU-ITEM Salir                  LABEL "&Salir".
+
+&ENDIF
+
+/*=================================================================================*/
+/*                           F I N   D E   S E C C I O N                           */
+/*=================================================================================*/
+
+/*=================================================================================*/
+/*                                                                                 */
+/*                      C O M I E N Z O   D E   S E C C I O N                      */
+/*                                                                                 */
+/*                          TRIGGERS PARTICULARES DEL CASO                         */
+/*                                                                                 */
+/*=================================================================================*/
+/*                                                                                 */
+&IF {&SECCION} = "TRIGGERS"
+&THEN
+/*                                                                                 */
+/*---------------------------------------------------------------------------------*/
+
+ON RETURN, TAB OF Opg_header.tip_comprob IN FRAME frm-documento
+DO:
+
+   Opg_header.tip_comprob:SCREEN-VALUE IN FRAME frm-documento =
+   CAPS(Opg_header.tip_comprob:SCREEN-VALUE IN FRAME frm-documento).
+
+   IF LOOKUP(INPUT FRAME frm-documento Opg_header.tip_comprob, {&TIPOS_VALIDOS}) = 0 
+   THEN DO:
+      RUN PONMENSJ.P (INPUT "DOCS010").
+      RETURN NO-APPLY.
+   END.
+END.   
+
+ON RETURN, TAB OF Opg_header.nro_comprob IN FRAME frm-documento
+DO:
+
+  IF AVAILABLE Opg_header AND modo = MD_ALTA
+  THEN ASSIGN 
+         Opg_header.tip_comprob
+         Opg_header.prf_comprob
+         Opg_header.nro_comprob.
+
+   IF LOOKUP(INPUT FRAME frm-documento Opg_header.tip_comprob, {&TIPOS_VALIDOS}) = 0 
+   THEN DO:
+      RUN PONMENSJ.P (INPUT "DOCS010").
+      RETURN NO-APPLY.
+   END.
+
+   IF modo <> MD_ALTA
+   THEN DO:
+      RUN BUSCAR_DOCUMENTO.
+      IF hay_error THEN RETURN NO-APPLY.
+   END.
+   ELSE DO:
+      IF NOT AVAILABLE Proveedor
+      THEN DO:
+         RUN PONMENSJ.P (INPUT "FAPR010").
+         RETURN NO-APPLY.
+      END.
+      ELSE DO:
+         IF CAN-FIND( FIRST Opg_header 
+                            WHERE Opg_header.nro_proveedor = Proveedor.nro_proveedor
+                              AND Opg_header.tip_comprob = INPUT Opg_header.tip_comprob 
+                              AND Opg_header.prf_comprob = INPUT Opg_header.prf_comprob
+                              AND Opg_header.nro_comprob = INPUT Opg_header.nro_comprob
+                              AND ROWID(Opg_header) <> act_opg_head)
+         THEN DO:
+            RUN PONMENSJ.P (INPUT "DOCS011").
+            RETURN NO-APPLY.
+         END.
+         ELSE DO:
+            ASSIGN  Opg_header.tip_comprob
+                    Opg_header.prf_comprob
+                    Opg_header.nro_comprob.
+
+         END.                
+
+      END.   
+
+   END.
+
+END.               
+
+ON VALUE-CHANGED OF Opg_header.tipo_pago IN FRAME frm-documento
+DO:
+
+  ASSIGN FRAME frm-documento Opg_header.tipo_pago.
+  IF Opg_header.tipo_pago = 2 
+  THEN DO:    
+     RUN HABILITAR_NETO.
+  END.
+  ELSE DO:
+     RUN HABILITAR_CTACTE.
+  END.     
+  DISPLAY " " @ Opg_header.imp_neto
+          " " @ Cta_cte_prv.tip_comprob
+          " " @ Cta_cte_prv.prf_comprob
+          " " @ Cta_cte_prv.nro_comprob
+          " " @ Cta_cte_prv.nro_vencimiento
+          WITH FRAME frm-documento.
+  
+END.
+
+ON ".", MOUSE-SELECT-DBLCLICK OF Cta_cte_prv.tip_comprob IN FRAME frm-documento,
+                                 Cta_cte_prv.prf_comprob IN FRAME frm-documento,
+                                 Cta_cte_prv.nro_comprob IN FRAME frm-documento,
+                                 Cta_cte_prv.nro_vencimiento IN FRAME frm-documento
+DO:
+  RUN SELCCPRV.P.
+  FOR EACH B-Cta_cte_prv OF Proveedor WHERE B-Cta_cte_prv.selectado EXCLUSIVE-LOCK:
+
+     DISPLAY B-Cta_cte_prv.tip_comprob @ Cta_cte_prv.tip_comprob
+             B-Cta_cte_prv.prf_comprob @ Cta_cte_prv.prf_comprob
+             B-Cta_cte_prv.nro_comprob @ Cta_cte_prv.nro_comprob
+             B-Cta_cte_prv.nro_vencimiento @ Cta_cte_prv.nro_vencimiento WITH FRAME frm-documento.
+
+     APPLY "RETURN" TO Cta_cte_prv.nro_vencimiento IN FRAME frm-documento.
+
+     B-Cta_cte_prv.selectado = NO.
+  END.
+  RETURN NO-APPLY.
+END.   
+
+ON RETURN, TAB OF Cta_cte_prv.nro_vencimiento  IN FRAME frm-documento
+DO:
+
+   IF LOOKUP(INPUT Cta_cte_prv.tip_comprob,"FA,FB,DA,DB,CA,CB") = 0
+   THEN DO:
+      RUN PONMENSJ.P (INPUT "DBCR017").
+      RETURN NO-APPLY.
+   END.
+   
+   IF INPUT Cta_cte_prv.nro_vencimiento = 0                      /* Pone vencimiento en 1 */
+      THEN Cta_cte_prv.nro_vencimiento:SCREEN-VALUE = STRING(1). /* si no se indico nada  */
+
+   FIND Cta_cte_prv OF Proveedor 
+                USING Cta_cte_prv.tip_comprob AND
+                      Cta_cte_prv.prf_comprob AND
+                      Cta_cte_prv.nro_comprob AND
+                      Cta_cte_prv.nro_vencimiento EXCLUSIVE-LOCK NO-ERROR.
+
+   IF NOT AVAILABLE Cta_cte_prv
+   THEN DO:
+      IF LOCKED Cta_cte_prv
+      THEN DO:
+         RUN PONMENSJ.P (INPUT "DBCR006").
+         RETURN NO-APPLY.
+      END.
+      ELSE DO:
+         RUN PONMENSJ.P (INPUT "DBCR001").
+         RETURN NO-APPLY.
+      END.
+   END.
+
+   IF Cta_cte_prv.nro_proveedor <> Proveedor.nro_proveedor
+   THEN DO:
+      RUN PONMENSJ.P (INPUT "DBCR002").
+      RETURN NO-APPLY.
+   END.
+
+   IF Cta_cte_prv.credito = Cta_cte_prv.debito
+   THEN DO:
+      RUN PONMENSJ.P (INPUT "DBCR003").
+      RETURN NO-APPLY.
+   END.
+
+   IF CAN-FIND(FIRST Opg_detalle OF Opg_header
+                     WHERE Opg_detalle.tip_cancela     = INPUT Cta_cte_prv.tip_comprob
+                       AND Opg_detalle.prf_cancela     = INPUT Cta_cte_prv.prf_comprob
+                       AND Opg_detalle.nro_cancela     = INPUT Cta_cte_prv.nro_comprob
+                       AND Opg_detalle.nro_vencimiento = INPUT Cta_cte_prv.nro_vencimiento)
+   THEN DO:
+      RUN PONMENSJ.P (INPUT "DBCR004").
+      RETURN NO-APPLY.
+   END.
+   
+   IF Cta_cte_prv.imputado
+   THEN DO:
+      RUN PONMENSJ.P (INPUT "DBCR005").
+      RETURN NO-APPLY.
+   END.
+
+   IF Cta_cte_prv.cdg_tiporetgan <> Tipo_actividad.cdg_tiporetgan
+   THEN DO:
+      RUN PONMENSJ.P (INPUT "OPAG011").
+      RETURN NO-APPLY.
+   END.
+
+   act_ctacte = ROWID(Cta_cte_prv).
+   Cta_cte_prv.imputado = YES.
+   RUN CREAR_DETALLE.
+   DISPLAY " " @ Cta_cte_prv.tip_comprob
+           " " @ Cta_cte_prv.prf_comprob
+           " " @ Cta_cte_prv.nro_comprob
+           " " @ Cta_cte_prv.nro_vencimiento
+           WITH FRAME frm-documento.
+   APPLY "ENTRY" TO Cta_cte_prv.tip_comprob  IN FRAME frm-documento.
+   RETURN NO-APPLY.
+      
+END.
+
+ON LEAVE OF Opg_header.imp_neto IN FRAME frm-documento
+DO:
+  ASSIGN FRAME frm-documento Opg_header.imp_neto.
+  RUN CALCULOS.
+END.
+
+ON LEAVE OF Opg_header.cambio IN FRAME frm-documento
+DO:
+  ASSIGN FRAME frm-documento Opg_header.cambio.
+  RUN CALCULOS.
+END.
+
+ON SHIFT-F7 ANYWHERE
+DO:
+
+  IF Opg_header.nro_transaccion = 0
+  THEN DO:
+     RUN PONMENSJ.P (INPUT "DBCR014").
+     RETURN NO-APPLY.      
+  END.
+  ELSE DO:
+     FIND Caj_header WHERE Caj_header.nro_transaccion = Opg_header.nro_transaccion NO-LOCK.
+     act_caj_head = ROWID(Caj_header).
+     HIDE FRAME frm-documento NO-PAUSE.
+     RUN ALTMCAJA.P (INPUT 2).
+     RUN PONER_SESION.
+     VIEW FRAME frm-documento.
+  END.
+  
+END.                    
+
+        /* -------------------- Proveedor ------------*/
+
+&SCOPED-DEFINE TABLA            Proveedor
+&SCOPED-DEFINE CODIGO           cdg_proveedor
+&SCOPED-DEFINE NOMBRE           nombre
+&SCOPED-DEFINE RUTINA           SELPROVE
+&SCOPED-DEFINE FRAME-INGRESO    frm-documento
+&SCOPED-DEFINE ROWID-TABLA      act_proveedor
+&SCOPED-DEFINE TRADUCIR         YES
+&SCOPED-DEFINE MOSTRAR          NO
+&SCOPED-DEFINE PROCESO          TRAER_PROVEEDOR
+&SCOPED-DEFINE ALTA-MODIF       ACTCLIEN
+&SCOPED-DEFINE ULT_REGISTRO     ult_proveedor
+&SCOPED-DEFINE ALT-MOD          YES
+
+{TRIGSELC.I}
+
+        /* -------------------- Condicion de iva ------------*/
+
+&SCOPED-DEFINE TABLA            Condicion_impos
+&SCOPED-DEFINE CODIGO           cdg_condiva
+&SCOPED-DEFINE NOMBRE           texto_iva
+&SCOPED-DEFINE RUTINA           SELCNDIV
+&SCOPED-DEFINE FRAME-INGRESO    frm-documento
+&SCOPED-DEFINE ROWID-TABLA      act_condiva
+&SCOPED-DEFINE TRADUCIR         YES
+&SCOPED-DEFINE MOSTRAR          YES
+&SCOPED-DEFINE PROCESO          ASIGNAR_CONDIVA
+&SCOPED-DEFINE ALTA-MODIF       ACTCNDIV
+&SCOPED-DEFINE ULT_REGISTRO     ult_condiva
+&SCOPED-DEFINE ALT-MOD          YES
+
+{TRIGSELC.I} 
+
+        /* -------------------- Condicion de Venta ------------*/
+
+&SCOPED-DEFINE TABLA            Condicion_venta
+&SCOPED-DEFINE CODIGO           cdg_cndventa
+&SCOPED-DEFINE NOMBRE           descripcion
+&SCOPED-DEFINE RUTINA           SELCNDVN
+&SCOPED-DEFINE FRAME-INGRESO    frm-documento
+&SCOPED-DEFINE ROWID-TABLA      act_cndventa
+&SCOPED-DEFINE TRADUCIR         YES
+&SCOPED-DEFINE MOSTRAR          YES
+&SCOPED-DEFINE PROCESO          ASIGNAR_CONDICION
+&SCOPED-DEFINE ALTA-MODIF       ACTCNDVN
+&SCOPED-DEFINE ULT_REGISTRO     ult_cndventa
+&SCOPED-DEFINE ALT-MOD          YES
+
+{TRIGSELC.I} 
+
+        /* -------------------- Concepto del documento ------------------*/
+
+&SCOPED-DEFINE TABLA            Imputacion
+&SCOPED-DEFINE CODIGO           cdg_imputacion
+&SCOPED-DEFINE NOMBRE           dsc_imputacion
+&SCOPED-DEFINE RUTINA           SELCNDOC
+&SCOPED-DEFINE FRAME-INGRESO    frm-documento
+&SCOPED-DEFINE ROWID-TABLA      act_concepto
+&SCOPED-DEFINE TRADUCIR         YES
+&SCOPED-DEFINE MOSTRAR          YES
+&SCOPED-DEFINE PROCESO          ASIGNAR_CONCEPTO
+&SCOPED-DEFINE ALTA-MODIF       ACTCNDOC
+&SCOPED-DEFINE ULT_REGISTRO     ult_concepto
+&SCOPED-DEFINE ALT-MOD          YES
+
+{TRIGSELC.I} 
+
+
+        /* -------------------- Moneda del documento ------------------*/
+
+&SCOPED-DEFINE TABLA            Moneda
+&SCOPED-DEFINE CODIGO           cdg_moneda
+&SCOPED-DEFINE NOMBRE           descripcion
+&SCOPED-DEFINE RUTINA           SELMONED
+&SCOPED-DEFINE FRAME-INGRESO    frm-documento
+&SCOPED-DEFINE ROWID-TABLA      act_moneda
+&SCOPED-DEFINE TRADUCIR         YES
+&SCOPED-DEFINE MOSTRAR          YES
+&SCOPED-DEFINE PROCESO          ASIGNAR_MONEDA
+&SCOPED-DEFINE ALTA-MODIF       ACBRWMND
+&SCOPED-DEFINE ULT_REGISTRO     ult_moneda
+&SCOPED-DEFINE ALT-MOD          YES
+
+{TRIGSELC.I} 
+
+&SCOPED-DEFINE ENTIDAD          Opg_header
+{HLPACTIV.I ""                "frm-documento" "YES" "YES"}  /* Actividad del proveedor*/
+
+&ENDIF
+
+/*=================================================================================*/
+/*                           F I N   D E   S E C C I O N                           */
+/*=================================================================================*/
+
+/*=================================================================================*/
+/*                                                                                 */
+/*                      C O M I E N Z O   D E   S E C C I O N                      */
+/*                                                                                 */
+/*                      PROCESO DE INICIALIZACION DEL PROGRAMA                     */
+/*                                                                                 */
+/*=================================================================================*/
+/*                                                                                 */
+&IF {&SECCION} = "INICIAR"
+&THEN
+/*                                                                                 */
+/*---------------------------------------------------------------------------------*/
+
+{FNDFLMON.I}
+
+FIND Parametro "DFNROCAJ" NO-LOCK NO-ERROR.
+FIND Caja WHERE Caja.cdg_caja = Parametro.valor_n NO-LOCK.
+act_caja = ROWID(Caja).
+
+FIND Parametro "DFCNCHRP" NO-LOCK NO-ERROR.
+FIND Imputacion WHERE Imputacion.cdg_imputacion = Parametro.valor_n NO-LOCK.
+FIND Cuenta OF Imputacion NO-LOCK.
+act_concepto = ROWID(Imputacion).
+act_cuenta = ROWID(Cuenta).
+
+
+&ENDIF
+
+/*=================================================================================*/
+/*                           F I N   D E   S E C C I O N                           */
+/*=================================================================================*/
+
+/*=================================================================================*/
+/*                                                                                 */
+/*                      C O M I E N Z O   D E   S E C C I O N                      */
+/*                                                                                 */
+/*                       PROCESO A EJECUTAR ANTES DE VALIDAR                       */
+/*                                                                                 */
+/*=================================================================================*/
+/*                                                                                 */
+&IF {&SECCION} = "ANT-VALIDAR"
+&THEN
+/*                                                                                 */
+/*---------------------------------------------------------------------------------*/
+
+
+
+&ENDIF
+
+/*=================================================================================*/
+/*                           F I N   D E   S E C C I O N                           */
+/*=================================================================================*/
+
+/*=================================================================================*/
+/*                                                                                 */
+/*                      C O M I E N Z O   D E   S E C C I O N                      */
+/*                                                                                 */
+/*                      PROCESO A EJECUTAR DESPUES DE VALIDAR                      */
+/*                                                                                 */
+/*=================================================================================*/
+/*                                                                                 */
+&IF {&SECCION} = "DES-VALIDAR"
+&THEN
+/*                                                                                 */
+/*---------------------------------------------------------------------------------*/
+
+
+&ENDIF
+
+/*=================================================================================*/
+/*                           F I N   D E   S E C C I O N                           */
+/*=================================================================================*/
+/*=================================================================================*/
+/*                                                                                 */
+/*                      C O M I E N Z O   D E   S E C C I O N                      */
+/*                                                                                 */
+/*                      PROCEDIMIENTOS PARTICULARES DEL CASO                       */
+/*                                                                                 */
+/*=================================================================================*/
+/*                                                                                 */
+&IF {&SECCION} = "PROCEDIMIENTOS"
+&THEN
+/*                                                                                 */
+/*---------------------------------------------------------------------------------*/
+
+PROCEDURE RESTAR_RENGLON:
+
+             
+END PROCEDURE.
+
+PROCEDURE SUMAR_RENGLON:
+
+
+END PROCEDURE.
+
+PROCEDURE VALIDAR_DOCUMENTO:
+
+  hubo_error = YES.
+
+  IF ROWID(Opg_header) = ?
+  THEN DO:
+     RUN PONMENSJ.P (INPUT "DBCR007").
+     RETURN.
+  END.
+
+  IF NOT CAN-FIND(FIRST Opg_detalle OF  Opg_header) AND Opg_header.tipo_pago = 1
+  THEN DO:
+     RUN PONMENSJ.P (INPUT "DBCR008").
+     RETURN.
+  END.
+
+  {IFNOTAVA.I "Proveedor" "DBCR010"}
+/*{IFNOTEXS.I "Provincia" "cdg_provincia" "frm-documento" "Provincia" "cdg_provincia" "DBCR009"}*/
+  {IFNOTEXS.I "Moneda" "cdg_moneda" "frm-documento" "Moneda" "cdg_moneda" "DBCR012"}  
+  {IFNOTEXS.I "Imputacion" "cdg_imputacion" "frm-documento" "Imputacion" "cdg_imputacion" "DBCR016"}  
+  {IFNOTEXS.I "Condicion_impos" "cdg_condiva" "frm-documento" "Condicion_impos" "cdg_condiva" "DBCR013"}
+
+  hubo_error = NO.
+
+END PROCEDURE.
+
+PROCEDURE CALCULOS:
+
+  IF Opg_header.ultima_linea = 0 AND Opg_header.tipo_pago = 1
+     THEN RETURN.
+
+  IF AVAILABLE T-Sub_header_prv 
+  THEN DO:
+     DELETE T-Sub_header_prv.
+     FOR EACH T-Sub_detalle_prv:
+         DELETE T-Sub_detalle_prv.
+     END.    
+  END.
+
+  {CALCCHPV.I "T-"}
+
+  DISPLAY Opg_header.imp_neto
+          Opg_header.imp_total 
+          Opg_header.imp_pesos
+          Opg_header.imp_difcambio
+          WITH FRAME frm-documento.
+
+END PROCEDURE.
+
+PROCEDURE TRAER_PROVEEDOR:
+
+  IF ROWID(Proveedor) = ant_proveedor
+     THEN RETURN.
+
+  IF Proveedor.cdg_proveedor = "" 
+     THEN APPLY "F8" TO Proveedor.cdg_proveedor IN FRAME frm-documento.
+    
+  RUN PONER_PROVEEDOR.
+
+END PROCEDURE.
+
+PROCEDURE PONER_PROVEEDOR:
+
+  FIND FIRST Domicilio_prv OF Proveedor NO-LOCK.
+/*FIND Provincia OF Domicilio_prv NO-LOCK.*/
+  act_provincia = ROWID(Provincia).
+
+  FIND Condicion_venta WHERE Condicion_venta.cdg_cndventa = Proveedor.dfl_cndventa NO-LOCK.
+  act_cndventa = ROWID(Condicion_venta).
+  
+  FIND Condicion_impos   OF Proveedor NO-LOCK.
+  act_condiva = ROWID(Condicion_impos).
+  v-tip_comprob = "C" + Condicion_impos.tipo_factura.
+  
+  v-prx_comprob = "PCR" + 
+                   Condicion_impos.tipo_factura + 
+                   STRING(Opg_header.prf_comprob,"9999").
+
+  DISABLE Condicion_impos.cdg_condiva WITH FRAME frm-documento.
+
+  ASSIGN
+      Opg_header.cdg_condiva          = Condicion_impos.cdg_condiva
+      Opg_header.nro_cndventa         = Condicion_venta.nro_cndventa
+      Opg_header.nro_proveedor        = Proveedor.nro_proveedor
+      Opg_header.nombre               = Proveedor.nombre
+      Opg_header.cuit                 = Proveedor.cuit
+      act_proveedor = ROWID(Proveedor).
+  
+  DISPLAY  Proveedor.cdg_proveedor 
+           Proveedor.nombre
+           Condicion_impos.cdg_condiva
+           Condicion_impos.texto_iva
+           Condicion_venta.cdg_cndventa
+           Condicion_venta.descripcion
+           WITH FRAME frm-documento.
+           
+  ENABLE
+        Opg_header.tip_comprob
+        Opg_header.prf_comprob
+        Opg_header.nro_comprob
+        Condicion_venta.cdg_cndventa
+        BTN_GRABAR
+        BTN_CANCEL
+        BTN_SALIR
+        WITH FRAME frm-documento.  
+  
+  IF Opg_header.tipo_pago = 2 
+  THEN DO:
+     RUN HABILITAR_NETO.
+     ENABLE
+        Proveedor.cdg_proveedor
+        Opg_header.imp_neto
+        WITH FRAME frm-documento.
+  END.
+  ELSE DO:
+     RUN HABILITAR_CTACTE.
+     ENABLE
+        Proveedor.cdg_proveedor
+        Cta_cte_prv.tip_comprob
+        Cta_cte_prv.prf_comprob
+        Cta_cte_prv.nro_comprob
+        Cta_cte_prv.nro_vencimiento
+        WITH FRAME frm-documento.
+  END.     
+
+  FIND Actividad_proveedor OF Proveedor NO-LOCK NO-ERROR.
+  IF AVAILABLE Actividad_proveedor
+  THEN DO:
+     FIND Tipo_actividad OF Actividad_proveedor NO-LOCK.
+     act_tipactiv = ROWID(Actividad_proveedor).      
+     ASSIGN  Opg_header.cdg_tiporetgan  = Tipo_actividad.cdg_tiporetgan.
+     DISPLAY Opg_header.cdg_tiporetgan
+             Tipo_actividad.nom_tipactiv
+             WITH FRAME frm-documento.
+     DISABLE Opg_header.cdg_tiporetgan WITH FRAME frm-documento.      
+  END.
+  ELSE DO:  /* No hay ninguna o hay mas de una */
+     ASSIGN  Opg_header.cdg_tiporetgan = "".
+     DISPLAY " " @ Opg_header.cdg_tiporetgan
+             " " @ Tipo_actividad.nom_tipactiv
+             WITH FRAME frm-documento.
+     ENABLE Opg_header.cdg_tiporetgan WITH FRAME frm-documento.
+  END.   
+
+  DISABLE Opg_header.tipo_pago
+           WITH FRAME frm-documento.
+
+  RUN CALCULOS.   
+
+  no_aplicar = YES.
+  APPLY "ENTRY" TO Opg_header.tip_comprob IN FRAME frm-documento.
+
+
+END PROCEDURE.                      
+
+PROCEDURE ASIGNAR_CONDIVA:
+
+   Opg_header.cdg_condiva = Condicion_impos.cdg_condiva.
+
+END PROCEDURE.
+
+PROCEDURE ASIGNAR_CONCEPTO:
+
+   Opg_header.cdg_imputacion = Imputacion.cdg_imputacion.
+
+END PROCEDURE.
+
+PROCEDURE ASIGNAR_MONEDA:
+
+   Opg_header.nro_moneda = Moneda.nro_moneda.
+   Opg_header.cambio     = Moneda.cambio.
+   RUN CALCULOS.
+   DISPLAY Opg_header.cambio 
+           WITH FRAME frm-documento.
+
+END PROCEDURE.
+
+PROCEDURE ASIGNAR_CONDICION:
+
+   Opg_header.nro_cndventa = Condicion_venta.nro_cndventa.
+
+END PROCEDURE.
+
+PROCEDURE ASIGNAR_ACTIVIDAD:
+
+    IF NOT CAN-FIND(FIRST Actividad_proveedor OF Proveedor 
+                          WHERE Actividad_proveedor.cdg_tiporetgan = Tipo_actividad.cdg_tiporetgan)
+    THEN DO:
+       no_aplicar = YES.
+       RUN PONMENSJ.P ( INPUT "FAPR025").
+       RETURN.
+    END.   
+
+    Opg_header.cdg_tiporetgan = Tipo_actividad.cdg_tiporetgan.
+
+END PROCEDURE.
+
+
+PROCEDURE TRAER_DOCUMENTO:
+
+   hay_error = YES.
+
+   IF Opg_header.anulado AND Opg_header.origen = "A"
+   THEN DO:
+      RUN PONMENSJ.P (INPUT "DBCR017").
+      RETURN.
+   END.   
+
+   FIND Proveedor        OF Opg_header NO-LOCK.
+/*   FIND Provincia        OF Opg_header NO-LOCK.*/
+   FIND Imputacion       OF Opg_header NO-LOCK.
+   FIND Moneda           OF Opg_header NO-LOCK.
+   FIND Condicion_venta  OF Opg_header NO-LOCK.
+   FIND Condicion_impos  OF Opg_header NO-LOCK.
+   act_condiva = ROWID(Condicion_impos).
+   v-tip_comprob = "C" + Condicion_impos.tipo_factura.   
+  
+   
+   DISPLAY
+        Opg_header.tip_comprob 
+        Opg_header.prf_comprob 
+        Opg_header.nro_comprob 
+        Opg_header.fecha 
+        Opg_header.anulado
+        Proveedor.cdg_proveedor
+        Proveedor.nombre 
+        Condicion_impos.cdg_condiva 
+        Condicion_impos.texto_iva 
+        Condicion_venta.cdg_cndventa
+        Condicion_venta.descripcion
+        Imputacion.cdg_imputacion
+        Imputacion.dsc_imputacion
+        Moneda.cdg_moneda
+        Moneda.descripcion
+        Opg_header.cambio
+        Opg_header.imp_neto
+        Opg_header.imp_total
+        Opg_header.imp_pesos
+        Opg_header.imp_difcambio
+        Opg_header.tipo_pago
+        brw-detalle
+        WITH FRAME frm-documento.
+       
+   OPEN QUERY qry-detalle 
+        FOR EACH Opg_detalle OF Opg_header,
+            EACH Cta_cte_prv  WHERE Cta_cte_prv.tip_comprob = Opg_detalle.tip_cancela
+                            AND Cta_cte_prv.prf_comprob = Opg_detalle.prf_cancela
+                            AND Cta_cte_prv.nro_comprob = Opg_detalle.nro_cancela
+                            AND Cta_cte_prv.nro_vencimiento = Opg_detalle.nro_vencimiento.
+   ENABLE btn_baja                             
+        WITH FRAME frm-documento.
+   
+   hay_error = NO.
+   act_Opg_head = ROWID(Opg_header).
+   APPLY "TAB" TO Opg_header.nro_comprob.
+
+END PROCEDURE.
+
+PROCEDURE ANULAR_DOCUMENTO:
+
+  FIND Caj_header 
+       WHERE Caj_header.tip_comprob = Opg_header.tip_comprob
+         AND Caj_header.prf_comprob = Opg_header.prf_comprob  
+         AND Caj_header.nro_comprob = Opg_header.nro_comprob 
+             NO-ERROR. 
+
+  IF AVAILABLE Caj_header
+  THEN DO:
+        act_caj_head = ROWID(Caj_header).     
+        RUN ANULCAJA.P ( OUTPUT puede_anular ).
+        IF NOT puede_anular 
+        THEN DO:
+           RUN PONMENSJ.P (INPUT "DBCR015").
+           RETURN.
+        END.   
+  END.
+
+  DO TRANSACTION:
+
+        FOR EACH Opg_detalle OF Opg_header EXCLUSIVE-LOCK:
+        
+            FIND Cta_cte_prv WHERE Cta_cte_prv.tip_comprob = Opg_detalle.tip_cancela
+                               AND Cta_cte_prv.prf_comprob = Opg_detalle.prf_cancela
+                               AND Cta_cte_prv.nro_comprob = Opg_detalle.nro_cancela
+                               AND Cta_cte_prv.nro_vencimiento = Opg_detalle.nro_vencimiento
+                               AND Cta_cte_prv.nro_proveedor = Opg_header.nro_proveedor 
+                                   EXCLUSIVE-LOCK.
+                         
+            IF LOOKUP(Cta_cte_prv.tip_comprob,str_debitan_prv) <> 0
+               THEN Cta_cte_prv.credito = Cta_cte_prv.credito - Opg_detalle.importe.
+               ELSE Cta_cte_prv.debito  = Cta_cte_prv.debito  - Opg_detalle.importe.
+      
+            DELETE Opg_detalle.
+      
+        END.
+      
+        FOR EACH Aplicacion_pagos_prv  
+             WHERE Aplicacion_pagos_prv.tip_comprob                   = Opg_header.tip_comprob
+                               AND Aplicacion_pagos_prv.prf_comprob   = Opg_header.prf_comprob
+                               AND Aplicacion_pagos_prv.nro_comprob   = Opg_header.nro_comprob
+                               AND Aplicacion_pagos_prv.nro_proveedor = Opg_header.nro_proveedor 
+                                   EXCLUSIVE-LOCK.
+                         
+             DELETE Aplicacion_pagos_prv.
+        END.
+      
+        FOR EACH Sub_header_prv 
+             WHERE Sub_header_prv.tip_comprob   = Opg_header.tip_comprob
+               AND Sub_header_prv.prf_comprob   = Opg_header.prf_comprob 
+               AND Sub_header_prv.nro_comprob   = Opg_header.nro_comprob 
+               AND Sub_header_prv.nro_proveedor = Opg_header.nro_proveedor 
+                   EXCLUSIVE-LOCK:
+      
+             DELETE Sub_header_prv.
+      
+        END.
+      
+        FOR EACH Sub_detalle_prv 
+             WHERE Sub_detalle_prv.tip_comprob   = Opg_header.tip_comprob
+               AND Sub_detalle_prv.prf_comprob   = Opg_header.prf_comprob 
+               AND Sub_detalle_prv.nro_comprob   = Opg_header.nro_comprob 
+               AND Sub_detalle_prv.nro_proveedor = Opg_header.nro_proveedor 
+                   EXCLUSIVE-LOCK:
+      
+             DELETE Sub_detalle_prv.
+      
+        END.
+      
+        FOR EACH Cta_cte_prv 
+             WHERE Cta_cte_prv.tip_comprob   = Opg_header.tip_comprob
+               AND Cta_cte_prv.prf_comprob   = Opg_header.prf_comprob 
+               AND Cta_cte_prv.nro_comprob   = Opg_header.nro_comprob 
+               AND Cta_cte_prv.nro_proveedor = Opg_header.nro_proveedor 
+                               EXCLUSIVE-LOCK:
+            
+            DELETE Cta_cte_prv.
+                               
+        END.                               
+
+        DELETE Opg_header.
+        
+        puede_anular = YES.
+
+  END. /* De la transaccion */
+
+END PROCEDURE.
+
+PROCEDURE HABILITAR_NETO:
+
+  ASSIGN
+     Opg_header.imp_neto:BGCOLOR IN FRAME frm-documento = be_c.
+     Cta_cte_prv.tip_comprob:BGCOLOR IN FRAME frm-documento = bg_c.
+     Cta_cte_prv.prf_comprob:BGCOLOR IN FRAME frm-documento = bg_c.
+     Cta_cte_prv.nro_comprob:BGCOLOR IN FRAME frm-documento = bg_c.
+     Cta_cte_prv.nro_vencimiento:BGCOLOR IN FRAME frm-documento = bg_c.
+     Opg_header.imp_neto:FGCOLOR IN FRAME frm-documento = fe_c.
+     Cta_cte_prv.tip_comprob:FGCOLOR IN FRAME frm-documento = fg_c.
+     Cta_cte_prv.prf_comprob:FGCOLOR IN FRAME frm-documento = fg_c.
+     Cta_cte_prv.nro_comprob:FGCOLOR IN FRAME frm-documento = fg_c.
+     Cta_cte_prv.nro_vencimiento:FGCOLOR IN FRAME frm-documento = fg_c.
+
+END PROCEDURE.
+
+PROCEDURE HABILITAR_CTACTE:
+
+  ASSIGN
+     Opg_header.imp_neto:BGCOLOR IN FRAME frm-documento = bg_c.
+     Cta_cte_prv.tip_comprob:BGCOLOR IN FRAME frm-documento = be_c.
+     Cta_cte_prv.prf_comprob:BGCOLOR IN FRAME frm-documento = be_c.
+     Cta_cte_prv.nro_comprob:BGCOLOR IN FRAME frm-documento = be_c.
+     Cta_cte_prv.nro_vencimiento:BGCOLOR IN FRAME frm-documento = be_c.
+     Opg_header.imp_neto:FGCOLOR IN FRAME frm-documento = fg_c.
+     Cta_cte_prv.tip_comprob:FGCOLOR IN FRAME frm-documento = fe_c.
+     Cta_cte_prv.prf_comprob:FGCOLOR IN FRAME frm-documento = fe_c.
+     Cta_cte_prv.nro_comprob:FGCOLOR IN FRAME frm-documento = fe_c.
+     Cta_cte_prv.nro_vencimiento:FGCOLOR IN FRAME frm-documento = fe_c.
+
+END PROCEDURE.
+
+PROCEDURE REIMPRIMIR_DOCUMENTO:
+
+   IF Opg_header.tip_comprob = "CA" 
+   THEN DO:
+      FIND Parametro "NFCREPVA" NO-LOCK NO-ERROR.
+      RUN VALUE ( "PRDPA" + STRING(Parametro.valor_n, "999") + ".P" ) (INPUT ROWID(Opg_header)).
+   END.   
+   ELSE DO:
+      FIND Parametro "NFCREPVB" NO-LOCK NO-ERROR.
+      RUN VALUE ( "PRDPB" + STRING(Parametro.valor_n, "999") + ".P" )  (INPUT ROWID(Opg_header)).
+   END.
+     
+END PROCEDURE.
+
+&ENDIF
+
+/*=================================================================================*/
+/*                           F I N   D E   S E C C I O N                           */
+/*=================================================================================*/

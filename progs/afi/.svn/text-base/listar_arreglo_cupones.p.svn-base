@@ -1,0 +1,28 @@
+/*OUTPUT TO PRINTER.*/
+
+FOR EACH Rec_header 
+    WHERE ( Rec_header.tip_comprob = "RB" OR Rec_header.tip_comprob = "RA" )
+      AND Rec_header.nro_rendicion <> 0:
+
+    FIND Cliente OF Rec_header NO-LOCK.
+    FIND Rendicion_hd WHERE Rendicion_hd.nro_rendicion = Rec_header.nro_rendicion 
+         EXCLUSIVE-LOCK NO-ERROR.
+
+    FIND Cobrador OF Rec_header.
+    DISPLAY Rec_header.cdg_empresa COLUMN-LABEL "Cod!Emp" FORMAT "X(1)"
+            Rec_header.fecha 
+            Rec_header.nro_comprob 
+            Rec_header.nro_rendicion COLUMN-LABEL "Nro!Rend"
+            Rec_header.imp_total FORMAT ">,>>9.99"
+            Cobrador.cdg_cobrador COLUMN-LABEL "Nro.!Cob" FORMAT "X(4)"
+            Cliente.cdg_cliente
+            CAN-FIND(FIRST Cupon 
+                          WHERE Cupon.cdg_empresa   = Rec_header.cdg_empresa
+                            AND Cupon.nro_comprob   = Rec_header.nro_comprob
+                            AND Cupon.prf_comprob   = Rec_header.prf_comprob
+                            AND Cupon.tip_comprob   = Rec_header.tip_comprob)
+            AVAILABLE Rendicion_hd                
+            WITH STREAM-IO.
+
+END.
+

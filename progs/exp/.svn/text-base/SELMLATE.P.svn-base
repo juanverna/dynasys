@@ -1,0 +1,9 @@
+&GLOBAL-DEFINE TABLA           Marca_lateral
+&GLOBAL-DEFINE CODIGO          cdg_mlateral
+&GLOBAL-DEFINE NOMBRE          desc_mlateral
+&GLOBAL-DEFINE TITULO-BROWSE   Seleccione la Marca lateral o ingrese nombre
+&GLOBAL-DEFINE TITULO-FRAME    Seleccion de Marca lateral
+&GLOBAL-DEFINE PROCESO         ACBRWMLA
+&GLOBAL-DEFINE ULT_REGISTRO    ult_mlateral
+
+{SELBROWS.I}

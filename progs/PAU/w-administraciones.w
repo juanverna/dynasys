@@ -1,0 +1,1096 @@
+&ANALYZE-SUSPEND _VERSION-NUMBER UIB_v8r12 GUI ADM1
+&ANALYZE-RESUME
+/* Connected Databases 
+          sic              PROGRESS
+*/
+&Scoped-define WINDOW-NAME W-Win
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CUSTOM _DEFINITIONS W-Win 
+/*------------------------------------------------------------------------
+
+  File: 
+
+  Description: from cntnrwin.w - ADM SmartWindow Template
+
+  Input Parameters:
+      <none>
+
+  Output Parameters:
+      <none>
+
+  History: 
+          
+------------------------------------------------------------------------*/
+/*          This .W file was created with the Progress UIB.             */
+/*----------------------------------------------------------------------*/
+
+/* Create an unnamed pool to store all the widgets created 
+     by this procedure. This is a good default which assures
+     that this procedure's triggers and internal procedures 
+     will execute in this procedure's storage, and that proper
+     cleanup will occur on deletion of the procedure. */
+
+CREATE WIDGET-POOL.
+
+/* ***************************  Definitions  ************************** */
+
+/* Parameters Definitions ---                                           */
+
+/* Local Variable Definitions ---                                       */
+
+{nrorelea.i}
+
+DEFINE VARIABLE txn_activa AS LOGICAL.
+DEFINE VARIABLE i-estado AS INTEGER.
+
+DEFINE VAR temp_tarea AS CHARACTER.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-PREPROCESSOR-BLOCK 
+
+/* ********************  Preprocessor Definitions  ******************** */
+
+&Scoped-define PROCEDURE-TYPE SmartWindow
+&Scoped-define DB-AWARE no
+
+&Scoped-define ADM-CONTAINER WINDOW
+
+/* Name of designated FRAME-NAME and/or first browse and/or first query */
+&Scoped-define FRAME-NAME F-Main
+
+/* External Tables                                                      */
+&Scoped-define EXTERNAL-TABLES Cliente
+&Scoped-define FIRST-EXTERNAL-TABLE Cliente
+
+
+/* Need to scope the external tables to this procedure                  */
+DEFINE QUERY external_tables FOR Cliente.
+/* Custom List Definitions                                              */
+/* List-1,List-2,List-3,List-4,List-5,List-6                            */
+
+/* _UIB-PREPROCESSOR-BLOCK-END */
+&ANALYZE-RESUME
+
+
+
+/* ***********************  Control Definitions  ********************** */
+
+/* Define the widget handle for the window                              */
+DEFINE VAR W-Win AS WIDGET-HANDLE NO-UNDO.
+
+/* Definitions of handles for SmartObjects                              */
+DEFINE VARIABLE h_b-administracion AS HANDLE NO-UNDO.
+DEFINE VARIABLE h_b-busc-tarea AS HANDLE NO-UNDO.
+DEFINE VARIABLE h_b-caja_valor AS HANDLE NO-UNDO.
+DEFINE VARIABLE h_b-canal AS HANDLE NO-UNDO.
+DEFINE VARIABLE h_b-cliente_contacto AS HANDLE NO-UNDO.
+DEFINE VARIABLE h_b-comprobante_rendicion AS HANDLE NO-UNDO.
+DEFINE VARIABLE h_b-consorcios_de_un_administrad AS HANDLE NO-UNDO.
+DEFINE VARIABLE h_b-ctacte-cli AS HANDLE NO-UNDO.
+DEFINE VARIABLE h_b-eventocli AS HANDLE NO-UNDO.
+DEFINE VARIABLE h_b-observacion-cli AS HANDLE NO-UNDO.
+DEFINE VARIABLE h_b-rendicion_adm AS HANDLE NO-UNDO.
+DEFINE VARIABLE h_b-valores_rendicion AS HANDLE NO-UNDO.
+DEFINE VARIABLE h_folder AS HANDLE NO-UNDO.
+DEFINE VARIABLE h_p-excel AS HANDLE NO-UNDO.
+DEFINE VARIABLE h_p-soloalta AS HANDLE NO-UNDO.
+DEFINE VARIABLE h_p-updspa AS HANDLE NO-UNDO.
+DEFINE VARIABLE h_p-updspa-2 AS HANDLE NO-UNDO.
+DEFINE VARIABLE h_p-updspa-3 AS HANDLE NO-UNDO.
+DEFINE VARIABLE h_q-domicilio AS HANDLE NO-UNDO.
+DEFINE VARIABLE h_v-administrador AS HANDLE NO-UNDO.
+DEFINE VARIABLE h_v-canal AS HANDLE NO-UNDO.
+DEFINE VARIABLE h_v-cliente_contacto AS HANDLE NO-UNDO.
+DEFINE VARIABLE h_v-dsc_cliente AS HANDLE NO-UNDO.
+DEFINE VARIABLE h_v-dsc_cliente-2 AS HANDLE NO-UNDO.
+DEFINE VARIABLE h_v-dsc_cliente-3 AS HANDLE NO-UNDO.
+DEFINE VARIABLE h_v-evento AS HANDLE NO-UNDO.
+DEFINE VARIABLE h_v-observacion-cli AS HANDLE NO-UNDO.
+DEFINE VARIABLE h_v-resumen AS HANDLE NO-UNDO.
+DEFINE VARIABLE h_v-tarea-red1 AS HANDLE NO-UNDO.
+DEFINE VARIABLE h_v-temp_tarea1 AS HANDLE NO-UNDO.
+DEFINE VARIABLE h_vo-administraciones AS HANDLE NO-UNDO.
+DEFINE VARIABLE p-updspa-sinborr AS HANDLE NO-UNDO.
+
+/* ************************  Frame Definitions  *********************** */
+
+DEFINE FRAME F-Main
+    WITH 1 DOWN NO-BOX KEEP-TAB-ORDER OVERLAY 
+         SIDE-LABELS NO-UNDERLINE THREE-D 
+         AT COL 1 ROW 1
+         SIZE 161.8 BY 26.52.
+
+
+/* *********************** Procedure Settings ************************ */
+
+&ANALYZE-SUSPEND _PROCEDURE-SETTINGS
+/* Settings for THIS-PROCEDURE
+   Type: SmartWindow
+   External Tables: sic.Cliente
+   Allow: Basic,Browse,DB-Fields,Query,Smart,Window
+   Design Page: 1
+   Other Settings: COMPILE
+ */
+&ANALYZE-RESUME _END-PROCEDURE-SETTINGS
+
+/* *************************  Create Window  ************************** */
+
+&ANALYZE-SUSPEND _CREATE-WINDOW
+IF SESSION:DISPLAY-TYPE = "GUI":U THEN
+  CREATE WINDOW W-Win ASSIGN
+         HIDDEN             = YES
+         TITLE              = "Mantenimiento de Administraciones"
+         HEIGHT             = 26.52
+         WIDTH              = 161.8
+         MAX-HEIGHT         = 49.1
+         MAX-WIDTH          = 336
+         VIRTUAL-HEIGHT     = 49.1
+         VIRTUAL-WIDTH      = 336
+         RESIZE             = no
+         SCROLL-BARS        = no
+         STATUS-AREA        = no
+         BGCOLOR            = ?
+         FGCOLOR            = ?
+         THREE-D            = yes
+         MESSAGE-AREA       = no
+         SENSITIVE          = yes.
+ELSE {&WINDOW-NAME} = CURRENT-WINDOW.
+/* END WINDOW DEFINITION                                                */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CUSTOM _INCLUDED-LIB W-Win 
+/* ************************* Included-Libraries *********************** */
+
+{src/adm/method/containr.i}
+{setsensitivo.i}
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+
+
+/* ***********  Runtime Attributes and AppBuilder Settings  *********** */
+
+&ANALYZE-SUSPEND _RUN-TIME-ATTRIBUTES
+/* SETTINGS FOR WINDOW W-Win
+  VISIBLE,,RUN-PERSISTENT                                               */
+/* SETTINGS FOR FRAME F-Main
+   FRAME-NAME                                                           */
+IF SESSION:DISPLAY-TYPE = "GUI":U AND VALID-HANDLE(W-Win)
+THEN W-Win:HIDDEN = yes.
+
+/* _RUN-TIME-ATTRIBUTES-END */
+&ANALYZE-RESUME
+
+ 
+
+
+
+/* ************************  Control Triggers  ************************ */
+
+&Scoped-define SELF-NAME W-Win
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL W-Win W-Win
+ON END-ERROR OF W-Win /* Mantenimiento de Administraciones */
+OR ENDKEY OF {&WINDOW-NAME} ANYWHERE DO:
+  /* This case occurs when the user presses the "Esc" key.
+     In a persistently run window, just ignore this.  If we did not, the
+     application would exit. */
+  IF THIS-PROCEDURE:PERSISTENT THEN RETURN NO-APPLY.
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL W-Win W-Win
+ON WINDOW-CLOSE OF W-Win /* Mantenimiento de Administraciones */
+DO:
+  /* This ADM code must be left here in order for the SmartWindow
+     and its descendents to terminate properly on exit. */
+
+
+  RUN verificar_txn ( OUTPUT txn_activa ).
+  IF NOT txn_activa
+  THEN DO: 
+        APPLY "CLOSE":U TO THIS-PROCEDURE.
+  END.
+
+  RETURN NO-APPLY.
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL W-Win W-Win
+ON WINDOW-MINIMIZED OF W-Win /* Mantenimiento de Administraciones */
+DO:
+  RUN get-attribute ('ADM-TRANSACTION').
+  IF RETURN-VALUE = "YES"
+  THEN DO:
+       MESSAGE "No debe minimizar esta ventana con una actualización pendiente"
+               VIEW-AS ALERT-BOX WARNING TITLE "CUIDADO!!!".
+{&WINDOW-NAME}:WINDOW-STATE = 1.
+RETURN NO-APPLY.
+  END.
+  
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&UNDEFINE SELF-NAME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CUSTOM _MAIN-BLOCK W-Win 
+
+
+/* ***************************  Main Block  *************************** */
+
+/* Include custom  Main Block code for SmartWindows. */
+{src/adm/template/windowmn.i}
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+/* **********************  Internal Procedures  *********************** */
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE adm-create-objects W-Win  _ADM-CREATE-OBJECTS
+PROCEDURE adm-create-objects :
+/*------------------------------------------------------------------------------
+  Purpose:     Create handles for all SmartObjects used in this procedure.
+               After SmartObjects are initialized, then SmartLinks are added.
+  Parameters:  <none>
+------------------------------------------------------------------------------*/
+  DEFINE VARIABLE adm-current-page  AS INTEGER NO-UNDO.
+
+  RUN get-attribute IN THIS-PROCEDURE ('Current-Page':U).
+  ASSIGN adm-current-page = INTEGER(RETURN-VALUE).
+
+  CASE adm-current-page: 
+
+    WHEN 0 THEN DO:
+       RUN init-object IN THIS-PROCEDURE (
+             INPUT  'adm/objects/folder.w':U ,
+             INPUT  FRAME F-Main:HANDLE ,
+             INPUT  'FOLDER-LABELS = ':U + 'Administrac.|Observacion|Cta.Cte.|Tareas|Evento|Cobranzas' + ',
+                     FOLDER-TAB-TYPE = 1':U ,
+             OUTPUT h_folder ).
+       RUN set-position IN h_folder ( 1.00 , 2.00 ) NO-ERROR.
+       RUN set-size IN h_folder ( 26.43 , 160.00 ) NO-ERROR.
+
+       /* Links to SmartFolder h_folder. */
+       RUN add-link IN adm-broker-hdl ( h_folder , 'Page':U , THIS-PROCEDURE ).
+
+    END. /* Page 0 */
+    WHEN 1 THEN DO:
+       RUN init-object IN THIS-PROCEDURE (
+             INPUT  'b-administracion.w':U ,
+             INPUT  FRAME F-Main:HANDLE ,
+             INPUT  'Layout = ':U ,
+             OUTPUT h_b-administracion ).
+       RUN set-position IN h_b-administracion ( 2.48 , 4.00 ) NO-ERROR.
+       RUN set-size IN h_b-administracion ( 5.71 , 152.80 ) NO-ERROR.
+
+       RUN init-object IN THIS-PROCEDURE (
+             INPUT  'v-administrador.w':U ,
+             INPUT  FRAME F-Main:HANDLE ,
+             INPUT  'Layout = ':U ,
+             OUTPUT h_v-administrador ).
+       RUN set-position IN h_v-administrador ( 8.38 , 3.00 ) NO-ERROR.
+       /* Size in UIB:  ( 8.81 , 112.00 ) */
+
+       RUN init-object IN THIS-PROCEDURE (
+             INPUT  'b-canal.w':U ,
+             INPUT  FRAME F-Main:HANDLE ,
+             INPUT  'Layout = ':U ,
+             OUTPUT h_b-canal ).
+       RUN set-position IN h_b-canal ( 8.38 , 117.00 ) NO-ERROR.
+       RUN set-size IN h_b-canal ( 10.24 , 19.00 ) NO-ERROR.
+
+       RUN init-object IN THIS-PROCEDURE (
+             INPUT  'v-canal.w':U ,
+             INPUT  FRAME F-Main:HANDLE ,
+             INPUT  'Initial-Lock = NO-LOCK,
+                     Hide-on-Init = no,
+                     Disable-on-Init = no,
+                     Key-Name = ,
+                     Layout = ,
+                     Create-On-Add = ?':U ,
+             OUTPUT h_v-canal ).
+       RUN set-position IN h_v-canal ( 8.48 , 138.20 ) NO-ERROR.
+       /* Size in UIB:  ( 2.43 , 21.00 ) */
+
+       RUN init-object IN THIS-PROCEDURE (
+             INPUT  'p-updspa.w':U ,
+             INPUT  FRAME F-Main:HANDLE ,
+             INPUT  'Edge-Pixels = 2,
+                     SmartPanelType = Update-Trans,
+                     AddFunction = One-Record':U ,
+             OUTPUT h_p-updspa-2 ).
+       RUN set-position IN h_p-updspa-2 ( 11.71 , 138.00 ) NO-ERROR.
+       RUN set-size IN h_p-updspa-2 ( 6.91 , 22.80 ) NO-ERROR.
+
+       RUN init-object IN THIS-PROCEDURE (
+             INPUT  'p-updspa.w':U ,
+             INPUT  FRAME F-Main:HANDLE ,
+             INPUT  'Edge-Pixels = 2,
+                     SmartPanelType = Update-Trans,
+                     AddFunction = One-Record':U ,
+             OUTPUT h_p-updspa ).
+       RUN set-position IN h_p-updspa ( 17.24 , 4.20 ) NO-ERROR.
+       RUN set-size IN h_p-updspa ( 1.86 , 87.00 ) NO-ERROR.
+
+       RUN init-object IN THIS-PROCEDURE (
+             INPUT  'vo-administraciones.w':U ,
+             INPUT  FRAME F-Main:HANDLE ,
+             INPUT  'Layout = ':U ,
+             OUTPUT h_vo-administraciones ).
+       RUN set-position IN h_vo-administraciones ( 17.24 , 93.00 ) NO-ERROR.
+       /* Size in UIB:  ( 1.91 , 8.00 ) */
+
+       RUN init-object IN THIS-PROCEDURE (
+             INPUT  'v-cliente_contacto_sindir.w':U ,
+             INPUT  FRAME F-Main:HANDLE ,
+             INPUT  'Layout = ':U ,
+             OUTPUT h_v-cliente_contacto ).
+       RUN set-position IN h_v-cliente_contacto ( 19.10 , 31.00 ) NO-ERROR.
+       /* Size in UIB:  ( 5.71 , 130.00 ) */
+
+       RUN init-object IN THIS-PROCEDURE (
+             INPUT  'fac/b-cliente_contacto.w':U ,
+             INPUT  FRAME F-Main:HANDLE ,
+             INPUT  'Layout = ,
+                     SortBy-Case = nombre':U ,
+             OUTPUT h_b-cliente_contacto ).
+       RUN set-position IN h_b-cliente_contacto ( 19.19 , 4.00 ) NO-ERROR.
+       RUN set-size IN h_b-cliente_contacto ( 7.86 , 26.00 ) NO-ERROR.
+
+       RUN init-object IN THIS-PROCEDURE (
+             INPUT  'p-updspa.w':U ,
+             INPUT  FRAME F-Main:HANDLE ,
+             INPUT  'Edge-Pixels = 2,
+                     SmartPanelType = Update-Trans,
+                     AddFunction = One-Record':U ,
+             OUTPUT h_p-updspa-3 ).
+       RUN set-position IN h_p-updspa-3 ( 25.05 , 61.00 ) NO-ERROR.
+       RUN set-size IN h_p-updspa-3 ( 1.76 , 65.00 ) NO-ERROR.
+
+       RUN init-object IN THIS-PROCEDURE (
+             INPUT  'q-domicilio.w':U ,
+             INPUT  FRAME F-Main:HANDLE ,
+             INPUT  '':U ,
+             OUTPUT h_q-domicilio ).
+       RUN set-position IN h_q-domicilio ( 2.91 , 8.00 ) NO-ERROR.
+       /* Size in UIB:  ( 1.86 , 10.80 ) */
+
+       /* Links to SmartBrowser h_b-administracion. */
+       RUN add-link IN adm-broker-hdl ( h_v-cliente_contacto , 'State':U , h_b-administracion ).
+
+       /* Links to SmartViewer h_v-administrador. */
+       RUN add-link IN adm-broker-hdl ( h_b-administracion , 'Record':U , h_v-administrador ).
+       RUN add-link IN adm-broker-hdl ( h_p-updspa , 'TableIO':U , h_v-administrador ).
+
+       /* Links to SmartBrowser h_b-canal. */
+       RUN add-link IN adm-broker-hdl ( h_b-administracion , 'Record':U , h_b-canal ).
+
+       /* Links to SmartViewer h_v-canal. */
+       RUN add-link IN adm-broker-hdl ( h_b-canal , 'Record':U , h_v-canal ).
+       RUN add-link IN adm-broker-hdl ( h_p-updspa-2 , 'TableIO':U , h_v-canal ).
+
+       /* Links to SmartVortex h_vo-administraciones. */
+       RUN add-link IN adm-broker-hdl ( h_b-administracion , 'Record':U , h_vo-administraciones ).
+
+       /* Links to SmartViewer h_v-cliente_contacto. */
+       RUN add-link IN adm-broker-hdl ( h_b-cliente_contacto , 'Record':U , h_v-cliente_contacto ).
+       RUN add-link IN adm-broker-hdl ( h_p-updspa-3 , 'TableIO':U , h_v-cliente_contacto ).
+
+       /* Links to SmartBrowser h_b-cliente_contacto. */
+       RUN add-link IN adm-broker-hdl ( h_q-domicilio , 'Record':U , h_b-cliente_contacto ).
+
+       /* Links to SmartQuery h_q-domicilio. */
+       RUN add-link IN adm-broker-hdl ( h_b-administracion , 'Record':U , h_q-domicilio ).
+       RUN add-link IN adm-broker-hdl ( h_v-cliente_contacto , 'State':U , h_q-domicilio ).
+
+       /* Adjust the tab order of the smart objects. */
+       RUN adjust-tab-order IN adm-broker-hdl ( h_b-administracion ,
+             h_folder , 'AFTER':U ).
+       RUN adjust-tab-order IN adm-broker-hdl ( h_v-administrador ,
+             h_b-administracion , 'AFTER':U ).
+       RUN adjust-tab-order IN adm-broker-hdl ( h_b-canal ,
+             h_v-administrador , 'AFTER':U ).
+       RUN adjust-tab-order IN adm-broker-hdl ( h_v-canal ,
+             h_b-canal , 'AFTER':U ).
+       RUN adjust-tab-order IN adm-broker-hdl ( h_p-updspa-2 ,
+             h_v-canal , 'AFTER':U ).
+       RUN adjust-tab-order IN adm-broker-hdl ( h_p-updspa ,
+             h_p-updspa-2 , 'AFTER':U ).
+       RUN adjust-tab-order IN adm-broker-hdl ( h_vo-administraciones ,
+             h_p-updspa , 'AFTER':U ).
+       RUN adjust-tab-order IN adm-broker-hdl ( h_v-cliente_contacto ,
+             h_vo-administraciones , 'AFTER':U ).
+       RUN adjust-tab-order IN adm-broker-hdl ( h_b-cliente_contacto ,
+             h_v-cliente_contacto , 'AFTER':U ).
+       RUN adjust-tab-order IN adm-broker-hdl ( h_p-updspa-3 ,
+             h_b-cliente_contacto , 'AFTER':U ).
+    END. /* Page 1 */
+    WHEN 2 THEN DO:
+       RUN init-object IN THIS-PROCEDURE (
+             INPUT  'v-dsc_cliente.w':U ,
+             INPUT  FRAME F-Main:HANDLE ,
+             INPUT  'Layout = ':U ,
+             OUTPUT h_v-dsc_cliente-2 ).
+       RUN set-position IN h_v-dsc_cliente-2 ( 2.91 , 11.00 ) NO-ERROR.
+       /* Size in UIB:  ( 0.95 , 120.40 ) */
+
+       RUN init-object IN THIS-PROCEDURE (
+             INPUT  'b-observacion-cli.w':U ,
+             INPUT  FRAME F-Main:HANDLE ,
+             INPUT  'Layout = ':U ,
+             OUTPUT h_b-observacion-cli ).
+       RUN set-position IN h_b-observacion-cli ( 5.05 , 5.00 ) NO-ERROR.
+       RUN set-size IN h_b-observacion-cli ( 12.38 , 152.00 ) NO-ERROR.
+
+       RUN init-object IN THIS-PROCEDURE (
+             INPUT  'v-observacion-cli.w':U ,
+             INPUT  FRAME F-Main:HANDLE ,
+             INPUT  'Layout = ':U ,
+             OUTPUT h_v-observacion-cli ).
+       RUN set-position IN h_v-observacion-cli ( 18.14 , 5.00 ) NO-ERROR.
+       /* Size in UIB:  ( 7.38 , 125.00 ) */
+
+       RUN init-object IN THIS-PROCEDURE (
+             INPUT  'p-soloalta.w':U ,
+             INPUT  FRAME F-Main:HANDLE ,
+             INPUT  'Edge-Pixels = 2,
+                     SmartPanelType = Update-Trans,
+                     AddFunction = One-Record':U ,
+             OUTPUT h_p-soloalta ).
+       RUN set-position IN h_p-soloalta ( 18.38 , 138.00 ) NO-ERROR.
+       RUN set-size IN h_p-soloalta ( 7.38 , 19.20 ) NO-ERROR.
+
+       /* Initialize other pages that this page requires. */
+       RUN init-pages IN THIS-PROCEDURE ('1':U) NO-ERROR.
+
+       /* Links to SmartViewer h_v-dsc_cliente-2. */
+       RUN add-link IN adm-broker-hdl ( h_b-administracion , 'Record':U , h_v-dsc_cliente-2 ).
+
+       /* Links to SmartBrowser h_b-observacion-cli. */
+       RUN add-link IN adm-broker-hdl ( h_b-administracion , 'Record':U , h_b-observacion-cli ).
+
+       /* Links to SmartViewer h_v-observacion-cli. */
+       RUN add-link IN adm-broker-hdl ( h_b-observacion-cli , 'Record':U , h_v-observacion-cli ).
+       RUN add-link IN adm-broker-hdl ( h_p-soloalta , 'TableIO':U , h_v-observacion-cli ).
+
+       /* Adjust the tab order of the smart objects. */
+       RUN adjust-tab-order IN adm-broker-hdl ( h_v-dsc_cliente-2 ,
+             h_folder , 'AFTER':U ).
+       RUN adjust-tab-order IN adm-broker-hdl ( h_b-observacion-cli ,
+             h_v-dsc_cliente-2 , 'AFTER':U ).
+       RUN adjust-tab-order IN adm-broker-hdl ( h_v-observacion-cli ,
+             h_b-observacion-cli , 'AFTER':U ).
+       RUN adjust-tab-order IN adm-broker-hdl ( h_p-soloalta ,
+             h_v-observacion-cli , 'AFTER':U ).
+    END. /* Page 2 */
+    WHEN 3 THEN DO:
+       RUN init-object IN THIS-PROCEDURE (
+             INPUT  'b-consorcios_de_un_administrador.w':U ,
+             INPUT  FRAME F-Main:HANDLE ,
+             INPUT  'Initial-Lock = NO-LOCK,
+                     Hide-on-Init = no,
+                     Disable-on-Init = no,
+                     Key-Name = nro_administrador,
+                     Layout = ,
+                     Create-On-Add = ?':U ,
+             OUTPUT h_b-consorcios_de_un_administrad ).
+       RUN set-position IN h_b-consorcios_de_un_administrad ( 2.43 , 8.00 ) NO-ERROR.
+       RUN set-size IN h_b-consorcios_de_un_administrad ( 8.57 , 146.00 ) NO-ERROR.
+
+       RUN init-object IN THIS-PROCEDURE (
+             INPUT  'cxc/b-ctacte-cli.w':U ,
+             INPUT  FRAME F-Main:HANDLE ,
+             INPUT  'Layout = ':U ,
+             OUTPUT h_b-ctacte-cli ).
+       RUN set-position IN h_b-ctacte-cli ( 11.24 , 8.00 ) NO-ERROR.
+       RUN set-size IN h_b-ctacte-cli ( 15.24 , 145.00 ) NO-ERROR.
+
+       /* Initialize other pages that this page requires. */
+       RUN init-pages IN THIS-PROCEDURE ('1':U) NO-ERROR.
+
+       /* Links to SmartBrowser h_b-consorcios_de_un_administrad. */
+       RUN add-link IN adm-broker-hdl ( h_b-administracion , 'Record':U , h_b-consorcios_de_un_administrad ).
+
+       /* Links to SmartBrowser h_b-ctacte-cli. */
+       RUN add-link IN adm-broker-hdl ( h_b-consorcios_de_un_administrad , 'fecha':U , h_b-ctacte-cli ).
+       RUN add-link IN adm-broker-hdl ( h_b-consorcios_de_un_administrad , 'Record':U , h_b-ctacte-cli ).
+
+       /* Adjust the tab order of the smart objects. */
+       RUN adjust-tab-order IN adm-broker-hdl ( h_b-consorcios_de_un_administrad ,
+             h_folder , 'AFTER':U ).
+       RUN adjust-tab-order IN adm-broker-hdl ( h_b-ctacte-cli ,
+             h_b-consorcios_de_un_administrad , 'AFTER':U ).
+    END. /* Page 3 */
+    WHEN 4 THEN DO:
+       RUN init-object IN THIS-PROCEDURE (
+             INPUT  'v-dsc_cliente.w':U ,
+             INPUT  FRAME F-Main:HANDLE ,
+             INPUT  'Layout = ':U ,
+             OUTPUT h_v-dsc_cliente ).
+       RUN set-position IN h_v-dsc_cliente ( 2.43 , 20.00 ) NO-ERROR.
+       /* Size in UIB:  ( 0.95 , 120.40 ) */
+
+       RUN init-object IN THIS-PROCEDURE (
+             INPUT  'b-busc-tarea.w':U ,
+             INPUT  FRAME F-Main:HANDLE ,
+             INPUT  'Key-Name = nro_cliente,
+                     Layout = ':U ,
+             OUTPUT h_b-busc-tarea ).
+       RUN set-position IN h_b-busc-tarea ( 3.91 , 5.60 ) NO-ERROR.
+       RUN set-size IN h_b-busc-tarea ( 4.76 , 153.00 ) NO-ERROR.
+
+       RUN init-object IN THIS-PROCEDURE (
+             INPUT  'v-temp_tarea1.w':U ,
+             INPUT  FRAME F-Main:HANDLE ,
+             INPUT  'Layout = ':U ,
+             OUTPUT h_v-temp_tarea1 ).
+       RUN set-position IN h_v-temp_tarea1 ( 8.81 , 6.40 ) NO-ERROR.
+       /* Size in UIB:  ( 10.00 , 150.60 ) */
+
+       RUN init-object IN THIS-PROCEDURE (
+             INPUT  'v-tarea-red1.w':U ,
+             INPUT  FRAME F-Main:HANDLE ,
+             INPUT  'Layout = ':U ,
+             OUTPUT h_v-tarea-red1 ).
+       RUN set-position IN h_v-tarea-red1 ( 18.91 , 8.40 ) NO-ERROR.
+       /* Size in UIB:  ( 7.71 , 147.00 ) */
+
+       /* Initialize other pages that this page requires. */
+       RUN init-pages IN THIS-PROCEDURE ('1':U) NO-ERROR.
+
+       /* Links to SmartViewer h_v-dsc_cliente. */
+       RUN add-link IN adm-broker-hdl ( h_b-administracion , 'Record':U , h_v-dsc_cliente ).
+
+       /* Links to SmartBrowser h_b-busc-tarea. */
+       RUN add-link IN adm-broker-hdl ( h_b-administracion , 'Record':U , h_b-busc-tarea ).
+
+       /* Links to SmartViewer h_v-temp_tarea1. */
+       RUN add-link IN adm-broker-hdl ( h_b-busc-tarea , 'Record':U , h_v-temp_tarea1 ).
+
+       /* Links to SmartViewer h_v-tarea-red1. */
+       RUN add-link IN adm-broker-hdl ( h_b-busc-tarea , 'Record':U , h_v-tarea-red1 ).
+
+       /* Adjust the tab order of the smart objects. */
+       RUN adjust-tab-order IN adm-broker-hdl ( h_v-dsc_cliente ,
+             h_folder , 'AFTER':U ).
+       RUN adjust-tab-order IN adm-broker-hdl ( h_b-busc-tarea ,
+             h_v-dsc_cliente , 'AFTER':U ).
+       RUN adjust-tab-order IN adm-broker-hdl ( h_v-temp_tarea1 ,
+             h_b-busc-tarea , 'AFTER':U ).
+       RUN adjust-tab-order IN adm-broker-hdl ( h_v-tarea-red1 ,
+             h_v-temp_tarea1 , 'AFTER':U ).
+    END. /* Page 4 */
+    WHEN 5 THEN DO:
+       RUN init-object IN THIS-PROCEDURE (
+             INPUT  'v-dsc_cliente.w':U ,
+             INPUT  FRAME F-Main:HANDLE ,
+             INPUT  'Layout = ':U ,
+             OUTPUT h_v-dsc_cliente-3 ).
+       RUN set-position IN h_v-dsc_cliente-3 ( 2.67 , 13.00 ) NO-ERROR.
+       /* Size in UIB:  ( 0.95 , 120.40 ) */
+
+       RUN init-object IN THIS-PROCEDURE (
+             INPUT  'p-excel.w':U ,
+             INPUT  FRAME F-Main:HANDLE ,
+             INPUT  '':U ,
+             OUTPUT h_p-excel ).
+       RUN set-position IN h_p-excel ( 2.67 , 139.00 ) NO-ERROR.
+       RUN set-size IN h_p-excel ( 1.76 , 11.00 ) NO-ERROR.
+
+       RUN init-object IN THIS-PROCEDURE (
+             INPUT  'b-eventocli.w':U ,
+             INPUT  FRAME F-Main:HANDLE ,
+             INPUT  'Layout = ':U ,
+             OUTPUT h_b-eventocli ).
+       RUN set-position IN h_b-eventocli ( 4.81 , 5.00 ) NO-ERROR.
+       RUN set-size IN h_b-eventocli ( 10.48 , 155.00 ) NO-ERROR.
+
+       RUN init-object IN THIS-PROCEDURE (
+             INPUT  'p-soloedita.w':U ,
+             INPUT  FRAME F-Main:HANDLE ,
+             INPUT  'Edge-Pixels = 2,
+                     SmartPanelType = Update-Trans,
+                     AddFunction = One-Record':U ,
+             OUTPUT p-updspa-sinborr ).
+       RUN set-position IN p-updspa-sinborr ( 15.76 , 4.00 ) NO-ERROR.
+       RUN set-size IN p-updspa-sinborr ( 10.48 , 7.00 ) NO-ERROR.
+
+       RUN init-object IN THIS-PROCEDURE (
+             INPUT  'v-evento.w':U ,
+             INPUT  FRAME F-Main:HANDLE ,
+             INPUT  'Layout = ':U ,
+             OUTPUT h_v-evento ).
+       RUN set-position IN h_v-evento ( 15.76 , 14.00 ) NO-ERROR.
+       /* Size in UIB:  ( 10.67 , 143.80 ) */
+
+       /* Initialize other pages that this page requires. */
+       RUN init-pages IN THIS-PROCEDURE ('1':U) NO-ERROR.
+
+       /* Links to SmartViewer h_v-dsc_cliente-3. */
+       RUN add-link IN adm-broker-hdl ( h_b-administracion , 'Record':U , h_v-dsc_cliente-3 ).
+
+       /* Links to SmartBrowser h_b-eventocli. */
+       RUN add-link IN adm-broker-hdl ( h_b-administracion , 'Record':U , h_b-eventocli ).
+       RUN add-link IN adm-broker-hdl ( h_p-excel , 'excel':U , h_b-eventocli ).
+
+       /* Links to SmartViewer h_v-evento. */
+       RUN add-link IN adm-broker-hdl ( h_b-eventocli , 'Record':U , h_v-evento ).
+       RUN add-link IN adm-broker-hdl ( p-updspa-sinborr , 'TableIO':U , h_v-evento ).
+
+       /* Adjust the tab order of the smart objects. */
+       RUN adjust-tab-order IN adm-broker-hdl ( h_v-dsc_cliente-3 ,
+             h_folder , 'AFTER':U ).
+       RUN adjust-tab-order IN adm-broker-hdl ( h_p-excel ,
+             h_v-dsc_cliente-3 , 'AFTER':U ).
+       RUN adjust-tab-order IN adm-broker-hdl ( h_b-eventocli ,
+             h_p-excel , 'AFTER':U ).
+       RUN adjust-tab-order IN adm-broker-hdl ( p-updspa-sinborr ,
+             h_b-eventocli , 'AFTER':U ).
+       RUN adjust-tab-order IN adm-broker-hdl ( h_v-evento ,
+             p-updspa-sinborr , 'AFTER':U ).
+    END. /* Page 5 */
+    WHEN 6 THEN DO:
+       RUN init-object IN THIS-PROCEDURE (
+             INPUT  'v-resumen.w':U ,
+             INPUT  FRAME F-Main:HANDLE ,
+             INPUT  'Layout = ':U ,
+             OUTPUT h_v-resumen ).
+       RUN set-position IN h_v-resumen ( 1.14 , 135.00 ) NO-ERROR.
+       /* Size in UIB:  ( 1.00 , 22.00 ) */
+
+       RUN init-object IN THIS-PROCEDURE (
+             INPUT  'b-rendicion_adm.w':U ,
+             INPUT  FRAME F-Main:HANDLE ,
+             INPUT  'Layout = ,
+                     SortBy-Case = fch_rendicion':U ,
+             OUTPUT h_b-rendicion_adm ).
+       RUN set-position IN h_b-rendicion_adm ( 2.67 , 4.60 ) NO-ERROR.
+       RUN set-size IN h_b-rendicion_adm ( 6.71 , 155.00 ) NO-ERROR.
+
+       RUN init-object IN THIS-PROCEDURE (
+             INPUT  'b-comprobante_rendicion-adm.w':U ,
+             INPUT  FRAME F-Main:HANDLE ,
+             INPUT  'Layout = ':U ,
+             OUTPUT h_b-comprobante_rendicion ).
+       RUN set-position IN h_b-comprobante_rendicion ( 9.57 , 3.40 ) NO-ERROR.
+       RUN set-size IN h_b-comprobante_rendicion ( 17.14 , 62.00 ) NO-ERROR.
+
+       RUN init-object IN THIS-PROCEDURE (
+             INPUT  'b-valores_rendicion.w':U ,
+             INPUT  FRAME F-Main:HANDLE ,
+             INPUT  'Layout = ':U ,
+             OUTPUT h_b-valores_rendicion ).
+       RUN set-position IN h_b-valores_rendicion ( 9.57 , 67.00 ) NO-ERROR.
+       RUN set-size IN h_b-valores_rendicion ( 7.86 , 93.00 ) NO-ERROR.
+
+       RUN init-object IN THIS-PROCEDURE (
+             INPUT  'b-caja_valor.w':U ,
+             INPUT  FRAME F-Main:HANDLE ,
+             INPUT  'Layout = ':U ,
+             OUTPUT h_b-caja_valor ).
+       RUN set-position IN h_b-caja_valor ( 17.57 , 67.00 ) NO-ERROR.
+       RUN set-size IN h_b-caja_valor ( 9.14 , 93.00 ) NO-ERROR.
+
+       /* Initialize other pages that this page requires. */
+       RUN init-pages IN THIS-PROCEDURE ('1':U) NO-ERROR.
+
+       /* Links to SmartViewer h_v-resumen. */
+       RUN add-link IN adm-broker-hdl ( h_b-administracion , 'Record':U , h_v-resumen ).
+
+       /* Links to SmartBrowser h_b-rendicion_adm. */
+       RUN add-link IN adm-broker-hdl ( h_b-administracion , 'Record':U , h_b-rendicion_adm ).
+
+       /* Links to SmartBrowser h_b-comprobante_rendicion. */
+       RUN add-link IN adm-broker-hdl ( h_b-rendicion_adm , 'Record':U , h_b-comprobante_rendicion ).
+
+       /* Links to SmartBrowser h_b-valores_rendicion. */
+       RUN add-link IN adm-broker-hdl ( h_b-rendicion_adm , 'Record':U , h_b-valores_rendicion ).
+
+       /* Links to SmartBrowser h_b-caja_valor. */
+       RUN add-link IN adm-broker-hdl ( h_b-valores_rendicion , 'Record':U , h_b-caja_valor ).
+
+       /* Adjust the tab order of the smart objects. */
+       RUN adjust-tab-order IN adm-broker-hdl ( h_v-resumen ,
+             h_folder , 'AFTER':U ).
+       RUN adjust-tab-order IN adm-broker-hdl ( h_b-rendicion_adm ,
+             h_v-resumen , 'AFTER':U ).
+       RUN adjust-tab-order IN adm-broker-hdl ( h_b-comprobante_rendicion ,
+             h_b-rendicion_adm , 'AFTER':U ).
+       RUN adjust-tab-order IN adm-broker-hdl ( h_b-valores_rendicion ,
+             h_b-comprobante_rendicion , 'AFTER':U ).
+       RUN adjust-tab-order IN adm-broker-hdl ( h_b-caja_valor ,
+             h_b-valores_rendicion , 'AFTER':U ).
+    END. /* Page 6 */
+
+  END CASE.
+  /* Select a Startup page. */
+  IF adm-current-page eq 0 
+  THEN RUN select-page IN THIS-PROCEDURE ( 1 ).
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE adm-row-available W-Win  _ADM-ROW-AVAILABLE
+PROCEDURE adm-row-available :
+/*------------------------------------------------------------------------------
+  Purpose:     Dispatched to this procedure when the Record-
+               Source has a new row available.  This procedure
+               tries to get the new row (or foriegn keys) from
+               the Record-Source and process it.
+  Parameters:  <none>
+------------------------------------------------------------------------------*/
+
+  /* Define variables needed by this internal procedure.             */
+  {src/adm/template/row-head.i}
+
+  /* Create a list of all the tables that we need to get.            */
+  {src/adm/template/row-list.i "Cliente"}
+
+  /* Get the record ROWID's from the RECORD-SOURCE.                  */
+  {src/adm/template/row-get.i}
+
+  /* FIND each record specified by the RECORD-SOURCE.                */
+  {src/adm/template/row-find.i "Cliente"}
+
+  /* Process the newly available records (i.e. display fields,
+     open queries, and/or pass records on to any RECORD-TARGETS).    */
+  {src/adm/template/row-end.i}
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE disable_UI W-Win  _DEFAULT-DISABLE
+PROCEDURE disable_UI :
+/*------------------------------------------------------------------------------
+  Purpose:     DISABLE the User Interface
+  Parameters:  <none>
+  Notes:       Here we clean-up the user-interface by deleting
+               dynamic widgets we have created and/or hide 
+               frames.  This procedure is usually called when
+               we are ready to "clean-up" after running.
+------------------------------------------------------------------------------*/
+  /* Delete the WINDOW we created */
+  IF SESSION:DISPLAY-TYPE = "GUI":U AND VALID-HANDLE(W-Win)
+  THEN DELETE WIDGET W-Win.
+  IF THIS-PROCEDURE:PERSISTENT THEN DELETE PROCEDURE THIS-PROCEDURE.
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE enable_UI W-Win  _DEFAULT-ENABLE
+PROCEDURE enable_UI :
+/*------------------------------------------------------------------------------
+  Purpose:     ENABLE the User Interface
+  Parameters:  <none>
+  Notes:       Here we display/view/enable the widgets in the
+               user-interface.  In addition, OPEN all queries
+               associated with each FRAME and BROWSE.
+               These statements here are based on the "Other 
+               Settings" section of the widget Property Sheets.
+------------------------------------------------------------------------------*/
+  VIEW FRAME F-Main IN WINDOW W-Win.
+  {&OPEN-BROWSERS-IN-QUERY-F-Main}
+  VIEW W-Win.
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE local-exit W-Win 
+PROCEDURE local-exit :
+/* -----------------------------------------------------------
+  Purpose:  Starts an "exit" by APPLYing CLOSE event, which starts "destroy".
+  Parameters:  <none>
+  Notes:    If activated, should APPLY CLOSE, *not* dispatch adm-exit.   
+-------------------------------------------------------------*/
+
+  RUN verificar_txn ( OUTPUT txn_activa ).
+  IF txn_activa
+  THEN DO:
+       RETURN NO-APPLY.
+  END.     
+  ELSE DO:
+       APPLY "CLOSE":U TO THIS-PROCEDURE.
+       RETURN.
+  END.     
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE local-initialize W-Win 
+PROCEDURE local-initialize :
+/*------------------------------------------------------------------------------
+  Purpose:     Override standard ADM method
+  Notes:       
+------------------------------------------------------------------------------*/
+DEFINE VAR hcproc AS CHAR NO-UNDO.
+DEFINE VAR hproc AS HANDLE NO-UNDO.
+  /* Code placed here will execute PRIOR to standard behavior. */
+
+  /* Dispatch standard ADM method.                             */
+  RUN dispatch IN THIS-PROCEDURE ( INPUT 'initialize':U ) .
+
+  /* Code placed here will execute AFTER standard behavior.    */
+    RUN set-estado-folders("HABILITAR").
+
+/*esta comandado desde afuera*/
+RUN get-link-handle IN adm-broker-hdl                                        
+        ( INPUT THIS-PROCEDURE,                                                      
+          INPUT "record-source",                                                     
+          OUTPUT hcproc ).                                                             
+      hproc = WIDGET-HANDLE( hcproc ).                                             
+      IF VALID-HANDLE(hProc) THEN DO:
+          
+      END.
+
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE local-view W-Win 
+PROCEDURE local-view :
+/*------------------------------------------------------------------------------
+  Purpose:     Override standard ADM method
+  Notes:       
+------------------------------------------------------------------------------*/
+
+  /* Code placed here will execute PRIOR to standard behavior. */
+
+  /* Dispatch standard ADM method.                             */
+  RUN dispatch IN THIS-PROCEDURE ( INPUT 'view':U ) .
+
+  /* Code placed here will execute AFTER standard behavior.    */
+
+  {setwintit.i "SIC/USR" "Mantenimiento de Administraciones"}
+
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE mostrar_window W-Win 
+PROCEDURE mostrar_window :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+
+    {&WINDOW-NAME}:HIDDEN = NO.
+    {&WINDOW-NAME}:WINDOW-STATE = i-estado.
+    {&WINDOW-NAME}:MOVE-TO-TOP().
+
+END PROCEDURE.
+
+.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE ocultar_window W-Win 
+PROCEDURE ocultar_window :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+
+    i-estado = {&WINDOW-NAME}:WINDOW-STATE.
+    {&WINDOW-NAME}:HIDDEN = YES.
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE send-records W-Win  _ADM-SEND-RECORDS
+PROCEDURE send-records :
+/*------------------------------------------------------------------------------
+  Purpose:     Send record ROWID's for all tables used by
+               this file.
+  Parameters:  see template/snd-head.i
+------------------------------------------------------------------------------*/
+
+  /* Define variables needed by this internal procedure.               */
+  {src/adm/template/snd-head.i}
+
+  /* For each requested table, put it's ROWID in the output list.      */
+  {src/adm/template/snd-list.i "Cliente"}
+
+  /* Deal with any unexpected table requests before closing.           */
+  {src/adm/template/snd-end.i}
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE set-estado-folders W-Win 
+PROCEDURE set-estado-folders :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+    DEFINE INPUT PARAMETER p-operacion AS CHARACTER.
+    DEFINE VARIABLE folder-labels AS CHARACTER.
+    DEFINE VARIABLE page-hdl      AS CHARACTER.
+    DEFINE VARIABLE j-pagina      AS INTEGER.
+
+    RUN get-attribute IN h_folder ('FOLDER-LABELS':U).
+    ASSIGN folder-labels   = IF RETURN-VALUE = ? THEN "":U
+                             ELSE RETURN-VALUE.
+
+    RUN get-link-handle IN adm-broker-hdl
+                      (THIS-PROCEDURE, 'PAGE-TARGET',OUTPUT page-hdl).
+
+
+    DO j-pagina = 1 TO NUM-ENTRIES(folder-labels,'|':U):                             
+
+       IF p-operacion = "HABILITAR"
+          THEN do:
+                IF lookup(entry(j-pagina,folder-labels,"|"),"tareas,cobranzas,Cta.Cte.") <> 0 THEN DO:
+                    FIND usuario_funcion OF usuario WHERE usuario_funcion.cdg_funcion = "PCXC" 
+                         AND  Usuario_funcion.permiso = "A" NO-ERROR.
+                    IF AVAILABLE usuario_funcion THEN 
+                       RUN enable-folder-page  IN h_folder (j-pagina).
+                    ELSE RUN disable-folder-page IN h_folder (j-pagina).    
+                END.
+                ELSE RUN enable-folder-page  IN h_folder (j-pagina).
+               END.
+          ELSE RUN disable-folder-page IN h_folder (j-pagina).
+
+    END.
+    /*
+    IF VALID-HANDLE(h_b-clientes)          THEN RUN set-sensitivo IN h_b-clientes          ( INPUT p-operacion = "HABILITAR" ).
+    IF VALID-HANDLE(h_b-bon_cliente)       THEN RUN set-sensitivo IN h_b-bon_cliente       ( INPUT p-operacion = "HABILITAR" ). 
+    IF VALID-HANDLE(h_b-bon_xarticulo)     THEN RUN set-sensitivo IN h_b-bon_xarticulo     ( INPUT p-operacion = "HABILITAR" ). 
+    IF VALID-HANDLE(h_b-cliente_condicion) THEN RUN set-sensitivo IN h_b-cliente_condicion ( INPUT p-operacion = "HABILITAR" ). 
+    IF VALID-HANDLE(h_b-clientes)          THEN RUN set-sensitivo IN h_b-clientes          ( INPUT p-operacion = "HABILITAR" ). 
+    IF VALID-HANDLE(h_b-domicilios)        THEN RUN set-sensitivo IN h_b-domicilios        ( INPUT p-operacion = "HABILITAR" ). 
+    IF VALID-HANDLE(h_p-updsav)            THEN RUN set-sensitivo IN h_p-updsav            ( INPUT p-operacion = "HABILITAR" ).
+    IF VALID-HANDLE(h_p-updspa)            THEN RUN set-sensitivo IN h_p-updspa            ( INPUT p-operacion = "HABILITAR" ). 
+    IF VALID-HANDLE(h_p-updspa-2)          THEN RUN set-sensitivo IN h_p-updspa-2          ( INPUT p-operacion = "HABILITAR" ). 
+    IF VALID-HANDLE(h_p-updspa-3)          THEN RUN set-sensitivo IN h_p-updspa-3          ( INPUT p-operacion = "HABILITAR" ).
+    IF VALID-HANDLE(h_p-updspa-4)          THEN RUN set-sensitivo IN h_p-updspa-4          ( INPUT p-operacion = "HABILITAR" ).
+    */
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE state-changed W-Win 
+PROCEDURE state-changed :
+/* -----------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+-------------------------------------------------------------*/
+  DEFINE INPUT PARAMETER p-issuer-hdl AS HANDLE NO-UNDO.
+  DEFINE INPUT PARAMETER p-state AS CHARACTER NO-UNDO.
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE template W-Win 
+PROCEDURE template :
+/*------------------------------------------------------------------------------
+  Purpose: Cambia los templates de pedidos de datos segun el tipo de tarea en forma dinamica.    
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+  DEFINE INPUT PARAMETER ptipo AS CHAR NO-UNDO.
+  DEFINE VAR atemp_tarea AS CHAR NO-UNDO.
+  DEFINE VARIABLE adm-current-page  AS INTEGER NO-UNDO.
+  DEFINE VAR posrow AS decimal NO-UNDO.
+  DEFINE VAR poscol AS DECIMAL NO-UNDO.
+
+  RUN get-attribute IN THIS-PROCEDURE ('Current-Page':U).
+  IF INTEGER(RETURN-VALUE) <> 4 THEN RETURN.
+
+  FIND tipo_tarea WHERE tipo_tarea.cdg_tipotarea = ptipo NO-LOCK NO-ERROR.
+
+  IF AVAILABLE tipo_tarea THEN
+      IF tipo_tarea.pgm_abm <> "" AND tipo_tarea.pgm_abm <> ?  THEN
+           atemp_tarea = tipo_tarea.pgm_abm.
+      ELSE
+           atemp_tarea = "v-temp_tarea1.w".
+  IF temp_tarea = atemp_tarea THEN RETURN.
+  temp_tarea = atemp_tarea.
+
+  posrow = 8.81. 
+  poscol = 6.40 .
+  
+  RUN remove-link IN adm-broker-hdl ( h_b-busc-tarea , 'Record':U , h_v-temp_tarea1 ).
+  RUN adm-destroy IN h_v-temp_tarea1.
+  RUN init-object IN THIS-PROCEDURE (
+             INPUT temp_tarea ,
+             INPUT  FRAME F-Main:HANDLE ,
+             INPUT  'Initial-Lock = NO-LOCK,
+                     Hide-on-Init = no,
+                     Disable-on-Init = no,
+                     Layout = ,
+                     Create-On-Add = ?':U ,
+             OUTPUT h_v-temp_tarea1 ).
+
+  RUN set-position IN h_v-temp_tarea1 ( posrow , poscol ) NO-ERROR.
+  RUN add-link IN adm-broker-hdl ( h_b-busc-tarea , 'Record':U , h_v-temp_tarea1 ).
+  RUN adjust-tab-order IN adm-broker-hdl ( h_v-temp_tarea1 ,
+         h_b-busc-tarea , 'AFTER':U ).
+  RUN dispatch IN h_v-temp_tarea1 ("initialize").
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE verificar_txn W-Win 
+PROCEDURE verificar_txn :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+
+  DEFINE OUTPUT PARAMETER p-estado AS LOGICAL.
+
+  RUN get-attribute ('ADM-TRANSACTION').
+  IF RETURN-VALUE = "YES"
+  THEN DO:
+       MESSAGE "No puede salir de esta pantalla con una actualización pendiente"
+               VIEW-AS ALERT-BOX ERROR.
+       p-estado = YES.
+  END.
+  ELSE DO:
+       p-estado = NO.   /* Function return value. */
+  END.
+  
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+

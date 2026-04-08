@@ -1,0 +1,4 @@
+OpenEdge Release 10.2A03 as of Thu Feb 25 00:35:21 EST 2010
+Ha intentado conectarse a una base de datos con demasiados usuarios 
+conectados. Intente la conexió mas tarde, 
+o incremente -n en el servidor. (5291)

@@ -1,0 +1,206 @@
+/*===================================================================================*/
+/*             Emite el listado de coseguros por algun campo                         */
+/*===================================================================================*/
+
+DEFINE INPUT PARAMETER p-des_codigo     LIKE {&TABLA}.{&CODIGO-TABLA}.
+DEFINE INPUT PARAMETER p-has_codigo     LIKE {&TABLA}.{&CODIGO-TABLA}.
+DEFINE INPUT PARAMETER p-des_fecha      AS DATE.
+DEFINE INPUT PARAMETER p-has_fecha      AS DATE.
+DEFINE INPUT PARAMETER p-lista_empresas AS CHARACTER.
+DEFINE INPUT PARAMETER p-ctl_salto      AS LOGICAL.
+
+DEFINE VARIABLE tr  AS INTEGER.
+DEFINE VARIABLE ctr AS CHARACTER LABEL "T.Resp.".
+
+DEFINE VARIABLE v-domicilio  AS CHARACTER FORMAT "X(25)" LABEL "Domicilio".
+DEFINE VARIABLE v-telefono   AS CHARACTER LABEL "Telefono".
+
+DEFINE VARIABLE medico AS CHARACTER LABEL "Médico"    FORMAT "X(15)".
+DEFINE VARIABLE enferm AS CHARACTER LABEL "Enfermero" FORMAT "X(15)".
+DEFINE VARIABLE chofer AS CHARACTER LABEL "Chofer"    FORMAT "X(15)".
+
+{defvarcoseguro.i}
+{defvarcolores.i}
+
+DEFINE FRAME frm-titulo HEADER
+  que_empresa 
+  "{&TITULO-LST}" AT 52 
+  "Página:" AT 111 PAGE-NUMBER FORMAT ">>9" AT 118
+  SKIP
+  des_fecha AT 52
+  "al"
+  has_fecha
+  fecha_lis AT 111
+  SKIP
+  hora_lis AT 111
+  SKIP(1)
+  WITH WIDTH 160 FRAME frm-titulo TOP-ONLY PAGE-TOP STREAM-IO.
+
+FORM
+  Ficha.{&CODIGO-FICHA} 
+  medico
+  enferm
+  chofer
+  Ficha.fch_alta 
+  Ficha.hms_alta
+  Ficha.num_ficha 
+  v-telefono
+  Ficha.nombre_pac FORMAT "X(20)"
+  v-domicilio
+  v-imp_pago      COLUMN-LABEL "Importe!Pagado"
+  v-imp_impago    COLUMN-LABEL "Importe!Adeudado"
+  WITH WIDTH 160 DOWN CENTERED FRAME frm-listado USE-TEXT STREAM-IO.
+
+ASSIGN 
+  des_fecha = p-des_fecha
+  has_fecha = p-has_fecha
+  ctl_salto = p-ctl_salto.
+
+lista_empresas = p-lista_empresas.
+
+{cerocosegutot.i}
+{cerocosegurec.i}
+
+{drsalida.i "55"} /* Direcciona la salida de impresión */
+{setvarimpre.i}
+
+FOR EACH Ficha NO-LOCK
+    WHERE Ficha.fch_alta <= has_fecha 
+      AND Ficha.fch_alta >= des_fecha
+      AND Ficha.cdg_destino <> "A" 
+      AND Ficha.imp_coseguro <> 0 
+      AND Ficha.{&CODIGO-FICHA} <= p-has_codigo
+      AND Ficha.{&CODIGO-FICHA} >= p-des_codigo
+      AND LOOKUP(Ficha.cdg_empresa,lista_empresas) <> 0
+      BREAK BY Ficha.{&CODIGO-FICHA} 
+            BY Ficha.fch_alta 
+            BY Ficha.num_ficha WITH FRAME f-listado:
+
+    VIEW FRAME frm-titulo.
+
+    FIND {&TABLA}  WHERE {&TABLA}.{&CODIGO-TABLA} = Ficha.{&CODIGO-FICHA} NO-LOCK NO-ERROR.
+    FIND Localidad OF Ficha NO-LOCK NO-ERROR.
+    
+    FIND Empleado WHERE Empleado.nro_legajo = Ficha.leg_chofer NO-LOCK NO-ERROR.
+    
+    IF AVAILABLE Empleado THEN DO:
+        chofer = nom_persona.
+    END.
+    ELSE DO:
+        chofer = "?".
+    END.
+    
+    FIND Empleado WHERE Empleado.nro_legajo = Ficha.leg_enfermero NO-LOCK NO-ERROR.
+    
+    IF AVAILABLE Empleado THEN DO:
+        enferm = nom_persona.
+    END.
+    ELSE DO:
+        enferm = "?".
+    END.
+    
+    FIND Empleado WHERE Empleado.nro_legajo = Ficha.leg_medico NO-LOCK NO-ERROR.
+    
+    IF AVAILABLE Empleado THEN DO:
+        medico = nom_persona.
+    END.
+    ELSE DO:
+        medico = "?".
+    END.
+
+    v-domicilio = Ficha.calle_emr + " " + Ficha.nropta_emr + "-" + Localidad.dsc_localidad.
+    v-telefono =  Ficha.prefijotel_emr + "-" + Ficha.telefono_emr.
+
+    {sumacoseguro.i}
+    
+    DISPLAY Ficha.{&CODIGO-FICHA}  WHEN FIRST-OF(Ficha.{&CODIGO-FICHA})
+            medico
+            enferm
+            chofer
+            Ficha.fch_alta   WHEN FIRST-OF(Ficha.fch_alta)
+            Ficha.hms_alta
+            Ficha.num_ficha 
+            v-telefono
+            Ficha.nombre_pac
+            v-domicilio
+            v-imp_pago      WHEN v-imp_pago <> 0
+            v-imp_impago    WHEN v-imp_impago <> 0
+            WITH FRAME frm-listado.
+
+    DOWN WITH FRAME frm-listado.        
+
+    IF LAST-OF(Ficha.{&CODIGO-FICHA})
+    THEN DO:
+
+         UNDERLINE Ficha.{&CODIGO-FICHA}
+                   medico
+                   enferm
+                   chofer
+                   Ficha.fch_alta 
+                   Ficha.hms_alta
+                   Ficha.num_ficha 
+                   v-telefono
+                   Ficha.nombre_pac
+                   v-domicilio
+                   v-imp_pago
+                   v-imp_impago
+                   WITH FRAME frm-listado.
+
+         DISPLAY   tmv_fichas      @ Ficha.num_ficha 
+                   tmv_coseguro-si @ v-imp_pago 
+                   tmv_coseguro-no @ v-imp_impago 
+                   WITH FRAME frm-listado.
+
+         DOWN 2 WITH FRAME frm-listado.        
+
+         {cerocosegurec.i}
+         
+         IF NOT LAST(Ficha.{&CODIGO-FICHA}) AND ctl_salto THEN PAGE.
+
+    END.
+
+END.            
+
+IF ctl_salto THEN PAGE.
+
+UNDERLINE Ficha.{&CODIGO-FICHA}
+          medico
+          enferm
+          chofer
+          Ficha.fch_alta 
+          Ficha.hms_alta
+          Ficha.num_ficha 
+          v-telefono
+          Ficha.nombre_pac
+          v-domicilio
+          v-imp_pago
+          v-imp_impago
+          WITH FRAME frm-listado.
+
+DISPLAY   tot_fichas      @ Ficha.num_ficha 
+          "TOTAL"         @ v-telefono
+          tot_coseguro-si @ v-imp_pago 
+          tot_coseguro-no @ v-imp_impago 
+          WITH FRAME frm-listado.
+
+UNDERLINE Ficha.{&CODIGO-FICHA}
+          medico
+          enferm
+          chofer
+          Ficha.fch_alta 
+          Ficha.hms_alta
+          Ficha.num_ficha 
+          v-telefono
+          Ficha.nombre_pac
+          v-domicilio
+          v-imp_pago
+          v-imp_impago
+          WITH FRAME frm-listado.
+
+OUTPUT CLOSE.
+
+   /* Visualiza en pantalla el archivo de salida */
+
+RUN veresult.w ( INPUT  arch_salida ,  /* Archivo */
+                 INPUT 8 ).            /* FONT a utilizar por default */               
+           

@@ -1,0 +1,3209 @@
+K 25
+svn:wc:ra_dav:version-url
+V 35
+/svn/Paulista/!svn/ver/44/progs/fac
+END
+v-set_empresa.w
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/Paulista/!svn/ver/1/progs/fac/v-set_empresa.w
+END
+tblliquidoproducto.i
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/Paulista/!svn/ver/1/progs/fac/tblliquidoproducto.i
+END
+prfaa116.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/fac/prfaa116.p
+END
+lsventasxzona_total.p
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/Paulista/!svn/ver/1/progs/fac/lsventasxzona_total.p
+END
+aplica-aumentos-con-especial.p
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/Paulista/!svn/ver/46/progs/fac/aplica-aumentos-con-especial.p
+END
+w-geocli-adm.wrx
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/fac/w-geocli-adm.wrx
+END
+w-lsexcencion_impositiva.w
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/Paulista/!svn/ver/1/progs/fac/w-lsexcencion_impositiva.w
+END
+facturar_remitos_arreglado.p
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/Paulista/!svn/ver/1/progs/fac/facturar_remitos_arreglado.p
+END
+w-lsrnk_clientes.w
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/Paulista/!svn/ver/1/progs/fac/w-lsrnk_clientes.w
+END
+w-comisiones_resumidas.w
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/Paulista/!svn/ver/1/progs/fac/w-comisiones_resumidas.w
+END
+w-refacturacion.w
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/fac/w-refacturacion.w
+END
+v-impuesto_condicion.w
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/Paulista/!svn/ver/1/progs/fac/v-impuesto_condicion.w
+END
+b-escala_vendedor.w
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/Paulista/!svn/ver/1/progs/fac/b-escala_vendedor.w
+END
+d-seldomicilio_cliente.w
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/Paulista/!svn/ver/1/progs/fac/d-seldomicilio_cliente.w
+END
+imprimir_lista_precios.p
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/Paulista/!svn/ver/1/progs/fac/imprimir_lista_precios.p
+END
+v-rng_ventasocmarginal.w
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/Paulista/!svn/ver/1/progs/fac/v-rng_ventasocmarginal.w
+END
+w-rldaclizona.w
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/Paulista/!svn/ver/1/progs/fac/w-rldaclizona.w
+END
+selcicloventas.p
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/fac/selcicloventas.p
+END
+prfab114.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/fac/prfab114.p
+END
+lsmaeclc.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/fac/lsmaeclc.p
+END
+print_forma_factura.p
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/Paulista/!svn/ver/1/progs/fac/print_forma_factura.p
+END
+vlb-vendedor.p
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/Paulista/!svn/ver/1/progs/fac/vlb-vendedor.p
+END
+aumentos.p
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/Paulista/!svn/ver/46/progs/fac/aumentos.p
+END
+w-lscumplimiento_xvendedor.w
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/Paulista/!svn/ver/1/progs/fac/w-lscumplimiento_xvendedor.w
+END
+vlb-municipios.p
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/fac/vlb-municipios.p
+END
+w-asigna_factura_remito.w
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/Paulista/!svn/ver/1/progs/fac/w-asigna_factura_remito.w
+END
+w-CRprinfacturas.w
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/Paulista/!svn/ver/12/progs/fac/w-CRprinfacturas.w
+END
+cambia_vendedor.p
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/fac/cambia_vendedor.p
+END
+prlqa103.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/fac/prlqa103.p
+END
+v-rng-vendedor.w
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/fac/v-rng-vendedor.w
+END
+w-reemplazar_facturas.w
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/Paulista/!svn/ver/1/progs/fac/w-reemplazar_facturas.w
+END
+SELCNDIV-V.P
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/1/progs/fac/SELCNDIV-V.P
+END
+prdea112.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/fac/prdea112.p
+END
+b-objetivos_vendedor.w
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/Paulista/!svn/ver/1/progs/fac/b-objetivos_vendedor.w
+END
+v-lista_de_precios.w
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/Paulista/!svn/ver/53/progs/fac/v-lista_de_precios.w
+END
+SELECMAI.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/fac/SELECMAI.p
+END
+v-ciclo_ventas.w
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/fac/v-ciclo_ventas.w
+END
+prcaa724.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/fac/prcaa724.p
+END
+vlb-clientes.p
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/Paulista/!svn/ver/1/progs/fac/vlb-clientes.p
+END
+cocinero_clientes_dado_de alta.p
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/Paulista/!svn/ver/46/progs/fac/cocinero_clientes_dado_de%20alta.p
+END
+v-par-asnconceptos.w
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/Paulista/!svn/ver/1/progs/fac/v-par-asnconceptos.w
+END
+prfaa917.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/fac/prfaa917.p
+END
+w-comisionesxventas.w
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/Paulista/!svn/ver/1/progs/fac/w-comisionesxventas.w
+END
+SELBONIF.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/fac/SELBONIF.p
+END
+b-domicilis.w
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/1/progs/fac/b-domicilis.w
+END
+VentasxadmptovtaTBL2.rpt
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/Paulista/!svn/ver/7/progs/fac/VentasxadmptovtaTBL2.rpt
+END
+gnasifac.i
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/fac/gnasifac.i
+END
+lsrnk_articulos_imple.p
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/Paulista/!svn/ver/1/progs/fac/lsrnk_articulos_imple.p
+END
+lscomisiones.p
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/Paulista/!svn/ver/1/progs/fac/lscomisiones.p
+END
+b-oferta-condicion.w
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/Paulista/!svn/ver/1/progs/fac/b-oferta-condicion.w
+END
+lsdiario_liquidoproducto.p
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/Paulista/!svn/ver/1/progs/fac/lsdiario_liquidoproducto.p
+END
+w-observaciones.w
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/fac/w-observaciones.w
+END
+exddjj_percep_err.p
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/Paulista/!svn/ver/1/progs/fac/exddjj_percep_err.p
+END
+prfaa501.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/fac/prfaa501.p
+END
+cocinero_cambio_23F.p
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/Paulista/!svn/ver/14/progs/fac/cocinero_cambio_23F.p
+END
+Prfaa918.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/fac/Prfaa918.p
+END
+PROCESO DE DOCU.p
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/Paulista/!svn/ver/1/progs/fac/PROCESO%20DE%20DOCU.p
+END
+d-detfactura_servicios.w
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/Paulista/!svn/ver/1/progs/fac/d-detfactura_servicios.w
+END
+prcmi252.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/fac/prcmi252.p
+END
+lsrnk_clientes_articulos.p
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/Paulista/!svn/ver/1/progs/fac/lsrnk_clientes_articulos.p
+END
+refacturar_pedidos.p
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/Paulista/!svn/ver/1/progs/fac/refacturar_pedidos.p
+END
+prfab999.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/fac/prfab999.p
+END
+b-consulta_cicloventas.w
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/Paulista/!svn/ver/1/progs/fac/b-consulta_cicloventas.w
+END
+w-exporta_ventas.w
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/Paulista/!svn/ver/1/progs/fac/w-exporta_ventas.w
+END
+lsexcencion_impositiva.p
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/Paulista/!svn/ver/1/progs/fac/lsexcencion_impositiva.p
+END
+w-comisionesxcobranzas.w
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/Paulista/!svn/ver/1/progs/fac/w-comisionesxcobranzas.w
+END
+lsrnk_clientes.p
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/fac/lsrnk_clientes.p
+END
+aplica-aumentos.p
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/Paulista/!svn/ver/46/progs/fac/aplica-aumentos.p
+END
+v-cliente_contacto.w
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/Paulista/!svn/ver/1/progs/fac/v-cliente_contacto.w
+END
+w-actualizar_precios.w
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/Paulista/!svn/ver/1/progs/fac/w-actualizar_precios.w
+END
+SELDOMIC.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/fac/SELDOMIC.p
+END
+lsfacturado_xcliente.p
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/Paulista/!svn/ver/1/progs/fac/lsfacturado_xcliente.p
+END
+lsrnk_articulos_clientes.p
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/Paulista/!svn/ver/1/progs/fac/lsrnk_articulos_clientes.p
+END
+w-excenciones_impositivas.w
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/Paulista/!svn/ver/1/progs/fac/w-excenciones_impositivas.w
+END
+v-panel_consulta_objetivos.w
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/Paulista/!svn/ver/1/progs/fac/v-panel_consulta_objetivos.w
+END
+v-rng-facturas.w
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/fac/v-rng-facturas.w
+END
+w-consultar_precios-2.w
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/Paulista/!svn/ver/1/progs/fac/w-consultar_precios-2.w
+END
+refundicion-clientes.p
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/Paulista/!svn/ver/1/progs/fac/refundicion-clientes.p
+END
+cocinero_arreglo_precios_detalle1.p
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/Paulista/!svn/ver/14/progs/fac/cocinero_arreglo_precios_detalle1.p
+END
+vlb-domicilios.p
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/fac/vlb-domicilios.p
+END
+b-bonheader.w
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/1/progs/fac/b-bonheader.w
+END
+w-rlasientos_ventas.w
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/Paulista/!svn/ver/1/progs/fac/w-rlasientos_ventas.w
+END
+w-lsddjj_abasto.w
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/fac/w-lsddjj_abasto.w
+END
+c-renumerar_facturas.w
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/Paulista/!svn/ver/1/progs/fac/c-renumerar_facturas.w
+END
+lsclie_nuevosxvend.p
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/Paulista/!svn/ver/1/progs/fac/lsclie_nuevosxvend.p
+END
+lsventasxzona.p
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/Paulista/!svn/ver/1/progs/fac/lsventasxzona.p
+END
+prfaa502.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/fac/prfaa502.p
+END
+lstot_clientes_articulos.p
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/Paulista/!svn/ver/1/progs/fac/lstot_clientes_articulos.p
+END
+prfab116.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/fac/prfab116.p
+END
+b-condiciones.w
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/Paulista/!svn/ver/1/progs/fac/b-condiciones.w
+END
+vlb-puntoventa.p
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/fac/vlb-puntoventa.p
+END
+prcra110.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/fac/prcra110.p
+END
+exddjj_percep_bas.p
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/Paulista/!svn/ver/1/progs/fac/exddjj_percep_bas.p
+END
+w-lsventasxvendedorarticulo.w
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/Paulista/!svn/ver/1/progs/fac/w-lsventasxvendedorarticulo.w
+END
+SELcodpuntoventa.P
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/Paulista/!svn/ver/1/progs/fac/SELcodpuntoventa.P
+END
+w-lsfacturas_xfecha.w
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/Paulista/!svn/ver/1/progs/fac/w-lsfacturas_xfecha.w
+END
+sellistaventas.p
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/fac/sellistaventas.p
+END
+imprg151.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/fac/imprg151.p
+END
+w-vendedores.w
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/Paulista/!svn/ver/1/progs/fac/w-vendedores.w
+END
+cr-facturasAA.xsd
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/fac/cr-facturasAA.xsd
+END
+cocinero_cambia_fecha_facturas.p
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/Paulista/!svn/ver/14/progs/fac/cocinero_cambia_fecha_facturas.p
+END
+v-condicion_venta.w
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/Paulista/!svn/ver/1/progs/fac/v-condicion_venta.w
+END
+lstot_articulos_clientes.p
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/Paulista/!svn/ver/1/progs/fac/lstot_articulos_clientes.p
+END
+prdea114.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/fac/prdea114.p
+END
+PRFAB145.P
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/fac/PRFAB145.P
+END
+b-lista_precios.w
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/fac/b-lista_precios.w
+END
+v-domicli.w
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/Paulista/!svn/ver/1/progs/fac/v-domicli.w
+END
+c-abmclasezonag.w
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/fac/c-abmclasezonag.w
+END
+lsresumen_condicion.p
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/Paulista/!svn/ver/1/progs/fac/lsresumen_condicion.p
+END
+w-asigna_comp_contrato.w
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/Paulista/!svn/ver/1/progs/fac/w-asigna_comp_contrato.w
+END
+v-objetivos_vendedor.w
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/Paulista/!svn/ver/1/progs/fac/v-objetivos_vendedor.w
+END
+exddjj_percep_cab.p
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/Paulista/!svn/ver/1/progs/fac/exddjj_percep_cab.p
+END
+cocinero_arreglo_precios_detalle2.p
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/Paulista/!svn/ver/14/progs/fac/cocinero_arreglo_precios_detalle2.p
+END
+b-detalle_remitoshd.w
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/Paulista/!svn/ver/1/progs/fac/b-detalle_remitoshd.w
+END
+d-cambia_moneda_facturas.w
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/Paulista/!svn/ver/1/progs/fac/d-cambia_moneda_facturas.w
+END
+prdeb112.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/fac/prdeb112.p
+END
+vlb-sucursal.p
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/Paulista/!svn/ver/1/progs/fac/vlb-sucursal.p
+END
+traer_factura.p
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/Paulista/!svn/ver/1/progs/fac/traer_factura.p
+END
+w-gnrg1361.w
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/1/progs/fac/w-gnrg1361.w
+END
+prfaa145.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/fac/prfaa145.p
+END
+imprimir_comprobante_cliente.p
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/Paulista/!svn/ver/1/progs/fac/imprimir_comprobante_cliente.p
+END
+w-lsdiario_liquidoproducto.w
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/Paulista/!svn/ver/1/progs/fac/w-lsdiario_liquidoproducto.w
+END
+v-dsc_cliente-referencia.w
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/Paulista/!svn/ver/1/progs/fac/v-dsc_cliente-referencia.w
+END
+v-zona_geografica.w
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/Paulista/!svn/ver/1/progs/fac/v-zona_geografica.w
+END
+q-cliente.w
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/Paulista/!svn/ver/1/progs/fac/q-cliente.w
+END
+lsresumenprovincia.p
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/Paulista/!svn/ver/1/progs/fac/lsresumenprovincia.p
+END
+w-editafacturas.w
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/fac/w-editafacturas.w
+END
+prfab917.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/fac/prfab917.p
+END
+b-cliente_condicion.w
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/Paulista/!svn/ver/1/progs/fac/b-cliente_condicion.w
+END
+v-cliente_jurisdiccion.w
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/Paulista/!svn/ver/1/progs/fac/v-cliente_jurisdiccion.w
+END
+exporta_ventas.p
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/fac/exporta_ventas.p
+END
+w-rlresumenprovincia.w
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/Paulista/!svn/ver/1/progs/fac/w-rlresumenprovincia.w
+END
+b-cliente_contacto.w
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/Paulista/!svn/ver/1/progs/fac/b-cliente_contacto.w
+END
+lstotalventasxarticulopartida.p
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/Paulista/!svn/ver/1/progs/fac/lstotalventasxarticulopartida.p
+END
+pri_y_ult_cliente.p
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/Paulista/!svn/ver/1/progs/fac/pri_y_ult_cliente.p
+END
+d-buscar_cliente.w
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/Paulista/!svn/ver/1/progs/fac/d-buscar_cliente.w
+END
+w-rlasientos_conceptos.w
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/Paulista/!svn/ver/1/progs/fac/w-rlasientos_conceptos.w
+END
+PRREM502.P
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/fac/PRREM502.P
+END
+w-lsrnk_clientes_articulos.w
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/Paulista/!svn/ver/1/progs/fac/w-lsrnk_clientes_articulos.w
+END
+prfab501.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/fac/prfab501.p
+END
+w-comisiones.w
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/Paulista/!svn/ver/1/progs/fac/w-comisiones.w
+END
+seloferta.p
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/Paulista/!svn/ver/1/progs/fac/seloferta.p
+END
+c-buscliente.w
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/Paulista/!svn/ver/1/progs/fac/c-buscliente.w
+END
+ACUMCCTE.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/fac/ACUMCCTE.p
+END
+v-dsc_cliente.w
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/Paulista/!svn/ver/1/progs/fac/v-dsc_cliente.w
+END
+imprimir_comprobante_cliente-rpt.p
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/Paulista/!svn/ver/1/progs/fac/imprimir_comprobante_cliente-rpt.p
+END
+prfaa890.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/fac/prfaa890.p
+END
+prcra201.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/fac/prcra201.p
+END
+b-vendedor-familia.w
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/Paulista/!svn/ver/1/progs/fac/b-vendedor-familia.w
+END
+Prfab918.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/fac/Prfab918.p
+END
+w-lsclientesnuevosxzona.w
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/Paulista/!svn/ver/1/progs/fac/w-lsclientesnuevosxzona.w
+END
+prcre501.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/fac/prcre501.p
+END
+b-detalle_remitos.w
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/Paulista/!svn/ver/1/progs/fac/b-detalle_remitos.w
+END
+prcra724.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/fac/prcra724.p
+END
+b-municipios.w
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/Paulista/!svn/ver/1/progs/fac/b-municipios.w
+END
+v-cliente_contacto1.w
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/Paulista/!svn/ver/1/progs/fac/v-cliente_contacto1.w
+END
+exddjj_percep_sircar.p
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/Paulista/!svn/ver/1/progs/fac/exddjj_percep_sircar.p
+END
+v-recuperando_datos.w
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/Paulista/!svn/ver/1/progs/fac/v-recuperando_datos.w
+END
+w-lsfacturas_xcliente.w
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/Paulista/!svn/ver/1/progs/fac/w-lsfacturas_xcliente.w
+END
+w-lsrnk_articulos_clientes.w
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/Paulista/!svn/ver/1/progs/fac/w-lsrnk_articulos_clientes.w
+END
+lsgeneracion_liquidoproducto.p
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/Paulista/!svn/ver/1/progs/fac/lsgeneracion_liquidoproducto.p
+END
+v-vendedor.w
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/1/progs/fac/v-vendedor.w
+END
+w-lsclientes_x_zonas.w
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/Paulista/!svn/ver/1/progs/fac/w-lsclientes_x_zonas.w
+END
+lscomisiones_resumidas.p
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/Paulista/!svn/ver/1/progs/fac/lscomisiones_resumidas.p
+END
+prfaa146.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/fac/prfaa146.p
+END
+v-escala_vendedor.w
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/Paulista/!svn/ver/1/progs/fac/v-escala_vendedor.w
+END
+w-lstot_clientes_articulos.w
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/Paulista/!svn/ver/1/progs/fac/w-lstot_clientes_articulos.w
+END
+prcra112.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/fac/prcra112.p
+END
+v-id_vendedor.w
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/Paulista/!svn/ver/1/progs/fac/v-id_vendedor.w
+END
+gnsicore_dgi.p
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/Paulista/!svn/ver/1/progs/fac/gnsicore_dgi.p
+END
+SELCLIEN.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/fac/SELCLIEN.p
+END
+superfac.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/fac/superfac.p
+END
+b-remitos.w
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/Paulista/!svn/ver/1/progs/fac/b-remitos.w
+END
+w-consulta_liquidoproducto.w
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/Paulista/!svn/ver/1/progs/fac/w-consulta_liquidoproducto.w
+END
+cr-facturasAB.xsd
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/fac/cr-facturasAB.xsd
+END
+lsencabezadofactura_xfecha.p
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/Paulista/!svn/ver/1/progs/fac/lsencabezadofactura_xfecha.p
+END
+SELPRVCA.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/fac/SELPRVCA.p
+END
+detalle_factura.p
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/fac/detalle_factura.p
+END
+lstot_partidas_clientes.p
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/Paulista/!svn/ver/1/progs/fac/lstot_partidas_clientes.p
+END
+prdea116.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/fac/prdea116.p
+END
+v-id-cliente.w
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/Paulista/!svn/ver/1/progs/fac/v-id-cliente.w
+END
+v-asignar_abasto.w
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/Paulista/!svn/ver/1/progs/fac/v-asignar_abasto.w
+END
+lscomisionesxcobrado.p
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/Paulista/!svn/ver/1/progs/fac/lscomisionesxcobrado.p
+END
+regla.p
+K 25
+svn:wc:ra_dav:version-url
+V 42
+/svn/Paulista/!svn/ver/1/progs/fac/regla.p
+END
+prcrb110.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/fac/prcrb110.p
+END
+w-lstot_articulos_clientes.w
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/Paulista/!svn/ver/1/progs/fac/w-lstot_articulos_clientes.w
+END
+w-lsadmclixptoavance.w
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/Paulista/!svn/ver/7/progs/fac/w-lsadmclixptoavance.w
+END
+w-lstot_partidas_clientes.w
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/Paulista/!svn/ver/1/progs/fac/w-lstot_partidas_clientes.w
+END
+v-cliente_contacto_sindir.w
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/Paulista/!svn/ver/26/progs/fac/v-cliente_contacto_sindir.w
+END
+w-rlsubventas_excel.w
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/Paulista/!svn/ver/1/progs/fac/w-rlsubventas_excel.w
+END
+d-mostrar_contador.w
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/Paulista/!svn/ver/1/progs/fac/d-mostrar_contador.w
+END
+w-rltotalventasxarticulo.w
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/Paulista/!svn/ver/1/progs/fac/w-rltotalventasxarticulo.w
+END
+v-fecha_vigencia_precios.w
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/Paulista/!svn/ver/1/progs/fac/v-fecha_vigencia_precios.w
+END
+w-rg151.w
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/svn/Paulista/!svn/ver/1/progs/fac/w-rg151.w
+END
+b-zonas_geograficas.w
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/Paulista/!svn/ver/1/progs/fac/b-zonas_geograficas.w
+END
+lstot_ventas_clasificadas.p
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/Paulista/!svn/ver/1/progs/fac/lstot_ventas_clasificadas.p
+END
+lsanticuacion_ventas.p
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/Paulista/!svn/ver/1/progs/fac/lsanticuacion_ventas.p
+END
+gnasincd.i
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/fac/gnasincd.i
+END
+w-exddjj_percep_err.p
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/Paulista/!svn/ver/1/progs/fac/w-exddjj_percep_err.p
+END
+prdeb114.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/fac/prdeb114.p
+END
+lsresumen_liquidoproducto.p
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/Paulista/!svn/ver/1/progs/fac/lsresumen_liquidoproducto.p
+END
+lstot_ventas_clasificadasprf.p
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/Paulista/!svn/ver/1/progs/fac/lstot_ventas_clasificadasprf.p
+END
+v-jurisdiccion_del_cliente.w
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/Paulista/!svn/ver/1/progs/fac/v-jurisdiccion_del_cliente.w
+END
+b-header_fac.w
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/Paulista/!svn/ver/1/progs/fac/b-header_fac.w
+END
+w-rlcliactivosxzona.w
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/Paulista/!svn/ver/1/progs/fac/w-rlcliactivosxzona.w
+END
+b-ofertas.w
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/Paulista/!svn/ver/1/progs/fac/b-ofertas.w
+END
+b-clientes_nombre.w
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/Paulista/!svn/ver/1/progs/fac/b-clientes_nombre.w
+END
+info_venta_prf.p
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/46/progs/fac/info_venta_prf.p
+END
+lstot_clientes_articulos-ant.p
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/Paulista/!svn/ver/1/progs/fac/lstot_clientes_articulos-ant.p
+END
+b-bonificaciones.w
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/Paulista/!svn/ver/1/progs/fac/b-bonificaciones.w
+END
+lsresumen_comisiones.p
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/Paulista/!svn/ver/1/progs/fac/lsresumen_comisiones.p
+END
+v-dsc_domicilio.w
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/fac/v-dsc_domicilio.w
+END
+w-prinfacturas.w
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/fac/w-prinfacturas.w
+END
+v-que-cicloventas.w
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/Paulista/!svn/ver/1/progs/fac/v-que-cicloventas.w
+END
+cr-facturasC.xsd
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/11/progs/fac/cr-facturasC.xsd
+END
+w-lsadmclixpto.w
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/fac/w-lsadmclixpto.w
+END
+SELLISTA.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/fac/SELLISTA.p
+END
+b-listas_de_precios.w
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/Paulista/!svn/ver/1/progs/fac/b-listas_de_precios.w
+END
+b-domicilios.w
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/Paulista/!svn/ver/1/progs/fac/b-domicilios.w
+END
+emitir_comprobante_cliente.p
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/Paulista/!svn/ver/1/progs/fac/emitir_comprobante_cliente.p
+END
+w-exporta_facturacion_alzada.w
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/Paulista/!svn/ver/1/progs/fac/w-exporta_facturacion_alzada.w
+END
+v-subcondicion.w
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/fac/v-subcondicion.w
+END
+b-puntoventa.w
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/Paulista/!svn/ver/1/progs/fac/b-puntoventa.w
+END
+vlb-bonificaciones.p
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/Paulista/!svn/ver/1/progs/fac/vlb-bonificaciones.p
+END
+w-cambiar_vendedor.w
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/Paulista/!svn/ver/1/progs/fac/w-cambiar_vendedor.w
+END
+v-grupoabasto.w
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/Paulista/!svn/ver/1/progs/fac/v-grupoabasto.w
+END
+lscomisionesxcobranzas.p
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/Paulista/!svn/ver/1/progs/fac/lscomisionesxcobranzas.p
+END
+w-zoom_cliente.w
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/fac/w-zoom_cliente.w
+END
+c-comprobante_cliente.w
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/Paulista/!svn/ver/1/progs/fac/c-comprobante_cliente.w
+END
+lsddjj_abasto.p
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/Paulista/!svn/ver/1/progs/fac/lsddjj_abasto.p
+END
+w-lstot_articulos.w
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/Paulista/!svn/ver/1/progs/fac/w-lstot_articulos.w
+END
+sumar_ventasprf.p
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/Paulista/!svn/ver/51/progs/fac/sumar_ventasprf.p
+END
+prlqp103.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/fac/prlqp103.p
+END
+v-rng-refacturacion.w
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/Paulista/!svn/ver/1/progs/fac/v-rng-refacturacion.w
+END
+PRFAA901.P
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/fac/PRFAA901.P
+END
+prfaa408.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/fac/prfaa408.p
+END
+prcaa917.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/fac/prcaa917.p
+END
+v-municipios.w
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/Paulista/!svn/ver/1/progs/fac/v-municipios.w
+END
+lssubventas_excel.p
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/Paulista/!svn/ver/1/progs/fac/lssubventas_excel.p
+END
+prcrb201.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/fac/prcrb201.p
+END
+b-clientes.w
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/1/progs/fac/b-clientes.w
+END
+prcra114.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/fac/prcra114.p
+END
+cerrar_puntoventa.p
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/Paulista/!svn/ver/1/progs/fac/cerrar_puntoventa.p
+END
+w-lsanticuacion-ventas.w
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/Paulista/!svn/ver/1/progs/fac/w-lsanticuacion-ventas.w
+END
+w-exddjj_percep_bas.w
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/Paulista/!svn/ver/1/progs/fac/w-exddjj_percep_bas.w
+END
+d-ver_cancelacion_factura.w
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/Paulista/!svn/ver/1/progs/fac/d-ver_cancelacion_factura.w
+END
+w-ls_ventastotalxcliente.w
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/Paulista/!svn/ver/1/progs/fac/w-ls_ventastotalxcliente.w
+END
+cocinero_regenerar_subdiario_ventas.p
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/Paulista/!svn/ver/14/progs/fac/cocinero_regenerar_subdiario_ventas.p
+END
+v-rng-municipios.w
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/Paulista/!svn/ver/1/progs/fac/v-rng-municipios.w
+END
+anular_comprobante_cliente.p
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/Paulista/!svn/ver/51/progs/fac/anular_comprobante_cliente.p
+END
+v-impuesto.w
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/1/progs/fac/v-impuesto.w
+END
+lscliactivosxzona.p
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/Paulista/!svn/ver/1/progs/fac/lscliactivosxzona.p
+END
+v-vigencia_precios.w
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/Paulista/!svn/ver/53/progs/fac/v-vigencia_precios.w
+END
+SELGRUEM.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/fac/SELGRUEM.p
+END
+d-copiar_listaprecios.w
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/Paulista/!svn/ver/1/progs/fac/d-copiar_listaprecios.w
+END
+vlb-familia-clientes.p
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/Paulista/!svn/ver/1/progs/fac/vlb-familia-clientes.p
+END
+cocinero_aumento_tanque_primera_factura.p
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/Paulista/!svn/ver/14/progs/fac/cocinero_aumento_tanque_primera_factura.p
+END
+prcrb112.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/fac/prcrb112.p
+END
+PRCRA501.P
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/fac/PRCRA501.P
+END
+v-id_vigencia_precios.w
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/Paulista/!svn/ver/1/progs/fac/v-id_vigencia_precios.w
+END
+w-familia_clientes.w
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/Paulista/!svn/ver/1/progs/fac/w-familia_clientes.w
+END
+vlb-grupoabasto.p
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/fac/vlb-grupoabasto.p
+END
+lsrankingxvendedorarticulo.p
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/Paulista/!svn/ver/1/progs/fac/lsrankingxvendedorarticulo.p
+END
+w-rlasientos_comprobantes.w
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/Paulista/!svn/ver/1/progs/fac/w-rlasientos_comprobantes.w
+END
+v-sucursal.w
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/1/progs/fac/v-sucursal.w
+END
+q-vigencia_precios.w
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/Paulista/!svn/ver/1/progs/fac/q-vigencia_precios.w
+END
+v-cnd_cliente.w
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/Paulista/!svn/ver/1/progs/fac/v-cnd_cliente.w
+END
+w-lsmaestro_de_clientes.w
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/Paulista/!svn/ver/1/progs/fac/w-lsmaestro_de_clientes.w
+END
+lsclientes_x_zona.p
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/Paulista/!svn/ver/1/progs/fac/lsclientes_x_zona.p
+END
+w-lsddjj_percepciones.w
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/Paulista/!svn/ver/1/progs/fac/w-lsddjj_percepciones.w
+END
+prdeb116.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/fac/prdeb116.p
+END
+w-exddjj_percep_cab.w
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/Paulista/!svn/ver/1/progs/fac/w-exddjj_percep_cab.w
+END
+selmarcacom.p
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/1/progs/fac/selmarcacom.p
+END
+w-condicion_impos.w
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/Paulista/!svn/ver/1/progs/fac/w-condicion_impos.w
+END
+prcaa918.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/fac/prcaa918.p
+END
+OPQRYCLI.i
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/fac/OPQRYCLI.i
+END
+calcular_liquidoproducto.p
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/Paulista/!svn/ver/1/progs/fac/calcular_liquidoproducto.p
+END
+aumentos-corregido2.rpt
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/Paulista/!svn/ver/1/progs/fac/aumentos-corregido2.rpt
+END
+lssubdiario_facturacion.p
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/Paulista/!svn/ver/1/progs/fac/lssubdiario_facturacion.p
+END
+w-zonas_geograficas.w
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/Paulista/!svn/ver/1/progs/fac/w-zonas_geograficas.w
+END
+w-busq_comprob.w
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/fac/w-busq_comprob.w
+END
+v-domicli_sano.w
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/fac/v-domicli_sano.w
+END
+v-header_fac.w
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/Paulista/!svn/ver/1/progs/fac/v-header_fac.w
+END
+regenerar_subdiario.p
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/Paulista/!svn/ver/1/progs/fac/regenerar_subdiario.p
+END
+b-remitos_pendientes.w
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/Paulista/!svn/ver/1/progs/fac/b-remitos_pendientes.w
+END
+w-geocli.wrx
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/1/progs/fac/w-geocli.wrx
+END
+b-familia_cliente.w
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/Paulista/!svn/ver/1/progs/fac/b-familia_cliente.w
+END
+w-lsventasxzona_total.w
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/Paulista/!svn/ver/1/progs/fac/w-lsventasxzona_total.w
+END
+b-oferta-rubro.w
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/fac/b-oferta-rubro.w
+END
+lscobros_xfecha.p
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/fac/lscobros_xfecha.p
+END
+w-consultar_precios.w
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/Paulista/!svn/ver/1/progs/fac/w-consultar_precios.w
+END
+w-geocli-adm.w
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/Paulista/!svn/ver/52/progs/fac/w-geocli-adm.w
+END
+copiar_comprobante_despacho.p
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/Paulista/!svn/ver/1/progs/fac/copiar_comprobante_despacho.p
+END
+v-puntoventa.w
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/Paulista/!svn/ver/1/progs/fac/v-puntoventa.w
+END
+cambiar_administrador.p
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/Paulista/!svn/ver/1/progs/fac/cambiar_administrador.p
+END
+v-poner_consolidadas.w
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/Paulista/!svn/ver/1/progs/fac/v-poner_consolidadas.w
+END
+d-eliminar_facturas.w
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/Paulista/!svn/ver/1/progs/fac/d-eliminar_facturas.w
+END
+prfaa900.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/fac/prfaa900.p
+END
+w-ciclo_ventas.w
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/fac/w-ciclo_ventas.w
+END
+w-bonificaciones.w
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/Paulista/!svn/ver/1/progs/fac/w-bonificaciones.w
+END
+PRFAA724.P
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/fac/PRFAA724.P
+END
+v-rng-facanular.w
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/fac/v-rng-facanular.w
+END
+selcobra.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/fac/selcobra.p
+END
+v-tasa_abasto.w
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/Paulista/!svn/ver/1/progs/fac/v-tasa_abasto.w
+END
+v-excencion_impuestos.w
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/Paulista/!svn/ver/1/progs/fac/v-excencion_impuestos.w
+END
+ls_ventastotalxcliente.p
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/Paulista/!svn/ver/1/progs/fac/ls_ventastotalxcliente.p
+END
+b-vigencia_precios.w
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/Paulista/!svn/ver/1/progs/fac/b-vigencia_precios.w
+END
+aplica-aumentos-con.p
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/Paulista/!svn/ver/51/progs/fac/aplica-aumentos-con.p
+END
+prcra116.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/fac/prcra116.p
+END
+d-nominar_factura.w
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/Paulista/!svn/ver/1/progs/fac/d-nominar_factura.w
+END
+w-busq_remito.w
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/Paulista/!svn/ver/1/progs/fac/w-busq_remito.w
+END
+w-rlmultilateral.w
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/Paulista/!svn/ver/1/progs/fac/w-rlmultilateral.w
+END
+b-articulo_precio.w
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/Paulista/!svn/ver/1/progs/fac/b-articulo_precio.w
+END
+b-header_det.w
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/Paulista/!svn/ver/1/progs/fac/b-header_det.w
+END
+q-vendedor.w
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/1/progs/fac/q-vendedor.w
+END
+PRFAC000.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/fac/PRFAC000.p
+END
+registro_ventas.p
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/fac/registro_ventas.p
+END
+v-dsc_clienterestric.w
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/Paulista/!svn/ver/1/progs/fac/v-dsc_clienterestric.w
+END
+calcular_comprobante_cliente.p
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/Paulista/!svn/ver/1/progs/fac/calcular_comprobante_cliente.p
+END
+SELVENDR.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/fac/SELVENDR.p
+END
+prfab408.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/fac/prfab408.p
+END
+b-sucursal.w
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/1/progs/fac/b-sucursal.w
+END
+prcab917.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/fac/prcab917.p
+END
+v-bon_cliente.w
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/Paulista/!svn/ver/1/progs/fac/v-bon_cliente.w
+END
+b-bon_xarticulo.w
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/fac/b-bon_xarticulo.w
+END
+prcmi103.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/fac/prcmi103.p
+END
+prcrb114.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/fac/prcrb114.p
+END
+v-rng_que_liquido.w
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/Paulista/!svn/ver/1/progs/fac/v-rng_que_liquido.w
+END
+SELpuntoventa.P
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/Paulista/!svn/ver/1/progs/fac/SELpuntoventa.P
+END
+b-articulos-oferta.w
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/Paulista/!svn/ver/1/progs/fac/b-articulos-oferta.w
+END
+w-lstot_articulos_clientes1.w
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/Paulista/!svn/ver/1/progs/fac/w-lstot_articulos_clientes1.w
+END
+SELCNDVN.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/fac/SELCNDVN.p
+END
+v-bon_xarticulo.w
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/fac/v-bon_xarticulo.w
+END
+corregir_zonas_clie.p
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/Paulista/!svn/ver/1/progs/fac/corregir_zonas_clie.p
+END
+w-lstot_ventas_clasificadas_char.w
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/Paulista/!svn/ver/1/progs/fac/w-lstot_ventas_clasificadas_char.w
+END
+w-lstot_ventas_clasificadas.w
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/Paulista/!svn/ver/1/progs/fac/w-lstot_ventas_clasificadas.w
+END
+v-par-asncomprobantes.w
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/Paulista/!svn/ver/1/progs/fac/v-par-asncomprobantes.w
+END
+selgrupoabasto.p
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/fac/selgrupoabasto.p
+END
+w-lsresumen_liquidoproducto.w
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/Paulista/!svn/ver/1/progs/fac/w-lsresumen_liquidoproducto.w
+END
+lsrg1361_ventas.p
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/fac/lsrg1361_ventas.p
+END
+v-id-lista_precios.w
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/Paulista/!svn/ver/1/progs/fac/v-id-lista_precios.w
+END
+b-exencion_impuestos.w
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/Paulista/!svn/ver/1/progs/fac/b-exencion_impuestos.w
+END
+prcra917.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/fac/prcra917.p
+END
+v-par-anticventas.w
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/Paulista/!svn/ver/1/progs/fac/v-par-anticventas.w
+END
+facturar_remitos.p
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/Paulista/!svn/ver/1/progs/fac/facturar_remitos.p
+END
+prfaa110.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/fac/prfaa110.p
+END
+b-grupoabasto.w
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/Paulista/!svn/ver/1/progs/fac/b-grupoabasto.w
+END
+v-ofertas.w
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/Paulista/!svn/ver/1/progs/fac/v-ofertas.w
+END
+b-vendedores.w
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/Paulista/!svn/ver/1/progs/fac/b-vendedores.w
+END
+w-consulta_objetivos.w
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/Paulista/!svn/ver/1/progs/fac/w-consulta_objetivos.w
+END
+v-lst_punto-vta.w
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/fac/v-lst_punto-vta.w
+END
+prcab918.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/fac/prcab918.p
+END
+lsddj_percepciones.p
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/Paulista/!svn/ver/1/progs/fac/lsddj_percepciones.p
+END
+prcmi104.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/fac/prcmi104.p
+END
+b-condicion_impos.w
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/Paulista/!svn/ver/1/progs/fac/b-condicion_impos.w
+END
+b-cais.w
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/svn/Paulista/!svn/ver/1/progs/fac/b-cais.w
+END
+v-dsc_cndiva.w
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/Paulista/!svn/ver/1/progs/fac/v-dsc_cndiva.w
+END
+lsclibonxartnom.p
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/fac/lsclibonxartnom.p
+END
+w-clientes.w
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/1/progs/fac/w-clientes.w
+END
+recorrer_clasificacion_ventasprf.p
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/Paulista/!svn/ver/1/progs/fac/recorrer_clasificacion_ventasprf.p
+END
+w-lsventasxvendedorarticulozona.w
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/Paulista/!svn/ver/1/progs/fac/w-lsventasxvendedorarticulozona.w
+END
+LSIVAVEN.p
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/Paulista/!svn/ver/13/progs/fac/LSIVAVEN.p
+END
+marcar_sincargo.p
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/fac/marcar_sincargo.p
+END
+v-par-asnventas.w
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/fac/v-par-asnventas.w
+END
+b-ciclo_ventas.w
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/fac/b-ciclo_ventas.w
+END
+prfaa888.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/fac/prfaa888.p
+END
+hola.txt
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/svn/Paulista/!svn/ver/1/progs/fac/hola.txt
+END
+lsdaclizona.p
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/1/progs/fac/lsdaclizona.p
+END
+prcra918.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/fac/prcra918.p
+END
+prfaa111.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/fac/prfaa111.p
+END
+Prfaa201.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/fac/Prfaa201.p
+END
+ANFRMFAC.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/fac/ANFRMFAC.p
+END
+prfab900.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/fac/prfab900.p
+END
+w-anular_facturas.w
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/Paulista/!svn/ver/1/progs/fac/w-anular_facturas.w
+END
+sumar_articulo.p
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/fac/sumar_articulo.p
+END
+prdaa918.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/fac/prdaa918.p
+END
+lsclibonxartcod.p
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/fac/lsclibonxartcod.p
+END
+v-bonificacion.w
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/fac/v-bonificacion.w
+END
+d-abmclasezonag.w
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/fac/d-abmclasezonag.w
+END
+prcrb116.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/fac/prcrb116.p
+END
+w-rlasnven.w
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/1/progs/fac/w-rlasnven.w
+END
+b-comprobantes1.w
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/fac/b-comprobantes1.w
+END
+v-cotiza-moneda.w
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/fac/v-cotiza-moneda.w
+END
+exportar.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/fac/exportar.p
+END
+q-lista_precios.w
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/fac/q-lista_precios.w
+END
+vlb-impuestos.p
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/Paulista/!svn/ver/1/progs/fac/vlb-impuestos.p
+END
+w-lista_precios.w
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/Paulista/!svn/ver/53/progs/fac/w-lista_precios.w
+END
+w-lsfacturado_xarticulo.w
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/Paulista/!svn/ver/1/progs/fac/w-lsfacturado_xarticulo.w
+END
+w-lsresumen_condicion.w
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/Paulista/!svn/ver/1/progs/fac/w-lsresumen_condicion.w
+END
+prfaa103.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/fac/prfaa103.p
+END
+v-cotiza-moneda-solo.w
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/Paulista/!svn/ver/1/progs/fac/v-cotiza-moneda-solo.w
+END
+d-cambio_de_precios.w
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/Paulista/!svn/ver/1/progs/fac/d-cambio_de_precios.w
+END
+lsrnk_articulos.p
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/fac/lsrnk_articulos.p
+END
+d-cambia_fecha_facturas.w
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/Paulista/!svn/ver/1/progs/fac/d-cambia_fecha_facturas.w
+END
+b-comprobantes.w
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/12/progs/fac/b-comprobantes.w
+END
+prfae501.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/fac/prfae501.p
+END
+runabmclasezona.p
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/fac/runabmclasezona.p
+END
+prfaa920.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/fac/prfaa920.p
+END
+w-lsrnk_articulos.w
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/Paulista/!svn/ver/1/progs/fac/w-lsrnk_articulos.w
+END
+tmplistadoventas.i
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/Paulista/!svn/ver/1/progs/fac/tmplistadoventas.i
+END
+vlb-lipre.p
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/53/progs/fac/vlb-lipre.p
+END
+v-id-contrato.w
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/51/progs/fac/v-id-contrato.w
+END
+w-lsclientes_x_zona.w
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/Paulista/!svn/ver/1/progs/fac/w-lsclientes_x_zona.w
+END
+prinfacturas.p
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/Paulista/!svn/ver/1/progs/fac/prinfacturas.p
+END
+w-rlsubctavta.w
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/Paulista/!svn/ver/1/progs/fac/w-rlsubctavta.w
+END
+v-que_estadocliente.w
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/Paulista/!svn/ver/1/progs/fac/v-que_estadocliente.w
+END
+recorrer_clasificacion_ventas.p
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/Paulista/!svn/ver/51/progs/fac/recorrer_clasificacion_ventas.p
+END
+w-condicion_venta.w
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/Paulista/!svn/ver/1/progs/fac/w-condicion_venta.w
+END
+prfaa112.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/fac/prfaa112.p
+END
+w-rlventas_xsucursal.w
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/Paulista/!svn/ver/1/progs/fac/w-rlventas_xsucursal.w
+END
+b-detalle_remitos1.w
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/Paulista/!svn/ver/1/progs/fac/b-detalle_remitos1.w
+END
+lscondiciones_impositivas.p
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/Paulista/!svn/ver/1/progs/fac/lscondiciones_impositivas.p
+END
+w-facturar_remitos.w
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/Paulista/!svn/ver/1/progs/fac/w-facturar_remitos.w
+END
+lssubventas_excel-orig.p
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/Paulista/!svn/ver/1/progs/fac/lssubventas_excel-orig.p
+END
+v-par-ivaventas.w
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/fac/v-par-ivaventas.w
+END
+anular_lote_facturas.p
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/Paulista/!svn/ver/1/progs/fac/anular_lote_facturas.p
+END
+d-buscar_entidad.w
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/Paulista/!svn/ver/1/progs/fac/d-buscar_entidad.w
+END
+selmunicipio.p
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/Paulista/!svn/ver/1/progs/fac/selmunicipio.p
+END
+d-selclase_vendedores.w
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/Paulista/!svn/ver/1/progs/fac/d-selclase_vendedores.w
+END
+sumar_ventas.p
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/Paulista/!svn/ver/51/progs/fac/sumar_ventas.p
+END
+b-tasa_abasto.w
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/Paulista/!svn/ver/1/progs/fac/b-tasa_abasto.w
+END
+d-seleccionar_concepto.w
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/Paulista/!svn/ver/1/progs/fac/d-seleccionar_concepto.w
+END
+prcrb917.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/fac/prcrb917.p
+END
+lsrg1361_ventas_mhsa.p
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/Paulista/!svn/ver/1/progs/fac/lsrg1361_ventas_mhsa.p
+END
+prfab110.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/fac/prfab110.p
+END
+prfaa104.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/fac/prfaa104.p
+END
+v-familia_cliente.w
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/Paulista/!svn/ver/1/progs/fac/v-familia_cliente.w
+END
+w-resumen_comisiones.w
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/Paulista/!svn/ver/1/progs/fac/w-resumen_comisiones.w
+END
+prfaa921.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/fac/prfaa921.p
+END
+d-cerrar_puntoventa.w
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/Paulista/!svn/ver/1/progs/fac/d-cerrar_puntoventa.w
+END
+v-cliente.w
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/Paulista/!svn/ver/1/progs/fac/v-cliente.w
+END
+prcrb501.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/fac/prcrb501.p
+END
+v-domicilio_remito.w
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/Paulista/!svn/ver/1/progs/fac/v-domicilio_remito.w
+END
+tmplistadoventasprf.i
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/Paulista/!svn/ver/1/progs/fac/tmplistadoventasprf.i
+END
+d-ver_imputacion_comprobante.w
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/Paulista/!svn/ver/1/progs/fac/d-ver_imputacion_comprobante.w
+END
+prrna103.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/fac/prrna103.p
+END
+pretiquetas_mailing.p
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/Paulista/!svn/ver/1/progs/fac/pretiquetas_mailing.p
+END
+LSCLIENT.i
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/fac/LSCLIENT.i
+END
+b-bon_cliente.w
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/Paulista/!svn/ver/1/progs/fac/b-bon_cliente.w
+END
+w-lsencabezadofacturas_xfecha.w
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/Paulista/!svn/ver/1/progs/fac/w-lsencabezadofacturas_xfecha.w
+END
+w-sucursal.w
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/1/progs/fac/w-sucursal.w
+END
+Ventasxadmptovta.rpt
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/Paulista/!svn/ver/1/progs/fac/Ventasxadmptovta.rpt
+END
+lscomisionesxventas.p
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/Paulista/!svn/ver/1/progs/fac/lscomisionesxventas.p
+END
+c-abmclasevendedor.w
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/Paulista/!svn/ver/1/progs/fac/c-abmclasevendedor.w
+END
+retroceder_anulacion_facturas.w
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/Paulista/!svn/ver/1/progs/fac/retroceder_anulacion_facturas.w
+END
+PRFAA916.P
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/fac/PRFAA916.P
+END
+w-municipios.w
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/Paulista/!svn/ver/1/progs/fac/w-municipios.w
+END
+b-precios.w
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/Paulista/!svn/ver/1/progs/fac/b-precios.w
+END
+regenerar_subdiario_ventas.p
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/Paulista/!svn/ver/13/progs/fac/regenerar_subdiario_ventas.p
+END
+v-articulo_precio.w
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/Paulista/!svn/ver/53/progs/fac/v-articulo_precio.w
+END
+sel_cliente.w
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/1/progs/fac/sel_cliente.w
+END
+b-listas_de_precio.w
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/Paulista/!svn/ver/1/progs/fac/b-listas_de_precio.w
+END
+w-grupoabasto.w
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/Paulista/!svn/ver/1/progs/fac/w-grupoabasto.w
+END
+b-consulta_objetivos.w
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/Paulista/!svn/ver/1/progs/fac/b-consulta_objetivos.w
+END
+lsbonificaciones_especiales.p
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/Paulista/!svn/ver/1/progs/fac/lsbonificaciones_especiales.p
+END
+prcrb918.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/fac/prcrb918.p
+END
+w-CRprinfacturas.wrx
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/Paulista/!svn/ver/12/progs/fac/w-CRprinfacturas.wrx
+END
+prfab111.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/fac/prfab111.p
+END
+Prfab201.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/fac/Prfab201.p
+END
+prfaa122.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/fac/prfaa122.p
+END
+b-cliente_jurisdiccion.w
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/Paulista/!svn/ver/1/progs/fac/b-cliente_jurisdiccion.w
+END
+Prfaa114.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/fac/Prfaa114.p
+END
+b-liquidos_productos.w
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/Paulista/!svn/ver/1/progs/fac/b-liquidos_productos.w
+END
+w-lsrankingxvendedorarticulo.w
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/Paulista/!svn/ver/1/progs/fac/w-lsrankingxvendedorarticulo.w
+END
+vlb-cndiva.p
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/1/progs/fac/vlb-cndiva.p
+END
+SELCNDIV-C.P
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/1/progs/fac/SELCNDIV-C.P
+END
+anular_liquidoproducto.p
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/Paulista/!svn/ver/1/progs/fac/anular_liquidoproducto.p
+END
+b-vigencias_de_precios.w
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/Paulista/!svn/ver/1/progs/fac/b-vigencias_de_precios.w
+END
+prdab918.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/fac/prdab918.p
+END
+Ventasxptovta.rpt
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/fac/Ventasxptovta.rpt
+END
+w-mantenimiento_domicilios.w
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/Paulista/!svn/ver/1/progs/fac/w-mantenimiento_domicilios.w
+END
+lslispre.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/fac/lslispre.p
+END
+d-detfactura_articulos.w
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/Paulista/!svn/ver/1/progs/fac/d-detfactura_articulos.w
+END
+prfab103.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/fac/prfab103.p
+END
+PRFAA500.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/fac/PRFAA500.p
+END
+aumentos-con.rpt
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/fac/aumentos-con.rpt
+END
+Prfaa123.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/fac/Prfaa123.p
+END
+prfaa016.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/fac/prfaa016.p
+END
+b-impuesto_condicion.w
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/Paulista/!svn/ver/1/progs/fac/b-impuesto_condicion.w
+END
+selfclie.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/fac/selfclie.p
+END
+prfab724.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/fac/prfab724.p
+END
+w-consulta_clientes.w
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/Paulista/!svn/ver/1/progs/fac/w-consulta_clientes.w
+END
+b-consulta_precios.w
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/Paulista/!svn/ver/1/progs/fac/b-consulta_precios.w
+END
+w-impuestos.w
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/1/progs/fac/w-impuestos.w
+END
+cocinero_clientes_dado_de baja.p
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/Paulista/!svn/ver/46/progs/fac/cocinero_clientes_dado_de%20baja.p
+END
+v-dea-vendedor.w
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/fac/v-dea-vendedor.w
+END
+lsventasxvendedorarticulozona.p
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/Paulista/!svn/ver/1/progs/fac/lsventasxvendedorarticulozona.p
+END
+prfab112.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/fac/prfab112.p
+END
+v-oferta-rubro.w
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/fac/v-oferta-rubro.w
+END
+shvestadart.i
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/1/progs/fac/shvestadart.i
+END
+lsmaecla.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/fac/lsmaecla.p
+END
+lsventasxvendedorarticulo.p
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/Paulista/!svn/ver/1/progs/fac/lsventasxvendedorarticulo.p
+END
+b-lista-articulo.w
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/Paulista/!svn/ver/1/progs/fac/b-lista-articulo.w
+END
+SELZONAG.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/fac/SELZONAG.p
+END
+lscumplimiento_xvendedor.p
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/Paulista/!svn/ver/1/progs/fac/lscumplimiento_xvendedor.p
+END
+w-exddjj_percep_sircar.w
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/Paulista/!svn/ver/1/progs/fac/w-exddjj_percep_sircar.w
+END
+lsfacturas_xfecha.p
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/Paulista/!svn/ver/1/progs/fac/lsfacturas_xfecha.p
+END
+v-condicion_impos.w
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/Paulista/!svn/ver/1/progs/fac/v-condicion_impos.w
+END
+w-lsventasxzona.w
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/fac/w-lsventasxzona.w
+END
+w-lsgeneracion_liquidoproducto.w
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/Paulista/!svn/ver/1/progs/fac/w-lsgeneracion_liquidoproducto.w
+END
+lsaplicacion_pagos.p
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/Paulista/!svn/ver/1/progs/fac/lsaplicacion_pagos.p
+END
+lsmultilateral.p
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/fac/lsmultilateral.p
+END
+pru.p
+K 25
+svn:wc:ra_dav:version-url
+V 40
+/svn/Paulista/!svn/ver/1/progs/fac/pru.p
+END
+lsexportaprecios.p
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/Paulista/!svn/ver/1/progs/fac/lsexportaprecios.p
+END
+w-gnsicore_dgi.w
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/fac/w-gnsicore_dgi.w
+END
+w-puntoventa.w
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/Paulista/!svn/ver/1/progs/fac/w-puntoventa.w
+END
+w-ofertas.w
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/Paulista/!svn/ver/1/progs/fac/w-ofertas.w
+END
+prfab104.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/fac/prfab104.p
+END
+VentasxadmptovtaTBL.rpt
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/Paulista/!svn/ver/1/progs/fac/VentasxadmptovtaTBL.rpt
+END
+v-detalle_fac.w
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/Paulista/!svn/ver/1/progs/fac/v-detalle_fac.w
+END
+lstotalventasxarticulo.p
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/Paulista/!svn/ver/1/progs/fac/lstotalventasxarticulo.p
+END
+lsfacturado_xarticulo.p
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/Paulista/!svn/ver/1/progs/fac/lsfacturado_xarticulo.p
+END
+prfaa999.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/fac/prfaa999.p
+END
+w-asigna_abasto.w
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/fac/w-asigna_abasto.w
+END
+d-selcomprobante_cliente.w
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/Paulista/!svn/ver/1/progs/fac/d-selcomprobante_cliente.w
+END
+w-rlsubdiario_facturacion.w
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/Paulista/!svn/ver/1/progs/fac/w-rlsubdiario_facturacion.w
+END
+lsddjj_percepciones.p
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/Paulista/!svn/ver/1/progs/fac/lsddjj_percepciones.p
+END
+Copia de v-cliente_contacto.w
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/Paulista/!svn/ver/1/progs/fac/Copia%20de%20v-cliente_contacto.w
+END
+b-especif_header.w
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/Paulista/!svn/ver/1/progs/fac/b-especif_header.w
+END
+w-geocli.w
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/fac/w-geocli.w
+END
+v-consulta_objetivos.w
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/Paulista/!svn/ver/1/progs/fac/v-consulta_objetivos.w
+END
+w-lsanticuacion_ventas.w
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/Paulista/!svn/ver/1/progs/fac/w-lsanticuacion_ventas.w
+END
+v-reserbon.w
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/1/progs/fac/v-reserbon.w
+END
+b-remitos1.w
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/1/progs/fac/b-remitos1.w
+END
+w-descuentos_volumen.w
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/Paulista/!svn/ver/1/progs/fac/w-descuentos_volumen.w
+END
+ANFRMCRD.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/fac/ANFRMCRD.p
+END
+w-lstot_ventas_clasificadasprf.w
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/Paulista/!svn/ver/1/progs/fac/w-lstot_ventas_clasificadasprf.w
+END
+w-rlivaven.w
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/1/progs/fac/w-rlivaven.w
+END
+d-bonificaciones_factura.w
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/Paulista/!svn/ver/1/progs/fac/d-bonificaciones_factura.w
+END
+opqryvnd.i
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/fac/opqryvnd.i
+END
+exporta_facturacion_alzada.p
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/Paulista/!svn/ver/1/progs/fac/exporta_facturacion_alzada.p
+END
+b-remitos-cli.w
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/Paulista/!svn/ver/1/progs/fac/b-remitos-cli.w
+END
+vlb-condiciones.p
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/fac/vlb-condiciones.p
+END
+b-impuestos.w
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/1/progs/fac/b-impuestos.w
+END

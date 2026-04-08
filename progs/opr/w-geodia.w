@@ -1,0 +1,631 @@
+&ANALYZE-SUSPEND _VERSION-NUMBER UIB_v8r12 GUI ADM1
+&ANALYZE-RESUME
+&Scoped-define WINDOW-NAME W-Win
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CUSTOM _DEFINITIONS W-Win 
+/*********************************************************************
+* Copyright (C) 2000 by Progress Software Corporation ("PSC"),       *
+* 14 Oak Park, Bedford, MA 01730, and other contributors as listed   *
+* below.  All Rights Reserved.                                       *
+*                                                                    *
+* The Initial Developer of the Original Code is PSC.  The Original   *
+* Code is Progress IDE code released to open source December 1, 2000.*
+*                                                                    *
+* The contents of this file are subject to the Possenet Public       *
+* License Version 1.0 (the "License"); you may not use this file     *
+* except in compliance with the License.  A copy of the License is   *
+* available as of the date of this notice at                         *
+* http://www.possenet.org/license.html                               *
+*                                                                    *
+* Software distributed under the License is distributed on an "AS IS"*
+* basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. You*
+* should refer to the License for the specific language governing    *
+* rights and limitations under the License.                          *
+*                                                                    *
+* Contributors:                                                      *
+*                                                                    *
+*********************************************************************/
+/*------------------------------------------------------------------------
+
+  File: 
+
+  Description: from cntnrwin.w - ADM SmartWindow Template
+
+  Input Parameters:
+      <none>
+
+  Output Parameters:
+      <none>
+
+  History: 
+          
+------------------------------------------------------------------------*/
+/*          This .W file was created with the Progress UIB.             */
+/*----------------------------------------------------------------------*/
+
+/* Create an unnamed pool to store all the widgets created 
+     by this procedure. This is a good default which assures
+     that this procedure's triggers and internal procedures 
+     will execute in this procedure's storage, and that proper
+     cleanup will occur on deletion of the procedure. */
+
+CREATE WIDGET-POOL.
+
+/* ***************************  Definitions  ************************** */
+
+/* Parameters Definitions ---                                           */
+DEFINE INPUT PARAMETER lista AS char no-undo.
+DEFINE INPUT PARAMETER diasel AS char NO-UNDO.
+/* Local Variable Definitions ---                                       */
+
+/*
+Protected Sub _PrintOrder(ByVal sHtml As String)
+        Dim oWebBrowser As New WebBrowser()
+        oWebBrowser.Navigate("about:blank")
+        oWebBrowser.ScriptErrorsSuppressed = False
+        Dim oDocument As HtmlDocument = oWebBrowser.Document
+        oDocument.OpenNew(False)
+        oDocument.Write(String.Empty)
+        oDocument.Write(sHtml)
+        oWebBrowser.Print()
+        oWebBrowser.Dispose()
+    End Sub
+
+*/
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-PREPROCESSOR-BLOCK 
+
+/* ********************  Preprocessor Definitions  ******************** */
+
+&Scoped-define PROCEDURE-TYPE SmartWindow
+&Scoped-define DB-AWARE no
+
+&Scoped-define ADM-CONTAINER WINDOW
+
+/* Name of designated FRAME-NAME and/or first browse and/or first query */
+&Scoped-define FRAME-NAME F-Main
+
+/* Custom List Definitions                                              */
+/* List-1,List-2,List-3,List-4,List-5,List-6                            */
+
+/* _UIB-PREPROCESSOR-BLOCK-END */
+&ANALYZE-RESUME
+
+
+/* ************************  Function Prototypes ********************** */
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _FUNCTION-FORWARD genehtml W-Win 
+FUNCTION genehtml RETURNS CHARACTER
+  ( lista AS CHAR , diasel AS CHAR )  FORWARD.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _FUNCTION-FORWARD muestradia W-Win 
+FUNCTION muestradia RETURNS LOGICAL
+  ( lista AS CHAR, diasel AS CHAR )  FORWARD.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+/* ***********************  Control Definitions  ********************** */
+
+/* Define the widget handle for the window                              */
+DEFINE VAR W-Win AS WIDGET-HANDLE NO-UNDO.
+
+/* Definitions of handles for OCX Containers                            */
+DEFINE VARIABLE Mundo AS WIDGET-HANDLE NO-UNDO.
+DEFINE VARIABLE chMundo AS COMPONENT-HANDLE NO-UNDO.
+
+/* ************************  Frame Definitions  *********************** */
+
+DEFINE FRAME F-Main
+    WITH DOWN NO-BOX NO-HIDE KEEP-TAB-ORDER OVERLAY NO-HELP 
+         NO-LABELS NO-UNDERLINE NO-VALIDATE THREE-D 
+         AT COL 1 ROW 1
+         SIZE 119 BY 20.24 WIDGET-ID 100.
+
+
+/* *********************** Procedure Settings ************************ */
+
+&ANALYZE-SUSPEND _PROCEDURE-SETTINGS
+/* Settings for THIS-PROCEDURE
+   Type: SmartWindow
+   Allow: Basic,Browse,DB-Fields,Query,Smart,Window
+   Other Settings: COMPILE
+ */
+&ANALYZE-RESUME _END-PROCEDURE-SETTINGS
+
+/* *************************  Create Window  ************************** */
+
+&ANALYZE-SUSPEND _CREATE-WINDOW
+IF SESSION:DISPLAY-TYPE = "GUI":U THEN
+  CREATE WINDOW W-Win ASSIGN
+         HIDDEN             = YES
+         TITLE              = "Mapa"
+         HEIGHT             = 20.24
+         WIDTH              = 119
+         MAX-HEIGHT         = 35.67
+         MAX-WIDTH          = 204.8
+         VIRTUAL-HEIGHT     = 35.67
+         VIRTUAL-WIDTH      = 204.8
+         SHOW-IN-TASKBAR    = no
+         RESIZE             = yes
+         SCROLL-BARS        = no
+         STATUS-AREA        = no
+         BGCOLOR            = ?
+         FGCOLOR            = ?
+         THREE-D            = yes
+         MESSAGE-AREA       = no
+         SENSITIVE          = yes.
+ELSE {&WINDOW-NAME} = CURRENT-WINDOW.
+/* END WINDOW DEFINITION                                                */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CUSTOM _INCLUDED-LIB W-Win 
+/* ************************* Included-Libraries *********************** */
+
+{src/adm/method/containr.i}
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+
+
+/* ***********  Runtime Attributes and AppBuilder Settings  *********** */
+
+&ANALYZE-SUSPEND _RUN-TIME-ATTRIBUTES
+/* SETTINGS FOR WINDOW W-Win
+  VISIBLE,,RUN-PERSISTENT                                               */
+/* SETTINGS FOR FRAME F-Main
+   FRAME-NAME                                                           */
+ASSIGN 
+       FRAME F-Main:SCROLLABLE       = FALSE.
+
+IF SESSION:DISPLAY-TYPE = "GUI":U AND VALID-HANDLE(W-Win)
+THEN W-Win:HIDDEN = no.
+
+/* _RUN-TIME-ATTRIBUTES-END */
+&ANALYZE-RESUME
+
+
+/* Setting information for Queries and Browse Widgets fields            */
+
+&ANALYZE-SUSPEND _QUERY-BLOCK FRAME F-Main
+/* Query rebuild information for FRAME F-Main
+     _Query            is NOT OPENED
+*/  /* FRAME F-Main */
+&ANALYZE-RESUME
+
+ 
+
+
+/* **********************  Create OCX Containers  ********************** */
+
+&ANALYZE-SUSPEND _CREATE-DYNAMIC
+
+&IF "{&OPSYS}" = "WIN32":U AND "{&WINDOW-SYSTEM}" NE "TTY":U &THEN
+
+CREATE CONTROL-FRAME Mundo ASSIGN
+       FRAME           = FRAME F-Main:HANDLE
+       ROW             = 1
+       COLUMN          = 1
+       HEIGHT          = 20.24
+       WIDTH           = 119
+       WIDGET-ID       = 10
+       HIDDEN          = no
+       SENSITIVE       = yes.
+
+PROCEDURE adm-create-controls:
+      Mundo:NAME = "Mundo":U .
+/* Mundo OCXINFO:CREATE-CONTROL from: {8856F961-340A-11D0-A96B-00C04FD705A2} type: WebBrowser */
+
+END PROCEDURE.
+
+&ENDIF
+
+&ANALYZE-RESUME /* End of _CREATE-DYNAMIC */
+
+
+/* ************************  Control Triggers  ************************ */
+
+&Scoped-define SELF-NAME W-Win
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL W-Win W-Win
+ON END-ERROR OF W-Win /* Mapa */
+OR ENDKEY OF {&WINDOW-NAME} ANYWHERE DO:
+  /* This case occurs when the user presses the "Esc" key.
+     In a persistently run window, just ignore this.  If we did not, the
+     application would exit. */
+  IF THIS-PROCEDURE:PERSISTENT THEN RETURN NO-APPLY.
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL W-Win W-Win
+ON WINDOW-CLOSE OF W-Win /* Mapa */
+DO:
+    /* Modificado para que el control retorne a la window padre al cerrar una windows hija */
+    DEFINE VARIABLE h_parent AS HANDLE      NO-UNDO.
+    h_parent = THIS-PROCEDURE:CURRENT-WINDOW:PARENT.
+    APPLY "CLOSE":U TO THIS-PROCEDURE.
+    IF VALID-HANDLE(h_parent) THEN DO:
+        CURRENT-WINDOW = h_parent.
+        APPLY 'ENTRY' TO h_parent.
+    END.
+    RETURN NO-APPLY.
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL W-Win W-Win
+ON WINDOW-RESIZED OF W-Win /* Mapa */
+DO:
+  muestradia( lista , diasel ) .
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&UNDEFINE SELF-NAME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CUSTOM _MAIN-BLOCK W-Win 
+
+
+/* ***************************  Main Block  *************************** */
+
+/* Include custom  Main Block code for SmartWindows. */
+{src/adm/template/windowmn.i}
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+/* **********************  Internal Procedures  *********************** */
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE adm-create-objects W-Win  _ADM-CREATE-OBJECTS
+PROCEDURE adm-create-objects :
+/*------------------------------------------------------------------------------
+  Purpose:     Create handles for all SmartObjects used in this procedure.
+               After SmartObjects are initialized, then SmartLinks are added.
+  Parameters:  <none>
+------------------------------------------------------------------------------*/
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE adm-row-available W-Win  _ADM-ROW-AVAILABLE
+PROCEDURE adm-row-available :
+/*------------------------------------------------------------------------------
+  Purpose:     Dispatched to this procedure when the Record-
+               Source has a new row available.  This procedure
+               tries to get the new row (or foriegn keys) from
+               the Record-Source and process it.
+  Parameters:  <none>
+------------------------------------------------------------------------------*/
+
+  /* Define variables needed by this internal procedure.             */
+  {src/adm/template/row-head.i}
+
+  /* Process the newly available records (i.e. display fields,
+     open queries, and/or pass records on to any RECORD-TARGETS).    */
+  {src/adm/template/row-end.i}
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE control_load W-Win  _CONTROL-LOAD
+PROCEDURE control_load :
+/*------------------------------------------------------------------------------
+  Purpose:     Load the OCXs    
+  Parameters:  <none>
+  Notes:       Here we load, initialize and make visible the 
+               OCXs in the interface.                        
+------------------------------------------------------------------------------*/
+
+&IF "{&OPSYS}" = "WIN32":U AND "{&WINDOW-SYSTEM}" NE "TTY":U &THEN
+DEFINE VARIABLE UIB_S    AS LOGICAL    NO-UNDO.
+DEFINE VARIABLE OCXFile  AS CHARACTER  NO-UNDO.
+
+OCXFile = SEARCH( "w-geodia.wrx":U ).
+IF OCXFile = ? THEN
+  OCXFile = SEARCH(SUBSTRING(THIS-PROCEDURE:FILE-NAME, 1,
+                     R-INDEX(THIS-PROCEDURE:FILE-NAME, ".":U), "CHARACTER":U) + "wrx":U).
+
+IF OCXFile <> ? THEN
+DO:
+  ASSIGN
+    chMundo = Mundo:COM-HANDLE
+    UIB_S = chMundo:LoadControls( OCXFile, "Mundo":U)
+  .
+  RUN DISPATCH IN THIS-PROCEDURE("initialize-controls":U) NO-ERROR.
+END.
+ELSE MESSAGE "w-geodia.wrx":U SKIP(1)
+             "The binary control file could not be found. The controls cannot be loaded."
+             VIEW-AS ALERT-BOX TITLE "Controls Not Loaded".
+
+&ENDIF
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE disable_UI W-Win  _DEFAULT-DISABLE
+PROCEDURE disable_UI :
+/*------------------------------------------------------------------------------
+  Purpose:     DISABLE the User Interface
+  Parameters:  <none>
+  Notes:       Here we clean-up the user-interface by deleting
+               dynamic widgets we have created and/or hide 
+               frames.  This procedure is usually called when
+               we are ready to "clean-up" after running.
+------------------------------------------------------------------------------*/
+  /* Delete the WINDOW we created */
+  IF SESSION:DISPLAY-TYPE = "GUI":U AND VALID-HANDLE(W-Win)
+  THEN DELETE WIDGET W-Win.
+  IF THIS-PROCEDURE:PERSISTENT THEN DELETE PROCEDURE THIS-PROCEDURE.
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE enable_UI W-Win  _DEFAULT-ENABLE
+PROCEDURE enable_UI :
+/*------------------------------------------------------------------------------
+  Purpose:     ENABLE the User Interface
+  Parameters:  <none>
+  Notes:       Here we display/view/enable the widgets in the
+               user-interface.  In addition, OPEN all queries
+               associated with each FRAME and BROWSE.
+               These statements here are based on the "Other 
+               Settings" section of the widget Property Sheets.
+------------------------------------------------------------------------------*/
+  VIEW FRAME F-Main IN WINDOW W-Win.
+  {&OPEN-BROWSERS-IN-QUERY-F-Main}
+  VIEW W-Win.
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE local-exit W-Win 
+PROCEDURE local-exit :
+/* -----------------------------------------------------------
+  Purpose:  Starts an "exit" by APPLYing CLOSE event, which starts "destroy".
+  Parameters:  <none>
+  Notes:    If activated, should APPLY CLOSE, *not* dispatch adm-exit.   
+-------------------------------------------------------------*/
+   APPLY "CLOSE":U TO THIS-PROCEDURE.
+   
+   RETURN.
+       
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE local-initialize W-Win 
+PROCEDURE local-initialize :
+/*------------------------------------------------------------------------------
+  Purpose:     Override standard ADM method
+  Notes:       
+------------------------------------------------------------------------------*/
+
+  /* Code placed here will execute PRIOR to standard behavior. */
+
+  /* Dispatch standard ADM method.                             */
+  RUN dispatch IN THIS-PROCEDURE ( INPUT 'initialize':U ) .
+
+  /* Code placed here will execute AFTER standard behavior.    */
+
+  muestradia(lista ,  diasel).
+
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE send-records W-Win  _ADM-SEND-RECORDS
+PROCEDURE send-records :
+/*------------------------------------------------------------------------------
+  Purpose:     Send record ROWID's for all tables used by
+               this file.
+  Parameters:  see template/snd-head.i
+------------------------------------------------------------------------------*/
+
+  /* SEND-RECORDS does nothing because there are no External
+     Tables specified for this SmartWindow, and there are no
+     tables specified in any contained Browse, Query, or Frame. */
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE state-changed W-Win 
+PROCEDURE state-changed :
+/* -----------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+-------------------------------------------------------------*/
+  DEFINE INPUT PARAMETER p-issuer-hdl AS HANDLE NO-UNDO.
+  DEFINE INPUT PARAMETER p-state AS CHARACTER NO-UNDO.
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+/* ************************  Function Implementations ***************** */
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _FUNCTION genehtml W-Win 
+FUNCTION genehtml RETURNS CHARACTER
+  ( lista AS CHAR , diasel AS CHAR ) :
+/*------------------------------------------------------------------------------
+  Purpose:  Genera el html para googlemaps
+    Notes: aplicque CSS para maquetear la frame
+------------------------------------------------------------------------------*/
+def var archivo as char no-undo.
+DEFINE VAR sistema AS CHAR NO-UNDO.
+DEFINE VAR ancho AS INT NO-UNDO.
+DEFINE VAR alto AS INT NO-UNDO.
+DEFINE VAR fr AS WIDGET-HANDLE NO-UNDO.
+DEFINE VAR i AS INT NO-UNDO.
+DEFINE VAR k AS INT NO-UNDO.
+DEFINE VAR almenos AS LOGICAL NO-UNDO.
+DEFINE VAR colores AS CHAR INITIAL "white,red,yellow,blue,green,orange,black,brown" NO-UNDO.
+DEFINE VAR recursos AS CHAR INITIAL "COMODIN" NO-UNDO.
+DEFINE VAR crecurso LIKE recurso_agenda.cdg_recurso NO-UNDO.
+DEFINE VAR kk AS INT NO-UNDO.
+
+fr = FRAME F-Main:HANDLE.
+ancho = w-win:WIDTH-PIXELS.
+alto = w-win:HEIGHT-PIXELS.
+IF fr:WIDTH-PIXELS < ancho OR fr:HEIGHT-PIXELS < alto THEN DO:
+    fr:WIDTH-PIXELS = ancho.
+    fr:HEIGHT-PIXELS = alto.
+END.
+chMundo:WIDTH = ancho .
+chMundo:HEIGHT = alto   .
+fr:WIDTH-PIXELS = ancho .
+fr:HEIGHT-PIXELS = alto .
+
+archivo = SESSION:TEMP-DIR + STRING( USERID("sic") ) + ".htm".
+sistema = SESSION:NUMERIC-FORMAT.
+SESSION:NUMERIC-FORMAT= "American".
+output to value(archivo).
+put UNFORMATTED '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"' skip
+    '"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">' skip
+    '<html xmlns="http://www.w3.org/1999/xhtml">' skip
+    '<head>' skip
+    '<meta http-equiv="X-UA-Compatible" content="IE=edge" charset=utf-8/>'  skip
+    '<title>Google Maps JavaScript API Example</title>' skip
+    '<script src="https://maps.google.com/maps?file=api&amp;v=3&amp;key=AIzaSyDWJAlUHjKWv4cB1O2QKRt1JI-khfVvy4s"' skip
+    'type="text/javascript"></script>' skip
+    '<script type="text/javascript">' skip
+    '//<![CDATA[' skip
+    'function load() ~{' skip
+    'if (GBrowserIsCompatible()) ~{' skip
+    'var map = new GMap2(document.getElementById("map"));' skip.
+recursos = "".
+DO k = 1 TO NUM-ENTRIES(diasel):
+    DO i = 1 TO NUM-ENTRIES(lista):
+        FOR EACH recurso_agenda NO-LOCK WHERE recurso_agenda.cdg_recurso = entry( i, lista) and
+            recurso_agenda.fecha = date(ENTRY(k,diasel)):
+            IF LOOKUP(recursos,recurso_agenda.cdg_recurso) = 0 THEN
+                recursos = recursos + "," + recurso_agenda.cdg_recurso.
+        END.
+    END.
+END.
+recursos = SUBSTRING(recursos,2).
+almenos = FALSE.
+DO k = 1 TO NUM-ENTRIES(diasel):
+    DO i = 1 TO NUM-ENTRIES(recursos):
+        FOR EACH recurso_agenda NO-LOCK WHERE recurso_agenda.cdg_recurso = entry( i, recursos) and
+            recurso_agenda.fecha = date(ENTRY(k,diasel)):
+            FIND evento OF recurso_agenda NO-LOCK.
+            FIND cliente OF evento NO-LOCK.
+            FIND cliente_otros_datos OF cliente NO-LOCK NO-ERROR.
+            IF cliente.geolat <> 0 THEN DO:
+                IF NOT almenos THEN DO:
+                    PUT UNFORMATTED
+                    'map.setCenter(new GLatLng(' cliente.geolat ',' cliente.geolong '), 15);' skip
+                    'map.addControl(new GSmallMapControl());' SKIP
+                    'var customIcons = [];' SKIP.
+                    DO kk = 1 TO NUM-ENTRIES(recursos):
+                        IF kk > NUM-ENTRIES(colores) THEN LEAVE.
+                        PUT UNFORMATTED
+                        'var icon' entry(kk,colores) ' = new GIcon(); ' SKIP
+                        'icon' entry(kk,colores) ".image = 'http://labs.google.com/ridefinder/images/mm_20_" entry(kk,colores) ".png';" SKIP
+                        'icon' entry(kk,colores) ".shadow = 'http://labs.google.com/ridefinder/images/mm_20_shadow.png';" SKIP
+                        'icon' entry(kk,colores) '.iconSize = new GSize(12, 20);' SKIP
+                        'icon' entry(kk,colores) '.shadowSize = new GSize(22, 20);' SKIP
+                        'icon' entry(kk,colores) '.iconAnchor = new GPoint(6, 20);' SKIP
+                        'icon' entry(kk,colores) '.infoWindowAnchor = new GPoint(5, 1);' SKIP
+                        'customIcons["' entry(kk,recursos) '"] = icon' entry(kk,colores) ';' SKIP.
+                    END.
+                    PUT UNFORMATTED
+                    'function createMarker(point, nombre,origen) ' '~{' SKIP
+                    'var marker = new GMarker(point,customIcons[origen]);' SKIP
+                    "GEvent.addListener(marker, 'click', function()" '~{' SKIP
+                    'marker.openInfoWindowHtml(nombre);' '~}' ');' SKIP
+                    'return marker;' SKIP
+                    '~}' SKIP.
+                    almenos = TRUE.
+                END.
+                IF LOOKUP(recurso_agenda.cdg_recurso,recursos) = 0 THEN
+                        crecurso = "COMODIN".
+                    ELSE
+                        crecurso = recurso_agenda.cdg_recurso.
+                PUT UNFORMATTED
+                'var point = new GPoint (' cliente.geolong ',' cliente.geolat ' );' skip
+                'map.addOverlay(createMarker (point,"' replace(Cliente.nom_cliente,'"',' ') 
+                    '<BR>Dir:' replace(cliente.direccion,'"',' ')
+                    '<BR>Origen:' evento.origen 
+                    '<BR>Evento:' evento.nro_evento 
+                    '<BR>Operario:' recurso_agenda.cdg_recurso 
+                    '<BR>Unidades:' (IF AVAILABLE cliente_otros_datos THEN string(cliente_otros_datos.unidad) ELSE "NO DISPONIBLE" )
+                    '<BR>Asignado:' evento.fasignado ' ' evento.turno 
+                     '","' crecurso '"));' skip.
+            END.
+    
+        END.
+    END.
+END.
+PUT UNFORMATTED 
+    '~}' skip
+    '~}' skip
+    '//]]>' skip
+    '</script>' skip
+    '</head>' skip
+    '<body onload="load()" onunload="GUnload()">' skip
+    '<div id="map" style="width:' + string( ancho - 20 ) + 'px;height:' + string( alto - 2 ) + 'px;position:absolute; top: 0px; left:0px;"></div>' skip
+    '</body>' skip
+    '</html>' skip(1).
+OUTPUT CLOSE.
+IF NOT almenos THEN DO:
+  FILE-INFO:FILE-NAME = search("nogeo.htm").
+  archivo = FILE-INFO:FULL-PATHNAME.
+END.
+
+SESSION:NUMERIC-FORMAT= sistema.
+  RETURN archivo.   /* Function return value. */
+
+END FUNCTION.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _FUNCTION muestradia W-Win 
+FUNCTION muestradia RETURNS LOGICAL
+  ( lista AS CHAR, diasel AS CHAR ) :
+/*------------------------------------------------------------------------------
+  Purpose:  
+    Notes:  
+------------------------------------------------------------------------------*/
+ 
+chMundo:WebBrowser:Navigate( genehtml( lista , diasel ) ).
+  w-win:WINDOW-STATE = 3.
+  w-win:MOVE-TO-TOP().
+  RETURN  true.   /* Function return value. */
+
+END FUNCTION.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+

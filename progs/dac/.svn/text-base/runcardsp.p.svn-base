@@ -1,0 +1,31 @@
+  /*====================================================================================*/
+  /*        VALIDA LA EJECUCION DEL PROGRAMA DE CONSULTA DE FICHAS DE DESPACHO          */
+  /*====================================================================================*/
+
+  DEFINE VARIABLE v-valida_cambio AS CHARACTER FORMAT "X(10)" LABEL "Validacion".
+  DEFINE VARIABLE v-clave_cambio  AS CHARACTER.
+  DEFINE VARIABLE v-hora_valida   AS CHARACTER.
+  
+  DEFINE FRAME f-valida
+        v-valida_cambio AT 5 BLANK
+         WITH FRAME f-valida VIEW-AS DIALOG-BOX THREE-D SIDE-LABELS FONT 4
+              TITLE "Validacion:" WIDTH 40.
+
+  v-hora_valida = STRING(TIME,"HH:MM:SS").
+  v-valida_cambio = "".
+  FRAME f-valida:TITLE = "Validación:" + STRING(TODAY) + " - " + v-hora_valida.
+  UPDATE v-valida_cambio BLANK
+         WITH FRAME f-valida VIEW-AS DIALOG-BOX THREE-D SIDE-LABELS FONT 4
+              TITLE "Validacion:".
+
+  v-clave_cambio = SUBSTRING(v-hora_valida,7,2) + 
+                   SUBSTRING(v-hora_valida,4,2) + 
+                   SUBSTRING(v-hora_valida,1,2) + 
+                   SUBSTRING(STRING(TODAY,"99/99/99"),1,2).
+
+  IF v-valida_cambio = v-clave_cambio
+  THEN DO:
+        RUN w-cardsp.w.
+  END.
+  
+  QUIT.

@@ -1,0 +1,160 @@
+/*=================================================================================*/
+/*                      ANULACION DE UN MOVIMIENTO DE CAJA                         */
+/*=================================================================================*/
+
+DEFINE OUTPUT PARAMETER p-anulado AS INTEGER.
+DEFINE VARIABLE es_posible        AS INTEGER INITIAL 0 NO-UNDO.
+
+{VPERSINM.I}
+{VRSHARED.I}
+
+/*=================================================================================*/
+/*                          B L O Q U E   P R I N C I P A L                        */
+/*=================================================================================*/
+
+es_posible = 0. /* Es posible la anulación hasta que se demuestre lo contrario */
+DO TRANSACTION:
+
+    FIND Caj_header WHERE ROWID(Caj_header) = act_caj_head EXCLUSIVE-LOCK.
+    FIND Caja OF Caj_header.
+    
+    FOR EACH Caj_detalle OF Caj_header, Rubro OF Caj_detalle NO-LOCK: 
+
+           CASE Rubro.tipo:
+    
+                WHEN "A" 
+                THEN DO:
+                            /* --------------------------------------------------------------- */
+                            /*   SI HAY MAS DE UNA, ANULA TODAS LAS VECES TODAS LAS QUE HAYA   */
+                            /* --------------------------------------------------------------- */
+                 
+                     FOR EACH Cta_cte_bco 
+                          WHERE Cta_cte_bco.nro_transaccion = Caj_header.nro_transaccion 
+                                EXCLUSIVE-LOCK.
+                         Cta_cte_bco.anulado = YES.
+                     END.     
+
+                END.
+    
+                WHEN "B" 
+                THEN DO:
+                            /* --------------------------------------------------------------- */
+                            /*   SI HAY MAS DE UNA, ANULA TODAS LAS VECES TODAS LAS QUE HAYA   */
+                            /* --------------------------------------------------------------- */
+                 
+                     FOR EACH Cta_cte_bco 
+                          WHERE Cta_cte_bco.nro_transaccion = Caj_header.nro_transaccion 
+                                EXCLUSIVE-LOCK.
+                         Cta_cte_bco.anulado = YES.
+                     END.     
+
+                END.
+    
+                WHEN "P" 
+                THEN DO:
+
+                     FIND Cheque OF Caj_detalle EXCLUSIVE-LOCK.
+                     IF Cheque.estado = "00" OR Cheque.estado = "PP"
+                     THEN DO:
+                            FIND Cuenta_bancaria OF Cheque NO-LOCK.
+                            IF NOT Cuenta_bancaria.ficticia
+                            THEN DO:
+                                   FIND Cta_cte_bco OF Cheque EXCLUSIVE-LOCK.
+                                   Cta_cte_bco.anulado = YES.
+                            END. 
+                            Cheque.estado = "A".
+                            es_posible = 0.
+                     END. 
+                     ELSE DO:
+                          es_posible = 1.
+                          RETURN ERROR.
+                     END.     
+
+                END.
+    
+                WHEN "V" 
+                THEN DO:
+                     FIND Valor OF Caj_detalle EXCLUSIVE-LOCK.
+                     IF Caj_header.tipo_mov = "I"
+                     THEN DO:
+                          IF Valor.estado = "00"
+                          THEN DO:
+                              DELETE Valor.
+                              es_posible = 0.
+                          END.
+                          ELSE DO:   
+                              es_posible = 2.
+                              RETURN ERROR.
+                          END.
+                     END.
+                     ELSE DO:
+                         IF Valor.estado = "10"
+                          THEN DO:
+                              Valor.estado = "00".
+                              es_posible = 0.
+                          END.
+                          ELSE DO:   
+                              es_posible = 3.
+                              RETURN ERROR.
+                          END.
+                     END.
+                END.
+
+                WHEN "R" 
+                THEN DO:
+                     CASE Rubro.es_retencion:
+                
+                         WHEN "GAN"
+                         THEN DO:
+                              FIND Certificado_gan OF Caj_detalle EXCLUSIVE-LOCK.
+                              Certificado_gan.anulado = YES.
+                                                      
+                              FIND FIRST Acumulado_pagos
+                                   WHERE Acumulado_pagos.nro_proveedor  = Certificado_gan.nro_proveedor
+                                     AND Acumulado_pagos.cdg_empresa    = Certificado_gan.cdg_empresa
+                                     AND Acumulado_pagos.ano            = YEAR(Certificado_gan.fecha_emision)
+                                     AND Acumulado_pagos.mes            = MONTH(Certificado_gan.fecha_emision) 
+                                     AND Acumulado_pago.cdg_tiporetgan  = Certificado_gan.cdg_tiporetgan
+                                     EXCLUSIVE-LOCK.
+                            
+                              Acumulado_pagos.total_retganan = Acumulado_pagos.total_retganan - 
+                                               Certificado_gan.imp_retenido.
+
+                              RELEASE Acumulado_pagos.                 
+                         END.
+                 
+                         WHEN "IBR"
+                         THEN DO:
+                              FIND Certificado_ibr OF Caj_detalle EXCLUSIVE-LOCK.
+                              Certificado_ibr.anulado = YES.
+                         END.
+                 
+                         WHEN "IVA"
+                         THEN DO:
+                              FIND Certificado_iva OF Caj_detalle EXCLUSIVE-LOCK.
+                              Certificado_iva.anulado = YES.
+                         END.
+                
+                         WHEN "SUS"
+                         THEN DO:
+                              FIND Certificado_sus OF Caj_detalle EXCLUSIVE-LOCK.
+                              Certificado_sus.anulado = YES.
+                         END.
+                
+                     END CASE.
+
+                END.
+    
+           END CASE.
+    END.
+    
+    IF es_posible = 0
+    THEN DO:
+        RUN ACUMCAJA.P ( INPUT "B",input rowid(caj_header) ).
+        Caj_header.estado = "A".
+    END.
+
+END. /* De la transaccion */
+
+p-anulado = es_posible.
+

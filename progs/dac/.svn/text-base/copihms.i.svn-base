@@ -1,0 +1,2 @@
+ IF NUEVA.Ficha.hor_{1} = 0 THEN NUEVA.Ficha.hor_{1} = ?.
+ IF NUEVA.Ficha.hor_{1} NE ? THEN NUEVA.Ficha.hms_{1} = STRING(NUEVA.Ficha.hor_{1},"HH:MM:SS").

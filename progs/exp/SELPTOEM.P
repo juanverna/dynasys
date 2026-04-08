@@ -1,0 +1,9 @@
+&GLOBAL-DEFINE TABLA           Puerto_embarque
+&GLOBAL-DEFINE CODIGO          cdg_puerto_emb
+&GLOBAL-DEFINE NOMBRE          nombre_puerto_emb
+&GLOBAL-DEFINE TITULO-BROWSE   Seleccione el Puerto de embarque o ingrese nombre
+&GLOBAL-DEFINE TITULO-FRAME    Seleccion de Puertos de embarque
+&GLOBAL-DEFINE PROCESO         ACBRWPEM
+&GLOBAL-DEFINE ULT_REGISTRO    ult_puerto_emb
+
+{SELBROWS.I}

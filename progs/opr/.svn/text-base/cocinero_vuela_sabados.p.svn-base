@@ -1,0 +1,15 @@
+FOR EACH evento WHERE evento.origen = "contrato" AND periodo=200912
+    AND WEEKDAY(evento.fasignado)=7:
+FIND contrato_restriccion WHERE contrato_restriccion.nro_contrato = evento.nro_identificacion
+    AND evento.sub_evento = contrato_restriccion.sub_evento AND contrato_restriccion.nro_restriccion = 3 NO-ERROR.
+IF NOT AVAILABLE contrato_restriccion THEN DO: 
+CREATE contrato_restriccion.
+ASSIGN contrato_restriccion.nro_restriccion = 3
+       contrato_restriccion.nro_contrato = evento.nro_identificacion
+       contrato_restriccion.sub_evento = evento.sub_evento.
+END.
+       contrato_restriccion.valor = "*||7".
+
+evento.fasignado = ?.
+END.
+

@@ -1,0 +1,1437 @@
+&ANALYZE-SUSPEND _VERSION-NUMBER AB_v10r12 GUI ADM2
+&ANALYZE-RESUME
+/* Connected Databases 
+          sic              PROGRESS
+*/
+&Scoped-define WINDOW-NAME wWin
+{adecomm/appserv.i}
+
+
+/* Temp-Table and Buffer definitions                                    */
+DEFINE BUFFER Administrador FOR Cliente.
+DEFINE TEMP-TABLE T-Caja-imputacion NO-UNDO LIKE Caja-imputacion.
+DEFINE TEMP-TABLE T-Caj_detalle NO-UNDO LIKE Caj_detalle.
+DEFINE TEMP-TABLE T-Caj_header NO-UNDO LIKE Caj_header.
+DEFINE TEMP-TABLE T-Cheque NO-UNDO LIKE Cheque.
+DEFINE TEMP-TABLE T-comprobante_rendicion NO-UNDO LIKE comprobante_rendicion.
+DEFINE TEMP-TABLE T-Rendicion_hd NO-UNDO LIKE Rendicion_hd.
+DEFINE TEMP-TABLE T-Valor NO-UNDO LIKE Valor.
+
+
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CUSTOM _DEFINITIONS wWin 
+/*------------------------------------------------------------------------
+
+  File: 
+
+  Description: from cntnrwin.w - ADM SmartWindow Template
+
+  Input Parameters:
+      <none>
+
+  Output Parameters:
+      <none>
+
+  History: New V9 Version - January 15, 1998
+          
+------------------------------------------------------------------------*/
+/*          This .W file was created with the Progress AB.              */
+/*----------------------------------------------------------------------*/
+
+/* Create an unnamed pool to store all the widgets created 
+     by this procedure. This is a good default which assures
+     that this procedure's triggers and internal procedures 
+     will execute in this procedure's storage, and that proper
+     cleanup will occur on deletion of the procedure. */
+
+CREATE WIDGET-POOL.
+
+/* ***************************  Definitions  ************************** */
+
+/* Parameters Definitions ---                                           */
+
+/* Local Variable Definitions ---                                       */
+
+{src/adm2/widgetprto.i}
+
+
+    {nrorelea.i}
+
+    DEFINE VARIABLE sino AS LOGICAL.
+
+    DEFINE VARIABLE rid_tabla AS ROWID.
+    DEF TEMP-TABLE rinde
+        FIELD rid AS ROWID.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-PREPROCESSOR-BLOCK 
+
+/* ********************  Preprocessor Definitions  ******************** */
+
+&Scoped-define PROCEDURE-TYPE SmartWindow
+&Scoped-define DB-AWARE no
+
+&Scoped-define ADM-CONTAINER WINDOW
+
+&Scoped-define ADM-SUPPORTED-LINKS Data-Target,Data-Source,Page-Target,Update-Source,Update-Target,Filter-target,Filter-Source
+
+/* Name of designated FRAME-NAME and/or first browse and/or first query */
+&Scoped-define FRAME-NAME fMain
+&Scoped-define BROWSE-NAME BROWSE-1
+
+/* Internal Tables (found by Frame, Query & Browse Queries)             */
+&Scoped-define INTERNAL-TABLES T-comprobante_rendicion Fac_header ~
+T-Rendicion_hd
+
+/* Definitions for BROWSE BROWSE-1                                      */
+&Scoped-define FIELDS-IN-QUERY-BROWSE-1 Fac_header.fecha ~
+Fac_header.tip_comprob Fac_header.prf_comprob Fac_header.nro_comprob ~
+Fac_header.mes Fac_header.ano Fac_header.imp_total ~
+T-comprobante_rendicion.este_pago ~
+t-comprobante_rendicion.este_pago * v-hat / 100 Fac_header.codigo_cliente ~
+Fac_header.direccion 
+&Scoped-define ENABLED-FIELDS-IN-QUERY-BROWSE-1 ~
+T-comprobante_rendicion.este_pago 
+&Scoped-define ENABLED-TABLES-IN-QUERY-BROWSE-1 T-comprobante_rendicion
+&Scoped-define FIRST-ENABLED-TABLE-IN-QUERY-BROWSE-1 T-comprobante_rendicion
+&Scoped-define QUERY-STRING-BROWSE-1 FOR EACH T-comprobante_rendicion OF T-Rendicion_hd NO-LOCK, ~
+      EACH Fac_header OF T-comprobante_rendicion NO-LOCK ~
+    BY Fac_header.direccion ~
+       BY Fac_header.fecha INDEXED-REPOSITION
+&Scoped-define OPEN-QUERY-BROWSE-1 OPEN QUERY BROWSE-1 FOR EACH T-comprobante_rendicion OF T-Rendicion_hd NO-LOCK, ~
+      EACH Fac_header OF T-comprobante_rendicion NO-LOCK ~
+    BY Fac_header.direccion ~
+       BY Fac_header.fecha INDEXED-REPOSITION.
+&Scoped-define TABLES-IN-QUERY-BROWSE-1 T-comprobante_rendicion Fac_header
+&Scoped-define FIRST-TABLE-IN-QUERY-BROWSE-1 T-comprobante_rendicion
+&Scoped-define SECOND-TABLE-IN-QUERY-BROWSE-1 Fac_header
+
+
+/* Definitions for FRAME fMain                                          */
+&Scoped-define FIELDS-IN-QUERY-fMain T-Rendicion_hd.cant_recibos ~
+T-Rendicion_hd.imp_imputado 
+&Scoped-define OPEN-BROWSERS-IN-QUERY-fMain ~
+    ~{&OPEN-QUERY-BROWSE-1}
+&Scoped-define QUERY-STRING-fMain FOR EACH T-Rendicion_hd SHARE-LOCK
+&Scoped-define OPEN-QUERY-fMain OPEN QUERY fMain FOR EACH T-Rendicion_hd SHARE-LOCK.
+&Scoped-define TABLES-IN-QUERY-fMain T-Rendicion_hd
+&Scoped-define FIRST-TABLE-IN-QUERY-fMain T-Rendicion_hd
+
+
+/* Standard List Definitions                                            */
+&Scoped-Define ENABLED-OBJECTS b-acepta RECT-4 RECT-7 v-Pendiente ~
+v-importependiente v-hat v-cdg_cobrador t-Cambio b-cancela BROWSE-1 b-lista ~
+b-ninguno B-TODO bVer-2 
+&Scoped-Define DISPLAYED-FIELDS T-Rendicion_hd.cant_recibos ~
+T-Rendicion_hd.imp_imputado 
+&Scoped-define DISPLAYED-TABLES T-Rendicion_hd
+&Scoped-define FIRST-DISPLAYED-TABLE T-Rendicion_hd
+&Scoped-Define DISPLAYED-OBJECTS v-Pendiente v-importependiente v-hat ~
+v-cdg_cobrador v-fch_rendicion v-cdg_administrador v-dsc_administrador ~
+t-Cambio 
+
+/* Custom List Definitions                                              */
+/* List-1,List-2,List-3,List-4,List-5,List-6                            */
+
+/* _UIB-PREPROCESSOR-BLOCK-END */
+&ANALYZE-RESUME
+
+
+
+/* ***********************  Control Definitions  ********************** */
+
+/* Define the widget handle for the window                              */
+DEFINE VAR wWin AS WIDGET-HANDLE NO-UNDO.
+
+/* Definitions of the field level widgets                               */
+DEFINE BUTTON b-acepta  NO-FOCUS
+     LABEL "&Aceptar" 
+     SIZE 15 BY 1.14.
+
+DEFINE BUTTON b-cancela  NO-FOCUS
+     LABEL "&Cancelar" 
+     SIZE 15 BY 1.14.
+
+DEFINE BUTTON b-lista  NO-FOCUS
+     LABEL "&Listar" 
+     SIZE 15 BY 1.14.
+
+DEFINE BUTTON b-ninguno  NO-FOCUS
+     LABEL "&Ninguno" 
+     SIZE 15 BY 1.14.
+
+DEFINE BUTTON B-TODO  NO-FOCUS
+     LABEL "&Todo" 
+     SIZE 15 BY 1.14.
+
+DEFINE BUTTON bVer-2  NO-FOCUS
+     LABEL "&Ver" 
+     SIZE 14 BY 1.
+
+DEFINE VARIABLE v-cdg_cobrador AS CHARACTER FORMAT "X(256)":U 
+     LABEL "Cobrador" 
+     VIEW-AS COMBO-BOX INNER-LINES 5
+     LIST-ITEM-PAIRS "Item 1","Item 1"
+     DROP-DOWN-LIST
+     SIZE 69 BY 1
+     BGCOLOR 15 FGCOLOR 9  NO-UNDO.
+
+DEFINE VARIABLE v-cdg_administrador AS CHARACTER FORMAT "X(8)" 
+     LABEL "Administ." 
+     VIEW-AS FILL-IN NATIVE 
+     SIZE 14 BY 1
+     BGCOLOR 15 FGCOLOR 9 .
+
+DEFINE VARIABLE v-dsc_administrador AS CHARACTER FORMAT "X(35)" 
+     VIEW-AS FILL-IN 
+     SIZE 67 BY 1
+     BGCOLOR 7 FGCOLOR 15 .
+
+DEFINE VARIABLE v-fch_rendicion LIKE T-Rendicion_hd.fch_rendicion
+     LABEL "Fecha Cobro" 
+     VIEW-AS FILL-IN 
+     SIZE 14 BY 1
+     BGCOLOR 15 FGCOLOR 9  NO-UNDO.
+
+DEFINE VARIABLE v-hat AS DECIMAL FORMAT "->>,>>9.99%":U INITIAL 0 
+     LABEL "HAT" 
+     VIEW-AS FILL-IN NATIVE 
+     SIZE 14 BY 1
+     BGCOLOR 15 FGCOLOR 9  NO-UNDO.
+
+DEFINE VARIABLE v-importependiente AS DECIMAL FORMAT "->>,>>9.99":U INITIAL 0 
+     VIEW-AS FILL-IN NATIVE 
+     SIZE 19 BY 1
+     BGCOLOR 15 FGCOLOR 9  NO-UNDO.
+
+DEFINE VARIABLE v-Pendiente AS INTEGER FORMAT ">>9":U INITIAL 0 
+     LABEL "Pend." 
+     VIEW-AS FILL-IN NATIVE 
+     SIZE 7 BY 1
+     BGCOLOR 15 FGCOLOR 9  NO-UNDO.
+
+DEFINE RECTANGLE RECT-4
+     EDGE-PIXELS 2 GRAPHIC-EDGE  NO-FILL   
+     SIZE 114 BY 4.05.
+
+DEFINE RECTANGLE RECT-7
+     EDGE-PIXELS 2 GRAPHIC-EDGE  NO-FILL   
+     SIZE 20 BY 4.05.
+
+DEFINE VARIABLE t-Cambio AS LOGICAL INITIAL no 
+     LABEL "&Permitir cambio importe ( pago Parcial )" 
+     VIEW-AS TOGGLE-BOX
+     SIZE 47 BY .81 NO-UNDO.
+
+/* Query definitions                                                    */
+&ANALYZE-SUSPEND
+DEFINE QUERY BROWSE-1 FOR 
+      T-comprobante_rendicion, 
+      Fac_header SCROLLING.
+
+DEFINE QUERY fMain FOR 
+      T-Rendicion_hd SCROLLING.
+&ANALYZE-RESUME
+
+/* Browse definitions                                                   */
+DEFINE BROWSE BROWSE-1
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _DISPLAY-FIELDS BROWSE-1 wWin _STRUCTURED
+  QUERY BROWSE-1 NO-LOCK DISPLAY
+      Fac_header.fecha COLUMN-LABEL "Fecha!Factura" FORMAT "99/99/9999":U
+      Fac_header.tip_comprob COLUMN-LABEL "Tipo!Comp" FORMAT "X(3)":U
+      Fac_header.prf_comprob FORMAT "9999":U
+      Fac_header.nro_comprob COLUMN-LABEL "Número!Comprobante." FORMAT "ZZZZZZZ9":U
+      Fac_header.mes COLUMN-LABEL "Imp!Mes" FORMAT "99":U
+      Fac_header.ano COLUMN-LABEL "Imp!Año" FORMAT "9999":U
+      Fac_header.imp_total FORMAT "->>>,>>9.99":U
+      T-comprobante_rendicion.este_pago FORMAT "->>>,>>9.99":U
+      t-comprobante_rendicion.este_pago * v-hat / 100 COLUMN-LABEL "Importe!HAT" FORMAT "->>,>>9.99":U
+      Fac_header.codigo_cliente FORMAT "X(8)":U
+      Fac_header.direccion COLUMN-LABEL "Direccion!Factura" FORMAT "X(45)":U
+  ENABLE
+      T-comprobante_rendicion.este_pago
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+    WITH NO-ROW-MARKERS SEPARATORS SIZE 144 BY 18.57
+         BGCOLOR 15 FGCOLOR 9 FONT 6 ROW-HEIGHT-CHARS .67 NO-EMPTY-SPACE.
+
+
+/* ************************  Frame Definitions  *********************** */
+
+DEFINE FRAME fMain
+     b-acepta AT ROW 1.48 COL 124 WIDGET-ID 8
+     T-Rendicion_hd.cant_recibos AT ROW 1.48 COL 13 COLON-ALIGNED WIDGET-ID 16
+          LABEL "Recibos" FORMAT ">>9"
+          VIEW-AS FILL-IN 
+          SIZE 8 BY 1
+          BGCOLOR 15 FGCOLOR 9 FONT 6 NO-TAB-STOP 
+     T-Rendicion_hd.imp_imputado AT ROW 1.48 COL 32 COLON-ALIGNED WIDGET-ID 18
+          LABEL "Importe"
+          VIEW-AS FILL-IN 
+          SIZE 12 BY 1
+          BGCOLOR 15 FGCOLOR 9 FONT 6 NO-TAB-STOP 
+     v-Pendiente AT ROW 1.48 COL 55 COLON-ALIGNED WIDGET-ID 4 NO-TAB-STOP 
+     v-importependiente AT ROW 1.48 COL 63 COLON-ALIGNED NO-LABEL WIDGET-ID 6 NO-TAB-STOP 
+     v-hat AT ROW 1.48 COL 98 COLON-ALIGNED WIDGET-ID 14 NO-TAB-STOP 
+     v-cdg_cobrador AT ROW 2.67 COL 13 COLON-ALIGNED WIDGET-ID 42
+     v-fch_rendicion AT ROW 2.67 COL 98 COLON-ALIGNED HELP
+          "Fecha de la rendición" WIDGET-ID 44
+          LABEL "Fecha Cobro"
+          BGCOLOR 15 FGCOLOR 9 
+     v-cdg_administrador AT ROW 3.86 COL 13 COLON-ALIGNED WIDGET-ID 26
+     v-dsc_administrador AT ROW 3.86 COL 28 COLON-ALIGNED HELP
+          "Denominacion" NO-LABEL WIDGET-ID 28 NO-TAB-STOP 
+     t-Cambio AT ROW 5.52 COL 56 WIDGET-ID 48 NO-TAB-STOP 
+     b-cancela AT ROW 3.86 COL 124 WIDGET-ID 12
+     BROWSE-1 AT ROW 6.71 COL 1.6 WIDGET-ID 200
+     b-lista AT ROW 2.67 COL 124 WIDGET-ID 10 NO-TAB-STOP 
+     b-ninguno AT ROW 5.43 COL 22 WIDGET-ID 38
+     B-TODO AT ROW 5.43 COL 4.6 WIDGET-ID 34
+     bVer-2 AT ROW 3.86 COL 100 WIDGET-ID 32 NO-TAB-STOP 
+     RECT-4 AT ROW 1.24 COL 1 WIDGET-ID 20
+     RECT-7 AT ROW 1.24 COL 121 WIDGET-ID 22
+    WITH 1 DOWN NO-BOX KEEP-TAB-ORDER OVERLAY 
+         SIDE-LABELS NO-UNDERLINE THREE-D 
+         AT COL 1 ROW 1
+         SIZE 146.4 BY 24.67 WIDGET-ID 100.
+
+
+/* *********************** Procedure Settings ************************ */
+
+&ANALYZE-SUSPEND _PROCEDURE-SETTINGS
+/* Settings for THIS-PROCEDURE
+   Type: SmartWindow
+   Allow: Basic,Browse,DB-Fields,Query,Smart,Window
+   Container Links: Data-Target,Data-Source,Page-Target,Update-Source,Update-Target,Filter-target,Filter-Source
+   Other Settings: COMPILE APPSERVER
+   Temp-Tables and Buffers:
+      TABLE: Administrador B "?" ? sic Cliente
+      TABLE: T-Caja-imputacion T "?" NO-UNDO sic Caja-imputacion
+      TABLE: T-Caj_detalle T "?" NO-UNDO sic Caj_detalle
+      TABLE: T-Caj_header T "?" NO-UNDO sic Caj_header
+      TABLE: T-Cheque T "?" NO-UNDO sic Cheque
+      TABLE: T-comprobante_rendicion T "?" NO-UNDO sic comprobante_rendicion
+      TABLE: T-Rendicion_hd T "?" NO-UNDO sic Rendicion_hd
+      TABLE: T-Valor T "?" NO-UNDO sic Valor
+   END-TABLES.
+ */
+&ANALYZE-RESUME _END-PROCEDURE-SETTINGS
+
+/* *************************  Create Window  ************************** */
+
+&ANALYZE-SUSPEND _CREATE-WINDOW
+IF SESSION:DISPLAY-TYPE = "GUI":U THEN
+  CREATE WINDOW wWin ASSIGN
+         HIDDEN             = YES
+         TITLE              = "Ingreso de Recibos"
+         HEIGHT             = 26.14
+         WIDTH              = 147
+         MAX-HEIGHT         = 28.81
+         MAX-WIDTH          = 160
+         VIRTUAL-HEIGHT     = 28.81
+         VIRTUAL-WIDTH      = 160
+         RESIZE             = no
+         SCROLL-BARS        = no
+         STATUS-AREA        = no
+         BGCOLOR            = ?
+         FGCOLOR            = ?
+         THREE-D            = yes
+         MESSAGE-AREA       = no
+         SENSITIVE          = yes.
+ELSE {&WINDOW-NAME} = CURRENT-WINDOW.
+/* END WINDOW DEFINITION                                                */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CUSTOM _INCLUDED-LIB wWin 
+/* ************************* Included-Libraries *********************** */
+
+{src/adm2/containr.i}
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+
+
+/* ***********  Runtime Attributes and AppBuilder Settings  *********** */
+
+&ANALYZE-SUSPEND _RUN-TIME-ATTRIBUTES
+/* SETTINGS FOR WINDOW wWin
+  VISIBLE,,RUN-PERSISTENT                                               */
+/* SETTINGS FOR FRAME fMain
+   FRAME-NAME                                                           */
+/* BROWSE-TAB BROWSE-1 b-cancela fMain */
+/* SETTINGS FOR FILL-IN T-Rendicion_hd.cant_recibos IN FRAME fMain
+   NO-ENABLE EXP-LABEL EXP-FORMAT                                       */
+/* SETTINGS FOR FILL-IN T-Rendicion_hd.imp_imputado IN FRAME fMain
+   NO-ENABLE EXP-LABEL                                                  */
+/* SETTINGS FOR FILL-IN v-cdg_administrador IN FRAME fMain
+   NO-ENABLE                                                            */
+/* SETTINGS FOR FILL-IN v-dsc_administrador IN FRAME fMain
+   NO-ENABLE                                                            */
+ASSIGN 
+       v-dsc_administrador:READ-ONLY IN FRAME fMain        = TRUE.
+
+/* SETTINGS FOR FILL-IN v-fch_rendicion IN FRAME fMain
+   NO-ENABLE LIKE = Temp-Tables.T-Rendicion_hd.fch_rendicion EXP-LABEL EXP-SIZE */
+ASSIGN 
+       v-hat:READ-ONLY IN FRAME fMain        = TRUE.
+
+ASSIGN 
+       v-importependiente:READ-ONLY IN FRAME fMain        = TRUE.
+
+ASSIGN 
+       v-Pendiente:READ-ONLY IN FRAME fMain        = TRUE.
+
+IF SESSION:DISPLAY-TYPE = "GUI":U AND VALID-HANDLE(wWin)
+THEN wWin:HIDDEN = yes.
+
+/* _RUN-TIME-ATTRIBUTES-END */
+&ANALYZE-RESUME
+
+
+/* Setting information for Queries and Browse Widgets fields            */
+
+&ANALYZE-SUSPEND _QUERY-BLOCK BROWSE BROWSE-1
+/* Query rebuild information for BROWSE BROWSE-1
+     _TblList          = "Temp-Tables.T-comprobante_rendicion OF Temp-Tables.T-Rendicion_hd,sic.Fac_header OF Temp-Tables.T-comprobante_rendicion"
+     _Options          = "NO-LOCK INDEXED-REPOSITION"
+     _OrdList          = "sic.Fac_header.direccion|yes,sic.Fac_header.fecha|yes"
+     _FldNameList[1]   > sic.Fac_header.fecha
+"Fac_header.fecha" "Fecha!Factura" ? "date" ? ? ? ? ? ? no ? no no ? yes no no "U" "" "" "" "" "" "" 0 no 0 no no
+     _FldNameList[2]   > sic.Fac_header.tip_comprob
+"Fac_header.tip_comprob" "Tipo!Comp" ? "character" ? ? ? ? ? ? no ? no no ? yes no no "U" "" "" "" "" "" "" 0 no 0 no no
+     _FldNameList[3]   = sic.Fac_header.prf_comprob
+     _FldNameList[4]   > sic.Fac_header.nro_comprob
+"Fac_header.nro_comprob" "Número!Comprobante." ? "integer" ? ? ? ? ? ? no ? no no ? yes no no "U" "" "" "" "" "" "" 0 no 0 no no
+     _FldNameList[5]   > sic.Fac_header.mes
+"Fac_header.mes" "Imp!Mes" ? "integer" ? ? ? ? ? ? no ? no no ? yes no no "U" "" "" "" "" "" "" 0 no 0 no no
+     _FldNameList[6]   > sic.Fac_header.ano
+"Fac_header.ano" "Imp!Año" ? "integer" ? ? ? ? ? ? no ? no no ? yes no no "U" "" "" "" "" "" "" 0 no 0 no no
+     _FldNameList[7]   > sic.Fac_header.imp_total
+"Fac_header.imp_total" ? "->>>,>>9.99" "decimal" ? ? ? ? ? ? no ? no no ? yes no no "U" "" "" "" "" "" "" 0 no 0 no no
+     _FldNameList[8]   > Temp-Tables.T-comprobante_rendicion.este_pago
+"T-comprobante_rendicion.este_pago" ? ? "decimal" ? ? ? ? ? ? yes ? no no ? yes no no "U" "" "" "" "" "" "" 0 no 0 no no
+     _FldNameList[9]   > "_<CALC>"
+"t-comprobante_rendicion.este_pago * v-hat / 100" "Importe!HAT" "->>,>>9.99" ? ? ? ? ? ? ? no ? no no ? yes no no "U" "" "" "" "" "" "" 0 no 0 no no
+     _FldNameList[10]   = sic.Fac_header.codigo_cliente
+     _FldNameList[11]   > sic.Fac_header.direccion
+"Fac_header.direccion" "Direccion!Factura" ? "character" ? ? ? ? ? ? no ? no no ? yes no no "U" "" "" "" "" "" "" 0 no 0 no no
+     _Query            is OPENED
+*/  /* BROWSE BROWSE-1 */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _QUERY-BLOCK FRAME fMain
+/* Query rebuild information for FRAME fMain
+     _TblList          = "Temp-Tables.T-Rendicion_hd"
+     _Query            is OPENED
+*/  /* FRAME fMain */
+&ANALYZE-RESUME
+
+ 
+
+
+
+/* ************************  Control Triggers  ************************ */
+
+&Scoped-define SELF-NAME wWin
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL wWin wWin
+ON END-ERROR OF wWin /* Ingreso de Recibos */
+OR ENDKEY OF {&WINDOW-NAME} ANYWHERE DO:
+  /* This case occurs when the user presses the "Esc" key.
+     In a persistently run window, just ignore this.  If we did not, the
+     application would exit. */
+  IF THIS-PROCEDURE:PERSISTENT THEN RETURN NO-APPLY.
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL wWin wWin
+ON WINDOW-CLOSE OF wWin /* Ingreso de Recibos */
+DO:
+  /* This ADM code must be left here in order for the SmartWindow
+     and its descendents to terminate properly on exit. */
+  APPLY "CLOSE":U TO THIS-PROCEDURE.
+  RETURN NO-APPLY.
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME b-acepta
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL b-acepta wWin
+ON CHOOSE OF b-acepta IN FRAME fMain /* Aceptar */
+DO:
+   ASSIGN v-cdg_administrador
+          v-fch_rendicion
+          v-cdg_cobrador.
+  T-Rendicion_hd.fch_rendicion = v-fch_rendicion.
+   FIND Cobrador WHERE Cobrador.cdg_cobrador = v-cdg_cobrador NO-LOCK NO-ERROR.
+   IF NOT AVAILABLE Cobrador
+   THEN DO:
+       MESSAGE "No existe cobrador"
+           VIEW-AS ALERT-BOX INFO BUTTONS OK.
+       RETURN NO-APPLY.
+   END.
+   ELSE DO:
+        T-Rendicion_hd.nro_cobrador = Cobrador.nro_cobrador.
+        IF v-cdg_administrador = "" THEN DO:
+           MESSAGE "Debe introducir el código de una administración" VIEW-AS ALERT-BOX ERROR.
+           RETURN NO-APPLY.
+        END.
+        FIND FIRST rinde NO-ERROR.
+        IF NOT AVAILABLE rinde THEN DO:
+           MESSAGE "No ha seleccionado ningún registro"
+               VIEW-AS ALERT-BOX INFO BUTTONS OK.
+               RETURN NO-APPLY.
+        END.
+        IF NOT AVAILABLE T-Caj_header
+        THEN DO:
+          RUN crear_caja.
+        END.
+        ELSE DO:
+          RUN asignar_caja.
+        END.   
+        RUN d-valores_movimiento.w ( INPUT-OUTPUT TABLE T-Caj_header,
+                                     INPUT-OUTPUT TABLE T-Caj_detalle,
+                                     INPUT-OUTPUT TABLE T-Caja-imputacion,
+                                     INPUT-OUTPUT TABLE T-Cheque,
+                                     INPUT-OUTPUT TABLE T-Valor,
+                                     INPUT 0).
+        FIND FIRST T-Caj_header EXCLUSIVE-LOCK.
+        IF T-Caj_header.importe <> T-Caj_header.ingreso THEN RETURN NO-APPLY.
+        
+        DEFINE VARIABLE sino AS LOGICAL.
+        sino = NO.
+        MESSAGE "Se dispone a cerrar la Rendición. Luego no podrán ingresarse mas recibos en la misma."
+              "Confirma que desa cerrar esta rendición? " VIEW-AS ALERT-BOX 
+              BUTTONS YES-NO SET sino.
+        IF sino
+        THEN DO:
+          RUN cierrarendicion.
+          FIND FIRST T-Rendicion_hd.
+          MESSAGE "Asignada Nro:" T-Rendicion_hd.nro_rendicion
+          VIEW-AS ALERT-BOX INFO BUTTONS OK.
+          RUN borratodo.
+        END.
+        RETURN NO-APPLY.
+   END.
+
+  
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME b-cancela
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL b-cancela wWin
+ON CHOOSE OF b-cancela IN FRAME fMain /* Cancelar */
+DO:
+    sino = NO.
+  RUN mensajepregunta.p ( INPUT "", INPUT "PREG002", INPUT-OUTPUT sino ).
+  IF sino
+  THEN RUN borratodo.
+  RETURN NO-APPLY.
+
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME b-lista
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL b-lista wWin
+ON CHOOSE OF b-lista IN FRAME fMain /* Listar */
+DO:
+    sino = NO.
+  MESSAGE "Desea imprimir la rendicion?" VIEW-AS ALERT-BOX 
+          BUTTONS YES-NO SET sino.
+  IF sino
+  THEN DO:
+       RUN prinrendicion.
+  END.        
+RETURN NO-APPLY.
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME b-ninguno
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL b-ninguno wWin
+ON CHOOSE OF b-ninguno IN FRAME fMain /* Ninguno */
+DO:
+  FOR EACH rinde:
+      DELETE rinde.
+  END.
+  RUN cambiar_color.
+  RUN poner_totales.
+  {&OPEN-QUERY-{&BROWSE-NAME}}
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME B-TODO
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL B-TODO wWin
+ON CHOOSE OF B-TODO IN FRAME fMain /* Todo */
+DO:
+  FOR EACH t-comprobante_rendicion:
+      FIND rinde WHERE rinde.rid = ROWID(t-comprobante_rendicion) NO-ERROR.
+      IF NOT AVAILABLE rinde THEN DO:
+          CREATE rinde.
+          ASSIGN rinde.rid = ROWID(t-comprobante_rendicion).
+      END.
+  END.
+  RUN cambiar_color.
+  RUN poner_totales.
+  {&OPEN-QUERY-{&BROWSE-NAME}}
+
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define BROWSE-NAME BROWSE-1
+&Scoped-define SELF-NAME BROWSE-1
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL BROWSE-1 wWin
+ON MOUSE-MENU-CLICK OF BROWSE-1 IN FRAME fMain
+OR "." OF Browse-1 IN FRAME {&FRAME-NAME}
+DO:
+    DEFINE VAR act_fac_head AS ROWID no-undo.
+    DEF VAR que_programa AS CHAR NO-UNDO.
+    RUN getparametro_c.p("CONCOMCL", OUTPUT que_programa).
+    IF que_programa = "" THEN que_programa = "c-comprobante_cliente.w".
+     act_fac_head = ROWID(Fac_header).
+     RUN value(que_programa)( INPUT-OUTPUT act_fac_head , INPUT 2, INPUT Fac_header.cdg_comprobante ).
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL BROWSE-1 wWin
+ON MOUSE-SELECT-DBLCLICK OF BROWSE-1 IN FRAME fMain
+OR RETURN OF Browse-1 IN FRAME {&FRAME-NAME}
+DO:
+
+ DEFINE VAR rr AS ROWID NO-UNDO.
+  IF NOT AVAILABLE t-comprobante_rendicion THEN RETURN NO-apply.
+  rr = ROWID(t-comprobante_rendicion).
+  FIND rinde WHERE rinde.rid = rr NO-ERROR.
+  IF AVAILABLE rinde THEN 
+      DELETE rinde.
+  ELSE DO:
+      CREATE rinde.
+      ASSIGN rinde.rid = rr.
+  END.
+  RUN cambiar_color.
+  RUN poner_totales.
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL BROWSE-1 wWin
+ON ROW-DISPLAY OF BROWSE-1 IN FRAME fMain
+DO:
+RUN cambiar_color.
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME T-comprobante_rendicion.este_pago
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL T-comprobante_rendicion.este_pago BROWSE-1 _BROWSE-COLUMN wWin
+ON LEAVE OF T-comprobante_rendicion.este_pago IN BROWSE BROWSE-1 /* Este!Pago */
+DO:
+    DO WITH FRAME {&FRAME-NAME}:
+        IF BROWSE-1:CURRENT-ROW-MODIFIED
+        THEN DO:
+             FIND cta_cte WHERE 
+                    fac_header.cdg_empresa = cta_cte.cdg_empresa AND
+                    fac_header.tip_comprob = cta_cte.tip_comprob AND
+                    fac_header.prf_comprob = cta_cte.prf_comprob AND
+                    fac_header.nro_comprob = cta_cte.nro_comprob NO-LOCK.
+            IF DECIMAL(T-comprobante_rendicion.este_pago:SCREEN-VALUE IN BROWSE BROWSE-1) > 
+                abs(Cta_cte.debito - Cta_cte.credito)
+            THEN DO:
+                MESSAGE "El importe indicado supera el pendiente a pagar"
+                    VIEW-AS ALERT-BOX INFO BUTTONS OK.
+                DISPLAY T-comprobante_rendicion.este_pago
+                    WITH BROWSE BROWSE-1.
+                RETURN NO-APPLY.
+            END.
+            ELSE DO:
+                ASSIGN BROWSE BROWSE-1 T-comprobante_rendicion.este_pago.
+                /* FFFerver T-Cambio:CHECKED=FALSE. */
+/*                browse-1:READ-ONLY =  NOT T-Cambio:CHECKED.*/
+                /*RUN poner_totales.*/
+            END.
+            
+        END.        
+    END.
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME bVer-2
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL bVer-2 wWin
+ON CHOOSE OF bVer-2 IN FRAME fMain /* Ver */
+DO:
+  DEFINE BUFFER badminis FOR cliente.
+  ASSIGN  v-cdg_administrador.
+  FIND badminis WHERE badminis.cdg_cliente = v-cdg_administrador NO-LOCK NO-ERROR.
+  RUN w-zoom_administraciones.w ( INPUT ROWID(badminis) ).
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME t-Cambio
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL t-Cambio wWin
+ON VALUE-CHANGED OF t-Cambio IN FRAME fMain /* Permitir cambio importe ( pago Parcial ) */
+DO:
+  browse-1:READ-ONLY =  NOT self:CHECKED.
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME v-cdg_administrador
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL v-cdg_administrador wWin
+ON LEAVE OF v-cdg_administrador IN FRAME fMain /* Administ. */
+DO:
+  IF v-cdg_administrador:INPUT-VALUE <> ? THEN
+      APPLY "return" TO SELF.
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL v-cdg_administrador wWin
+ON MOUSE-SELECT-DBLCLICK OF v-cdg_administrador IN FRAME fMain /* Administ. */
+OR "." OF v-cdg_administrador IN FRAME {&FRAME-NAME}
+OR MOUSE-MENU-DOWN OF v-cdg_administrador IN FRAME {&FRAME-NAME}
+DO:
+   {helptabla.i "Administrador" "cdg_cliente" "SELCLIEN.P"}
+
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL v-cdg_administrador wWin
+ON RETURN OF v-cdg_administrador IN FRAME fMain /* Administ. */
+DO:
+    &SCOPED-DEFINE PONER-TABLA RUN poner_administrador.
+   {traducetabla.i "Administrador" "cdg_cliente" "nom_cliente"} .
+    &UNDEFINE PONER-TABLA
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME v-cdg_cobrador
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL v-cdg_cobrador wWin
+ON RETURN OF v-cdg_cobrador IN FRAME fMain /* Cobrador */
+DO:
+
+  APPLY "VALUE-CHANGED" TO SELF.
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL v-cdg_cobrador wWin
+ON VALUE-CHANGED OF v-cdg_cobrador IN FRAME fMain /* Cobrador */
+DO:
+    ASSIGN v-cdg_cobrador.
+    IF v-cdg_cobrador = "zzz" THEN RETURN NO-APPLY.
+        
+    v-cdg_administrador:SENSITIVE = TRUE.
+    v-fch_rendicion:SENSITIVE = TRUE.
+    /* FFFerver t-Cambio = TRUE. */
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME v-fch_rendicion
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL v-fch_rendicion wWin
+ON LEAVE OF v-fch_rendicion IN FRAME fMain /* Fecha Cobro */
+DO:
+  IF SELF:INPUT-VALUE = ? THEN SELF:screen-value = string(TODAY).
+  ASSIGN v-fch_rendicion.
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&UNDEFINE SELF-NAME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CUSTOM _MAIN-BLOCK wWin 
+
+
+/* ***************************  Main Block  *************************** */
+
+/* Include custom  Main Block code for SmartWindows. */
+{src/adm2/windowmn.i}
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+/* **********************  Internal Procedures  *********************** */
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE adm-create-objects wWin  _ADM-CREATE-OBJECTS
+PROCEDURE adm-create-objects :
+/*------------------------------------------------------------------------------
+  Purpose:     Create handles for all SmartObjects used in this procedure.
+               After SmartObjects are initialized, then SmartLinks are added.
+  Parameters:  <none>
+------------------------------------------------------------------------------*/
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE asignar_caja wWin 
+PROCEDURE asignar_caja :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+
+    ASSIGN T-Caj_header.importe         = T-Rendicion_hd.imp_imputado
+           T-Caj_header.fecha           = T-Rendicion_hd.fch_rendicion.
+
+    EMPTY TEMP-TABLE T-Caja-imputacion.
+    RUN crear_caja_imputacion.
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE borratodo wWin 
+PROCEDURE borratodo :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+
+empty  TEMP-TABLE T-Caja-imputacion .
+empty  TEMP-TABLE T-Caj_detalle.
+empty  TEMP-TABLE T-Caj_header .
+empty  TEMP-TABLE T-Cheque .
+empty  TEMP-TABLE T-comprobante_rendicion .
+empty  TEMP-TABLE T-Rendicion_hd .
+empty  TEMP-TABLE T-Valor.
+EMPTY  TEMP-TABLE rinde.
+
+ASSIGN v-cdg_administrador = "".
+v-cdg_administrador:SENSITIVE IN FRAME {&FRAME-NAME} = yes.
+FIND FIRST t-rendicion_hd NO-ERROR.
+DELETE t-rendicion_hd NO-ERROR.
+RELEASE t-rendicion_hd.
+RUN open-query.
+v-cdg_cobrador = "ZZZ".
+v-fch_rendicion = ?.
+v-cdg_administrador:SENSITIVE = FALSE.
+v-fch_rendicion:SENSITIVE = FALSE.
+t-Cambio = FALSE.
+  DISPLAY 0 @ T-Rendicion_hd.cant_recibos 
+          0.00 @ T-Rendicion_hd.imp_imputado
+          v-cdg_cobrador 
+          0 @ v-pendiente
+          0.00 @ v-importependiente
+          v-fch_rendicion
+          WITH FRAME {&FRAME-NAME}.
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE cambiar_color wWin 
+PROCEDURE cambiar_color :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+   DEF VAR cFore AS INT NO-UNDO.
+   DEF VAR cBgco AS INT NO-UNDO.
+                   FIND cta_cte WHERE 
+                    fac_header.cdg_empresa = cta_cte.cdg_empresa AND
+                    fac_header.tip_comprob = cta_cte.tip_comprob AND
+                    fac_header.prf_comprob = cta_cte.prf_comprob AND
+                    fac_header.nro_comprob = cta_cte.nro_comprob NO-LOCK.
+   IF abs(Cta_cte.debito - Cta_cte.credito) <> fac_header.imp_total THEN DO:
+        cFore = 5.
+        cBgco = 15.
+            END.
+   ELSE DO:
+       cFore = 9.
+       cBgco = 15.
+           END.
+   FIND rinde WHERE rinde.rid = ROWID(t-comprobante_rendicion) NO-ERROR.
+   IF NOT AVAILABLE(rinde) THEN DO:
+    Fac_header.tip_comprob:fGCOLOR IN BROWSE {&BROWSE-NAME} = cFore. 
+    Fac_header.tip_comprob:bGCOLOR IN BROWSE {&BROWSE-NAME} = cBgco. 
+    Fac_header.prf_comprob:fGCOLOR IN BROWSE {&BROWSE-NAME} = cFore. 
+    Fac_header.prf_comprob:bGCOLOR IN BROWSE {&BROWSE-NAME} = cBgco. 
+    Fac_header.nro_comprob:fGCOLOR IN BROWSE {&BROWSE-NAME} = cFore. 
+    Fac_header.nro_comprob:bGCOLOR IN BROWSE {&BROWSE-NAME} = cBgco. 
+    T-comprobante_rendicion.este_pago:fGCOLOR IN BROWSE {&BROWSE-NAME} = cFore. 
+    T-comprobante_rendicion.este_pago:bGCOLOR IN BROWSE {&BROWSE-NAME} = cBgco. 
+   END.
+   ELSE DO:
+    Fac_header.tip_comprob:BGCOLOR IN BROWSE {&BROWSE-NAME} = cFore.  
+    Fac_header.tip_comprob:FGCOLOR IN BROWSE {&BROWSE-NAME} = cBgco.  
+    Fac_header.prf_comprob:BGCOLOR IN BROWSE {&BROWSE-NAME} = cFore.  
+    Fac_header.prf_comprob:FGCOLOR IN BROWSE {&BROWSE-NAME} = cBgco.  
+    Fac_header.nro_comprob:BGCOLOR IN BROWSE {&BROWSE-NAME} = cFore.  
+    Fac_header.nro_comprob:FGCOLOR IN BROWSE {&BROWSE-NAME} = cBgco.  
+    T-comprobante_rendicion.este_pago:BGCOLOR IN BROWSE {&BROWSE-NAME} = cFore.
+    T-comprobante_rendicion.este_pago:FGCOLOR IN BROWSE {&BROWSE-NAME} = cBgco.
+   END.
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE cierrarendicion wWin 
+PROCEDURE cierrarendicion :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+
+  DO TRANSACTION:
+      
+      RUN completar_auditoria.p ( OUTPUT T-Rendicion_hd.nro_usuario,
+                                  OUTPUT T-Rendicion_hd.fecha_grab,
+                                  OUTPUT T-Rendicion_hd.hora_grab,
+                                  OUTPUT T-Rendicion_hd.pc_name).
+ 
+      FOR EACH t-comprobante_rendicion:
+          FIND rinde WHERE rinde.rid = ROWID(t-comprobante_rendicion) NO-ERROR.
+          IF NOT AVAILABLE rinde THEN DELETE t-comprobante_rendicion.
+      END.
+
+      RUN cierrarendicion.p ( INPUT-OUTPUT TABLE T-Rendicion_hd,
+                              INPUT-OUTPUT TABLE T-comprobante_rendicion,
+                              INPUT-OUTPUT TABLE T-Caj_header,       
+                              INPUT-OUTPUT TABLE T-Caj_detalle,      
+                              INPUT-OUTPUT TABLE T-Caja-imputacion,  
+                              INPUT-OUTPUT TABLE T-Cheque,           
+                              INPUT-OUTPUT TABLE T-Valor
+                              ).
+
+          
+  END.
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE crear_caja wWin 
+PROCEDURE crear_caja :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+
+    DEFINE VARIABLE que_caja LIKE Caja.cdg_caja.
+
+    RUN getparametro_n.p (  INPUT  "DFNROCAJ", OUTPUT que_caja ).
+    FIND Caja WHERE Caja.cdg_caja = que_caja NO-LOCK.
+
+    FIND Administrador WHERE Administrador.cdg_cliente = v-cdg_administrador NO-LOCK.
+    FIND Familia_cliente OF Administrador NO-LOCK.
+
+    FIND FIRST Moneda WHERE Moneda.es_local NO-LOCK.
+ 
+    CREATE T-Caj_header.
+    BUFFER-COPY T-Rendicion_hd TO T-Caj_header
+        ASSIGN T-Caj_header.fecha           = T-Rendicion_hd.fch_rendicion
+               T-Caj_header.hora            = TIME
+               T-Caj_header.ultima_linea    = 0
+               T-Caj_header.importe         = T-Rendicion_hd.imp_imputado
+               T-Caj_header.emitir          = NO
+               T-Caj_header.cdg_caja        = Caja.cdg_caja
+               T-Caj_header.nro_cuenta      = Familia_cliente.nro_cuenta
+               T-Caj_header.observacion     = Administrador.cdg_cliente + "-" + Administrador.nom_cliente
+               T-Caj_header.nro_cliente     = Administrador.nro_cliente
+               T-Caj_header.tipo_mov        = "I"
+               T-Caj_header.nro_moneda      = Moneda.nro_moneda
+               T-Caj_header.cdg_comprobante = "RECIBCLI".
+
+    EMPTY TEMP-TABLE T-Caja-imputacion.
+    RUN crear_caja_imputacion.
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE crear_caja_imputacion wWin 
+PROCEDURE crear_caja_imputacion :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+
+    CREATE T-Caja-imputacion.
+    ASSIGN T-Caja-imputacion.nro_cuenta       = Familia_cliente.nro_cuenta
+           T-Caja-imputacion.nro_entidad      = Caja.nro_entidad
+           T-Caja-imputacion.nro_obra         = 0
+           T-Caja-imputacion.nro_transaccion  = T-Caj_header.nro_transaccion
+           T-Caja-imputacion.observacion      = ""
+           T-Caja-imputacion.valor            = T-Caj_header.importe.
+
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE disable_UI wWin  _DEFAULT-DISABLE
+PROCEDURE disable_UI :
+/*------------------------------------------------------------------------------
+  Purpose:     DISABLE the User Interface
+  Parameters:  <none>
+  Notes:       Here we clean-up the user-interface by deleting
+               dynamic widgets we have created and/or hide 
+               frames.  This procedure is usually called when
+               we are ready to "clean-up" after running.
+------------------------------------------------------------------------------*/
+  /* Delete the WINDOW we created */
+  IF SESSION:DISPLAY-TYPE = "GUI":U AND VALID-HANDLE(wWin)
+  THEN DELETE WIDGET wWin.
+  IF THIS-PROCEDURE:PERSISTENT THEN DELETE PROCEDURE THIS-PROCEDURE.
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE enable_UI wWin  _DEFAULT-ENABLE
+PROCEDURE enable_UI :
+/*------------------------------------------------------------------------------
+  Purpose:     ENABLE the User Interface
+  Parameters:  <none>
+  Notes:       Here we display/view/enable the widgets in the
+               user-interface.  In addition, OPEN all queries
+               associated with each FRAME and BROWSE.
+               These statements here are based on the "Other 
+               Settings" section of the widget Property Sheets.
+------------------------------------------------------------------------------*/
+
+  {&OPEN-QUERY-fMain}
+  GET FIRST fMain.
+  DISPLAY v-Pendiente v-importependiente v-hat v-cdg_cobrador v-fch_rendicion 
+          v-cdg_administrador v-dsc_administrador t-Cambio 
+      WITH FRAME fMain IN WINDOW wWin.
+  IF AVAILABLE T-Rendicion_hd THEN 
+    DISPLAY T-Rendicion_hd.cant_recibos T-Rendicion_hd.imp_imputado 
+      WITH FRAME fMain IN WINDOW wWin.
+  ENABLE b-acepta RECT-4 RECT-7 v-Pendiente v-importependiente v-hat 
+         v-cdg_cobrador t-Cambio b-cancela BROWSE-1 b-lista b-ninguno B-TODO 
+         bVer-2 
+      WITH FRAME fMain IN WINDOW wWin.
+  {&OPEN-BROWSERS-IN-QUERY-fMain}
+  VIEW wWin.
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE exitObject wWin 
+PROCEDURE exitObject :
+/*------------------------------------------------------------------------------
+  Purpose:  Window-specific override of this procedure which destroys 
+            its contents and itself.
+    Notes:  
+------------------------------------------------------------------------------*/
+
+  APPLY "CLOSE":U TO THIS-PROCEDURE.
+  RETURN.
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE initializeObject wWin 
+PROCEDURE initializeObject :
+/*------------------------------------------------------------------------------
+  Purpose:     Super Override
+  Parameters:  
+  Notes:       
+------------------------------------------------------------------------------*/
+
+  /* Code placed here will execute PRIOR to standard behavior. */
+
+  RUN SUPER.
+
+  /* Code placed here will execute AFTER standard behavior.    */
+
+  DEFINE VARIABLE lista AS CHARACTER.
+
+  DO WITH FRAME {&FRAME-NAME}:
+
+      lista = "[Indique Cobrador]|ZZZ".
+      v-cdg_cobrador:DELIMITER = "|".
+      FOR EACH Cobrador NO-LOCK BY Cobrador.nom_cobrador:
+          lista = lista + "|" + TRIM(Cobrador.nom_cobrador) + "|" + Cobrador.cdg_cobrador.
+      END.
+      v-cdg_cobrador:LIST-ITEM-PAIRS = lista.
+      v-cdg_cobrador = "ZZZ".
+      v-fch_rendicion = TODAY.
+      DISPLAY v-cdg_cobrador
+              v-fch_rendicion.
+      
+     
+
+  END.
+
+  
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE open-query wWin 
+PROCEDURE open-query :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+OPEN QUERY {&BROWSE-NAME} 
+    FOR EACH T-comprobante_rendicion OF T-Rendicion_hd NO-LOCK,
+      EACH sic.Fac_header OF T-comprobante_rendicion WHERE sic.Fac_header.anulado = FALSE NO-LOCK
+     BY sic.Fac_header.direccion 
+     BY sic.Fac_header.fecha.
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE poner_administrador wWin 
+PROCEDURE poner_administrador :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+ {findempresa.i}
+
+ CREATE T-Rendicion_hd.
+ ASSIGN T-Rendicion_hd.tipo = "1"
+        T-Rendicion_hd.cdg_empresa        = Empresa.cdg_empresa
+        T-Rendicion_hd.fch_rendicion      = v-fch_rendicion
+        T-Rendicion_hd.abierta            = YES
+        T-Rendicion_hd.canal              = USERID("sic")
+        T-Rendicion_hd.nro_administrador  = Administrador.nro_cliente
+        v-cdg_administrador = ""
+        v-dsc_administrador = "".
+        v-hat = 0.00.
+  /*FIND Cobrador OF Administrador NO-LOCK.*/
+  ASSIGN FRAME {&FRAME-NAME} v-cdg_cobrador.
+  FIND Cobrador WHERE Cobrador.cdg_cobrador = v-cdg_cobrador NO-LOCK NO-ERROR.
+  IF NOT AVAILABLE Cobrador
+  THEN DO:
+      MESSAGE "No existe cobrador"
+           VIEW-AS ALERT-BOX INFO BUTTONS OK.
+      DELETE t-rendicion_hd.
+      RETURN NO-APPLY.
+  END.
+
+  T-Rendicion_hd.nro_cobrador = Cobrador.nro_cobrador.
+  v-cdg_cobrador = Cobrador.cdg_cobrador.
+  DISPLAY v-cdg_cobrador WITH FRAME {&FRAME-NAME}. 
+  FOR EACH Cta_cte NO-LOCK
+                WHERE cta_cte.nro_administrador = administrador.nro_cliente
+                  AND Cta_cte.cdg_empresa     = empresa.cdg_empresa
+                  AND Cta_cte.debito <> Cta_cte.credito 
+                       BY cta_cte.fecha_emision:
+
+                /*IF cta_cte.fecha_vencimiento > p-vencimiento THEN NEXT.*/
+                FIND FIRST Tipocomprobante OF Cta_cte NO-LOCK.
+                FIND FIRST cliente OF cta_cte NO-LOCK. 
+                FIND fac_header WHERE 
+                    fac_header.cdg_empresa = cta_cte.cdg_empresa AND
+                    fac_header.tip_comprob = cta_cte.tip_comprob AND
+                    fac_header.prf_comprob = cta_cte.prf_comprob AND
+                    fac_header.nro_comprob = cta_cte.nro_comprob NO-LOCK.
+      CREATE T-comprobante_rendicion.
+      BUFFER-COPY fac_header TO T-comprobante_rendicion
+              ASSIGN T-comprobante_rendicion.este_pago = Cta_cte.debito - Cta_cte.credito.
+  END.
+
+  v-hat:SCREEN-VALUE IN FRAME {&FRAME-NAME} = STRING(Administrador.hat).
+  ASSIGN v-hat.
+  RUN poner_pendientes.
+  RUN open-query.
+  FIND FIRST T-comprobante_rendicion NO-ERROR.
+  IF AVAILABLE T-comprobante_rendicion 
+      THEN do:
+        browse-1:READ-ONLY = TRUE.
+        v-cdg_administrador:SENSITIVE IN FRAME {&FRAME-NAME} = NO.
+        v-fch_rendicion:SENSITIVE = FALSE.
+  /* FFFerver      t-Cambio = TRUE. */
+  END.
+  ELSE RUN borratodo.
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE poner_pendientes wWin 
+PROCEDURE poner_pendientes :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+ASSIGN v-pendiente = 0
+       v-importependiente = 0.
+
+  FOR EACH T-comprobante_rendicion , FIRST fac_header OF T-comprobante_rendicion:
+      ASSIGN v-pendiente = v-pendiente + 1
+             v-importependiente = v-importependiente + T-comprobante_rendicion.este_pago.
+  END.
+
+  DISPLAY v-importependiente
+          v-pendiente
+     WITH FRAME {&FRAME-NAME}.
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE poner_totales wWin 
+PROCEDURE poner_totales :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+DEFINE BUFFER bT-comprobante_rendicion FOR T-comprobante_rendicion.
+  FIND Cobrador OF T-Rendicion_hd NO-LOCK NO-ERROR.
+  v-cdg_cobrador = IF AVAILABLE Cobrador THEN Cobrador.cdg_cobrador ELSE "ZZZ".
+
+  ASSIGN T-Rendicion_hd.cant_recibos = 0
+         T-Rendicion_hd.imp_imputado = 0.
+  ASSIGN BROWSE {&BROWSE-NAME} T-comprobante_rendicion.este_pago.
+  FOR EACH rinde  , FIRST bt-comprobante_rendicion WHERE ROWID(bt-comprobante_rendicion) = rinde.rid , FIRST Fac_header  OF bT-comprobante_rendicion:
+
+      FIND Tipocomprobante OF Fac_header NO-LOCK.
+      
+      ASSIGN T-Rendicion_hd.cant_recibos = T-Rendicion_hd.cant_recibos + 1
+             T-Rendicion_hd.imp_imputado = T-Rendicion_hd.imp_imputado + 
+                                            bT-comprobante_rendicion.este_pago.
+  END.
+
+  DISPLAY T-Rendicion_hd.cant_recibos 
+          T-Rendicion_hd.imp_imputado
+          v-cdg_cobrador 
+          WITH FRAME {&FRAME-NAME}.
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE prinrendicion wWin 
+PROCEDURE prinrendicion :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+
+    /*=================================================================================*/
+    /*                     IMPRESION DE RENDICIONES                     */
+    /*=================================================================================*/
+    
+    
+    /*=================================================================================*/
+    /*                           VARIABLES, FRAMES, Y SUBMENUES                        */
+    /*=================================================================================*/
+    
+    DEFINE VARIABLE nt_lineas       AS INTEGER.
+    DEFINE VARIABLE total_chars     AS INTEGER.
+    DEFINE VARIABLE ancho_linea     AS INTEGER INITIAL 40.
+    DEFINE VARIABLE total_recibos   AS INTEGER.
+    DEFINE VARIABLE total_rendicion AS DECIMAL FORMAT "->>>,>>9.99 $".
+    DEFINE VARIABLE que_empresa     LIKE Empresa.nombre.
+    DEFINE VARIABLE fecha_lis       AS DATE.
+    DEFINE VARIABLE hora_lis        AS CHARACTER.
+    DEFINE VARIABLE titulo_det      AS CHARACTER FORMAT "X(40)".
+    DEFINE VARIABLE titulo_lis      AS CHARACTER FORMAT "X(40)".
+    DEFINE VARIABLE v-tipo          AS CHARACTER FORMAT "X(20)".
+    
+    DEFINE VARIABLE que_archivo     AS CHARACTER.
+    DEFINE VARIABLE p_printed       AS LOGICAL.
+    
+    DEFINE FRAME frm-titulo HEADER
+           que_empresa
+           titulo_lis AT 37
+           "Página:" AT 103 PAGE-NUMBER FORMAT ">>9" AT 111
+           SKIP  
+           fecha_lis       
+           hora_lis AT 103
+           SKIP
+           titulo_det AT 37  
+           SKIP(1)
+           WITH WIDTH 135 FRAME frm-titulo PAGE-TOP USE-TEXT STREAM-IO.
+        
+    FORM
+            Fac_header.tip_comprob     COLUMN-LABEL "Tip!Comp"
+            Fac_header.prf_comprob 
+            Fac_header.nro_comprob 
+            fac_header.codigo_cliente 
+            fac_header.nombre
+            fac_header.direccion
+            Fac_header.fecha 
+            Fac_header.mes     COLUMN-LABEL "Mes!Imp" 
+            T-comprobante_rendicion.este_pago FORMAT "->>>,>>9.99"
+            
+            WITH WIDTH 135 DOWN FRAME frm-listado USE-TEXT STREAM-IO .
+    
+    fecha_lis = TODAY.
+    hora_lis = STRING(TIME,"HH:MM:SS").
+    
+    FIND Cobrador OF T-Rendicion_hd NO-LOCK.
+    FIND Empresa OF T-Rendicion_hd.
+    que_empresa = Empresa.nombre.
+    
+    v-tipo = T-Rendicion_hd.tipo.
+    CASE T-Rendicion_hd.tipo:
+         WHEN "1" THEN v-tipo = "Recibos Cobrados".
+         WHEN "2" THEN v-tipo = "Recibos En Mora".
+         WHEN "3" THEN v-tipo = "Recibos de Baja".
+         WHEN "4" THEN v-tipo = "Recibos Devueltos".
+    END CASE.
+    
+    titulo_det =  Cobrador.cdg_cobrador + " " + Cobrador.nom_cobrador + " - " + v-tipo.
+    
+    titulo_lis = "Rendición de Cobradores Nro." + STRING(T-Rendicion_hd.nro_rendicion,"999999").
+    que_archivo = "C:\SIC-TEMP\prinrendicion.txt".
+    
+    OUTPUT TO VALUE(que_archivo) PAGED.
+    
+    FOR EACH T-comprobante_rendicion OF T-Rendicion_hd, FIRST fac_header OF T-comprobante_rendicion NO-LOCK, FIRST Cliente NO-LOCK OF fac_header:
+     FIND rinde WHERE ROWID(t-comprobante_rendicion) = rinde.rid NO-ERROR.
+     IF NOT AVAILABLE rinde THEN NEXT.
+        VIEW FRAME frm-titulo.
+    
+        DISPLAY
+            Fac_header.tip_comprob 
+            Fac_header.prf_comprob 
+            Fac_header.nro_comprob 
+            fac_header.codigo_cliente 
+            fac_header.nombre
+            fac_header.direccion
+            Fac_header.fecha 
+            Fac_header.mes 
+            T-comprobante_rendicion.este_pago
+
+            WITH FRAME frm-listado USE-TEXT STREAM-IO DOWN.
+            
+        DOWN WITH FRAME frm-listado.
+        
+        total_rendicion = total_rendicion + T-comprobante_rendicion.este_pago.
+        total_Recibos   = total_Recibos   + 1.
+    
+    END.
+    
+    
+    /*---------------------------------------------------------------------------------*/
+    /*                                       PIE                                       */
+    /*---------------------------------------------------------------------------------*/
+    
+    UNDERLINE
+            Fac_header.tip_comprob 
+            Fac_header.prf_comprob 
+            Fac_header.nro_comprob 
+            fac_header.codigo_cliente 
+            fac_header.nombre 
+            fac_header.direccion
+            Fac_header.fecha 
+            Fac_header.mes 
+            T-comprobante_rendicion.este_pago
+
+            WITH FRAME frm-listado USE-TEXT STREAM-IO DOWN.
+    
+    
+    DISPLAY
+        "<---  TOTAL  --->"   @ fac_header.nombre
+        total_Recibos   @ Fac_header.prf_comprob
+        total_rendicion @ T-comprobante_rendicion.este_pago
+        WITH DOWN FRAME frm-listado USE-TEXT STREAM-IO.
+        DOWN WITH DOWN FRAME frm-listado.
+    
+    UNDERLINE
+            Fac_header.tip_comprob 
+            Fac_header.prf_comprob 
+            Fac_header.nro_comprob 
+            fac_header.codigo_cliente 
+            fac_header.nombre
+            fac_header.direccion
+            Fac_header.fecha 
+            Fac_header.mes 
+            T-comprobante_rendicion.este_pago
+
+            WITH FRAME frm-listado USE-TEXT STREAM-IO DOWN.
+    
+    
+    /*=================================================================================*/
+    /*                                       FIN                                       */
+    /*=================================================================================*/
+    
+    OUTPUT CLOSE.
+    
+    RUN veresult.w ( INPUT que_archivo, INPUT 22 ).
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+

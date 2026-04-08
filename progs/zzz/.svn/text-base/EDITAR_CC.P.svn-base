@@ -1,0 +1,10 @@
+def var que_cli like cliente.cdg_cliente.
+repeat:
+prompt-for Cliente.cdg_cliente.
+FIND Cliente USING Cliente.cdg_cliente.
+display nom_cliente.
+FOR EACH Cta_cte OF Cliente:
+    DISPLAY tip_comprob nro_comprob nro_vencimiento debito.
+    update TIP_COMPROB FECHA_EMISION FECHA_VENCIMIENTO nro_comprob DEBITO CREDITO.
+end.
+end.    

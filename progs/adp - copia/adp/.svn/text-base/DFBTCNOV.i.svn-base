@@ -1,0 +1,19 @@
+DEFINE BUTTON BTN_CANCEL
+     LABEL "Ca&ncelar":L 
+     SIZE 10 BY 0.9 FONT 4.
+
+DEFINE BUTTON btn_LISTADOS
+     LABEL "&Imprimir":L 
+     SIZE 10 BY 0.9 FONT 4.
+
+DEFINE BUTTON btn_EXIT
+     LABEL "&Salir":L 
+     SIZE 10 BY 0.9 FONT 4.
+
+DEFINE BUTTON btn_TODAS
+     LABEL "&Todas":L 
+     SIZE 10 BY 0.9 FONT 4.
+
+DEFINE RECTANGLE rtn_botones
+       EDGE-PIXELS 2 GRAPHIC-EDGE  NO-FILL 
+       SIZE 70 BY 1.1.

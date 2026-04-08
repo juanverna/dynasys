@@ -1,0 +1,6 @@
+find first ficha.
+create memo-ficha.
+memo-ficha.num_ficha = ficha.num_ficha.
+memo-ficha.fch_alta = TODAY. 
+memo-ficha.cho_alta = string(time,"HH:MM:SS").
+update Memo-Ficha.observacion. 

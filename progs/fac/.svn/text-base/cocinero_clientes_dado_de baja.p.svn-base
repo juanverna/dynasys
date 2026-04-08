@@ -1,0 +1,20 @@
+
+    DEFINE BUFFER bcliente FOR cliente.
+    DEFINE VAR p-has_fecha AS DATE NO-UNDO.
+    DEFINE VAR p-des_fecha AS DATE NO-UNDO.
+    DEFINE VAR p-fecha AS DATE NO-UNDO.
+        p-fecha = 01/01/2009.
+    UPDATE p-fecha.
+        p-des_fecha = p-fecha.
+    p-has_fecha = 01/01/3000.
+
+    FOR EACH Contrato_hd 
+    WHERE ( Contrato_hd.rige_desde <= p-has_fecha  
+      AND Contrato_hd.rige_hasta >= p-des_fecha )
+      AND contrato_hd.estado = "A"
+      AND Contrato_hd.cant_periodos = 0  
+      AND not Contrato_hd.anulado and  contrato_hd.fecha_baja >= p-fecha BY contrato_hd.fecha_baja:
+    FIND cliente WHERE cliente.nro_cliente = contrato_hd.nro_cliente NO-LOCK.
+    FIND bcliente WHERE bcliente.nro_cliente = Cliente.nro_administrador NO-LOCK.
+    DISPLAY contrato_hd.fecha_baja bCliente.nom_cliente Cliente.nom_cliente contrato_hd.imp_total Contrato_hd.nro_contrato Contrato_hd.fecha_alta 
+        WITH STREAM-IO.

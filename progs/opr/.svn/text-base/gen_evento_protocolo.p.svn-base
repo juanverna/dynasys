@@ -1,0 +1,190 @@
+
+{resultados.i}
+{extrae.i}
+{findempresa.i}
+OUTPUT TO c:\dynasys10\logs\gen_evento_protocolo.log APPEND.
+
+DISPLAY "Fecha corrida" NOW.
+DEFINE VAR dd AS DATE.
+DEFINE VAR ldato AS LONGCHAR.
+DEFINE VAR retok AS LOGICAL.
+DEFINE VARIABLE rok LIKE tarea.nro_tarea NO-UNDO.
+DEFINE BUFFER bevento FOR evento.
+DEFINE VAR nro_tipo_evento_RL LIKE tipo_evento.nro_tipo_evento NO-UNDO.
+
+FIND tipo_evento WHERE tipo_evento.cdg_tipo_evento = "RL" NO-LOCK.
+nro_tipo_evento_RL = tipo_evento.nro_tipo_evento.
+RUN crea_evento_protocolo.p.
+FOR EACH evento_protocolo WHERE evento_protocolo.estado = "N" , 
+      evento OF evento_protocolo WHERE evento.frealizado < TODAY - 5 ,
+      cliente OF evento:
+      dd =  evento_protocolo.fecha_toma + 5.
+      IF WEEKDAY( dd ) = 1 THEN 
+            dd = dd + 1.
+      evento_protocolo.fecha_analisis = IF evento_protocolo.fecha_analisis = ? THEN dd ELSE evento_protocolo.fecha_analisis.
+      evento_protocolo.Analizo = IF evento_protocolo.Analizo = "" THEN "FS" ELSE evento_protocolo.Analizo.
+      evento_protocolo.estado = "P".
+      ldato = evento_protocolo.dato.
+      IF ldato <> "" THEN DO:
+          retOK = TEMP-TABLE resultados:READ-XML( "LONGCHAR" , 
+                       ldato, 
+                       "EMPTY", 
+                       ?, 
+                       ?, 
+                       ?, 
+                       ?).
+          FIND FIRST resultados WHERE resultados.valor1 = "" NO-ERROR.
+          IF AVAILABLE resultados THEN resultados.valor1 = string(RANDOM(5,20)).
+          retOK = TEMP-TABLE resultados:WRITE-XML("longchar", 
+                       ldato,
+                       FALSE, 
+                       ?, 
+                       ?, 
+                       YES, 
+                       YES). 
+          evento_protocolo.dato = ldato.
+      END.
+END.
+
+FOR EACH evento_protocolo WHERE evento_protocolo.estado = "P" OR evento_protocolo.estado = "I",
+     evento OF evento_protocolo WHERE evento.frealizado <> ? ,
+     cliente OF evento:
+     IF evento.frealizado < 06/01/2011 THEN NEXT.
+     /*verificar el libro y las tareas relacionadas*/
+    find restriccion no-lock where restriccion.cdg_restriccion = "LIBROT".
+    find cliente_restriccion where cliente_restriccion.nro_restriccion = restriccion.nro_restriccion and
+                                   cliente_restriccion.nro_cliente = evento.nro_cliente no-lock no-error.
+    if available cliente_restriccion AND cliente_restriccion.valor = "N" THEN DO:
+       /*crear el evento de "EC" del evento LT*/
+                FIND tipo_evento WHERE tipo_evento.cdg_tipo_evento = "EC" NO-LOCK.
+                FIND FIRST bevento WHERE bevento.nro_tipo_evento = tipo_evento.nro_tipo_evento AND NOT bevento.anulado AND
+                                        bevento.origen = "EVENTO" AND bevento.nro_identificacion = evento.nro_evento NO-ERROR.
+                IF NOT AVAILABLE bevento THEN DO:
+                    
+                    CREATE bevento.
+                    ASSIGN bevento.nro_evento = NEXT-VALUE(proximo_evento)
+                           bevento.nro_tipo_evento = tipo_evento.nro_tipo_evento
+                           bevento.fasignado = ?
+                           bevento.nro_identificacion = evento.nro_evento /*porque deviene directamente del evento*/
+                           bevento.origen = "EVENTO"
+                           bevento.nro_cliente = evento.nro_cliente
+                           bEvento.FCreado = TODAY
+                           bevento.periodo = YEAR(today) * 100 + MONTH(today)
+                           bevento.fmin  = TODAY
+                           bevento.fmax = TODAY + 20 /*fijo cualquier cosa se vera*/
+                           bevento.recurso = ""
+                           bevento.observacion = "Por la LT:" + string(evento.frealizado)
+                           bevento.duracion = 10
+                           bevento.turno = "**".
+                END.
+    END.
+    ELSE DO:
+      IF Evento.trae_libro THEN DO: 
+          FIND FIRST tarea WHERE tarea.cdg_tipotarea = "H" AND tarea.origen = "EVENTO" AND tarea.nro_identificacion = evento.nro_evento and
+                                         tarea.estado <> "D" NO-LOCK NO-ERROR.
+          IF NOT AVAILABLE tarea THEN DO: /*va por el camino largo*/
+              FIND FIRST tarea WHERE tarea.cdg_tipotarea = "J" AND tarea.origen = "EVENTO" AND tarea.nro_identificacion = evento.nro_evento AND 
+                                            tarea.estado <> "D" NO-LOCK NO-ERROR.
+              IF NOT AVAILABLE tarea THEN DO: /*me aseguro que no fue por el camino de la J*/
+                   FIND tarea WHERE tarea.cdg_tipotarea = "H" AND tarea.nro_identificacion = evento.nro_evento AND tarea.estado <> "D" NO-ERROR.
+                   IF NOT AVAILABLE tarea THEN DO:
+                       RUN crea_tarea.p( evento.nro_evento,evento.nro_cliente, "H" , "Origen EventoLT:" + STRING(evento.nro_evento),"Origen EventoLT:" + STRING(evento.nro_evento) , TODAY , "*" , OUTPUT rok ).
+                       FIND tarea WHERE tarea.nro_tarea = rok EXCLUSIVE-LOCK NO-ERROR.
+                       IF NOT AVAILABLE tarea THEN DO:
+                          DISPLAY "No se ha podido crear la tarea H para el evento" evento.nro_evento. 
+                          NEXT.
+                       END.
+                       tarea.datos-template = "EVENTOLT|" + STRING(evento_protocolo.nro_evento).
+                   END.
+              END.
+              ELSE DO: /*va por el camino largo*/
+                  FIND FIRST bevento WHERE bevento.origen = "TAREA" AND bevento.nro_identificacion = tarea.nro_tarea and
+                                            bevento.nro_tipo_evento = nro_tipo_evento_RL AND NOT bevento.anulado NO-LOCK NO-ERROR.
+                  IF AVAILABLE bevento THEN DO:
+                            IF bevento.frealizado <> ? THEN DO:
+                               FIND tarea WHERE tarea.cdg_tipotarea = "H" AND tarea.nro_identificacion = bevento.nro_evento AND tarea.estado <> "D" NO-ERROR.
+                               IF NOT AVAILABLE tarea THEN DO:
+                                   RUN crea_tarea.p( bevento.nro_evento,bevento.nro_cliente, "H" , "Origen EventoRL:" + STRING(bevento.nro_evento),"Origen EventoRL:" + STRING(bevento.nro_evento),TODAY,"*",OUTPUT rok).
+                                   FIND tarea WHERE tarea.nro_tarea = rok EXCLUSIVE-LOCK NO-ERROR.
+                                   IF NOT AVAILABLE tarea THEN DO:
+                                      DISPLAY "No se ha podido crear la tarea H para el evento" evento.nro_evento. 
+                                      NEXT.
+                                   END.
+                                   tarea.datos-template = "EVENTOLT|" + STRING(evento_protocolo.nro_evento).
+                               END.
+                            END.
+                   END.
+              
+              END.
+          END.
+      END.
+      /*ver si existen tareas J con tienelibro en falso y cerradas*/
+      ELSE DO:
+            FIND FIRST tarea WHERE tarea.cdg_tipotarea = "J" AND 
+                                        tarea.nro_evento = evento.nro_evento AND 
+                                        tarea.estado = "R" NO-ERROR.
+            
+            IF AVAILABLE tarea THEN DO:
+                /*creando el evento EC si no lo tiene*/
+            find restriccion no-lock where restriccion.cdg_restriccion = "LIBROT".
+            find cliente_restriccion where cliente_restriccion.nro_restriccion = restriccion.nro_restriccion and
+                                           cliente_restriccion.nro_cliente = evento.nro_cliente no-lock no-error.
+            if available cliente_restriccion OR NOT logical( extrae( "tienelibro", tarea.datos-template )) THEN DO:
+                FIND tipo_evento WHERE tipo_evento.cdg_tipo_evento = "EC" NO-LOCK.
+                FIND FIRST evento WHERE evento.nro_tipo_evento = tipo_evento.nro_tipo_evento AND NOT evento.anulado AND
+                                        evento.origen = "TAREA" AND evento.nro_identificacion = tarea.nro_tarea NO-ERROR.
+                IF NOT AVAILABLE evento THEN DO:
+                    
+                    CREATE evento.
+                    ASSIGN evento.nro_evento = NEXT-VALUE(proximo_evento)
+                           evento.nro_tipo_evento = tipo_evento.nro_tipo_evento
+                           evento.fasignado = ?
+                           evento.nro_identificacion = tarea.nro_tarea /*porque deviene de una tarea J*/
+                           evento.origen = "TAREA"
+                           evento.nro_cliente = tarea.nro_cliente
+                           Evento.FCreado = TODAY
+                           evento.periodo = YEAR(today) * 100 + MONTH(today)
+                           evento.fmin  = TODAY
+                           evento.fmax = TODAY + 20 /*fijo cualquier cosa se vera*/
+                           evento.recurso = ""
+                           evento.observacion = tarea.descripcion.
+                           evento.duracion = 15.
+                           tarea.destino = "EVENTO".
+                           tarea.nro_destino = evento.nro_evento.
+                           evento.turno = "**".
+                END.
+              END.
+            END.
+      END.
+      /*ver que evento RL se completaron y generar las H correspondientes*/
+    END.
+
+    FIND FIRST tarea WHERE tarea.cdg_tipotarea = "J" AND 
+                                tarea.nro_evento = evento.nro_evento AND 
+                                tarea.estado = "R" NO-LOCK NO-ERROR.
+    IF AVAILABLE tarea THEN DO:
+        /*FIND bevento WHERE bevento.nro_evento = tarea.nro_evento AND bevento.nro_tipo_evento = nro_tipo_evento_rl and
+             bevento.frealizado <> ? NO-ERROR.*/
+        FIND bevento WHERE bevento.origen = "TAREA" AND bevento.nro_identificacion = tarea.nro_tarea AND bevento.nro_tipo_evento = nro_tipo_evento_rl and
+             bevento.frealizado <> ? AND NOT bevento.anulado NO-ERROR.
+        IF AVAILABLE bevento THEN DO:
+            FIND FIRST tarea WHERE tarea.cdg_tipotarea = "H" AND tarea.origen = "EVENTO" AND tarea.nro_identificacion = bevento.nro_evento and
+                                     tarea.estado <> "D" NO-LOCK NO-ERROR.
+            IF NOT AVAILABLE tarea THEN DO:
+                RUN crea_tarea.p( bevento.nro_evento,bevento.nro_cliente, "H" , "Origen EventoRL:" + STRING(bevento.nro_evento),"EventoLT:" + STRING(evento.nro_evento), TODAY , "*" , OUTPUT rok).
+                FIND tarea WHERE tarea.nro_tarea = rok EXCLUSIVE-LOCK NO-ERROR.
+                IF NOT AVAILABLE tarea THEN DO:
+                            DISPLAY "No se ha podido crear la tarea H para el evento" evento.nro_evento. 
+                            NEXT.
+                END.
+                tarea.datos-template = "EVENTOLT|" + STRING(evento_protocolo.nro_evento).
+            END.
+        END.
+    END.
+  END.
+
+
+
+
+
+

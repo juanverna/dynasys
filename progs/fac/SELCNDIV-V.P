@@ -1,0 +1,16 @@
+/*==============================================================================*/
+/*                    SELECCION DE CONDICIONES IMPOSITIVAS                      */
+/*==============================================================================*/
+
+&GLOBAL-DEFINE TABLA           Condicion_impos
+&GLOBAL-DEFINE CODIGO          cdg_condiva
+&GLOBAL-DEFINE FORMATO-CODIGO  FORMAT ">>>>9"
+&GLOBAL-DEFINE NOMBRE          descripcion
+&GLOBAL-DEFINE FORMATO-NOMBRE  "X(35)"
+&GLOBAL-DEFINE TITULO-BROWSE   Seleccione la Condicion o ingrese nombre
+&GLOBAL-DEFINE TITULO-FRAME    Seleccion de Condiciones Impositivas
+&GLOBAL-DEFINE PROCESO         ACBRWCIV
+&GLOBAL-DEFINE CONDICION       Condicion_impos.compras_o_ventas = "V" 
+&GLOBAL-DEFINE ULT_REGISTRO    ult_condiva
+                   
+{SELBROWS.I}

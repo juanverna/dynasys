@@ -1,0 +1,4 @@
+def var n as integer.
+for each ficha where cdg_tipoemr = "4" while n < 10 by fch_alta descending:
+    n = n + 1.
+    abierta = yes.

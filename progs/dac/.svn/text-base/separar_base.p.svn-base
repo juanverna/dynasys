@@ -1,0 +1,22 @@
+/*===================================================================================================*/
+/*        DADO UN STRING DE ENTRADA, SEPARA DEL MISMO EL CODIGO DE BASE DEL CODIGO DE MOVIL          */     
+/*===================================================================================================*/
+
+ DEFINE INPUT  PARAMETER p-movil-area AS CHARACTER.  
+ DEFINE OUTPUT PARAMETER p-cdg_base   LIKE Base.cdg_base. 
+ DEFINE OUTPUT PARAMETER p-cdg_movil  LIKE Movil.cdg_movil.
+ 
+ DEFINE VARIABLE j                    AS INTEGER.
+ 
+ p-cdg_base = "".
+ j = 1.
+ 
+ DO WHILE INDEX("0123456789",SUBSTRING(p-movil-area,j,1)) = 0
+    AND j <= LENGTH(p-movil-area):
+    j = j + 1.
+ END.
+ 
+ IF j <> 1 THEN p-cdg_base = SUBSTRING(p-movil-area,1,j - 1).
+ p-cdg_movil = INTEGER(SUBSTRING(p-movil-area,j)) NO-ERROR.
+ IF ERROR-STATUS:ERROR THEN p-cdg_movil = ?.
+

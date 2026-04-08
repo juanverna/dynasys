@@ -1,0 +1,12 @@
+DEFINE VAR nn AS INT NO-UNDO.
+FIND tipo_evento WHERE tipo_evento.cdg_tipo_evento = "CO".
+FOR EACH evento WHERE evento.frealizado <> ? AND NOT evento.anulado
+AND evento.nro_tipo_evento = tipo_evento.nro_tipo_evento:
+nn = int(entry(2,evento.mobs,":")) NO-ERROR.
+IF ERROR-STATUS:ERROR THEN nn = -1.
+FIND rendicion_hd WHERE rendicion_hd.nro_rendicion = nn NO-ERROR.
+if AVAILABLE rendicion_hd THEN NEXT.
+FIND cliente OF evento.
+DISPLAY cdg_cliente evento.nro_evento cliente.nom_cliente.
+
+

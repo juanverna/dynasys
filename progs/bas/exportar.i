@@ -1,0 +1,5 @@
+OUTPUT TO "{1}".
+FOR EACH {2}:
+    EXPORT {2}.
+END.
+OUTPUT CLOSE.    

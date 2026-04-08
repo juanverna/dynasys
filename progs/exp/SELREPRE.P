@@ -1,0 +1,9 @@
+&GLOBAL-DEFINE TABLA           Representante
+&GLOBAL-DEFINE CODIGO          cdg_represente
+&GLOBAL-DEFINE NOMBRE          nom_represente
+&GLOBAL-DEFINE TITULO-BROWSE   Seleccione el Representante o ingrese nombre
+&GLOBAL-DEFINE TITULO-FRAME    Seleccion de Representantes
+&GLOBAL-DEFINE PROCESO         ACTREPRE
+&GLOBAL-DEFINE ULT_REGISTRO    ult_represente
+
+{SELBROWS.I}

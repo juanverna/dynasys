@@ -1,0 +1,13 @@
+{tiempo.i}
+DEFINE VAR aa AS CHAR FORMAT "X(20)".
+DEFINE VAR t AS INT.
+FOR EACH cliente:
+ IF NOT validahorario ( cliente.horario_de_atencion,FALSE ) THEN DO:
+aa = cliente.horario_de_atencion.
+t = INDEX(aa," a " ). 
+IF t <> 0 THEN aa = SUBSTR( aa, 1, t - 1 ) + "00:" + SUBSTR( aa, t + 3 ).
+IF length(ENTRY(2,aa,":")) < 4 THEN aa = aa + "00".
+UPDATE aa cliente.horario_de_atencion.
+END.
+END.
+

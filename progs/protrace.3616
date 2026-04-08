@@ -1,0 +1,79 @@
+=====================================================
+PROGRESS stack trace as of Thu Jun 01 08:23:37 2017
+=====================================================
+Startup parameters:
+-pf C:\Progress102\OpenEdge\startup.pf,-cpinternal ISO8859-1,-cpstream ISO8859-1,-cpcoll Spanish9,-cpcase Basic,-d dmy,-numsep 46,-numdec 44,(end .pf),-p largar.p,-db c:\bases\dynasys102,-ld sic,-T c:\temp,-basekey INI,-ininame c:\dynasys10\procs\dynasys10.ini,-s 200,-inp 8192,-nb 150,-l 4000,-bibufs 25,-q,-rr
+
+Exception code: C0000005 ACCESS_VIOLATION
+Fault address:  724031A0 01:000221A0 C:\Windows\system32\MFC42.DLL
+
+Registers:
+EAX:00000000
+EBX:0747AD8B
+ECX:00000000
+EDX:00000000
+ESI:02B25CF0
+EDI:02B25CF0
+CS:EIP:0023:724031A0
+SS:ESP:002B:0018F840  EBP:0018F8D0
+DS:002B  ES:002B  FS:0053  GS:002B
+Flags:00010246
+
+Call Stack:
+Address   Frame
+724031A0  00000000  Ordinal5981+0
+723F3687  00000000  Ordinal6374+2E
+723FA361  00000000  Ordinal1109+9D
+723FA2B9  00000000  Ordinal1578+40
+0749595A  00000000  DllUnregisterServer+3051E
+777362FA  00000000  gapfnScSendMessage+332
+77736D3A  00000000  GetThreadDesktop+D7
+777377C4  00000000  CharPrevW+138
+7773788A  00000000  DispatchMessageW+F
+10433D04  00000000  rcUpdateFieldMap+5FFF4
+
+
+** ABL Stack Trace **
+
+--> c-logon.w (.\seg\c-logon.r) at line 353
+    rundynasys-noquit.p (.\bas\rundynasys-noquit.r) at line 54
+
+** Persistent procedures/Classes **
+
+//=====================================================
+PROGRESS stack trace as of Thu Jun 01 08:23:37 2017
+//=====================================================
+Exception code: C0000005 ACCESS_VIOLATION
+Fault address:  724031A0 01:000221A0 C:\Windows\system32\MFC42.DLL
+
+Registers:
+EAX:00000000
+EBX:0747AD8B
+ECX:00000000
+EDX:00000000
+ESI:02B25CF0
+EDI:02B25CF0
+CS:EIP:0023:724031A0
+SS:ESP:002B:0018FB18  EBP:0018F8D0
+DS:002B  ES:002B  FS:0053  GS:002B
+Flags:00010246
+
+Call Stack:
+Address   Frame
+724031A0  0018FB28  Ordinal5981+0
+1024643F  0018FB30  pam_get_item+4145F
+100503CD  0018FB34  dbut_utclex+4F7D
+10020B79  0018FBB8  0001:0001FB79 C:\Progress102\OpenEdge\bin\prow32.dll
+77D70402  0018FBBC  LdrGetProcedureAddressEx+197
+77D6E232  0018FC2C  RtlFreeAnsiString+6C
+77D72FDD  0018FC30  RtlQueryPerformanceCounter+689
+77D72BD5  0018FC50  RtlQueryPerformanceCounter+281
+77D6E728  0018FC64  RtlDeleteBoundaryDescriptor+1B
+77D6E6FF  0018FC74  RtlMultiByteToUnicodeN+11A
+771B0502  0018FC8C  CreateSemaphoreExA+4B
+771BD1BF  0018FCAC  CreateSemaphoreA+1D
+1007744C  0018FF88  ProStartup+1C
+7719336A  0018FF94  BaseThreadInitThunk+12
+77D79902  0018FFD4  RtlInitializeExceptionChain+63
+77D798D5  0018FFEC  RtlInitializeExceptionChain+36
+

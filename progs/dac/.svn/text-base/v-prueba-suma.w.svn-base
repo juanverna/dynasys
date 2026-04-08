@@ -1,0 +1,737 @@
+&ANALYZE-SUSPEND _VERSION-NUMBER UIB_v8r12 GUI
+&ANALYZE-RESUME
+&Scoped-define WINDOW-NAME CURRENT-WINDOW
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CUSTOM _DEFINITIONS V-table-Win 
+/*------------------------------------------------------------------------
+
+  File:
+
+  Description: from VIEWER.W - Template for SmartViewer Objects
+
+  Input Parameters:
+      <none>
+
+  Output Parameters:
+      <none>
+
+------------------------------------------------------------------------*/
+/*          This .W file was created with the Progress UIB.             */
+/*----------------------------------------------------------------------*/
+
+/* Create an unnamed pool to store all the widgets created 
+     by this procedure. This is a good default which assures
+     that this procedure's triggers and internal procedures 
+     will execute in this procedure's storage, and that proper
+     cleanup will occur on deletion of the procedure. */
+
+CREATE WIDGET-POOL.
+
+/* ***************************  Definitions  ************************** */
+
+/* Parameters Definitions ---                                           */
+
+/* Local Variable Definitions ---                                       */
+
+DEFINE VARIABLE v-idsesion AS CHARACTER.
+DEFINE VARIABLE v-clavesesion AS CHARACTER.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-PREPROCESSOR-BLOCK 
+
+/* ********************  Preprocessor Definitions  ******************** */
+
+&Scoped-define PROCEDURE-TYPE SmartViewer
+
+&Scoped-define ADM-SUPPORTED-LINKS Record-Source,Record-Target,TableIO-Target
+
+/* Name of first Frame and/or Browse and/or first Query                 */
+&Scoped-define FRAME-NAME F-Main
+
+/* Standard List Definitions                                            */
+&Scoped-Define ENABLED-OBJECTS RECT-1 v-estado d-idsesion d-clavesesion ~
+v-resultado v-valor btn_logear btn_ver 
+&Scoped-Define DISPLAYED-OBJECTS v-estado d-idsesion d-clavesesion ~
+v-resultado v-valor 
+
+/* Custom List Definitions                                              */
+/* ADM-CREATE-FIELDS,ADM-ASSIGN-FIELDS,List-3,List-4,List-5,List-6      */
+
+/* _UIB-PREPROCESSOR-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _XFTR "Foreign Keys" V-table-Win _INLINE
+/* Actions: ? adm/support/keyedit.w ? ? ? */
+/* STRUCTURED-DATA
+<KEY-OBJECT>
+THIS-PROCEDURE
+</KEY-OBJECT>
+<FOREIGN-KEYS>
+</FOREIGN-KEYS> 
+<EXECUTING-CODE>
+**************************
+* Set attributes related to FOREIGN KEYS
+*/
+RUN set-attribute-list (
+    'Keys-Accepted = "",
+     Keys-Supplied = ""':U).
+/**************************
+</EXECUTING-CODE> */   
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+/* ***********************  Control Definitions  ********************** */
+
+
+/* Definitions of handles for OCX Containers                            */
+DEFINE VARIABLE CtrlFrame AS WIDGET-HANDLE NO-UNDO.
+DEFINE VARIABLE chCtrlFrame AS COMPONENT-HANDLE NO-UNDO.
+DEFINE VARIABLE CtrlFrame-2 AS WIDGET-HANDLE NO-UNDO.
+DEFINE VARIABLE chCtrlFrame-2 AS COMPONENT-HANDLE NO-UNDO.
+
+/* Definitions of the field level widgets                               */
+DEFINE BUTTON btn_logear 
+     LABEL "&Login" 
+     SIZE 29 BY 1.12.
+
+DEFINE BUTTON btn_ver 
+     LABEL "&Ver" 
+     SIZE 29 BY 1.12.
+
+DEFINE VARIABLE v-resultado AS CHARACTER 
+     VIEW-AS EDITOR SCROLLBAR-VERTICAL LARGE
+     SIZE 63 BY 4.31
+     BGCOLOR 15 FGCOLOR 9  NO-UNDO.
+
+DEFINE VARIABLE d-clavesesion AS CHARACTER FORMAT "X(256)":U 
+     LABEL "Clave" 
+     VIEW-AS FILL-IN 
+     SIZE 14 BY 1 NO-UNDO.
+
+DEFINE VARIABLE d-idsesion AS CHARACTER FORMAT "X(256)":U 
+     LABEL "Id" 
+     VIEW-AS FILL-IN 
+     SIZE 14 BY 1 NO-UNDO.
+
+DEFINE VARIABLE v-estado AS CHARACTER FORMAT "X(256)":U 
+     LABEL "Estado" 
+     VIEW-AS FILL-IN NATIVE 
+     SIZE 63.29 BY 1
+     BGCOLOR 15 FGCOLOR 9  NO-UNDO.
+
+DEFINE VARIABLE v-valor AS CHARACTER FORMAT "X(256)":U 
+     LABEL "Valor" 
+     VIEW-AS FILL-IN 
+     SIZE 63 BY 1 NO-UNDO.
+
+DEFINE RECTANGLE RECT-1
+     EDGE-PIXELS 2 GRAPHIC-EDGE  NO-FILL 
+     SIZE 82 BY 14.
+
+
+/* ************************  Frame Definitions  *********************** */
+
+DEFINE FRAME F-Main
+     v-estado AT ROW 3.15 COL 10 COLON-ALIGNED
+     d-idsesion AT ROW 4.77 COL 10 COLON-ALIGNED
+     d-clavesesion AT ROW 4.77 COL 31 COLON-ALIGNED
+     v-resultado AT ROW 6.12 COL 12 NO-LABEL
+     v-valor AT ROW 10.96 COL 10 COLON-ALIGNED
+     btn_logear AT ROW 13.12 COL 12
+     btn_ver AT ROW 13.12 COL 45
+     RECT-1 AT ROW 1 COL 1
+    WITH 1 DOWN NO-BOX KEEP-TAB-ORDER OVERLAY 
+         SIDE-LABELS NO-UNDERLINE THREE-D 
+         AT COL 1 ROW 1 SCROLLABLE .
+
+
+/* *********************** Procedure Settings ************************ */
+
+&ANALYZE-SUSPEND _PROCEDURE-SETTINGS
+/* Settings for THIS-PROCEDURE
+   Type: SmartViewer
+   Allow: Basic,DB-Fields
+   Frames: 1
+   Add Fields to: EXTERNAL-TABLES
+   Other Settings: PERSISTENT-ONLY COMPILE
+ */
+
+/* This procedure should always be RUN PERSISTENT.  Report the error,  */
+/* then cleanup and return.                                            */
+IF NOT THIS-PROCEDURE:PERSISTENT THEN DO:
+  MESSAGE "{&FILE-NAME} should only be RUN PERSISTENT."
+          VIEW-AS ALERT-BOX ERROR BUTTONS OK.
+  RETURN.
+END.
+
+&ANALYZE-RESUME _END-PROCEDURE-SETTINGS
+
+/* *************************  Create Window  ************************** */
+
+&ANALYZE-SUSPEND _CREATE-WINDOW
+/* DESIGN Window definition (used by the UIB) 
+  CREATE WINDOW V-table-Win ASSIGN
+         HEIGHT             = 14.65
+         WIDTH              = 88.29.
+/* END WINDOW DEFINITION */
+                                                                        */
+&ANALYZE-RESUME
+
+
+/* ***************  Runtime Attributes and UIB Settings  ************** */
+
+&ANALYZE-SUSPEND _RUN-TIME-ATTRIBUTES
+/* SETTINGS FOR WINDOW V-table-Win
+  VISIBLE,,RUN-PERSISTENT                                               */
+/* SETTINGS FOR FRAME F-Main
+   NOT-VISIBLE Size-to-Fit                                              */
+ASSIGN 
+       FRAME F-Main:SCROLLABLE       = FALSE
+       FRAME F-Main:HIDDEN           = TRUE.
+
+/* _RUN-TIME-ATTRIBUTES-END */
+&ANALYZE-RESUME
+
+
+/* Setting information for Queries and Browse Widgets fields            */
+
+&ANALYZE-SUSPEND _QUERY-BLOCK FRAME F-Main
+/* Query rebuild information for FRAME F-Main
+     _Options          = "NO-LOCK"
+     _Query            is NOT OPENED
+*/  /* FRAME F-Main */
+&ANALYZE-RESUME
+
+ 
+
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CUSTOM _INCLUDED-LIB V-table-Win 
+/* ************************* Included-Libraries *********************** */
+
+{src/adm/method/viewer.i}
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+
+/* **********************  Create OCX Containers  ********************** */
+
+&ANALYZE-SUSPEND _CREATE-DYNAMIC
+
+&IF "{&OPSYS}" = "WIN32":U AND "{&WINDOW-SYSTEM}" NE "TTY":U &THEN
+
+CREATE CONTROL-FRAME CtrlFrame ASSIGN
+       FRAME        = FRAME F-Main:HANDLE
+       ROW          = 12.58
+       COLUMN       = 4
+       HEIGHT       = 1.46
+       WIDTH        = 5.43
+       HIDDEN       = yes
+       SENSITIVE    = yes.
+
+CREATE CONTROL-FRAME CtrlFrame-2 ASSIGN
+       FRAME        = FRAME F-Main:HANDLE
+       ROW          = 13.12
+       COLUMN       = 77
+       HEIGHT       = 1.08
+       WIDTH        = 4
+       HIDDEN       = yes
+       SENSITIVE    = yes.
+
+PROCEDURE adm-create-controls:
+      CtrlFrame:NAME = "CtrlFrame":U .
+/* CtrlFrame OCXINFO:CREATE-CONTROL from: {48E59293-9880-11CF-9754-00AA00C00908} type: inetihs */
+      CtrlFrame-2:NAME = "CtrlFrame-2":U .
+/* CtrlFrame-2 OCXINFO:CREATE-CONTROL from: {F0B88A90-F5DA-11CF-B545-0020AF6ED35A} type: PSTimer */
+      CtrlFrame:MOVE-AFTER(v-valor:HANDLE IN FRAME F-Main).
+      CtrlFrame-2:MOVE-AFTER(btn_ver:HANDLE IN FRAME F-Main).
+
+END PROCEDURE.
+
+&ENDIF
+
+&ANALYZE-RESUME /* End of _CREATE-DYNAMIC */
+
+
+/* ************************  Control Triggers  ************************ */
+
+&Scoped-define SELF-NAME btn_logear
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL btn_logear V-table-Win
+ON CHOOSE OF btn_logear IN FRAME F-Main /* Login */
+DO:
+   RUN iniciar_sesion.
+   
+   /* Poner a trabajar el TIMER !!!!!!!!!!! */
+   
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME btn_ver
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL btn_ver V-table-Win
+ON CHOOSE OF btn_ver IN FRAME F-Main /* Ver */
+DO:
+  
+  RUN get_lista_incidentes.
+  
+  /*
+  chctrlframe:inetihs:URL = "http://devofria2000/Calculador/Sumar.asp?Valor1=" 
+                             + v-suma1 + "&Valor2=" + v-suma2.
+  chctrlframe:inetihs:URL = "file://d:\desa\dac\r3.8\ihs\xml\ingresoclaverecurso.xml".
+
+  chctrlframe:inetihs:URL = 
+      "http://devihsawww/infoemerdatos/mensajesrecurso.asp?idsesion=" + v-idsesion +
+                          "&clavesesion=" + v-clavesesion.
+  
+     message "puso URL:" "http://devihsawww/infoemerdatos/mensajesrecurso.asp?idsesion=" + v-idsesion +
+                          "&clavesesion=" + v-clavesesion
+        view-as alert-box message.
+
+  v-resultado = chctrlframe:inetihs:openURL.
+
+  message "recupera el url" view-as alert-box message.
+  
+  RUN getvalor.p ( INPUT v-resultado,
+                   INPUT "Mensaje",
+                   INPUT 1,
+                   OUTPUT v-valor ).
+                    
+  DISPLAY v-resultado 
+          v-valor
+          WITH FRAME  {&FRAME-NAME}.
+
+  */
+
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME CtrlFrame
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL CtrlFrame V-table-Win
+PROCEDURE CtrlFrame.inetihs.StateChanged .
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  Required for OCX.
+    State
+  Notes:       
+------------------------------------------------------------------------------*/
+
+DEFINE INPUT PARAMETER p-State AS INTEGER NO-UNDO.
+
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&UNDEFINE SELF-NAME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CUSTOM _MAIN-BLOCK V-table-Win 
+
+
+/* ***************************  Main Block  *************************** */
+
+  &IF DEFINED(UIB_IS_RUNNING) <> 0 &THEN          
+    RUN dispatch IN THIS-PROCEDURE ('initialize':U).        
+  &ENDIF         
+  
+  /************************ INTERNAL PROCEDURES ********************/
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+/* **********************  Internal Procedures  *********************** */
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE adm-row-available V-table-Win _ADM-ROW-AVAILABLE
+PROCEDURE adm-row-available :
+/*------------------------------------------------------------------------------
+  Purpose:     Dispatched to this procedure when the Record-
+               Source has a new row available.  This procedure
+               tries to get the new row (or foriegn keys) from
+               the Record-Source and process it.
+  Parameters:  <none>
+------------------------------------------------------------------------------*/
+
+  /* Define variables needed by this internal procedure.             */
+  {src/adm/template/row-head.i}
+
+  /* Process the newly available records (i.e. display fields,
+     open queries, and/or pass records on to any RECORD-TARGETS).    */
+  {src/adm/template/row-end.i}
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE contar_veces V-table-Win 
+PROCEDURE contar_veces :
+/*------------------------------------------------------------------------------
+  Purpose: DADO UN VALOR DE DATO DETERMINADO, CUENTA LA CANTIDAD DE OCURRENCIAS DEL MISMO    
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+    
+    DEFINE INPUT  PARAMETER p-cadena    AS CHARACTER.
+    DEFINE INPUT  PARAMETER p-rotulo    AS CHARACTER.
+    DEFINE OUTPUT PARAMETER p-jotaesima AS INTEGER.
+    
+    DEFINE VARIABLE p1                  AS INTEGER.
+    DEFINE VARIABLE p2                  AS INTEGER.
+    DEFINE VARIABLE k                   AS INTEGER.
+    DEFINE VARIABLE straux              AS CHARACTER.
+    
+          /* Averiguamos la posicion de comienzo del valor en el string de entrada */
+    
+    straux = p-cadena.
+    p-jotaesima = 0.
+    DO WHILE straux <> "":
+        p1 = INDEX(straux,"<" + p-rotulo + ">").
+        IF p1 <> 0 
+        THEN DO:
+             p2 = INDEX(straux,"</" + p-rotulo + ">").
+             straux = SUBSTRING(straux,p2 + LENGTH("</" + p-rotulo + ">")).
+             p-jotaesima = p-jotaesima + 1.
+        END.
+        ELSE DO:
+             straux = "".
+        END.     
+    END.
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE control_load V-table-Win _CONTROL-LOAD
+PROCEDURE control_load :
+/*------------------------------------------------------------------------------
+  Purpose:     Load the OCXs    
+  Parameters:  <none>
+  Notes:       Here we load, initialize and make visible the 
+               OCXs in the interface.                        
+------------------------------------------------------------------------------*/
+
+&IF "{&OPSYS}" = "WIN32":U AND "{&WINDOW-SYSTEM}" NE "TTY":U &THEN
+DEFINE VARIABLE UIB_S    AS LOGICAL    NO-UNDO.
+DEFINE VARIABLE OCXFile  AS CHARACTER  NO-UNDO.
+
+OCXFile = SEARCH( "v-prueba-suma.wrx":U ).
+IF OCXFile = ? THEN
+  OCXFile = SEARCH(SUBSTRING(THIS-PROCEDURE:FILE-NAME, 1,
+                     R-INDEX(THIS-PROCEDURE:FILE-NAME, ".":U), "CHARACTER":U) + "wrx":U).
+
+IF OCXFile <> ? THEN
+DO:
+  ASSIGN
+    chCtrlFrame = CtrlFrame:COM-HANDLE
+    UIB_S = chCtrlFrame:LoadControls( OCXFile, "CtrlFrame":U)
+    chCtrlFrame-2 = CtrlFrame-2:COM-HANDLE
+    UIB_S = chCtrlFrame-2:LoadControls( OCXFile, "CtrlFrame-2":U)
+  .
+  RUN DISPATCH IN THIS-PROCEDURE("initialize-controls":U) NO-ERROR.
+END.
+ELSE MESSAGE "v-prueba-suma.wrx":U SKIP(1)
+             "The binary control file could not be found. The controls cannot be loaded."
+             VIEW-AS ALERT-BOX TITLE "Controls Not Loaded".
+
+&ENDIF
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE disable_UI V-table-Win _DEFAULT-DISABLE
+PROCEDURE disable_UI :
+/*------------------------------------------------------------------------------
+  Purpose:     DISABLE the User Interface
+  Parameters:  <none>
+  Notes:       Here we clean-up the user-interface by deleting
+               dynamic widgets we have created and/or hide 
+               frames.  This procedure is usually called when
+               we are ready to "clean-up" after running.
+------------------------------------------------------------------------------*/
+  /* Hide all frames. */
+  HIDE FRAME F-Main.
+  IF THIS-PROCEDURE:PERSISTENT THEN DELETE PROCEDURE THIS-PROCEDURE.
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE get_lista_incidentes V-table-Win 
+PROCEDURE get_lista_incidentes :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+
+  DEFINE VARIABLE n-mensajes AS INTEGER.
+  DEFINE VARIABLE j-mensaje  AS INTEGER.
+  
+  DEFINE VARIABLE v-mensaje AS CHARACTER.
+
+  RUN poner_estado ( INPUT "Recuperando lista de incidentes...." ).
+
+  RUN get_pagina ( INPUT "mensajesrecurso" , INPUT "", OUTPUT v-resultado).
+
+  RUN contar_veces ( INPUT v-resultado,
+                     INPUT "MensajeRecurso",
+                     OUTPUT n-mensajes).
+
+      MESSAGE "Mensajes:" STRING(n-mensajes)
+              VIEW-AS ALERT-BOX MESSAGE.
+  DO j-mensaje = 1 TO n-mensajes:
+   
+     RUN get_valor  ( INPUT v-resultado,
+                      INPUT "MensajeRecurso",
+                      INPUT j-mensaje,
+                      OUTPUT v-mensaje ).
+                      
+     MESSAGE v-mensaje VIEW-AS ALERT-BOX MESSAGE TITLE STRING(j-mensaje).                 
+                      
+  END.
+
+/*
+  RUN get_valor  ( INPUT v-resultado,
+                   INPUT "MensajeRecurso",
+                   INPUT 1,
+                   OUTPUT v-idsesion ).
+
+  RUN get_valor  ( INPUT v-resultado,
+                   INPUT "Clavesesion",
+                   INPUT 1,
+                   OUTPUT v-clavesesion ).
+
+  ASSIGN
+     d-idsesion = v-idsesion
+     d-clavesesion = v-clavesesion.
+                    
+  DISPLAY v-resultado 
+          v-valor
+          d-idsesion
+          d-clavesesion          
+          WITH FRAME  {&FRAME-NAME}.
+
+  RUN poner_estado ( INPUT "SESION INICIADA" ).
+*/
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE get_pagina V-table-Win 
+PROCEDURE get_pagina :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+
+  DEFINE INPUT PARAMETER   nombre_pagina       AS CHARACTER.
+  DEFINE INPUT PARAMETER   parametros_pagina   AS CHARACTER.
+  DEFINE OUTPUT PARAMETER  p-resultado         AS CHARACTER.
+  
+  DEFINE VARIABLE x-url AS CHARACTER.
+
+  x-url = "file://d:\desa\dac\r3.8\ihs\xml\" + nombre_pagina + ".xml" .
+  IF parametros_pagina <> ""
+     THEN x-url = x-url + "?" + parametros_pagina.
+
+  chctrlframe:inetihs:URL = x-url.
+
+  p-resultado = chctrlframe:inetihs:openURL.
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE get_valor V-table-Win 
+PROCEDURE get_valor :
+/*------------------------------------------------------------------------------
+  Purpose: DADO UN VALOR DE DATO DETERMINADO, DEVUELVE EL VALOR ASOCIADO    
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+
+    DEFINE INPUT  PARAMETER p-cadena    AS CHARACTER.
+    DEFINE INPUT  PARAMETER p-rotulo    AS CHARACTER.
+    DEFINE INPUT  PARAMETER p-jotaesima AS INTEGER.
+    DEFINE OUTPUT PARAMETER p-valor     AS CHARACTER.
+    
+    DEFINE VARIABLE pos-start           AS INTEGER.
+    DEFINE VARIABLE pos-valor           AS INTEGER.
+    DEFINE VARIABLE len-valor           AS INTEGER.
+    DEFINE VARIABLE p1                  AS INTEGER.
+    DEFINE VARIABLE p2                  AS INTEGER.
+    DEFINE VARIABLE k                   AS INTEGER.
+    DEFINE VARIABLE straux              AS CHARACTER.
+    
+          /* Averiguamos la posicion de comienzo del valor en el string de entrada */
+    
+    straux = p-cadena.
+    DO k = 1 TO p-jotaesima - 1:
+        p1 = INDEX(straux,"<" + p-rotulo + ">").
+        IF p1 <> 0 
+        THEN DO:
+             p2 = INDEX(straux,"</" + p-rotulo + ">").
+             straux = SUBSTRING(straux,p2 + LENGTH("</" + p-rotulo + ">")).
+        END.
+        ELSE DO:
+             straux = "".
+        END.     
+    END.
+    
+    p1 = INDEX(straux,"<" + p-rotulo + ">").
+    IF p1 <> 0
+    THEN DO:
+       p2 = INDEX(straux,"</" + p-rotulo + ">").
+       IF p2 <> 0
+       THEN DO:
+            pos-valor = p1 + LENGTH("<" + p-rotulo + ">").
+            len-valor = p2 - pos-valor.
+            p-valor = SUBSTRING(straux,pos-valor,len-valor).
+       END.
+       ELSE DO:
+            p-valor = ?.
+       END.      
+    END.
+    ELSE DO:
+       p-valor = ?.
+    END.   
+
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE iniciar_sesion V-table-Win 
+PROCEDURE iniciar_sesion :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+
+  RUN poner_estado ( INPUT "Iniciando sesion...." ).
+
+  /*
+  chctrlframe:inetihs:URL = 
+  "http://devihsawww/infoemerdatos/ingresoclaverecurso.asp?tiporadio=rcdmovil&claverecurso=31022010".
+  */
+
+  chctrlframe:inetihs:URL = "file://d:\desa\dac\r3.8\ihs\xml\ingresoclaverecurso.xml".
+
+  v-resultado = chctrlframe:inetihs:openURL.
+  
+  RUN getvalor.p ( INPUT v-resultado,
+                   INPUT "Idsesion",
+                   INPUT 1,
+                   OUTPUT v-idsesion ).
+
+  RUN getvalor.p ( INPUT v-resultado,
+                   INPUT "Clavesesion",
+                   INPUT 1,
+                   OUTPUT v-clavesesion ).
+
+  ASSIGN
+     d-idsesion = v-idsesion
+     d-clavesesion = v-clavesesion.
+                    
+  DISPLAY v-resultado 
+          v-valor
+          d-idsesion
+          d-clavesesion          
+          WITH FRAME  {&FRAME-NAME}.
+
+  RUN poner_estado ( INPUT "SESION INICIADA" ).
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE poner_estado V-table-Win 
+PROCEDURE poner_estado :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+
+  DEFINE INPUT PARAMETER p-estado AS CHARACTER.
+  
+  v-estado = p-estado.
+  DISPLAY v-estado
+          WITH FRAME {&FRAME-NAME}.
+
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE send-records V-table-Win _ADM-SEND-RECORDS
+PROCEDURE send-records :
+/*------------------------------------------------------------------------------
+  Purpose:     Send record ROWID's for all tables used by
+               this file.
+  Parameters:  see template/snd-head.i
+------------------------------------------------------------------------------*/
+
+  /* SEND-RECORDS does nothing because there are no External
+     Tables specified for this SmartViewer, and there are no
+     tables specified in any contained Browse, Query, or Frame. */
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE state-changed V-table-Win 
+PROCEDURE state-changed :
+/* -----------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+-------------------------------------------------------------*/
+  DEFINE INPUT PARAMETER p-issuer-hdl AS HANDLE    NO-UNDO.
+  DEFINE INPUT PARAMETER p-state      AS CHARACTER NO-UNDO.
+
+  CASE p-state:
+      /* Object instance CASEs can go here to replace standard behavior
+         or add new cases. */
+      {src/adm/template/vstates.i}
+  END CASE.
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+

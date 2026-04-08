@@ -1,0 +1,7 @@
+
+CREATE Hst_ficha.
+BUFFER-COPY Ficha TO Hst_ficha
+           ASSIGN Hst_ficha.fch_modificacion = TODAY
+                  Hst_ficha.hor_modificacion = TIME
+                  Hst_ficha.hms_modificacion = STRING(TIME,"HH:MM:SS")
+                  Hst_ficha.cdg_usuario = USERID("despacho").

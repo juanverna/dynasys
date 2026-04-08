@@ -1,0 +1,1157 @@
+/*=======================================================================================*/
+/*           PROGRAMA: GENERACION INTERFACES MCI                                         */
+/*           AUTOR:    EVANGELINA OTARAN                                                 */
+/*           FECHA:    MAYO 2003                                                         */
+/*=======================================================================================*/
+
+DEFINE VAR des_fecha AS DATE INIT 07/02/03.                  
+DEFINE VAR has_fecha AS DATE INIT 07/02/03.                
+DEFINE VAR cempresa  LIKE Empresa.cdg_empresa INIT "M". 
+
+
+
+
+/* DEFINE INPUT PARAMETER des_fecha AS DATE.                  */
+/* DEFINE INPUT PARAMETER has_fecha AS DATE.                  */
+/* DEFINE INPUT PARAMETER cempresa  LIKE Empresa.cdg_empresa. */
+
+FUNCTION convierte RETURNS CHARACTER (INPUT parm1 AS DECIMAL,
+                                      INPUT parm2 AS CHARACTER) FORWARD.    
+
+{VRSHARED.I "NEW"}
+
+DEFINE VARIABLE IMPIVI       AS DECIMAL.
+DEFINE VARIABLE IMPIVN       AS DECIMAL.
+DEFINE VARIABLE IMPGRA       AS DECIMAL.
+DEFINE VARIABLE IMPNGR       AS DECIMAL.
+DEFINE VARIABLE IMPEIV       AS DECIMAL.
+DEFINE VARIABLE IMPEIB       AS DECIMAL.
+DEFINE VARIABLE IMPBON       AS DECIMAL.
+DEFINE VARIABLE GRAPIV       AS DECIMAL.
+DEFINE VARIABLE codgen       AS INTEGER.
+DEFINE VARIABLE sig          AS INTEGER INITIAL 1.
+DEFINE VARIABLE xx           AS DECIMAL.
+DEFINE VARIABLE archivo      AS CHARACTER FORMAT "x(45)".
+DEFINE VARIABLE que_archivo  AS CHARACTER FORMAT "x(45)".
+DEFINE VARIABLE lineadcc     AS CHARACTER FORMAT "X(575)".
+DEFINE VARIABLE lineadcct    AS CHARACTER FORMAT "X(842)".
+DEFINE VARIABLE lineaxcc     AS CHARACTER FORMAT "X(212)".
+DEFINE VARIABLE lineaxcct    AS CHARACTER FORMAT "X(241)".
+DEFINE VARIABLE lineazcc     AS CHARACTER FORMAT "X(209)".
+DEFINE VARIABLE lineazcct    AS CHARACTER FORMAT "X(321)".
+DEFINE VARIABLE lineascm     AS CHARACTER FORMAT "X(373)".
+DEFINE VARIABLE lineascmt    AS CHARACTER FORMAT "X(453)".
+
+DEFINE VARIABLE lineaasc     AS CHARACTER FORMAT "X(43)".
+DEFINE VARIABLE lineaasct    AS CHARACTER FORMAT "X(79)".
+
+
+DEFINE TEMP-TABLE DCC
+FIELD  INT-DCC-CENFAC            AS INTEGER FORMAT "9999"
+FIELD  INT-DCC-CODDOC            AS INTEGER FORMAT "999"
+FIELD  INT-DCC-LETIVA            AS CHARACTER FORMAT "X(1)"
+FIELD  INT-DCC-NUMDOC            AS INTEGER FORMAT "99999999"
+FIELD  INT-DCC-FECING            AS INTEGER FORMAT "99999999"
+FIELD  INT-DCC-NRGUIA            AS INTEGER FORMAT "99999999"
+FIELD  INT-DCC-ORDGRA            AS INTEGER FORMAT "9999"
+FIELD  INT-DCC-CODGEN            AS INTEGER FORMAT "9"
+FIELD  INT-DCC-PLADEP            AS INTEGER FORMAT "9999"
+FIELD  INT-DCC-FECDOC            AS INTEGER FORMAT "99999999"
+FIELD  INT-DCC-NROCLI            AS INTEGER FORMAT "999999"
+FIELD  INT-DCC-NROSUC            AS INTEGER FORMAT "9999"
+FIELD  INT-DCC-CFDORI            AS INTEGER FORMAT "9999"
+FIELD  INT-DCC-CODDOR            AS INTEGER FORMAT "999"
+FIELD  INT-DCC-LETIVO            AS CHARACTER FORMAT "X(1)"
+FIELD  INT-DCC-NUMDOR            AS INTEGER FORMAT "99999999"
+FIELD  INT-DCC-FEVEFA            AS INTEGER FORMAT "99999999"
+FIELD  INT-DCC-FEVERE            AS INTEGER FORMAT "99999999"
+FIELD  INT-DCC-NROFLE            AS INTEGER FORMAT "9999"
+FIELD  INT-DCC-NROREP            AS INTEGER FORMAT "9999"
+FIELD  INT-DCC-HORING            AS INTEGER FORMAT "999999"
+FIELD  INT-DCC-FEVILP            AS INTEGER FORMAT "99999999"
+FIELD  INT-DCC-IMPIVI            AS DECIMAL FORMAT "9999999999999999.99"
+FIELD  INT-DCC-IMPIVN            AS DECIMAL FORMAT "9999999999999999.99"
+FIELD  INT-DCC-IMPGRA            AS DECIMAL FORMAT "9999999999999999.99"
+FIELD  INT-DCC-IMPNGR            AS DECIMAL FORMAT "9999999999999999.99"
+FIELD  INT-DCC-IMPEIV            AS DECIMAL FORMAT "9999999999999999.99"
+FIELD  INT-DCC-IMPEIB            AS DECIMAL FORMAT "9999999999999999.99"
+FIELD  INT-DCC-IMPBON            AS DECIMAL FORMAT "-999999999999999.99"
+FIELD  INT-DCC-NROPED            AS INTEGER FORMAT "9999999999"
+FIELD  INT-DCC-FEINCO            AS INTEGER FORMAT "99999999"
+FIELD  INT-DCC-CODZVT            AS INTEGER FORMAT "9999"
+FIELD  INT-DCC-TIPCLI            AS INTEGER FORMAT "99"
+FIELD  INT-DCC-FECCON            AS INTEGER FORMAT "99999999"
+FIELD  INT-DCC-HORCON            AS INTEGER FORMAT "999999"
+FIELD  INT-DCC-CODACT            AS INTEGER FORMAT "99"
+FIELD  INT-DCC-FECPCL            AS INTEGER FORMAT "99999999"
+FIELD  INT-DCC-MARLIQ            AS CHARACTER FORMAT "X(1)"
+FIELD  INT-DCC-CODPRO            AS INTEGER FORMAT "99"
+FIELD  INT-DCC-NROLEG            AS INTEGER FORMAT "999999"
+FIELD  INT-DCC-LEGAJO-MOD        AS INTEGER FORMAT "999999"
+FIELD  INT-DCC-LETEXT            AS CHARACTER FORMAT "X(1)"
+FIELD  INT-DCC-SUCEXT            AS INTEGER FORMAT "9999"
+FIELD  INT-DCC-NUMEXT            AS INTEGER FORMAT "99999999"
+FIELD  INT-DCC-PERREF            AS INTEGER FORMAT "999999"
+FIELD  INT-DCC-MARDEP            AS CHARACTER FORMAT "X(1)"
+FIELD  INT-DCC-GRAILC            AS DECIMAL FORMAT "-99999999999.99"
+FIELD  INT-DCC-GRAMAS            AS DECIMAL FORMAT "-99999999999.99"
+FIELD  INT-DCC-NGRILC            AS DECIMAL FORMAT "-99999999999.99"
+FIELD  INT-DCC-NGRMAS            AS DECIMAL FORMAT "-99999999999.99"
+FIELD  INT-DCC-BONILC            AS DECIMAL FORMAT "-99999999999.99"
+FIELD  INT-DCC-BONMAS            AS DECIMAL FORMAT "-99999999999.99"
+FIELD  INT-DCC-PROILC            AS DECIMAL FORMAT "-99999999999.99"
+FIELD  INT-DCC-PROMAS            AS DECIMAL FORMAT "-99999999999.99"
+FIELD  INT-DCC-IMPBOI            AS DECIMAL FORMAT "-999999999999999.99"
+FIELD  INT-DCC-IMPBOM            AS DECIMAL FORMAT "-999999999999999.99"
+FIELD  INT-DCC-IMPPRI            AS DECIMAL FORMAT "-999999999999999.99"
+FIELD  INT-DCC-IMPPRM            AS DECIMAL FORMAT "-999999999999999.99"
+FIELD  INT-DCC-IMPMUL            AS DECIMAL FORMAT "-9999999999999999.99"
+FIELD  INT-DCC-GRAPIV            AS DECIMAL FORMAT "99999999999.99"
+FIELD  INT-DCC-TERRIT            AS INTEGER FORMAT "9999"
+FIELD  INT-DCC-NROREM            AS INTEGER FORMAT "9999999999"
+FIELD  INT-DCC-CONPGO            AS INTEGER FORMAT "99".
+
+DEFINE TEMP-TABLE DCC_TRA
+FIELD  INT-DCC-CENFAC            AS INTEGER FORMAT "9999999999"
+FIELD  INT-DCC-CODDOC            AS INTEGER FORMAT "999999999"
+FIELD  INT-DCC-NUMDOC            AS INTEGER FORMAT "99999999999999"
+FIELD  INT-DCC-FECING            AS INTEGER FORMAT "99999999999999"
+FIELD  INT-DCC-NRGUIA            AS INTEGER FORMAT "99999999999999"
+FIELD  INT-DCC-ORDGRA            AS INTEGER FORMAT "9999999999"
+FIELD  INT-DCC-CODGEN            AS INTEGER FORMAT "9999999"
+FIELD  INT-DCC-PLADEP            AS INTEGER FORMAT "9999999999"
+FIELD  INT-DCC-FECDOC            AS INTEGER FORMAT "99999999999999"
+FIELD  INT-DCC-NROCLI            AS INTEGER FORMAT "999999999999"
+FIELD  INT-DCC-NROSUC            AS INTEGER FORMAT "9999999999"
+FIELD  INT-DCC-CFDORI            AS INTEGER FORMAT "9999999999"
+FIELD  INT-DCC-CODDOR            AS INTEGER FORMAT "999999999"
+FIELD  INT-DCC-NUMDOR            AS INTEGER FORMAT "99999999999999"
+FIELD  INT-DCC-FEVEFA            AS INTEGER FORMAT "99999999999999"
+FIELD  INT-DCC-FEVERE            AS INTEGER FORMAT "99999999999999"
+FIELD  INT-DCC-NROFLE            AS INTEGER FORMAT "9999999999"
+FIELD  INT-DCC-NROREP            AS INTEGER FORMAT "9999999999"
+FIELD  INT-DCC-HORING            AS INTEGER FORMAT "999999999999"
+FIELD  INT-DCC-FEVILP            AS INTEGER FORMAT "99999999999999"
+FIELD  INT-DCC-IMPIVI            AS DECIMAL FORMAT "9999999999999999.99"
+FIELD  INT-DCC-IMPIVN            AS DECIMAL FORMAT "9999999999999999.99"
+FIELD  INT-DCC-IMPGRA            AS DECIMAL FORMAT "9999999999999999.99"
+FIELD  INT-DCC-IMPNGR            AS DECIMAL FORMAT "9999999999999999.99"
+FIELD  INT-DCC-IMPEIV            AS DECIMAL FORMAT "9999999999999999.99"
+FIELD  INT-DCC-IMPEIB            AS DECIMAL FORMAT "9999999999999999.99"
+FIELD  INT-DCC-IMPBON            AS DECIMAL FORMAT "-9999999999999999.99"
+FIELD  INT-DCC-NROPED            AS INTEGER FORMAT "9999999999999999"
+FIELD  INT-DCC-FEINCO            AS INTEGER FORMAT "99999999999999"
+FIELD  INT-DCC-CODZVT            AS INTEGER FORMAT "9999999999"
+FIELD  INT-DCC-TIPCLI            AS INTEGER FORMAT "99999999"
+FIELD  INT-DCC-FECCON            AS INTEGER FORMAT "99999999999999"
+FIELD  INT-DCC-HORCON            AS INTEGER FORMAT "999999999999"
+FIELD  INT-DCC-CODACT            AS INTEGER FORMAT "99999999"
+FIELD  INT-DCC-FECPCL            AS INTEGER FORMAT "99999999999999"
+FIELD  INT-DCC-CODPRO            AS INTEGER FORMAT "99999999"
+FIELD  INT-DCC-NROLEG            AS INTEGER FORMAT "999999999999"
+FIELD  INT-DCC-LEGAJO-MOD        AS INTEGER FORMAT "999999999999"
+FIELD  INT-DCC-SUCEXT            AS INTEGER FORMAT "9999999999"
+FIELD  INT-DCC-NUMEXT            AS INTEGER FORMAT "99999999999999"
+FIELD  INT-DCC-PERREF            AS INTEGER FORMAT "999999999999"
+FIELD  INT-DCC-GRAILC            AS DECIMAL FORMAT "-9999999999999999.99"
+FIELD  INT-DCC-GRAMAS            AS DECIMAL FORMAT "-9999999999999999.99"
+FIELD  INT-DCC-NGRILC            AS DECIMAL FORMAT "-9999999999999999.99"
+FIELD  INT-DCC-NGRMAS            AS DECIMAL FORMAT "-9999999999999999.99"
+FIELD  INT-DCC-BONILC            AS DECIMAL FORMAT "-9999999999999999.99"
+FIELD  INT-DCC-BONMAS            AS DECIMAL FORMAT "-9999999999999999.99"
+FIELD  INT-DCC-PROILC            AS DECIMAL FORMAT "-9999999999999999.99"
+FIELD  INT-DCC-PROMAS            AS DECIMAL FORMAT "-9999999999999999.99"
+FIELD  INT-DCC-IMPBOI            AS DECIMAL FORMAT "-9999999999999999.99"
+FIELD  INT-DCC-IMPBOM            AS DECIMAL FORMAT "-9999999999999999.99"
+FIELD  INT-DCC-IMPPRI            AS DECIMAL FORMAT "-9999999999999999.99"
+FIELD  INT-DCC-IMPPRM            AS DECIMAL FORMAT "-9999999999999999.99"
+FIELD  INT-DCC-IMPMUL            AS DECIMAL FORMAT "-9999999999999999.99"
+FIELD  INT-DCC-GRAPIV            AS DECIMAL FORMAT "9999999999999999.99"
+FIELD  INT-DCC-TERRIT            AS INTEGER FORMAT "99999999999999"
+FIELD  INT-DCC-NROREM            AS INTEGER FORMAT "9999999999999999"
+FIELD  INT-DCC-CONPGO            AS INTEGER FORMAT "99999999".
+
+DEFINE TEMP-TABLE XCC
+FIELD INT-XCC-CENFAC            AS INTEGER FORMAT "9999"
+FIELD INT-XCC-CODDOC            AS INTEGER FORMAT "999"
+FIELD INT-XCC-LETIVA            AS CHARACTER FORMAT "X(1)"
+FIELD INT-XCC-NUMDOC            AS INTEGER FORMAT "99999999"
+FIELD INT-XCC-CODEMP            AS INTEGER FORMAT "99"
+FIELD INT-XCC-IMPGRAS           AS DECIMAL FORMAT "-9999999999999999.99"
+FIELD INT-XCC-IMPNGRS           AS DECIMAL FORMAT "-9999999999999999.99"
+FIELD INT-XCC-IMPPRO            AS DECIMAL FORMAT "-999999999999999.99"
+FIELD INT-XCC-IMPBON            AS DECIMAL FORMAT "-999999999999999.99"
+FIELD INT-XCC-IMPBOI            AS DECIMAL FORMAT "-999999999999999.99"
+FIELD INT-XCC-IMPPIN            AS DECIMAL FORMAT "-999999999999999.99"
+FIELD INT-XCC-IMPBOP            AS DECIMAL FORMAT "-999999999999999.99"
+FIELD INT-XCC-IMPPRP            AS DECIMAL FORMAT "-999999999999999.99"
+FIELD INT-XCC-GRABON            AS DECIMAL FORMAT "-9999999999999999.99"
+FIELD INT-XCC-NGRBON            AS DECIMAL FORMAT "-9999999999999999.99"
+INDEX XCC IS PRIMARY INT-XCC-CENFAC INT-XCC-LETIVA  INT-XCC-NUMDOC INT-XCC-CODEMP ASCENDING.
+
+DEFINE TEMP-TABLE XCC_TRA
+FIELD INT-XCC-CENFAC            AS INTEGER FORMAT "9999999999"
+FIELD INT-XCC-CODDOC            AS INTEGER FORMAT "999999999"
+FIELD INT-XCC-NUMDOC            AS INTEGER FORMAT "99999999999999"
+FIELD INT-XCC-CODEMP            AS INTEGER FORMAT "99999999"
+FIELD INT-XCC-IMPGRAS           AS DECIMAL FORMAT "-9999999999999999.99"
+FIELD INT-XCC-IMPNGRS           AS DECIMAL FORMAT "-9999999999999999.99"
+FIELD INT-XCC-IMPPRO            AS DECIMAL FORMAT "-9999999999999999.99"
+FIELD INT-XCC-IMPBON            AS DECIMAL FORMAT "-9999999999999999.99"
+FIELD INT-XCC-IMPBOI            AS DECIMAL FORMAT "-9999999999999999.99"
+FIELD INT-XCC-IMPPIN            AS DECIMAL FORMAT "-9999999999999999.99"
+FIELD INT-XCC-IMPBOP            AS DECIMAL FORMAT "-9999999999999999.99"
+FIELD INT-XCC-IMPPRP            AS DECIMAL FORMAT "-9999999999999999.99"
+FIELD INT-XCC-GRABON            AS DECIMAL FORMAT "-9999999999999999.99"
+FIELD INT-XCC-NGRBON            AS DECIMAL FORMAT "-9999999999999999.99".
+
+
+DEFINE TEMP-TABLE ZCC
+FIELD  INT-ZCC-CODDOC            AS INTEGER FORMAT "999"
+FIELD  INT-ZCC-CENFAC            AS INTEGER FORMAT "9999"
+FIELD  INT-ZCC-LETIVA            AS CHARACTER FORMAT "X(1)"
+FIELD  INT-ZCC-NUMDOC            AS INTEGER FORMAT "99999999"
+FIELD  INT-ZCC-NROPRO            AS INTEGER FORMAT "9999"
+FIELD  INT-ZCC-CODSAB            AS INTEGER FORMAT "99"
+FIELD  INT-ZCC-CANFAC            AS DECIMAL FORMAT "9999999.999"
+FIELD  INT-ZCC-CANCGA            AS DECIMAL FORMAT "9999999.999"
+FIELD  INT-ZCC-PREUNI            AS DECIMAL FORMAT "9999999.999"
+FIELD  INT-ZCC-IMBOIN            AS DECIMAL FORMAT "-9999999.999"
+FIELD  INT-ZCC-IMBODE            AS DECIMAL FORMAT "-9999999.999"
+FIELD  INT-ZCC-IMBOTO            AS DECIMAL FORMAT "-9999999.999"
+FIELD  INT-ZCC-IMPRIN            AS DECIMAL FORMAT "-9999999.999"
+FIELD  INT-ZCC-IMPRDE            AS DECIMAL FORMAT "-9999999.999"
+FIELD  INT-ZCC-IMPRTO            AS DECIMAL FORMAT "-9999999.999"
+FIELD  INT-ZCC-CODEMP            AS INTEGER FORMAT "99"
+FIELD  INT-ZCC-ORDVL1            AS INTEGER FORMAT "9999"
+FIELD  INT-ZCC-ORDVL3            AS INTEGER FORMAT "9999"
+FIELD  INT-ZCC-INDIVA            AS CHARACTER FORMAT "X(1)" INITIAL "N"
+FIELD  INT-ZCC-PORIVA            AS INTEGER FORMAT "999.999"
+FIELD  INT-ZCC-CODCTO            AS INTEGER FORMAT "9999"
+FIELD  INT-ZCC-TOGRAV            AS DECIMAL FORMAT "-9999999999999999.99"
+FIELD  INT-ZCC-TONEFA            AS DECIMAL FORMAT "-9999999999999999.99"
+FIELD  INT-ZCC-TOTIVA            AS DECIMAL FORMAT "-9999999999999999.99".
+
+
+DEFINE TEMP-TABLE ZCC_TRA
+FIELD  INT-ZCC-CODDOC            AS INTEGER FORMAT "999999999"
+FIELD  INT-ZCC-CENFAC            AS INTEGER FORMAT "9999999999"
+FIELD  INT-ZCC-NUMDOC            AS INTEGER FORMAT "99999999999999"
+FIELD  INT-ZCC-NROPRO            AS INTEGER FORMAT "9999999999"
+FIELD  INT-ZCC-CODSAB            AS INTEGER FORMAT "99999999"
+FIELD  INT-ZCC-CANFAC            AS DECIMAL FORMAT "9999999999999.999"
+FIELD  INT-ZCC-CANCGA            AS DECIMAL FORMAT "9999999999999.999"
+FIELD  INT-ZCC-PREUNI            AS DECIMAL FORMAT "9999999999999.999"
+FIELD  INT-ZCC-IMBOIN            AS DECIMAL FORMAT "-9999999999999.999"
+FIELD  INT-ZCC-IMBODE            AS DECIMAL FORMAT "-9999999999999.999"
+FIELD  INT-ZCC-IMBOTO            AS DECIMAL FORMAT "-9999999999999.999"
+FIELD  INT-ZCC-IMPRIN            AS DECIMAL FORMAT "-9999999999999.999"
+FIELD  INT-ZCC-IMPRDE            AS DECIMAL FORMAT "-9999999999999.999"
+FIELD  INT-ZCC-IMPRTO            AS DECIMAL FORMAT "-9999999999999.999"
+FIELD  INT-ZCC-CODEMP            AS INTEGER FORMAT "99999999"
+FIELD  INT-ZCC-ORDVL1            AS INTEGER FORMAT "9999999999"
+FIELD  INT-ZCC-ORDVL3            AS INTEGER FORMAT "9999999999"
+FIELD  INT-ZCC-PORIVA            AS INTEGER FORMAT "999999999.999"
+FIELD  INT-ZCC-CODCTO            AS INTEGER FORMAT "9999999999"
+FIELD  INT-ZCC-TOGRAV            AS DECIMAL FORMAT "-9999999999999999.99"
+FIELD  INT-ZCC-TONEFA            AS DECIMAL FORMAT "-9999999999999999.99"
+FIELD  INT-ZCC-TOTIVA            AS DECIMAL FORMAT "-9999999999999999.99".
+
+DEFINE TEMP-TABLE SCM
+FIELD  INT-SCM-CODGEN            AS INTEGER FORMAT "9"
+FIELD  INT-SCM-AMNDOP            AS INTEGER FORMAT "999999"
+FIELD  INT-SCM-PLADEP            AS INTEGER FORMAT "9999"  INITIAL 37
+FIELD  INT-SCM-CODDOC            AS INTEGER FORMAT "999"
+FIELD  INT-SCM-FECDOC            AS INTEGER FORMAT "99999999"
+FIELD  INT-SCM-IMPNGR            AS DECIMAL FORMAT "9999999999999999.99"
+FIELD  INT-SCM-IMPGRA            AS DECIMAL  FORMAT "9999999999999999.99"
+FIELD  INT-SCM-IMPIVI            AS DECIMAL FORMAT "9999999999999999.99"
+FIELD  INT-SCM-IMPIVN            AS DECIMAL FORMAT "9999999999999999.99"
+FIELD  INT-SCM-IMPEIV            AS DECIMAL FORMAT "9999999999999999.99"
+FIELD  INT-SCM-IMPEIB            AS DECIMAL FORMAT "9999999999999999.99"
+FIELD  INT-SCM-TIPCLI            AS INTEGER FORMAT "99"
+FIELD  INT-SCM-LETIVA            AS CHARACTER FORMAT "X(1)"
+FIELD  INT-SCM-IMPBON            AS DECIMAL FORMAT "-999999999999999.99"
+FIELD  INT-SCM-GRAILC            AS DECIMAL FORMAT "-99999999999.99"
+FIELD  INT-SCM-GRAMAS            AS DECIMAL FORMAT "-99999999999.99"
+FIELD  INT-SCM-NGRILC            AS DECIMAL FORMAT "-99999999999.99"
+FIELD  INT-SCM-NGRMAS            AS DECIMAL FORMAT "-99999999999.99"
+FIELD  INT-SCM-PROILC            AS DECIMAL FORMAT "-99999999999.99"
+FIELD  INT-SCM-PROMAS            AS DECIMAL FORMAT "-99999999999.99"
+FIELD  INT-SCM-BONILC            AS DECIMAL FORMAT "-99999999999.99"
+FIELD  INT-SCM-BONMAS            AS DECIMAL FORMAT "-99999999999.99"
+FIELD  INT-SCM-IMPBOI            AS DECIMAL FORMAT "-999999999999999.99"
+FIELD  INT-SCM-IMPBOM            AS DECIMAL FORMAT "-999999999999999.99"
+FIELD  INT-SCM-IMPPRI            AS DECIMAL FORMAT "-999999999999999.99"
+FIELD  INT-SCM-IMPPRM            AS DECIMAL FORMAT "-999999999999999.99"
+FIELD  INT-SCM-IMPEIVX           AS DECIMAL FORMAT "9999999999999999.99"
+INDEX SCM IS PRIMARY INT-SCM-CODGEN INT-SCM-CODDOC INT-SCM-FECDOC INT-SCM-LETIVA INT-SCM-TIPCLI ASCENDING.
+
+DEFINE TEMP-TABLE SCM_TRA
+FIELD  INT-SCM-CODGEN            AS INTEGER FORMAT "9999999"
+FIELD  INT-SCM-AMNDOP            AS INTEGER FORMAT "999999999999"
+FIELD  INT-SCM-PLADEP            AS INTEGER FORMAT "9999999999"  
+FIELD  INT-SCM-CODDOC            AS INTEGER FORMAT "999999999"
+FIELD  INT-SCM-FECDOC            AS INTEGER FORMAT "99999999999999"
+FIELD  INT-SCM-IMPNGR            AS DECIMAL FORMAT "9999999999999999.99"
+FIELD  INT-SCM-IMPGRA            AS DECIMAL FORMAT "9999999999999999.99"
+FIELD  INT-SCM-IMPIVI            AS DECIMAL FORMAT "9999999999999999.99"
+FIELD  INT-SCM-IMPIVN            AS DECIMAL FORMAT "9999999999999999.99"
+FIELD  INT-SCM-IMPEIV            AS DECIMAL FORMAT "9999999999999999.99"
+FIELD  INT-SCM-IMPEIB            AS DECIMAL FORMAT "9999999999999999.99"
+FIELD  INT-SCM-TIPCLI            AS INTEGER FORMAT "99999999"
+FIELD  INT-SCM-IMPBON            AS DECIMAL FORMAT "-9999999999999999.99"
+FIELD  INT-SCM-GRAILC            AS DECIMAL FORMAT "-9999999999999999.99"
+FIELD  INT-SCM-GRAMAS            AS DECIMAL FORMAT "-9999999999999999.99"
+FIELD  INT-SCM-NGRILC            AS DECIMAL FORMAT "-9999999999999999.99"
+FIELD  INT-SCM-NGRMAS            AS DECIMAL FORMAT "-9999999999999999.99"
+FIELD  INT-SCM-PROILC            AS DECIMAL FORMAT "-9999999999999999.99"
+FIELD  INT-SCM-PROMAS            AS DECIMAL FORMAT "-9999999999999999.99"
+FIELD  INT-SCM-BONILC            AS DECIMAL FORMAT "-9999999999999999.99"
+FIELD  INT-SCM-BONMAS            AS DECIMAL FORMAT "-9999999999999999.99"
+FIELD  INT-SCM-IMPBOI            AS DECIMAL FORMAT "-9999999999999999.99"
+FIELD  INT-SCM-IMPBOM            AS DECIMAL FORMAT "-9999999999999999.99"
+FIELD  INT-SCM-IMPPRI            AS DECIMAL FORMAT "-9999999999999999.99"
+FIELD  INT-SCM-IMPPRM            AS DECIMAL FORMAT "-9999999999999999.99"
+FIELD  INT-SCM-IMPEIVX           AS DECIMAL FORMAT "9999999999999999.99".
+
+
+DEFINE TEMP-TABLE ASCC
+FIELD  INT-ASCC-CODGEN            AS INTEGER FORMAT "9"
+FIELD  INT-ASCC-AMNDOP            AS INTEGER FORMAT "999999"
+FIELD  INT-ASCC-PLADEP            AS INTEGER FORMAT "9999"
+FIELD  INT-ASCC-CODDOC            AS INTEGER FORMAT "999"
+FIELD  INT-ASCC-FECDOC            AS INTEGER FORMAT "99999999"
+FIELD  INT-ASCC-CODPRO            AS INTEGER FORMAT "99"
+FIELD  INT-ASCC-IMPEIB            AS DECIMAL FORMAT "9999999999999999.99"
+INDEX ASCC IS PRIMARY INT-ASCC-CODGEN INT-ASCC-CODDOC INT-ASCC-FECDOC INT-ASCC-CODPRO ASCENDING.
+
+DEFINE TEMP-TABLE ASCC_TRA
+FIELD  INT-ASCC-CODGEN            AS INTEGER FORMAT "9999999"
+FIELD  INT-ASCC-AMNDOP            AS INTEGER FORMAT "999999999999"
+FIELD  INT-ASCC-PLADEP            AS INTEGER FORMAT "9999999999"
+FIELD  INT-ASCC-CODDOC            AS INTEGER FORMAT "999999999"
+FIELD  INT-ASCC-FECDOC            AS INTEGER FORMAT "99999999999999"
+FIELD  INT-ASCC-CODPRO            AS INTEGER FORMAT "99999999"
+FIELD  INT-ASCC-IMPEIB            AS DECIMAL FORMAT "9999999999999999.99".
+
+
+DO TRANSACTION:
+    RUN GENERA.
+    RUN BAJA.
+END.
+
+
+/* __________________________________________________________________________________________________________*/
+/*                                                                                                           */
+/*                                           procedimientos                                                  */
+/* __________________________________________________________________________________________________________*/
+
+PROCEDURE GENERA:
+
+    FOR EACH Fac_header EXCLUSIVE-LOCK
+        WHERE NOT Fac_header.proc_estad
+          AND Fac_header.fecha >= des_fecha
+          AND Fac_header.fecha <= has_fecha
+          AND Fac_header.cdg_empresa = cempresa,
+                        FIRST Tipocomprobante OF Fac_header WHERE Tipocomprobante.afecta_stock,
+        FIRST Cliente OF Fac_header, FIRST Grupo-empresario OF CLiente WHERE Grupo-empresario.viaja_estadisticas,
+        FIRST Comprobante_concepto WHERE Comprobante_concepto.cdg_imputacion = Fac_header.cdg_imputacion
+                                    AND Comprobante_concepto.cdg_comprobante = Tipocomprobante.cdg_comprobante
+                                    AND Comprobante_concepto.codigo_mci <> 0:
+
+      FIND Cta_cte OF Cliente WHERE Fac_header.tip_comprob = Cta_cte.tip_comprob
+                                AND Fac_header.prf_comprob = Cta_cte.prf_comprob
+                                AND Fac_header.nro_comprob = Cta_cte.nro_comprob
+                                AND Fac_header.cdg_empresa = Cta_cte.cdg_empresa NO-LOCK NO-ERROR.
+      FIND Domicilio OF cliente WHERE Domicilio.nro_domicilio = Fac_header.nro_domicilio NO-ERROR.
+      FIND Provincia OF Domicilio NO-ERROR.
+      FIND Rem_header WHERE Rem_header.nro_remito =  Fac_header.nro_remito NO-ERROR.
+      IF AVAILABLE Rem_header THEN FIND Ped_header WHERE Ped_header.nro_pedido =  Rem_header.nro_pedido NO-ERROR.
+
+      IMPIVI = 0. /* recorro la tabla de impuestos del comprobante y verifico si el mismo es_IVA*/
+      IMPIVN = 0. /* considero que no existen NO INSCRIPTO*/
+      IMPEIV = 0. /* recorro la tabla de impuestos del comprobante y verifico si NO es_IVA y es un impuesto nacional   => Perc. Iva */
+      IMPEIB = 0. /* recorro la tabla de impuestos del comprobante y verifico si NO es_IVA y es un impuesto provincial => Perc. IBrutos */
+      IMPGRA = 0.
+      GRAPIV = 0.
+      IMPNGR = 0.
+      xx = 0.
+
+      FOR EACH Fac_header_impuesto OF Fac_header:
+          FIND Impuesto OF Fac_header_impuesto NO-ERROR.
+          IF Impuesto.es_iva
+          THEN DO:
+               IMPIVI = IMPIVI + Fac_header_impuesto.importe.
+               IMPGRA = IMPGRA + Fac_header_impuesto.monto_imponible.
+          END.
+          ELSE DO:
+              IF Impuesto.nivel = 0
+              THEN DO:
+                   IMPEIV = IMPEIV +  Fac_header_impuesto.importe.
+                   /*GRAPIV = GRAPIV +  Fac_header_impuesto.monto_imponible.*/
+              END.
+              ELSE IMPEIB = IMPEIB +  Fac_header_impuesto.importe.
+          END.
+          xx = xx + Fac_header_impuesto.importe.
+      END.
+      GRAPIV = IMPGRA. /* POR ORDEN DE SANDRA */
+
+      codgen = IF SUBSTRING(Fac_header.tip_comprob,2,1) = "I" THEN 3 ELSE 5.
+      FIND ASCC WHERE ASCC.INT-ASCC-CODGEN = codgen
+                  AND ASCC.INT-ASCC-CODDOC = Comprobante_concepto.codigo_mci
+                  AND ASCC.INT-ASCC-FECDOC = YEAR(Fac_header.fecha) * 10000 + MONTH(Fac_header.fecha) * 100 + DAY(Fac_header.fecha)
+                  AND ASCC.INT-ASCC-CODPRO = INT(Provincia.cdg_provincia) NO-ERROR.
+      IF NOT AVAILABLE ASCC
+      THEN DO:
+          CREATE ASCC.
+          ASSIGN ASCC.INT-ASCC-CODGEN = codgen
+                 ASCC.INT-ASCC-CODDOC = Comprobante_concepto.codigo_mci
+                 ASCC.INT-ASCC-FECDOC = YEAR(Fac_header.fecha) * 10000 + MONTH(Fac_header.fecha) * 100 + DAY(Fac_header.fecha)
+                 ASCC.INT-ASCC-CODPRO = INT(Provincia.cdg_provincia)
+                 ASCC.INT-ASCC-AMNDOP = YEAR(Fac_header.fecha) * 100 + MONTH(Fac_header.fecha)
+                 ASCC.INT-ASCC-PLADEP = 37.
+      END.
+      ASSIGN ASCC.INT-ASCC-IMPEIB = ASCC.INT-ASCC-IMPEIB + IMPEIB.
+      IF xx = 0 THEN IMPNGR  = Fac_header.imp_neto.
+      ELSE DO:
+          IF Fac_header.imp_neto > IMPGRA
+              THEN IMPNGR  =  Fac_header.imp_neto - IMPGRA.
+      END.
+
+      CREATE DCC.
+      ASSIGN DCC.INT-DCC-CENFAC     = Fac_header.prf_comprob
+             DCC.INT-DCC-CODDOC     = Comprobante_concepto.codigo_mci
+             DCC.INT-DCC-LETIVA     = SUBSTRING(Fac_header.tip_comprob,2,1)
+             DCC.INT-DCC-NUMDOC     = Fac_header.nro_comprob
+             DCC.INT-DCC-FECING     = YEAR(Fac_header.fecha) * 10000 + MONTH(Fac_header.fecha) * 100 + DAY(Fac_header.fecha)
+             DCC.INT-DCC-NRGUIA     = 0
+             DCC.INT-DCC-CODGEN     = IF SUBSTRING(Fac_header.tip_comprob,2,1) = "I" THEN 3 ELSE 5
+             DCC.INT-DCC-PLADEP     = 37
+             DCC.INT-DCC-FECDOC     = YEAR(Fac_header.fecha) * 10000 + MONTH(Fac_header.fecha) * 100 + DAY(Fac_header.fecha)
+             DCC.INT-DCC-NROCLI     = INTEGER(Cliente.cdg_cliente)
+             DCC.INT-DCC-NROSUC     = Domicilio.nro_domicilio WHEN AVAILABLE Domicilio
+             DCC.INT-DCC-CFDORI     = 0
+             DCC.INT-DCC-CODDOR     = 0
+             DCC.INT-DCC-LETIVO     = SUBSTRING(Fac_header.tip_comprob,2,1)
+             DCC.INT-DCC-NUMDOR     = 0
+             DCC.INT-DCC-FEVEFA     = IF AVAILABLE Cta_cte THEN YEAR(Cta_cte.fecha_vencimiento) * 10000 + MONTH(Cta_cte.fecha_vencimiento) * 100 + DAY(Cta_cte.fecha_vencimiento)
+                                                           ELSE YEAR(Fac_header.fecha) * 10000 + MONTH(Fac_header.fecha) * 100 + DAY(Fac_header.fecha)
+             DCC.INT-DCC-FEVERE     = IF AVAILABLE Cta_cte THEN YEAR(Cta_cte.fecha_vencimiento) * 10000 + MONTH(Cta_cte.fecha_vencimiento) * 100 + DAY(Cta_cte.fecha_vencimiento)
+                                                           ELSE YEAR(Fac_header.fecha) * 10000 + MONTH(Fac_header.fecha) * 100 + DAY(Fac_header.fecha)
+             DCC.INT-DCC-NROFLE     = 9999
+             DCC.INT-DCC-NROREP     = 37
+             DCC.INT-DCC-HORING     = 0
+             DCC.INT-DCC-FEVILP     = 0
+             DCC.INT-DCC-IMPIVI     = IMPIVI
+             DCC.INT-DCC-IMPIVN     = IMPIVN
+             DCC.INT-DCC-IMPGRA     = IMPGRA
+             DCC.INT-DCC-IMPNGR     = IMPNGR
+             DCC.INT-DCC-IMPEIV     = IMPEIV
+             DCC.INT-DCC-IMPEIB     = IMPEIB
+             DCC.INT-DCC-IMPBON     = IMPBON
+             DCC.INT-DCC-NROPED     = Ped_header.nro_comprob WHEN AVAILABLE Ped_header
+             DCC.INT-DCC-FEINCO     = 0
+             DCC.INT-DCC-CODZVT     = IF NUM-ENTRIES(Domicilio.cdg_subclasezng,".") >= 4 THEN INT(ENTRY(4,Domicilio.cdg_subclasezng,".")) ELSE 0
+             DCC.INT-DCC-TIPCLI     = INT(Cliente.cdg_famclie)
+             DCC.INT-DCC-FECCON     = 0
+             DCC.INT-DCC-HORCON     = 0
+             DCC.INT-DCC-CODACT     = INT(Cliente.cdg_tipoclie)
+             DCC.INT-DCC-FECPCL     = YEAR(Ped_header.fecha) * 10000 + MONTH(Ped_header.fecha) * 100 + DAY(Ped_header.fecha) WHEN AVAILABLE Ped_header
+             DCC.INT-DCC-MARLIQ     = ""
+             DCC.INT-DCC-CODPRO     = INT(Provincia.cdg_provincia)
+             DCC.INT-DCC-NROLEG     = 0
+             DCC.INT-DCC-LEGAJO-MOD = 0
+             DCC.INT-DCC-LETEXT     = ""
+             DCC.INT-DCC-SUCEXT     = 0
+             DCC.INT-DCC-NUMEXT     = 0
+             DCC.INT-DCC-PERREF     = 0
+             DCC.INT-DCC-MARDEP     = ""
+             DCC.INT-DCC-GRAILC     = 0
+             DCC.INT-DCC-GRAMAS     = 0
+             DCC.INT-DCC-NGRILC     = 0
+             DCC.INT-DCC-NGRMAS     = 0
+             DCC.INT-DCC-BONILC     = 0
+             DCC.INT-DCC-BONMAS     = 0
+             DCC.INT-DCC-PROILC     = 0
+             DCC.INT-DCC-PROMAS     = 0
+             DCC.INT-DCC-IMPBOI     = 0
+             DCC.INT-DCC-IMPBOM     = 0
+             DCC.INT-DCC-IMPPRI     = 0
+             DCC.INT-DCC-IMPPRM     = 0
+             DCC.INT-DCC-IMPMUL     = 0
+             DCC.INT-DCC-GRAPIV     = GRAPIV
+             DCC.INT-DCC-TERRIT     = IF NUM-ENTRIES(Domicilio.cdg_subclasezng,".") >= 4 THEN INT(ENTRY(4,Domicilio.cdg_subclasezng,".")) ELSE 0
+             DCC.INT-DCC-NROREM     = Rem_header.nro_comprob WHEN AVAILABLE Rem_header
+             DCC.INT-DCC-CONPGO     = Fac_header.nro_cndventa.
+
+
+/*       IF Tipocomprobante.debita THEN sig =  1. */
+/*                                 ELSE sig = -1. */
+
+      FIND SCM WHERE SCM.INT-SCM-CODGEN = DCC.INT-DCC-CODGEN
+                 AND SCM.INT-SCM-CODDOC = DCC.INT-DCC-CODDOC
+                 AND SCM.INT-SCM-FECDOC = DCC.INT-DCC-FECDOC
+                 AND SCM.INT-SCM-LETIVA = DCC.INT-DCC-LETIVA
+                 AND SCM.INT-SCM-TIPCLI = DCC.INT-DCC-TIPCLI NO-ERROR.
+      IF NOT AVAILABLE SCM
+      THEN DO:
+            CREATE SCM.
+            ASSIGN SCM.INT-SCM-CODGEN = DCC.INT-DCC-CODGEN
+                   SCM.INT-SCM-AMNDOP = YEAR(Fac_header.fecha) * 100 + MONTH(Fac_header.fecha)
+                   SCM.INT-SCM-CODDOC = DCC.INT-DCC-CODDOC
+                   SCM.INT-SCM-FECDOC = DCC.INT-DCC-FECDOC
+                   SCM.INT-SCM-LETIVA = DCC.INT-DCC-LETIVA
+                   SCM.INT-SCM-TIPCLI = DCC.INT-DCC-TIPCLI.
+
+      END.
+      ASSIGN SCM.INT-SCM-IMPIVI   = SCM.INT-SCM-IMPIVI + sig * IMPIVI
+             SCM.INT-SCM-IMPIVN   = SCM.INT-SCM-IMPIVN + sig * IMPIVN
+             SCM.INT-SCM-IMPEIV   = SCM.INT-SCM-IMPEIV + sig * IMPEIV
+             SCM.INT-SCM-IMPEIB   = SCM.INT-SCM-IMPEIB + sig * IMPEIB
+             SCM.INT-SCM-IMPEIVX  = 0. /* TODAVÍA NO LO TENGO DEFINIDO*/
+
+      FIND Imputacion OF Fac_header.
+      FOR EACH Fac_detalle OF Fac_header:
+            FIND Articulo OF Fac_detalle.
+            FIND Familia_impositiva OF Articulo.
+            FIND Articulo_Propiedad OF Articulo NO-ERROR.
+
+            CREATE ZCC.
+            ASSIGN ZCC.INT-ZCC-CODDOC = Comprobante_concepto.codigo_mci
+                   ZCC.INT-ZCC-CENFAC = Fac_header.prf_comprob
+                   ZCC.INT-ZCC-LETIVA = SUBSTRING(Fac_header.tip_comprob,2,1)
+                   ZCC.INT-ZCC-NUMDOC = Fac_header.nro_comprob
+                   ZCC.INT-ZCC-NROPRO = INTEGER(SUBSTRING(Articulo.cdg_articulo,4,6))
+                   ZCC.INT-ZCC-CODSAB = INT(Articulo_Propiedad.cdg_propiedad) WHEN AVAILABLE Articulo_Propiedad
+                   ZCC.INT-ZCC-CANFAC = Fac_detalle.cantidad
+                   ZCC.INT-ZCC-PREUNI = Fac_detalle.precio.
+
+
+            FIND Articulo-Proveedor WHERE Articulo-Proveedor.nro_articulo = Fac_detalle.nro_articulo
+                                      AND Fac_header.fecha <= Articulo-Proveedor.a_fecha NO-ERROR.
+            IF AVAILABLE Articulo-Proveedor
+            THEN FIND Proveedor WHERE Proveedor.nro_proveedor = Articulo-Proveedor.nro_proveedor.
+            ELSE FIND Proveedor WHERE Proveedor.nro_proveedor = 1.
+            
+            ZCC.INT-ZCC-CODEMP = INT(Proveedor.cdg_proveedor).
+            FIND XCC WHERE XCC.INT-XCC-CENFAC = Fac_header.prf_comprob
+                       AND XCC.INT-XCC-LETIVA = SUBSTRING(Fac_header.tip_comprob,2,1)
+                       AND XCC.INT-XCC-NUMDOC = Fac_header.nro_comprob
+                       AND XCC.INT-XCC-CODEMP = INT(Proveedor.cdg_proveedor) NO-ERROR.
+            IF NOT AVAILABLE XCC
+            THEN DO:
+                CREATE XCC.
+                ASSIGN XCC.INT-XCC-CENFAC = Fac_header.prf_comprob
+                       XCC.INT-XCC-CODDOC = Comprobante_concepto.codigo_mci
+                       XCC.INT-XCC-LETIVA = SUBSTRING(Fac_header.tip_comprob,2,1)
+                       XCC.INT-XCC-NUMDOC = Fac_header.nro_comprob
+                       XCC.INT-XCC-CODEMP = int(Proveedor.cdg_proveedor).
+            END.
+            FIND FIRST Fac_detalle_impuesto OF Fac_detalle NO-ERROR.
+            IF AVAILABLE Fac_detalle_impuesto
+            THEN DO:
+                IF INT(Proveedor.cdg_proveedor) = 1
+                THEN SCM.INT-SCM-GRAMAS = SCM.INT-SCM-GRAMAS + sig * Fac_detalle.subtotal_neto.
+                ELSE SCM.INT-SCM-GRAILC = SCM.INT-SCM-GRAILC + sig * Fac_detalle.subtotal_neto.
+                SCM.INT-SCM-IMPGRA  = SCM.INT-SCM-IMPGRA + sig * Fac_detalle.subtotal_neto.
+                XCC.INT-XCC-IMPGRAS = XCC.INT-XCC-IMPGRAS + sig * Fac_detalle.subtotal_neto.
+            END.
+            ELSE DO:
+                IF AVAILABLE Proveedor AND INT(Proveedor.cdg_proveedor) = 1
+                THEN SCM.INT-SCM-NGRMAS = SCM.INT-SCM-NGRMAS + sig * Fac_detalle.subtotal_neto.
+                ELSE SCM.INT-SCM-NGRILC = SCM.INT-SCM-NGRILC + sig * Fac_detalle.subtotal_neto.
+                SCM.INT-SCM-IMPNGR  = SCM.INT-SCM-IMPNGR + sig * Fac_detalle.subtotal_neto.
+                XCC.INT-XCC-IMPNGRS = XCC.INT-XCC-IMPNGRS + sig * Fac_detalle.subtotal_neto.
+            END.
+
+            FOR EACH Fac_detalle_impuesto OF Fac_detalle:
+               FIND Impuesto WHERE Impuesto.cdg_impuesto = Fac_detalle_impuesto.cdg_impuesto.
+               IF Impuesto.es_iva
+               THEN DO:
+                    ZCC.INT-ZCC-INDIVA = "S".
+                    ZCC.INT-ZCC-PORIVA = Fac_detalle_impuesto.tasa.
+                    xx = Fac_detalle_impuesto.importe.
+                    IF Imputacion.afecta_stock 
+                    THEN ZCC.INT-ZCC-TOTIVA = ZCC.INT-ZCC-TOTIVA + sig * xx.                    
+               END.
+            END.
+            IF Comprobante_concepto.codigo_mci = 614
+            THEN DO:
+                ZCC.INT-ZCC-TOGRAV = ZCC.INT-ZCC-TOGRAV + Fac_detalle.precio.
+                ZCC.INT-ZCC-TONEFA = ZCC.INT-ZCC-TONEFA + Fac_detalle.precio + xx.
+            END.
+            ELSE DO:
+                IF Imputacion.afecta_stock 
+                THEN DO:
+                    IF Fac_header.tip_comprob MATCHES "*A*" 
+                    THEN DO:
+                        ZCC.INT-ZCC-TONEFA = ZCC.INT-ZCC-TONEFA + sig * Fac_detalle.subtotal_neto.
+                        ZCC.INT-ZCC-TOGRAV = ZCC.INT-ZCC-TOGRAV + (Fac_detalle.precio *  10).
+                    END.
+                    ELSE DO:
+                        IF Fac_header.tip_comprob MATCHES "*B*" 
+                        THEN DO:
+                            IF  Familia_impositiva.cdg_familimpos = "2" 
+                            THEN DO:
+                                ZCC.INT-ZCC-TONEFA = ZCC.INT-ZCC-TONEFA + sig * Fac_detalle.subtotal_neto.
+                                ZCC.INT-ZCC-TOGRAV = ZCC.INT-ZCC-TOGRAV + (Fac_detalle.precio *  10).
+                            END.
+                            ELSE DO:
+                                ZCC.INT-ZCC-TONEFA = ZCC.INT-ZCC-TONEFA + sig * Fac_detalle.subtotal_neto_cf.
+                                ZCC.INT-ZCC-TOGRAV = ZCC.INT-ZCC-TOGRAV + (Fac_detalle.precio_cf *  10).
+                            END.
+                        END.
+                    END.
+                END.
+                ELSE ZCC.INT-ZCC-TOGRAV = ZCC.INT-ZCC-TOGRAV + Fac_detalle.precio.            
+            END.
+            FOR EACH Fac_detalle-bon OF Fac_detalle:
+               XCC.INT-XCC-IMPBON  =  XCC.INT-XCC-IMPBON  + sig * Fac_detalle-bon.importe.
+               ZCC.INT-ZCC-IMBODE  =  ZCC.INT-ZCC-IMBODE  + sig * Fac_detalle-bon.importe.
+               SCM.INT-SCM-IMPBON  =  SCM.INT-SCM-IMPBON  + sig * Fac_detalle-bon.importe.
+               IF AVAILABLE Proveedor AND INT(Proveedor.cdg_proveedor) = 1
+               THEN SCM.INT-SCM-BONMAS = SCM.INT-SCM-BONMAS + sig * Fac_detalle.subtotal_neto.
+               ELSE SCM.INT-SCM-BONILC = SCM.INT-SCM-BONILC + sig * Fac_detalle.subtotal_neto.
+            END.
+
+            FOR EACH Fac_detalle-bon OF Fac_detalle:
+                DCC.INT-DCC-IMPBON  =  DCC.INT-DCC-IMPBON  + ( Fac_detalle-bon.importe).
+            END.
+
+      END.
+
+      Fac_header.proc_estad = YES.
+
+    END.
+
+END PROCEDURE.
+
+PROCEDURE BAJA:
+
+archivo = STRING(YEAR(has_fecha),"9999") + STRING(MONTH(has_fecha),"99") + STRING(DAY(has_fecha),"99") + "." + REPLACE(STRING(TIME, "HH:mm:SS"), ":", "") + ".0042.p.mci".
+que_archivo = dire_tmp + "dcc." + archivo.
+
+OUTPUT TO VALUE(que_archivo).
+CREATE DCC_TRA.
+FOR EACH DCC:
+   lineadcc = STRING(DCC.INT-DCC-CENFAC, "9999")
+            + STRING(DCC.INT-DCC-CODDOC, "999")
+            + STRING(DCC.INT-DCC-LETIVA, "X(1)")
+            + STRING(DCC.INT-DCC-NUMDOC, "99999999")
+            + STRING(DCC.INT-DCC-FECING, "99999999")
+            + STRING(DCC.INT-DCC-NRGUIA, "99999999")
+            + STRING(DCC.INT-DCC-ORDGRA, "9999")
+            + STRING(DCC.INT-DCC-CODGEN, "9")
+            + STRING(DCC.INT-DCC-PLADEP, "9999")
+            + STRING(DCC.INT-DCC-FECDOC, "99999999")
+            + STRING(DCC.INT-DCC-NROCLI, "999999")
+            + STRING(DCC.INT-DCC-NROSUC, "9999")
+            + STRING(DCC.INT-DCC-CFDORI, "9999")
+            + STRING(DCC.INT-DCC-CODDOR, "999")
+            + STRING(DCC.INT-DCC-LETIVO, "X(1)")
+            + STRING(DCC.INT-DCC-NUMDOR, "99999999")
+            + STRING(DCC.INT-DCC-FEVEFA, "99999999")
+            + STRING(DCC.INT-DCC-FEVERE, "99999999")
+            + STRING(DCC.INT-DCC-NROFLE, "9999")
+            + STRING(DCC.INT-DCC-NROREP, "9999")
+            + STRING(DCC.INT-DCC-HORING, "999999")
+            + STRING(DCC.INT-DCC-FEVILP, "99999999")
+            + REPLACE(STRING(DCC.INT-DCC-IMPIVI, "9999999999999999.99"), "." , ",")
+            + REPLACE(STRING(DCC.INT-DCC-IMPIVN, "9999999999999999.99"), "." , ",")
+            + REPLACE(STRING(DCC.INT-DCC-IMPGRA, "9999999999999999.99"), "." , ",")
+            + REPLACE(STRING(DCC.INT-DCC-IMPNGR, "9999999999999999.99"), "." , ",")
+            + REPLACE(STRING(DCC.INT-DCC-IMPEIV, "9999999999999999.99"), "." , ",")
+            + REPLACE(STRING(DCC.INT-DCC-IMPEIB, "9999999999999999.99"), "." , ",")
+            + CONVIERTE(DCC.INT-DCC-IMPBON, "-999999999999999.99")
+            + STRING(DCC.INT-DCC-NROPED, "9999999999")
+            + STRING(DCC.INT-DCC-FEINCO, "99999999")
+            + STRING(DCC.INT-DCC-CODZVT, "9999")
+            + STRING(DCC.INT-DCC-TIPCLI, "99")
+            + STRING(DCC.INT-DCC-FECCON, "99999999")
+            + STRING(DCC.INT-DCC-HORCON, "999999")
+            + STRING(DCC.INT-DCC-CODACT, "99")
+            + STRING(DCC.INT-DCC-FECPCL, "99999999")
+            + STRING(DCC.INT-DCC-MARLIQ, "X(1)")
+            + STRING(DCC.INT-DCC-CODPRO, "99")
+            + STRING(DCC.INT-DCC-NROLEG, "999999")
+            + STRING(DCC.INT-DCC-LEGAJO-MOD, "999999")
+            + STRING(DCC.INT-DCC-LETEXT, "X(1)")
+            + STRING(DCC.INT-DCC-SUCEXT, "9999")
+            + STRING(DCC.INT-DCC-NUMEXT, "99999999")
+            + STRING(DCC.INT-DCC-PERREF, "999999")
+            + STRING(DCC.INT-DCC-MARDEP, "X(1)")
+            + CONVIERTE(DCC.INT-DCC-GRAILC, "-99999999999.99")
+            + CONVIERTE(DCC.INT-DCC-GRAMAS, "-99999999999.99")
+            + CONVIERTE(DCC.INT-DCC-NGRILC, "-99999999999.99")
+            + CONVIERTE(DCC.INT-DCC-NGRMAS, "-99999999999.99")
+            + CONVIERTE(DCC.INT-DCC-BONILC, "-99999999999.99")
+            + CONVIERTE(DCC.INT-DCC-BONMAS,  "-99999999999.99")
+            + CONVIERTE(DCC.INT-DCC-PROILC, "-99999999999.99")
+            + CONVIERTE(DCC.INT-DCC-PROMAS, "-99999999999.99")
+            + CONVIERTE(DCC.INT-DCC-IMPBOI, "-999999999999999.99")
+            + CONVIERTE(DCC.INT-DCC-IMPBOM,  "-999999999999999.99")
+            + CONVIERTE(DCC.INT-DCC-IMPPRI,  "-999999999999999.99")
+            + CONVIERTE(DCC.INT-DCC-IMPPRM, "-999999999999999.99")
+            + CONVIERTE(DCC.INT-DCC-IMPMUL, "-9999999999999999.99")
+            + REPLACE(STRING(DCC.INT-DCC-GRAPIV, "99999999999.99"), "." , ",")
+            + STRING(DCC.INT-DCC-TERRIT, "9999")
+            + STRING(DCC.INT-DCC-NROREM, "9999999999")
+            + STRING(DCC.INT-DCC-CONPGO, "99").
+      PUT lineadcc
+          SKIP.
+
+       ASSIGN DCC_TRA.INT-DCC-CENFAC  = DCC_TRA.INT-DCC-CENFAC + DCC.INT-DCC-CENFAC
+              DCC_TRA.INT-DCC-CODDOC  = DCC_TRA.INT-DCC-CODDOC + DCC.INT-DCC-CODDOC 
+              DCC_TRA.INT-DCC-NUMDOC  = DCC_TRA.INT-DCC-NUMDOC + DCC.INT-DCC-NUMDOC
+              DCC_TRA.INT-DCC-FECING  = DCC_TRA.INT-DCC-FECING + DCC.INT-DCC-FECING
+              DCC_TRA.INT-DCC-NRGUIA  = DCC_TRA.INT-DCC-NRGUIA + DCC.INT-DCC-NRGUIA
+              DCC_TRA.INT-DCC-ORDGRA  = DCC_TRA.INT-DCC-ORDGRA + DCC.INT-DCC-ORDGRA
+              DCC_TRA.INT-DCC-CODGEN  = DCC_TRA.INT-DCC-CODGEN + DCC.INT-DCC-CODGEN        
+              DCC_TRA.INT-DCC-PLADEP  = DCC_TRA.INT-DCC-PLADEP + DCC.INT-DCC-PLADEP
+              DCC_TRA.INT-DCC-FECDOC  = DCC_TRA.INT-DCC-FECDOC + DCC.INT-DCC-FECDOC         
+              DCC_TRA.INT-DCC-NROCLI  = DCC_TRA.INT-DCC-NROCLI + DCC.INT-DCC-NROCLI           
+              DCC_TRA.INT-DCC-NROSUC  = DCC_TRA.INT-DCC-NROSUC + DCC.INT-DCC-NROSUC           
+              DCC_TRA.INT-DCC-CFDORI  = DCC_TRA.INT-DCC-CFDORI + DCC.INT-DCC-CFDORI          
+              DCC_TRA.INT-DCC-CODDOR  = DCC_TRA.INT-DCC-CODDOR + DCC.INT-DCC-CODDOR        
+              DCC_TRA.INT-DCC-NUMDOR  = DCC_TRA.INT-DCC-NUMDOR + DCC.INT-DCC-NUMDOR          
+              DCC_TRA.INT-DCC-FEVEFA  = DCC_TRA.INT-DCC-FEVEFA + DCC.INT-DCC-FEVEFA          
+              DCC_TRA.INT-DCC-FEVERE  = DCC_TRA.INT-DCC-FEVERE + DCC.INT-DCC-FEVERE          
+              DCC_TRA.INT-DCC-NROFLE  = DCC_TRA.INT-DCC-NROFLE + DCC.INT-DCC-NROFLE          
+              DCC_TRA.INT-DCC-NROREP  = DCC_TRA.INT-DCC-NROREP + DCC.INT-DCC-NROREP          
+              DCC_TRA.INT-DCC-HORING  = DCC_TRA.INT-DCC-HORING + DCC.INT-DCC-HORING          
+              DCC_TRA.INT-DCC-FEVILP  = DCC_TRA.INT-DCC-FEVILP + DCC.INT-DCC-FEVILP          
+              DCC_TRA.INT-DCC-IMPIVI  = DCC_TRA.INT-DCC-IMPIVI + DCC.INT-DCC-IMPIVI        
+              DCC_TRA.INT-DCC-IMPIVN  = DCC_TRA.INT-DCC-IMPIVN + DCC.INT-DCC-IMPIVN        
+              DCC_TRA.INT-DCC-IMPGRA  = DCC_TRA.INT-DCC-IMPGRA + DCC.INT-DCC-IMPGRA        
+              DCC_TRA.INT-DCC-IMPNGR  = DCC_TRA.INT-DCC-IMPNGR + DCC.INT-DCC-IMPNGR        
+              DCC_TRA.INT-DCC-IMPEIV  = DCC_TRA.INT-DCC-IMPEIV + DCC.INT-DCC-IMPEIV         
+              DCC_TRA.INT-DCC-IMPEIB  = DCC_TRA.INT-DCC-IMPEIB + DCC.INT-DCC-IMPEIB        
+              DCC_TRA.INT-DCC-IMPBON  = DCC_TRA.INT-DCC-IMPBON + DCC.INT-DCC-IMPBON        
+              DCC_TRA.INT-DCC-NROPED  = DCC_TRA.INT-DCC-NROPED + DCC.INT-DCC-NROPED          
+              DCC_TRA.INT-DCC-FEINCO  = DCC_TRA.INT-DCC-FEINCO + DCC.INT-DCC-FEINCO          
+              DCC_TRA.INT-DCC-CODZVT  = DCC_TRA.INT-DCC-CODZVT + DCC.INT-DCC-CODZVT          
+              DCC_TRA.INT-DCC-TIPCLI  = DCC_TRA.INT-DCC-TIPCLI + DCC.INT-DCC-TIPCLI          
+              DCC_TRA.INT-DCC-FECCON  = DCC_TRA.INT-DCC-FECCON + DCC.INT-DCC-FECCON          
+              DCC_TRA.INT-DCC-HORCON  = DCC_TRA.INT-DCC-HORCON + DCC.INT-DCC-HORCON          
+              DCC_TRA.INT-DCC-CODACT  = DCC_TRA.INT-DCC-CODACT + DCC.INT-DCC-CODACT           
+              DCC_TRA.INT-DCC-FECPCL  = DCC_TRA.INT-DCC-FECPCL + DCC.INT-DCC-FECPCL            
+              DCC_TRA.INT-DCC-CODPRO  = DCC_TRA.INT-DCC-CODPRO + DCC.INT-DCC-CODPRO           
+              DCC_TRA.INT-DCC-NROLEG  = DCC_TRA.INT-DCC-NROLEG + DCC.INT-DCC-NROLEG           
+              DCC_TRA.INT-DCC-LEGAJO-MOD = DCC_TRA.INT-DCC-LEGAJO-MOD + DCC.INT-DCC-LEGAJO-MOD       
+              DCC_TRA.INT-DCC-SUCEXT  = DCC_TRA.INT-DCC-SUCEXT + DCC.INT-DCC-SUCEXT          
+              DCC_TRA.INT-DCC-NUMEXT  = DCC_TRA.INT-DCC-NUMEXT + DCC.INT-DCC-NUMEXT          
+              DCC_TRA.INT-DCC-PERREF  = DCC_TRA.INT-DCC-PERREF + DCC.INT-DCC-PERREF          
+              DCC_TRA.INT-DCC-GRAILC  = DCC_TRA.INT-DCC-GRAILC + DCC.INT-DCC-GRAILC        
+              DCC_TRA.INT-DCC-GRAMAS  = DCC_TRA.INT-DCC-GRAMAS + DCC.INT-DCC-GRAMAS          
+              DCC_TRA.INT-DCC-NGRILC  = DCC_TRA.INT-DCC-NGRILC + DCC.INT-DCC-NGRILC         
+              DCC_TRA.INT-DCC-NGRMAS  = DCC_TRA.INT-DCC-NGRMAS + DCC.INT-DCC-NGRMAS         
+              DCC_TRA.INT-DCC-BONILC  = DCC_TRA.INT-DCC-BONILC + DCC.INT-DCC-BONILC          
+              DCC_TRA.INT-DCC-BONMAS  = DCC_TRA.INT-DCC-BONMAS + DCC.INT-DCC-BONMAS         
+              DCC_TRA.INT-DCC-PROILC  = DCC_TRA.INT-DCC-PROILC + DCC.INT-DCC-PROILC         
+              DCC_TRA.INT-DCC-PROMAS  = DCC_TRA.INT-DCC-PROMAS + DCC.INT-DCC-PROMAS         
+              DCC_TRA.INT-DCC-IMPBOI  = DCC_TRA.INT-DCC-IMPBOI + DCC.INT-DCC-IMPBOI         
+              DCC_TRA.INT-DCC-IMPBOM  = DCC_TRA.INT-DCC-IMPBOM + DCC.INT-DCC-IMPBOM         
+              DCC_TRA.INT-DCC-IMPPRI  = DCC_TRA.INT-DCC-IMPPRI + DCC.INT-DCC-IMPPRI         
+              DCC_TRA.INT-DCC-IMPPRM  = DCC_TRA.INT-DCC-IMPPRM + DCC.INT-DCC-IMPPRM         
+              DCC_TRA.INT-DCC-IMPMUL  = DCC_TRA.INT-DCC-IMPMUL + DCC.INT-DCC-IMPMUL         
+              DCC_TRA.INT-DCC-GRAPIV  = DCC_TRA.INT-DCC-GRAPIV + DCC.INT-DCC-GRAPIV         
+              DCC_TRA.INT-DCC-TERRIT  = DCC_TRA.INT-DCC-TERRIT + DCC.INT-DCC-TERRIT         
+              DCC_TRA.INT-DCC-NROREM  = DCC_TRA.INT-DCC-NROREM + DCC.INT-DCC-NROREM         
+              DCC_TRA.INT-DCC-CONPGO  = DCC_TRA.INT-DCC-CONPGO + DCC.INT-DCC-CONPGO.
+    
+      
+  END.
+  OUTPUT CLOSE.
+que_archivo = dire_tmp + "xcc." + archivo.
+OUTPUT TO VALUE(que_archivo).
+
+CREATE XCC_TRA.
+FOR EACH XCC:
+  lineaxcc = STRING(XCC.INT-XCC-CENFAC, "9999")
+           + STRING(XCC.INT-XCC-CODDOC, "999")
+           + STRING(XCC.INT-XCC-LETIVA, "X(1)")
+           + STRING(XCC.INT-XCC-NUMDOC, "99999999")
+           + STRING(XCC.INT-XCC-CODEMP, "99")
+           + CONVIERTE(XCC.INT-XCC-IMPGRAS, "-9999999999999999.99")
+           + CONVIERTE(XCC.INT-XCC-IMPNGRS, "-9999999999999999.99")
+           + CONVIERTE(XCC.INT-XCC-IMPPRO, "-999999999999999.99")
+           + CONVIERTE(XCC.INT-XCC-IMPBON, "-999999999999999.99")
+           + CONVIERTE(XCC.INT-XCC-IMPBOI, "-999999999999999.99")
+           + CONVIERTE(XCC.INT-XCC-IMPPIN, "-999999999999999.99")
+           + CONVIERTE(XCC.INT-XCC-IMPBOP, "-999999999999999.99")
+           + CONVIERTE(XCC.INT-XCC-IMPPRP, "-999999999999999.99")
+           + CONVIERTE(XCC.INT-XCC-GRABON, "-9999999999999999.99")
+           + CONVIERTE(XCC.INT-XCC-NGRBON, "-9999999999999999.99").
+        PUT
+            lineaxcc
+            SKIP.
+        ASSIGN  XCC_TRA.INT-XCC-CENFAC  = XCC_TRA.INT-XCC-CENFAC  + XCC.INT-XCC-CENFAC 
+                XCC_TRA.INT-XCC-CODDOC  = XCC_TRA.INT-XCC-CODDOC  + XCC.INT-XCC-CODDOC          
+                XCC_TRA.INT-XCC-NUMDOC  = XCC_TRA.INT-XCC-NUMDOC  + XCC.INT-XCC-NUMDOC           
+                XCC_TRA.INT-XCC-CODEMP  = XCC_TRA.INT-XCC-CODEMP  + XCC.INT-XCC-CODEMP          
+                XCC_TRA.INT-XCC-IMPGRAS = XCC_TRA.INT-XCC-IMPGRAS + XCC.INT-XCC-IMPGRAS           
+                XCC_TRA.INT-XCC-IMPNGRS = XCC_TRA.INT-XCC-IMPNGRS + XCC.INT-XCC-IMPNGRS            
+                XCC_TRA.INT-XCC-IMPPRO  = XCC_TRA.INT-XCC-IMPPRO  + XCC.INT-XCC-IMPPRO           
+                XCC_TRA.INT-XCC-IMPBON  = XCC_TRA.INT-XCC-IMPBON  + XCC.INT-XCC-IMPBON            
+                XCC_TRA.INT-XCC-IMPBOI  = XCC_TRA.INT-XCC-IMPBOI  + XCC.INT-XCC-IMPBOI           
+                XCC_TRA.INT-XCC-IMPPIN  = XCC_TRA.INT-XCC-IMPPIN  + XCC.INT-XCC-IMPPIN           
+                XCC_TRA.INT-XCC-IMPBOP  = XCC_TRA.INT-XCC-IMPBOP  + XCC.INT-XCC-IMPBOP           
+                XCC_TRA.INT-XCC-IMPPRP  = XCC_TRA.INT-XCC-IMPPRP  + XCC.INT-XCC-IMPPRP           
+                XCC_TRA.INT-XCC-GRABON  = XCC_TRA.INT-XCC-GRABON  + XCC.INT-XCC-GRABON           
+                XCC_TRA.INT-XCC-NGRBON  = XCC_TRA.INT-XCC-NGRBON  + XCC.INT-XCC-NGRBON.          
+
+END.
+OUTPUT CLOSE.
+
+que_archivo = dire_tmp + "zcc." + archivo.
+OUTPUT TO VALUE(que_archivo).
+
+CREATE ZCC_TRA.
+FOR EACH ZCC:
+   lineazcc = STRING(ZCC.INT-ZCC-CODDOC, "999")
+            + STRING(ZCC.INT-ZCC-CENFAC, "9999")
+            + STRING(ZCC.INT-ZCC-LETIVA, "X(1)")
+            + STRING(ZCC.INT-ZCC-NUMDOC, "99999999")
+            + STRING(ZCC.INT-ZCC-NROPRO, "9999")
+            + STRING(ZCC.INT-ZCC-CODSAB, "99")            
+            + REPLACE(STRING(ZCC.INT-ZCC-CANFAC, "9999999.999"), "." , ",")
+            + REPLACE(STRING(ZCC.INT-ZCC-CANCGA, "9999999.999"), "." , ",")
+            + REPLACE(STRING(ZCC.INT-ZCC-PREUNI, "9999999.999"), "." , ",")            
+            + CONVIERTE(ZCC.INT-ZCC-IMBOIN, "-9999999.999")
+            + CONVIERTE(ZCC.INT-ZCC-IMBODE, "-9999999.999")
+            + CONVIERTE(ZCC.INT-ZCC-IMBOTO, "-9999999.999")
+            + CONVIERTE(ZCC.INT-ZCC-IMPRIN, "-9999999.999")
+            + CONVIERTE(ZCC.INT-ZCC-IMPRDE, "-9999999.999")
+            + CONVIERTE(ZCC.INT-ZCC-IMPRTO, "-9999999.999")
+            + STRING(ZCC.INT-ZCC-CODEMP, "99")
+            + STRING(ZCC.INT-ZCC-ORDVL1, "9999")
+            + STRING(ZCC.INT-ZCC-ORDVL3, "9999")
+            + STRING(ZCC.INT-ZCC-INDIVA, "X(1)")
+            + REPLACE(STRING(ZCC.INT-ZCC-PORIVA, "999.999"), "." , ",")
+            + STRING(ZCC.INT-ZCC-CODCTO, "9999")
+            + CONVIERTE(ZCC.INT-ZCC-TOGRAV, "-9999999999999999.99")
+            + CONVIERTE(ZCC.INT-ZCC-TONEFA, "-9999999999999999.99")
+            + CONVIERTE(ZCC.INT-ZCC-TOTIVA, "-9999999999999999.99").
+        PUT
+            lineazcc
+            SKIP.
+
+        ASSIGN  ZCC_TRA.INT-ZCC-CODDOC  = ZCC_TRA.INT-ZCC-CODDOC + ZCC.INT-ZCC-CODDOC
+                ZCC_TRA.INT-ZCC-CENFAC  = ZCC_TRA.INT-ZCC-CENFAC + ZCC.INT-ZCC-CENFAC 
+                ZCC_TRA.INT-ZCC-NUMDOC  = ZCC_TRA.INT-ZCC-NUMDOC + ZCC.INT-ZCC-NUMDOC 
+                ZCC_TRA.INT-ZCC-NROPRO  = ZCC_TRA.INT-ZCC-NROPRO + ZCC.INT-ZCC-NROPRO 
+                ZCC_TRA.INT-ZCC-CODSAB  = ZCC_TRA.INT-ZCC-CODSAB + ZCC.INT-ZCC-CODSAB 
+                ZCC_TRA.INT-ZCC-CANFAC  = ZCC_TRA.INT-ZCC-CANFAC + ZCC.INT-ZCC-CANFAC 
+                ZCC_TRA.INT-ZCC-CANCGA  = ZCC_TRA.INT-ZCC-CANCGA + ZCC.INT-ZCC-CANCGA 
+                ZCC_TRA.INT-ZCC-PREUNI  = ZCC_TRA.INT-ZCC-PREUNI + ZCC.INT-ZCC-PREUNI 
+                ZCC_TRA.INT-ZCC-IMBOIN  = ZCC_TRA.INT-ZCC-IMBOIN + ZCC.INT-ZCC-IMBOIN 
+                ZCC_TRA.INT-ZCC-IMBODE  = ZCC_TRA.INT-ZCC-IMBODE + ZCC.INT-ZCC-IMBODE 
+                ZCC_TRA.INT-ZCC-IMBOTO  = ZCC_TRA.INT-ZCC-IMBOTO + ZCC.INT-ZCC-IMBOTO 
+                ZCC_TRA.INT-ZCC-IMPRIN  = ZCC_TRA.INT-ZCC-IMPRIN + ZCC.INT-ZCC-IMPRIN 
+                ZCC_TRA.INT-ZCC-IMPRDE  = ZCC_TRA.INT-ZCC-IMPRDE + ZCC.INT-ZCC-IMPRDE 
+                ZCC_TRA.INT-ZCC-IMPRTO  = ZCC_TRA.INT-ZCC-IMPRTO + ZCC.INT-ZCC-IMPRTO 
+                ZCC_TRA.INT-ZCC-CODEMP  = ZCC_TRA.INT-ZCC-CODEMP + ZCC.INT-ZCC-CODEMP 
+                ZCC_TRA.INT-ZCC-ORDVL1  = ZCC_TRA.INT-ZCC-ORDVL1 + ZCC.INT-ZCC-ORDVL1 
+                ZCC_TRA.INT-ZCC-ORDVL3  = ZCC_TRA.INT-ZCC-ORDVL3 + ZCC.INT-ZCC-ORDVL3 
+                ZCC_TRA.INT-ZCC-PORIVA  = ZCC_TRA.INT-ZCC-PORIVA + ZCC.INT-ZCC-PORIVA 
+                ZCC_TRA.INT-ZCC-CODCTO  = ZCC_TRA.INT-ZCC-CODCTO + ZCC.INT-ZCC-CODCTO 
+                ZCC_TRA.INT-ZCC-TOGRAV  = ZCC_TRA.INT-ZCC-TOGRAV + ZCC.INT-ZCC-TOGRAV 
+                ZCC_TRA.INT-ZCC-TONEFA  = ZCC_TRA.INT-ZCC-TONEFA + ZCC.INT-ZCC-TONEFA 
+                ZCC_TRA.INT-ZCC-TOTIVA  = ZCC_TRA.INT-ZCC-TOTIVA + ZCC.INT-ZCC-TOTIVA.
+        
+END.
+OUTPUT CLOSE.
+
+que_archivo = dire_tmp + "scm." + archivo.
+OUTPUT TO VALUE(que_archivo).
+
+CREATE SCM_TRA.
+FOR EACH SCM:
+  lineascm = STRING(SCM.INT-SCM-CODGEN, "9")
+           + STRING(SCM.INT-SCM-AMNDOP, "999999")
+           + STRING(SCM.INT-SCM-PLADEP, "9999")
+           + STRING(SCM.INT-SCM-CODDOC, "999")
+           + STRING(SCM.INT-SCM-FECDOC, "99999999")
+           + REPLACE(STRING(SCM.INT-SCM-IMPNGR, "9999999999999999.99"), "." , ",")
+           + REPLACE(STRING(SCM.INT-SCM-IMPGRA, "9999999999999999.99"), "." , ",")
+           + REPLACE(STRING(SCM.INT-SCM-IMPIVI, "9999999999999999.99"), "." , ",")
+           + REPLACE(STRING(SCM.INT-SCM-IMPIVN, "9999999999999999.99"), "." , ",")
+           + REPLACE(STRING(SCM.INT-SCM-IMPEIV, "9999999999999999.99"), "." , ",")
+           + REPLACE(STRING(SCM.INT-SCM-IMPEIB, "9999999999999999.99"), "." , ",")
+           + STRING(SCM.INT-SCM-TIPCLI, "99")
+           + STRING(SCM.INT-SCM-LETIVA, "X(1)")
+           + CONVIERTE(SCM.INT-SCM-IMPBON, "-999999999999999.99")
+           + CONVIERTE(SCM.INT-SCM-GRAILC, "-99999999999.99")
+           + CONVIERTE(SCM.INT-SCM-GRAMAS, "-99999999999.99")
+           + CONVIERTE(SCM.INT-SCM-NGRILC, "-99999999999.99")
+           + CONVIERTE(SCM.INT-SCM-NGRMAS, "-99999999999.99")
+           + CONVIERTE(SCM.INT-SCM-PROILC, "-99999999999.99")
+           + CONVIERTE(SCM.INT-SCM-PROMAS, "-99999999999.99")
+           + CONVIERTE(SCM.INT-SCM-BONILC, "-99999999999.99")
+           + CONVIERTE(SCM.INT-SCM-BONMAS, "-99999999999.99")
+           + CONVIERTE(SCM.INT-SCM-IMPBOI, "-999999999999999.99")
+           + CONVIERTE(SCM.INT-SCM-IMPBOM, "-999999999999999.99")
+           + CONVIERTE(SCM.INT-SCM-IMPPRI, "-999999999999999.99")
+           + CONVIERTE(SCM.INT-SCM-IMPPRM, "-999999999999999.99")
+           + REPLACE(STRING(SCM.INT-SCM-IMPEIVX, "9999999999999999.99"), "." , ",").
+                      
+        PUT
+            lineascm
+            SKIP.
+        ASSIGN  SCM_TRA.INT-SCM-CODGEN   = SCM_TRA.INT-SCM-CODGEN + SCM.INT-SCM-CODGEN
+                SCM_TRA.INT-SCM-AMNDOP   = SCM_TRA.INT-SCM-AMNDOP + SCM.INT-SCM-AMNDOP
+                SCM_TRA.INT-SCM-PLADEP   = SCM_TRA.INT-SCM-PLADEP + SCM.INT-SCM-PLADEP 
+                SCM_TRA.INT-SCM-CODDOC   = SCM_TRA.INT-SCM-CODDOC + SCM.INT-SCM-CODDOC  
+                SCM_TRA.INT-SCM-FECDOC   = SCM_TRA.INT-SCM-FECDOC + SCM.INT-SCM-FECDOC 
+                SCM_TRA.INT-SCM-IMPNGR   = SCM_TRA.INT-SCM-IMPNGR + SCM.INT-SCM-IMPNGR 
+                SCM_TRA.INT-SCM-IMPGRA   = SCM_TRA.INT-SCM-IMPGRA + SCM.INT-SCM-IMPGRA 
+                SCM_TRA.INT-SCM-IMPIVI   = SCM_TRA.INT-SCM-IMPIVI + SCM.INT-SCM-IMPIVI  
+                SCM_TRA.INT-SCM-IMPIVN   = SCM_TRA.INT-SCM-IMPIVN + SCM.INT-SCM-IMPIVN   
+                SCM_TRA.INT-SCM-IMPEIV   = SCM_TRA.INT-SCM-IMPEIV + SCM.INT-SCM-IMPEIV  
+                SCM_TRA.INT-SCM-IMPEIB   = SCM_TRA.INT-SCM-IMPEIB + SCM.INT-SCM-IMPEIB
+                SCM_TRA.INT-SCM-TIPCLI   = SCM_TRA.INT-SCM-TIPCLI + SCM.INT-SCM-TIPCLI
+                SCM_TRA.INT-SCM-IMPBON   = SCM_TRA.INT-SCM-IMPBON + SCM.INT-SCM-IMPBON
+                SCM_TRA.INT-SCM-GRAILC   = SCM_TRA.INT-SCM-GRAILC + SCM.INT-SCM-GRAILC 
+                SCM_TRA.INT-SCM-GRAMAS   = SCM_TRA.INT-SCM-GRAMAS + SCM.INT-SCM-GRAMAS 
+                SCM_TRA.INT-SCM-NGRILC   = SCM_TRA.INT-SCM-NGRILC + SCM.INT-SCM-NGRILC
+                SCM_TRA.INT-SCM-NGRMAS   = SCM_TRA.INT-SCM-NGRMAS + SCM.INT-SCM-NGRMAS
+                SCM_TRA.INT-SCM-PROILC   = SCM_TRA.INT-SCM-PROILC + SCM.INT-SCM-PROILC    
+                SCM_TRA.INT-SCM-PROMAS   = SCM_TRA.INT-SCM-PROMAS + SCM.INT-SCM-PROMAS
+                SCM_TRA.INT-SCM-BONILC   = SCM_TRA.INT-SCM-BONILC + SCM.INT-SCM-BONILC  
+                SCM_TRA.INT-SCM-BONMAS   = SCM_TRA.INT-SCM-BONMAS + SCM.INT-SCM-BONMAS 
+                SCM_TRA.INT-SCM-IMPBOI   = SCM_TRA.INT-SCM-IMPBOI + SCM.INT-SCM-IMPBOI  
+                SCM_TRA.INT-SCM-IMPBOM   = SCM_TRA.INT-SCM-IMPBOM + SCM.INT-SCM-IMPBOM
+                SCM_TRA.INT-SCM-IMPPRI   = SCM_TRA.INT-SCM-IMPPRI + SCM.INT-SCM-IMPPRI
+                SCM_TRA.INT-SCM-IMPPRM   = SCM_TRA.INT-SCM-IMPPRM + SCM.INT-SCM-IMPPRM
+                SCM_TRA.INT-SCM-IMPEIVX  = SCM_TRA.INT-SCM-IMPEIVX + SCM.INT-SCM-IMPEIVX .
+
+END.
+OUTPUT CLOSE.
+
+que_archivo = dire_tmp + "asc." + archivo.
+OUTPUT TO VALUE(que_archivo).
+CREATE ASCC_TRA.
+FOR EACH ASCC:
+   lineaasc = STRING(ASCC.INT-ASCC-CODGEN, "9")
+            + STRING(ASCC.INT-ASCC-AMNDOP, "999999")
+            + STRING(ASCC.INT-ASCC-PLADEP, "9999")
+            + STRING(ASCC.INT-ASCC-CODDOC, "999")
+            + STRING(ASCC.INT-ASCC-FECDOC, "99999999")
+            + STRING(ASCC.INT-ASCC-CODPRO, "99")
+            + REPLACE(STRING(ASCC.INT-ASCC-IMPEIB, "9999999999999999.99"), "." , ",").
+        PUT
+            lineaasc
+            SKIP.
+       ASSIGN  ASCC_TRA.INT-ASCC-CODGEN = ASCC_TRA.INT-ASCC-CODGEN + ASCC.INT-ASCC-CODGEN
+               ASCC_TRA.INT-ASCC-AMNDOP = ASCC_TRA.INT-ASCC-AMNDOP + ASCC.INT-ASCC-AMNDOP 
+               ASCC_TRA.INT-ASCC-PLADEP = ASCC_TRA.INT-ASCC-PLADEP + ASCC.INT-ASCC-PLADEP
+               ASCC_TRA.INT-ASCC-CODDOC = ASCC_TRA.INT-ASCC-CODDOC + ASCC.INT-ASCC-CODDOC
+               ASCC_TRA.INT-ASCC-FECDOC = ASCC_TRA.INT-ASCC-FECDOC + ASCC.INT-ASCC-FECDOC
+               ASCC_TRA.INT-ASCC-CODPRO = ASCC_TRA.INT-ASCC-CODPRO + ASCC.INT-ASCC-CODPRO 
+               ASCC_TRA.INT-ASCC-IMPEIB = ASCC_TRA.INT-ASCC-IMPEIB + ASCC.INT-ASCC-IMPEIB.  
+
+END.
+OUTPUT CLOSE.
+/* __________________________________________________________________________________________________________*/
+/*                                                                                                           */
+/*                                      GENERO LOS ARCHIVOS "TRAILER"                                        */
+/* __________________________________________________________________________________________________________*/
+
+archivo = STRING(YEAR(has_fecha),"9999") + STRING(MONTH(has_fecha),"99") + STRING(DAY(has_fecha),"99") + "." + REPLACE(STRING(TIME, "HH:mm:SS"), ":", "") + ".0042.p.tra".
+que_archivo = dire_tmp + "dcc." + archivo. 
+
+OUTPUT TO VALUE(que_archivo).
+
+  FOR EACH DCC_TRA:
+    lineadcct = STRING(DCC_TRA.INT-DCC-CENFAC, "9999999999")
+              + STRING(DCC_TRA.INT-DCC-CODDOC, "999999999")
+              + STRING(DCC_TRA.INT-DCC-NUMDOC, "99999999999999")
+              + STRING(DCC_TRA.INT-DCC-FECING, "99999999999999")
+              + STRING(DCC_TRA.INT-DCC-NRGUIA, "99999999999999")
+              + STRING(DCC_TRA.INT-DCC-ORDGRA, "9999999999")
+              + STRING(DCC_TRA.INT-DCC-CODGEN, "9999999")
+              + STRING(DCC_TRA.INT-DCC-PLADEP, "9999999999")
+              + STRING(DCC_TRA.INT-DCC-FECDOC, "99999999999999")
+              + STRING(DCC_TRA.INT-DCC-NROCLI, "999999999999")
+              + STRING(DCC_TRA.INT-DCC-NROSUC, "9999999999")
+              + STRING(DCC_TRA.INT-DCC-CFDORI, "9999999999")
+              + STRING(DCC_TRA.INT-DCC-CODDOR, "999999999")
+              + STRING(DCC_TRA.INT-DCC-NUMDOR, "99999999999999")
+              + STRING(DCC_TRA.INT-DCC-FEVEFA, "99999999999999")
+              + STRING(DCC_TRA.INT-DCC-FEVERE, "99999999999999")
+              + STRING(DCC_TRA.INT-DCC-NROFLE, "9999999999")
+              + STRING(DCC_TRA.INT-DCC-NROREP, "9999999999")
+              + STRING(DCC_TRA.INT-DCC-HORING, "999999999999")
+              + STRING(DCC_TRA.INT-DCC-FEVILP, "99999999999999")
+              + REPLACE(STRING(DCC_TRA.INT-DCC-IMPIVI, "9999999999999999.99"), "." , ",")
+              + REPLACE(STRING(DCC_TRA.INT-DCC-IMPIVN, "9999999999999999.99"), "." , ",")
+              + REPLACE(STRING(DCC_TRA.INT-DCC-IMPGRA, "9999999999999999.99"), "." , ",")
+              + REPLACE(STRING(DCC_TRA.INT-DCC-IMPNGR, "9999999999999999.99"), "." , ",")
+              + REPLACE(STRING(DCC_TRA.INT-DCC-IMPEIV, "9999999999999999.99"), "." , ",")
+              + REPLACE(STRING(DCC_TRA.INT-DCC-IMPEIB, "9999999999999999.99"), "." , ",")
+              + CONVIERTE(DCC_TRA.INT-DCC-IMPBON, "-9999999999999999.99")
+              + STRING(DCC_TRA.INT-DCC-NROPED, "9999999999999999")
+              + STRING(DCC_TRA.INT-DCC-FEINCO, "99999999999999")
+              + STRING(DCC_TRA.INT-DCC-CODZVT, "9999999999")
+              + STRING(DCC_TRA.INT-DCC-TIPCLI, "99999999")
+              + STRING(DCC_TRA.INT-DCC-FECCON, "99999999999999")
+              + STRING(DCC_TRA.INT-DCC-HORCON, "999999999999")
+              + STRING(DCC_TRA.INT-DCC-CODACT, "99999999")
+              + STRING(DCC_TRA.INT-DCC-FECPCL, "99999999999999")
+              + STRING(DCC_TRA.INT-DCC-CODPRO, "99999999")
+              + STRING(DCC_TRA.INT-DCC-NROLEG, "999999999999")
+              + STRING(DCC_TRA.INT-DCC-LEGAJO-MOD, "999999999999")
+              + STRING(DCC_TRA.INT-DCC-SUCEXT, "9999999999")
+              + STRING(DCC_TRA.INT-DCC-NUMEXT, "99999999999999")
+              + STRING(DCC_TRA.INT-DCC-PERREF, "999999999999")
+              + CONVIERTE(DCC_TRA.INT-DCC-GRAILC, "-9999999999999999.99")
+              + CONVIERTE(DCC_TRA.INT-DCC-GRAMAS, "-9999999999999999.99")
+              + CONVIERTE(DCC_TRA.INT-DCC-NGRILC, "-9999999999999999.99")
+              + CONVIERTE(DCC_TRA.INT-DCC-NGRMAS, "-9999999999999999.99")
+              + CONVIERTE(DCC_TRA.INT-DCC-BONILC, "-9999999999999999.99")
+              + CONVIERTE(DCC_TRA.INT-DCC-BONMAS, "-9999999999999999.99")
+              + CONVIERTE(DCC_TRA.INT-DCC-PROILC, "-9999999999999999.99")
+              + CONVIERTE(DCC_TRA.INT-DCC-PROMAS, "-9999999999999999.99")
+              + CONVIERTE(DCC_TRA.INT-DCC-IMPBOI, "-9999999999999999.99")
+              + CONVIERTE(DCC_TRA.INT-DCC-IMPBOM, "-9999999999999999.99")
+              + CONVIERTE(DCC_TRA.INT-DCC-IMPPRI, "-9999999999999999.99")
+              + CONVIERTE(DCC_TRA.INT-DCC-IMPPRM, "-9999999999999999.99")
+              + CONVIERTE(DCC_TRA.INT-DCC-IMPMUL, "-9999999999999999.99")
+              + REPLACE(STRING(DCC_TRA.INT-DCC-GRAPIV, "9999999999999999.99"), "." , ",")
+              + STRING(DCC_TRA.INT-DCC-TERRIT, "9999999999")
+              + STRING(DCC_TRA.INT-DCC-NROREM, "9999999999999999")
+              + STRING(DCC_TRA.INT-DCC-CONPGO, "99999999").
+        PUT lineadcct
+            SKIP.
+  END.
+OUTPUT CLOSE.
+
+que_archivo = dire_tmp + "xcc." + archivo.
+OUTPUT TO VALUE(que_archivo).
+
+FOR EACH XCC_TRA:
+ lineaxcct = STRING(XCC_TRA.INT-XCC-CENFAC, "9999999999")
+           + STRING(XCC_TRA.INT-XCC-CODDOC, "999999999")
+           + STRING(XCC_TRA.INT-XCC-NUMDOC, "99999999999999")
+           + STRING(XCC_TRA.INT-XCC-CODEMP, "99999999")
+           + CONVIERTE(XCC_TRA.INT-XCC-IMPGRAS, "-9999999999999999.99")
+           + CONVIERTE(XCC_TRA.INT-XCC-IMPNGRS, "-9999999999999999.99")
+           + CONVIERTE(XCC_TRA.INT-XCC-IMPPRO,  "-9999999999999999.99")
+           + CONVIERTE(XCC_TRA.INT-XCC-IMPBON,  "-9999999999999999.99")
+           + CONVIERTE(XCC_TRA.INT-XCC-IMPBOI,  "-9999999999999999.99")
+           + CONVIERTE(XCC_TRA.INT-XCC-IMPPIN,  "-9999999999999999.99")
+           + CONVIERTE(XCC_TRA.INT-XCC-IMPBOP,  "-9999999999999999.99")
+           + CONVIERTE(XCC_TRA.INT-XCC-IMPPRP,  "-9999999999999999.99")
+           + CONVIERTE(XCC_TRA.INT-XCC-GRABON,  "-9999999999999999.99")
+           + CONVIERTE(XCC_TRA.INT-XCC-NGRBON,  "-9999999999999999.99").
+        PUT
+            lineaxcct
+            SKIP.
+END.
+OUTPUT CLOSE.
+
+que_archivo = dire_tmp + "zcc." + archivo.
+OUTPUT TO VALUE(que_archivo).
+FOR EACH ZCC_TRA:
+  lineazcct = STRING(ZCC_TRA.INT-ZCC-CODDOC, "999999999")
+            + STRING(ZCC_TRA.INT-ZCC-CENFAC, "9999999999")
+            + STRING(ZCC_TRA.INT-ZCC-NUMDOC, "99999999999999")
+            + STRING(ZCC_TRA.INT-ZCC-NROPRO, "9999999999")
+            + STRING(ZCC_TRA.INT-ZCC-CODSAB, "99999999")            
+            + REPLACE(STRING(ZCC_TRA.INT-ZCC-CANFAC, "9999999999999.999"), "." , ",")
+            + REPLACE(STRING(ZCC_TRA.INT-ZCC-CANCGA, "9999999999999.999"), "." , ",")
+            + REPLACE(STRING(ZCC_TRA.INT-ZCC-PREUNI, "9999999999999.999"), "." , ",")            
+            + CONVIERTE(ZCC_TRA.INT-ZCC-IMBOIN, "-9999999999999.999")
+            + CONVIERTE(ZCC_TRA.INT-ZCC-IMBODE, "-9999999999999.999")
+            + CONVIERTE(ZCC_TRA.INT-ZCC-IMBOTO, "-9999999999999.999")
+            + CONVIERTE(ZCC_TRA.INT-ZCC-IMPRIN, "-9999999999999.999")
+            + CONVIERTE(ZCC_TRA.INT-ZCC-IMPRDE, "-9999999999999.999")
+            + CONVIERTE(ZCC_TRA.INT-ZCC-IMPRTO, "-9999999999999.999")
+            + STRING(ZCC_TRA.INT-ZCC-CODEMP, "99999999")
+            + STRING(ZCC_TRA.INT-ZCC-ORDVL1, "9999999999")
+            + STRING(ZCC_TRA.INT-ZCC-ORDVL3, "9999999999")
+            + REPLACE(STRING(ZCC_TRA.INT-ZCC-PORIVA, "999999999.999"), "." , ",")
+            + STRING(ZCC_TRA.INT-ZCC-CODCTO, "9999999999")
+            + CONVIERTE(ZCC_TRA.INT-ZCC-TOGRAV, "-9999999999999999.99")
+            + CONVIERTE(ZCC_TRA.INT-ZCC-TONEFA, "-9999999999999999.99")
+            + CONVIERTE(ZCC_TRA.INT-ZCC-TOTIVA, "-9999999999999999.99").
+        PUT
+            lineazcct
+            SKIP.
+END.
+OUTPUT CLOSE.
+
+que_archivo = dire_tmp + "scm." + archivo.
+OUTPUT TO VALUE(que_archivo).
+
+FOR EACH SCM_TRA:
+ lineascmt = STRING(SCM_TRA.INT-SCM-CODGEN, "9999999")
+           + STRING(SCM_TRA.INT-SCM-AMNDOP, "999999999999")
+           + STRING(SCM_TRA.INT-SCM-PLADEP, "9999999999")
+           + STRING(SCM_TRA.INT-SCM-CODDOC, "999999999")
+           + STRING(SCM_TRA.INT-SCM-FECDOC, "99999999999999")
+           + REPLACE(STRING(SCM_TRA.INT-SCM-IMPNGR, "9999999999999999.99"), "." , ",")
+           + REPLACE(STRING(SCM_TRA.INT-SCM-IMPGRA, "9999999999999999.99"), "." , ",")
+           + REPLACE(STRING(SCM_TRA.INT-SCM-IMPIVI, "9999999999999999.99"), "." , ",")
+           + REPLACE(STRING(SCM_TRA.INT-SCM-IMPIVN, "9999999999999999.99"), "." , ",")
+           + REPLACE(STRING(SCM_TRA.INT-SCM-IMPEIV, "9999999999999999.99"), "." , ",")
+           + REPLACE(STRING(SCM_TRA.INT-SCM-IMPEIB, "9999999999999999.99"), "." , ",")
+           + STRING(SCM_TRA.INT-SCM-TIPCLI, "99999999")
+           + CONVIERTE(SCM_TRA.INT-SCM-IMPBON, "-9999999999999999.99")
+           + CONVIERTE(SCM_TRA.INT-SCM-GRAILC, "-9999999999999999.99")
+           + CONVIERTE(SCM_TRA.INT-SCM-GRAMAS, "-9999999999999999.99")
+           + CONVIERTE(SCM_TRA.INT-SCM-NGRILC, "-9999999999999999.99")
+           + CONVIERTE(SCM_TRA.INT-SCM-NGRMAS, "-9999999999999999.99")
+           + CONVIERTE(SCM_TRA.INT-SCM-PROILC, "-9999999999999999.99")
+           + CONVIERTE(SCM_TRA.INT-SCM-PROMAS, "-9999999999999999.99")
+           + CONVIERTE(SCM_TRA.INT-SCM-BONILC, "-9999999999999999.99")
+           + CONVIERTE(SCM_TRA.INT-SCM-BONMAS, "-9999999999999999.99")
+           + CONVIERTE(SCM_TRA.INT-SCM-IMPBOI, "-9999999999999999.99")
+           + CONVIERTE(SCM_TRA.INT-SCM-IMPBOM, "-9999999999999999.99")
+           + CONVIERTE(SCM_TRA.INT-SCM-IMPPRI, "-9999999999999999.99")
+           + CONVIERTE(SCM_TRA.INT-SCM-IMPPRM, "-9999999999999999.99")
+           + REPLACE(STRING(SCM_TRA.INT-SCM-IMPEIVX, "9999999999999999.99"), "." , ",").
+                      
+        PUT
+            lineascmt
+            SKIP.
+END.
+OUTPUT CLOSE.
+
+que_archivo = dire_tmp + "asc." + archivo.
+OUTPUT TO VALUE(que_archivo).
+FOR EACH ASCC_TRA:
+  lineaasct = STRING(ASCC_TRA.INT-ASCC-CODGEN, "9999999")
+            + STRING(ASCC_TRA.INT-ASCC-AMNDOP, "999999999999")
+            + STRING(ASCC_TRA.INT-ASCC-PLADEP, "9999999999")
+            + STRING(ASCC_TRA.INT-ASCC-CODDOC, "999999999")
+            + STRING(ASCC_TRA.INT-ASCC-FECDOC, "99999999999999")
+            + STRING(ASCC_TRA.INT-ASCC-CODPRO, "99999999")
+            + REPLACE(STRING(ASCC_TRA.INT-ASCC-IMPEIB, "9999999999999999.99"), "." , ",").
+        PUT
+            lineaasct
+            SKIP.
+END.
+OUTPUT CLOSE.
+
+END PROCEDURE.
+
+
+/* __________________________________________________________________________________________________________*/
+/*                                                                                                           */
+/*                                           funciones                                                       */
+/* __________________________________________________________________________________________________________*/
+
+FUNCTION CONVIERTE RETURNS CHARACTER. 
+DEFINE VARIABLE Dato AS CHARACTER.
+
+    IF parm1 < 0 then Dato = REPLACE(STRING(parm1, parm2), "." , ",").
+    ELSE Dato = REPLACE(REPLACE(STRING(parm1, parm2), "." , ","), " ", "+").
+
+    RETURN (Dato). 
+    
+END FUNCTION.    
+
+
+

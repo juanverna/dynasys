@@ -1,0 +1,23 @@
+  /*====================================================================================*/
+  /*        VALIDA LA EJECUCION DEL PROGRAMA DE MANTENIMIENTO DE CLIENTES               */
+  /*====================================================================================*/
+
+  DEFINE INPUT PARAMETER p-lista-permiso LIKE Parametro.cdg_parametro.
+  DEFINE INPUT PARAMETER p-programa      AS CHARACTER.
+
+  FIND Parametro WHERE Parametro.cdg_parametro = p-lista-permiso NO-LOCK NO-ERROR.
+  IF AVAILABLE Parametro  
+  THEN DO:
+        IF CAN-DO(Parametro.observacion,USERID("despacho")) 
+        THEN DO:
+              RUN VALUE(p-programa).
+        END.
+        ELSE DO:
+              MESSAGE "Se intenta ejecutar una función no autorizada"
+                      VIEW-AS ALERT-BOX ERROR TITLE "Error de seguridad".
+        END.
+  END.
+  ELSE DO:
+        MESSAGE "Se intenta ejecutar una función no autorizada"
+                VIEW-AS ALERT-BOX ERROR TITLE "Error de seguridad".
+  END.

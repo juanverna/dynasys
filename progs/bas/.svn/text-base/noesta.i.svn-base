@@ -1,0 +1,2 @@
+  MESSAGE "Funcion no implementada	"
+          VIEW-AS ALERT-BOX MESSAGE TITLE "Informacion".

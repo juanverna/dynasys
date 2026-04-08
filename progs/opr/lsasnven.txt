@@ -1,0 +1,824 @@
+
+Fumigadora Paulista S.R.L.                                 Detalle de Movimientos por Caja                                                 Página: 1
+27/09/18                                                   del 01/06/18 1200 al 28/09/18 1200                                              08:30:30
+                                                           Caja:  2 Arrastrar Saldos:Desde Dia/Hora  -  Consolidado:No
+
+
+Fecha    Hora  Cod Comprobante    Observaciones                                    Importe         Importe        Arrastre Ru-              Importe Observaciones de
+Comp     Comp  Emp Movimiento     Comprobante                                     Ingresos         Egresos           Saldo bro              Detalle Detalle del movimiento
+-------- ----- --- ------------   ---------------------------------------- --------------- --------------- --------------- -------- --------------- ---------------------------------
+01/06    12:00                    Saldo inicial                                                                  -4,950.84
+01/06    14:22 P   CJ    12845  E nahuel voguel                                                     200.00       -5,150.84 EFTVO             200.00
+         15:04 P   CJ    12846  E refrigerio emanuel                                                 20.00       -5,170.84 EFTVO              20.00
+         16:00 P   CJ    12847  E anulacion mov. 12841                                              940.00       -6,110.84 EFTVO             940.00
+         16:03 P   CJ    12848  E fer                                                            15,000.00      -21,110.84 EFTVO          15,000.00
+         16:04 P   TI    12849  E transferencia                                  24,266.10                        3,155.26 EFTVO          24,266.10
+04/06    09:56 P   CJ    12850  E nafta gomez                                                        30.08        3,125.18 EFTVO              30.08
+         10:21 P   CJ    12851  E sube                                                            2,100.00        1,025.18 EFTVO           2,100.00
+         11:30 P   CJ    12852  E sueldos fer                                                       658.00          367.18 EFTVO             658.00
+         11:48 P   CJ    12853  E massobact fc. 2900                                                741.12         -373.94 EFTVO             741.12
+         12:48 P   CJ    12854  E vero tarta                                                         70.00         -443.94 EFTVO              70.00
+         15:26 P   CJ    12855  E sueldos                                                           130.00         -573.94 EFTVO             130.00
+         15:28 P   TI    12856  E transferencia                                  17,070.10                       16,496.16 EFTVO          17,070.10
+05/06    09:00 P   CJ    12857  E sube fernando                                                     200.00       16,296.16 EFTVO             200.00
+         11:09 P   CJ    12858  E sueldos fer                                                       658.00       15,638.16 EFTVO             658.00
+         11:26 P   CJ    12859  E caja gaston                                                       400.00       15,238.16 EFTVO             400.00
+         11:27 P   CJ    12860  E nafta pepe                                                        400.00       14,838.16 EFTVO             400.00
+         13:48 P   CJ    12861  E nafta gomez                                                        50.23       14,787.93 EFTVO              50.23
+         14:58 P   CJ    12862  E fer fotocopias                                                     10.00       14,777.93 EFTVO              10.00
+         15:33 P   CJ    12863  E papel higienico                                                    70.00       14,707.93 EFTVO              70.00
+         16:03 P   CJ    12864  E fer                                                            20,000.00       -5,292.07 EFTVO          20,000.00
+         16:11 P   CJ    12866  E mov. 12865 erroneo                                             13,283.25      -18,575.32 EFTVO          13,283.25
+         16:11 P   TI    12867  E transferencia                                  13,283.25                       -5,292.07 EFTVO          13,283.25
+         16:15 P   CJ    12868  E anulo mov. 12866                               13,283.25                        7,991.18 EFTVO          13,283.25
+07/06    09:12 P   CJ    12870  E peajes pepe                                                        46.00        7,945.18 EFTVO              46.00
+         09:25 P   CJ    12871  E jose cambio de perilla                                            250.00        7,695.18 EFTVO             250.00
+         10:21 P   CJ    12872  E obra 4                                                          2,099.96        5,595.22 EFTVO           2,099.96
+         10:24 P   CJ    12873  E 1 mouse                                                           360.00        5,235.22 EFTVO             360.00
+         10:28 P   CJ    12874  E azucar                                                             25.00        5,210.22 EFTVO              25.00
+         10:30 P   CJ    12875  E sube                                                            2,200.00        3,010.22 EFTVO           2,200.00
+         13:10 P   CJ    12876  E sube omar marquez                                                 300.00        2,710.22 EFTVO             300.00
+         14:23 P   CJ    12877  E obra 4                                                          2,937.88         -227.66 EFTVO           2,937.88
+         14:43 P   CJ    12878  E libro actas                                                       650.00         -877.66 EFTVO             650.00
+         14:52 P   CJ    12879  E bonificacion monrini figueron                                     415.00       -1,292.66 EFTVO             415.00
+         15:04 P   CJ    12880  E fer                                                            20,000.00      -21,292.66 EFTVO          20,000.00
+         15:04 P   TI    12881  E transferencia                                  27,131.00                        5,838.34 EFTVO          27,131.00
+08/06    09:47 P   CJ    12882  E rapipago                                                        3,732.50        2,105.84 EFTVO           3,732.50
+         11:22 P   CJ    12883  E correo                                                            318.00        1,787.84 EFTVO             318.00
+         11:23 P   CJ    12884  E fotocopias                                                          4.00        1,783.84 EFTVO               4.00
+         11:23 P   CJ    12885  E detergente                                                         30.00        1,753.84 EFTVO              30.00
+         13:03 P   CJ    12886  E lavandina fc. 6579                                                370.00        1,383.84 EFTVO             370.00
+         13:30 P   TI    12887  E transferencia                                   3,887.00                        5,270.84 EFTVO           3,887.00
+         14:04 P   CJ    12888  E sube fernando                                                     200.00        5,070.84 EFTVO             200.00
+11/06    13:58 P   CJ    12889  E greco bonif.                                                    1,145.00        3,925.84 EFTVO           1,145.00
+12/06    10:55 P   CJ    12890  E auriculares                                                       299.85        3,625.99 EFTVO             299.85
+         10:55 P   CJ    12891  E sube norma                                                        200.00        3,425.99 EFTVO             200.00
+         10:56 P   CJ    12892  E bonif. greco                                                    1,145.00        2,280.99 EFTVO           1,145.00
+         10:56 P   CJ    12893  E dif. aracor                                                       176.72        2,104.27 EFTVO             176.72
+         10:57 P   CJ    12894  E disco rigido                                                    2,511.38         -407.11 EFTVO           2,511.38
+         10:57 P   CJ    12895  E vero sandwich                                                      72.00         -479.11 EFTVO              72.00
+         10:58 P   CJ    12896  E nafta gomez                                                        48.80         -527.91 EFTVO              48.80
+         10:59 P   CJ    12897  E reintegro caja cauvin                              10.00                         -517.91 EFTVO              10.00
+         11:00 P   CJ    12898  E sube                                                            1,200.00       -1,717.91 EFTVO           1,200.00
+         11:05 P   CJ    12899  E sube                                                            1,000.00       -2,717.91 EFTVO           1,000.00
+         12:32 P   CJ    12900  E sube                                                            1,600.00       -4,317.91 EFTVO           1,600.00
+         14:59 P   CJ    12901  E diferencia emprego                                                 80.00       -4,397.91 EFTVO              80.00
+         15:00 P   CJ    12902  E pegamento                                                         320.00       -4,717.91 EFTVO             320.00
+         15:00 P   CJ    12903  E moto patada gomez                                                 180.00       -4,897.91 EFTVO             180.00
+         15:01 P   CJ    12904  E sellador fc. 3848                                                 330.00       -5,227.91 EFTVO             330.00
+         15:13 P   CJ    12905  E bonif. kalejman                                                   299.00       -5,526.91 EFTVO             299.00
+         15:16 P   CJ    12906  E bonif. magnani                                                  2,289.00       -7,815.91 EFTVO           2,289.00
+         15:46 P   CJ    12907  E anulacion mov. 12892                            1,145.00                       -6,670.91 EFTVO           1,145.00
+         15:52 P   TI    12908  E transferencia                                  11,090.70                        4,419.79 EFTVO          11,090.70
+
+Fumigadora Paulista S.R.L.                                 Detalle de Movimientos por Caja                                                 Página: 2
+27/09/18                                                   del 01/06/18 1200 al 28/09/18 1200                                              08:30:30
+                                                           Caja:  2 Arrastrar Saldos:Desde Dia/Hora  -  Consolidado:No
+
+
+Fecha    Hora  Cod Comprobante    Observaciones                                    Importe         Importe        Arrastre Ru-              Importe Observaciones de
+Comp     Comp  Emp Movimiento     Comprobante                                     Ingresos         Egresos           Saldo bro              Detalle Detalle del movimiento
+-------- ----- --- ------------   ---------------------------------------- --------------- --------------- --------------- -------- --------------- ---------------------------------
+13/06    09:38 P   CJ    12909  E nafta gomez                                                        30.06        4,389.73 EFTVO              30.06
+         09:38 P   CJ    12910  E sube gomez                                                         50.00        4,339.73 EFTVO              50.00
+         09:47 P   CJ    12911  E sube fernando                                                     200.00        4,139.73 EFTVO             200.00
+         10:13 P   CJ    12912  E sueldos fer                                                     1,316.00        2,823.73 EFTVO           1,316.00
+         13:13 P   CJ    12913  E caja gaston                                                       400.00        2,423.73 EFTVO             400.00
+         13:34 P   CJ    12914  E diferencia regidor                                                 58.00        2,365.73 EFTVO              58.00
+         14:29 P   CJ    12915  E diferencia de pino                                                 61.00        2,304.73 EFTVO              61.00
+         15:18 P   CJ    12916  E lavandina                                                         370.00        1,934.73 EFTVO             370.00
+         15:54 P   TI    12917  E transferencia                                  16,949.55                       18,884.28 EFTVO          16,949.55
+14/06    08:35 P   CJ    12918  E destapaciones                                                   4,500.00       14,384.28 EFTVO           4,500.00
+         08:36 P   CJ    12919  E saca ganchitos para los cheques                                    55.00       14,329.28 EFTVO              55.00
+         09:40 P   CJ    12920  E destapaciones                                                   4,000.00       10,329.28 EFTVO           4,000.00
+         10:15 P   CJ    12921  E destapaciones                                                   7,900.00        2,429.28 EFTVO           7,900.00
+         11:23 P   CJ    12922  E guantes fumigacion                                                318.00        2,111.28 EFTVO             318.00
+         13:34 P   CJ    12923  E combustible gomez                                                  40.13        2,071.15 EFTVO              40.13
+         14:38 P   CJ    12924  E sintetico blanco                                                  331.54        1,739.61 EFTVO             331.54
+15/06    09:25 P   CJ    12925  E teclado genius                                                    390.00        1,349.61 EFTVO             390.00
+         09:26 P   CJ    12926  E rapipago 32 y 49                                                   81.00        1,268.61 EFTVO              81.00
+         09:27 P   CJ    12927  E cambio gomas gomez y emanuel                                      700.00          568.61 EFTVO             700.00
+         09:52 P   CJ    12928  E desengrasante                                                      80.00          488.61 EFTVO              80.00
+         11:01 P   CJ    12929  E sube                                                            1,400.00         -911.39 EFTVO           1,400.00
+         11:02 P   CJ    12930  E sube                                                            1,400.00       -2,311.39 EFTVO           1,400.00
+         11:27 P   CJ    12931  E bolsas amarillas                                                  242.00       -2,553.39 EFTVO             242.00
+         13:33 P   CJ    12932  E nafta gomez                                                        30.19       -2,583.58 EFTVO              30.19
+         13:33 P   CJ    12933  E bonif. chas                                                     1,620.00       -4,203.58 EFTVO           1,620.00
+         13:43 P   CJ    12934  E bonif. nacher                                                   2,720.00       -6,923.58 EFTVO           2,720.00
+         13:48 P   CJ    12935  E bonif. cora                                                     2,665.00       -9,588.58 EFTVO           2,665.00
+         13:55 P   CJ    12936  E bonif. jalle                                                      485.00      -10,073.58 EFTVO             485.00
+         14:02 P   CJ    12937  E bonif. schmahl                                                    804.00      -10,877.58 EFTVO             804.00
+         14:03 P   CJ    12938  E sube norma                                                        200.00      -11,077.58 EFTVO             200.00
+         14:08 P   CJ    12939  E cora bonif.                                                     2,665.00      -13,742.58 EFTVO           2,665.00
+         15:13 P   CJ    12940  E reintegro bolsas amarillas                         32.00                      -13,710.58 EFTVO              32.00
+         15:26 P   CJ    12941  E anulacion mov. 12939                            2,665.00                      -11,045.58 EFTVO           2,665.00
+         15:27 P   CJ    12942  E bonificacion karmiol                                            1,875.00      -12,920.58 EFTVO           1,875.00
+         15:31 P   CJ    12943  E fer                                                            18,000.00      -30,920.58 EFTVO          18,000.00
+         15:37 P   TI    12944  E transferencia                                  35,294.97                        4,374.39 EFTVO          35,294.97
+18/06    09:21 P   CJ    12945  E sube fernando                                                     200.00        4,174.39 EFTVO             200.00
+         09:45 P   CJ    12946  E sube                                                            1,200.00        2,974.39 EFTVO           1,200.00
+         09:51 P   CJ    12947  E reintegro bonif. nacher                           300.00                        3,274.39 EFTVO             300.00
+         13:13 P   CJ    12948  E sube omar                                                         300.00        2,974.39 EFTVO             300.00
+         14:45 P   CJ    12949  E reintegro caja cauvin                              25.00                        2,999.39 EFTVO              25.00
+         14:49 P   CJ    12950  E nafta gomez                                                        35.00        2,964.39 EFTVO              35.00
+         15:41 P   CJ    12951  E fer                                                            25,000.00      -22,035.61 EFTVO          25,000.00
+         15:50 P   TI    12952  E transferencia                                  25,673.40                        3,637.79 EFTVO          25,673.40
+19/06    08:59 P   CJ    12953  E correo                                                            318.00        3,319.79 EFTVO             318.00
+         11:14 P   CJ    12954  E tapas de luz                                                       10.00        3,309.79 EFTVO              10.00
+         11:16 P   CJ    12955  E expensas las heras                                              1,915.00        1,394.79 EFTVO           1,915.00
+         11:58 P   CJ    12956  E maidana kevin                                                     200.00        1,194.79 EFTVO             200.00
+         13:54 P   CJ    12957  E boif. alta                                                        635.00          559.79 EFTVO             635.00
+         14:48 P   CJ    12958  E nafta gomez                                                        40.13          519.66 EFTVO              40.13
+         14:49 P   CJ    12959  E bonificacion costas                                               450.00           69.66 EFTVO             450.00
+         15:40 P   CJ    12960  E bateria camioneta                                               3,300.00       -3,230.34 EFTVO           3,300.00
+         15:44 P   CJ    12961  E fer                                                            30,000.00      -33,230.34 EFTVO          30,000.00
+         16:12 P   TI    12962  E transferencias                                 36,674.52                        3,444.18 EFTVO          36,674.52
+21/06    08:53 P   CJ    12963  E bonif. piñeiro                                                  2,145.00        1,299.18 EFTVO           2,145.00
+         09:04 P   CJ    12964  E sube norma                                                        200.00        1,099.18 EFTVO             200.00
+         09:06 P   CJ    12965  E bonif. croce                                                      680.00          419.18 EFTVO             680.00
+         09:06 P   CJ    12966  E hat frojmovich                                                  1,160.00         -740.82 EFTVO           1,160.00
+         09:06 P   CJ    12967  E mabel de rota bonif.                                            1,470.00       -2,210.82 EFTVO           1,470.00
+         11:00 P   CJ    12968  E sube                                                            1,900.00       -4,110.82 EFTVO           1,900.00
+         11:03 P   CJ    12969  E anulacion mov. 12935                            2,665.00                       -1,445.82 EFTVO           2,665.00
+         11:41 P   CJ    12970  E coto                                                              388.86       -1,834.68 EFTVO             388.86
+         11:59 P   TI    12971  E transferencias                                  9,055.90                        7,221.22 EFTVO           9,055.90
+
+Fumigadora Paulista S.R.L.                                 Detalle de Movimientos por Caja                                                 Página: 3
+27/09/18                                                   del 01/06/18 1200 al 28/09/18 1200                                              08:30:30
+                                                           Caja:  2 Arrastrar Saldos:Desde Dia/Hora  -  Consolidado:No
+
+
+Fecha    Hora  Cod Comprobante    Observaciones                                    Importe         Importe        Arrastre Ru-              Importe Observaciones de
+Comp     Comp  Emp Movimiento     Comprobante                                     Ingresos         Egresos           Saldo bro              Detalle Detalle del movimiento
+-------- ----- --- ------------   ---------------------------------------- --------------- --------------- --------------- -------- --------------- ---------------------------------
+         12:32 P   CJ    12972  E diferncia resmacon                                                  5.85        7,215.37 EFTVO               5.85
+22/06    08:55 P   CJ    12973  E bonif. magnani                                                    150.00        7,065.37 EFTVO             150.00
+         09:21 P   CJ    12974  E diesel camioneta jose                                             400.00        6,665.37 EFTVO             400.00
+         09:43 P   CJ    12975  E nafta gomez                                                        48.88        6,616.49 EFTVO              48.88
+         11:58 P   CJ    12976  E sube                                                              600.00        6,016.49 EFTVO             600.00
+         13:26 P   CJ    12977  E fernando sube                                                     200.00        5,816.49 EFTVO             200.00
+         13:35 P   CJ    12978  E bonif. marzano                                                    205.00        5,611.49 EFTVO             205.00
+         13:36 P   CJ    12979  E bonif. kaplan                                                     465.00        5,146.49 EFTVO             465.00
+         13:36 P   CJ    12980  E bonif. echeveste                                                  765.00        4,381.49 EFTVO             765.00
+         14:24 P   CJ    12981  E castagnino                                                        185.00        4,196.49 EFTVO             185.00
+         15:06 P   CJ    12982  E nafta gomez                                                        25.10        4,171.39 EFTVO              25.10
+         15:40 P   CJ    12983  E fer                                                            40,000.00      -35,828.61 EFTVO          40,000.00
+         15:45 P   CJ    12984  E reintegro magnani                                 150.00                      -35,678.61 EFTVO             150.00
+         15:49 P   CJ    12985  E reintegro bonif. piñeiro michel                 1,000.00                      -34,678.61 EFTVO           1,000.00
+         15:52 P   TI    12986  E transferencia                                  38,300.51                        3,621.90 EFTVO          38,300.51
+26/06    09:07 P   CJ    12987  E sube leandro                                                      200.00        3,421.90 EFTVO             200.00
+         09:14 P   CJ    12988  E agip asprea                                                     3,225.60          196.30 EFTVO           3,225.60
+         11:08 P   CJ    12989  E FER                                                            30,000.00      -29,803.70 EFTVO          30,000.00
+         11:13 P   TI    12990  E transferencias                                 36,336.50                        6,532.80 EFTVO          36,336.50
+         11:16 P   CJ    12991  E sube                                                            2,200.00        4,332.80 EFTVO           2,200.00
+27/06    08:45 P   CJ    12992  E bonif. sobron                                                     763.00        3,569.80 EFTVO             763.00
+         08:56 P   CJ    12993  E bonif. nogueira                                                   175.00        3,394.80 EFTVO             175.00
+         09:03 P   CJ    12994  E bonif. cormax                                                     442.00        2,952.80 EFTVO             442.00
+         09:57 P   CJ    12995  E nafta gomez                                                        40.48        2,912.32 EFTVO              40.48
+         09:58 P   CJ    12996  E sube                                                              800.00        2,112.32 EFTVO             800.00
+         10:01 P   CJ    12997  E cauvin sube                                                       200.00        1,912.32 EFTVO             200.00
+         10:07 P   CJ    12998  E nafta jose                                                        400.00        1,512.32 EFTVO             400.00
+         11:44 P   CJ    12999  E reintegro bonif. nogueira                         175.00                        1,687.32 EFTVO             175.00
+         12:19 P   CJ    13000  E nafta gomez                                                        30.19        1,657.13 EFTVO              30.19
+         12:37 P   CJ    13001  E tarta vero                                                         66.00        1,591.13 EFTVO              66.00
+         14:57 P   CJ    13002  E sube norma                                                        200.00        1,391.13 EFTVO             200.00
+         15:08 P   CJ    13003  E reintegro bonif. cormax                           442.00                        1,833.13 EFTVO             442.00
+         15:31 P   CJ    13004  E dap quim                                                          545.66        1,287.47 EFTVO             545.66
+         15:31 P   CJ    13005  E materiales gustavo                                              5,569.94       -4,282.47 EFTVO           5,569.94
+         15:37 P   TI    13006  E transferencias                                 24,150.30                       19,867.83 EFTVO          24,150.30
+28/06    09:17 P   CJ    13007  E solimano bonif.                                                   814.00       19,053.83 EFTVO             814.00
+         09:29 P   CJ    13008  E nafta gomez                                                        20.35       19,033.48 EFTVO              20.35
+         10:11 P   CJ    13009  E sube                                                            1,000.00       18,033.48 EFTVO           1,000.00
+         11:10 P   CJ    13010  E destapaciones                                                   2,200.00       15,833.48 EFTVO           2,200.00
+         13:23 P   CJ    13011  E bonif. pintos                                                   1,320.00       14,513.48 EFTVO           1,320.00
+         13:27 P   CJ    13012  E sube fer                                                          200.00       14,313.48 EFTVO             200.00
+         13:59 P   CJ    13013  E combustible gomez                                                  30.06       14,283.42 EFTVO              30.06
+         14:18 P   CJ    13014  E bonificacion costantino                                           814.00       13,469.42 EFTVO             814.00
+         15:18 P   CJ    13015  E bonif. solimano                                                   645.00       12,824.42 EFTVO             645.00
+         15:19 P   CJ    13016  E anulacion mov. 13007                              814.00                       13,638.42 EFTVO             814.00
+         15:21 P   CJ    13017  E fer                                                            20,000.00       -6,361.58 EFTVO          20,000.00
+         15:22 P   TI    13018  E transferencia                                  30,525.90                       24,164.32 EFTVO          30,525.90
+29/06    09:19 P   CJ    13019  E caja cuavin                                                       400.00       23,764.32 EFTVO             400.00
+         09:30 P   CJ    13020  E sube                                                            1,200.00       22,564.32 EFTVO           1,200.00
+         09:37 P   CJ    13021  E norma sube                                                        200.00       22,364.32 EFTVO             200.00
+         09:48 P   CJ    13022  E ayudin lavandina                                                   25.00       22,339.32 EFTVO              25.00
+         09:49 P   CJ    13023  E kalejman bonif.                                                   188.00       22,151.32 EFTVO             188.00
+         09:51 P   CJ    13024  E reintegro caja cauvin                              25.00                       22,176.32 EFTVO              25.00
+         10:33 P   CJ    13025  E dif. dap quim                                                     315.00       21,861.32 EFTVO             315.00
+         12:23 P   CJ    13026  E destapaciones                                                  13,600.00        8,261.32 EFTVO          13,600.00
+         13:07 P   CJ    13027  E maidana sube                                                      200.00        8,061.32 EFTVO             200.00
+         14:01 P   CJ    13028  E dif. cemiba                                                       250.00        7,811.32 EFTVO             250.00
+         14:10 P   CJ    13029  E nafta gomez                                                        55.11        7,756.21 EFTVO              55.11
+         14:41 P   CJ    13030  E bonif. abril                                                      874.00        6,882.21 EFTVO             874.00
+         14:56 P   CJ    13031  E lavandina y valerina                                               45.01        6,837.20 EFTVO              45.01
+         15:19 P   CJ    13032  E vtv                                                               348.00        6,489.20 EFTVO             348.00
+         15:35 P   CJ    13033  E correo                                                            318.00        6,171.20 EFTVO             318.00
+         15:35 P   CJ    13034  E fer                                                            40,000.00      -33,828.80 EFTVO          40,000.00
+
+Fumigadora Paulista S.R.L.                                 Detalle de Movimientos por Caja                                                 Página: 4
+27/09/18                                                   del 01/06/18 1200 al 28/09/18 1200                                              08:30:30
+                                                           Caja:  2 Arrastrar Saldos:Desde Dia/Hora  -  Consolidado:No
+
+
+Fecha    Hora  Cod Comprobante    Observaciones                                    Importe         Importe        Arrastre Ru-              Importe Observaciones de
+Comp     Comp  Emp Movimiento     Comprobante                                     Ingresos         Egresos           Saldo bro              Detalle Detalle del movimiento
+-------- ----- --- ------------   ---------------------------------------- --------------- --------------- --------------- -------- --------------- ---------------------------------
+         15:51 P   TI    13035  E transferencia                                  38,064.04                        4,235.24 EFTVO          38,064.04
+02/07    09:48 P   CJ    13036  E gestion de cobranza                                             6,720.00       -2,484.76 EFTVO           6,720.00
+         11:54 P   CJ    13037  E bonif. karmiol transferencias                                   2,123.00       -4,607.76 EFTVO           2,123.00
+         15:02 P   TI    13038  E transferencia                                  14,500.60                        9,892.84 EFTVO          14,500.60
+         15:05 P   CJ    13039  E reintegro sobrante caja                           530.00                       10,422.84 EFTVO             530.00
+         16:09 P   CJ    13040  E nafta gomez                                                        44.33       10,378.51 EFTVO              44.33
+03/07    08:53 P   CJ    13041  E cif y trapos de piso                                              130.00       10,248.51 EFTVO             130.00
+         10:07 P   CJ    13042  E sube                                                            1,700.00        8,548.51 EFTVO           1,700.00
+         11:59 P   CJ    13043  E reposicion de lamparas fiorino                                    199.99        8,348.52 EFTVO             199.99
+         13:54 P   CJ    13044  E diferencia cartuchos 4/7                                          109.00        8,239.52 EFTVO             109.00
+         15:27 P   TI    13045  E transferencia                                   4,515.87                       12,755.39 EFTVO           4,515.87
+         15:45 P   CJ    13046  E bomba desagote fc. 539                                          2,670.00       10,085.39 EFTVO           2,670.00
+04/07    09:12 P   CJ    13047  E la toallera fc. 28886                                             957.00        9,128.39 EFTVO             957.00
+         10:01 P   CJ    13048  E sube                                                            2,000.00        7,128.39 EFTVO           2,000.00
+         10:27 P   CJ    13049  E lavado camioneta                                                  140.00        6,988.39 EFTVO             140.00
+         11:24 P   CJ    13050  E peluffo libreria                                                1,632.00        5,356.39 EFTVO           1,632.00
+         11:49 P   CJ    13051  E productos de gustavo                                              398.05        4,958.34 EFTVO             398.05
+         15:31 P   CJ    13052  E diferencia cartuchos imcom                                        252.00        4,706.34 EFTVO             252.00
+         15:33 P   CJ    13053  E sueldos fer                                                       658.00        4,048.34 EFTVO             658.00
+         15:35 P   CJ    13054  E anulacion mov. 13044                              109.00                        4,157.34 EFTVO             109.00
+         16:05 P   CJ    13055  E sube fernando                                                     200.00        3,957.34 EFTVO             200.00
+         16:07 P   CJ    13056  E fer                                                            13,000.00       -9,042.66 EFTVO          13,000.00
+         16:08 P   TI    13057  E transferencia                                  14,142.40                        5,099.74 EFTVO          14,142.40
+05/07    08:44 P   CJ    13058  E vtv jose                                                        2,500.00        2,599.74 EFTVO           2,500.00
+         08:45 P   CJ    13059  E nafta gomez                                                        40.05        2,559.69 EFTVO              40.05
+         10:12 P   CJ    13060  E sube                                                              600.00        1,959.69 EFTVO             600.00
+         11:57 P   CJ    13061  E jose vtv                                                        2,000.01          -40.32 EFTVO           2,000.01
+         11:59 P   CJ    13062  E nafta jose                                                        500.00         -540.32 EFTVO             500.00
+         12:03 P   CJ    13063  E anulacion mov. 13058                            2,500.00                        1,959.68 EFTVO           2,500.00
+         12:06 P   CJ    13064  E azucar                                                             27.00        1,932.68 EFTVO              27.00
+         13:10 P   CJ    13065  E 5 litros lavandina                                                275.00        1,657.68 EFTVO             275.00
+         14:48 P   CJ    13066  E nafta gomez                                                        49.99        1,607.69 EFTVO              49.99
+         14:49 P   CJ    13067  E diferencia subito                                                 200.00        1,407.69 EFTVO             200.00
+06/07    08:54 P   CJ    13068  E Ingreso EF Canepa                               3,000.00                        4,407.69 EFTVO           3,000.00
+         08:58 P   CJ    13069  E mapeplastic fc. 3179                                            3,125.00        1,282.69 EFTVO           3,125.00
+         12:42 P   CJ    13070  E sube                                                              400.00          882.69 EFTVO             400.00
+         12:47 P   CJ    13071  E cargas                                                         17,516.55      -16,633.86 EFTVO          17,516.55
+         12:48 P   CJ    13072  E vero                                           17,520.00                          886.14 EFTVO          17,520.00
+         15:01 P   TI    13073  E transferencia                                  25,941.40                       26,827.54 EFTVO          25,941.40
+         15:02 P   CJ    13074  E fer                                                            20,000.00        6,827.54 EFTVO          20,000.00
+         15:18 P   CJ    13075  E sube                                                              700.00        6,127.54 EFTVO             700.00
+         16:10 P   CJ    13076  E refrigerio emanuel                                                 20.00        6,107.54 EFTVO              20.00
+10/07    10:30 P   CJ    13077  E SUBE                                                            1,800.00        4,307.54 EFTVO           1,800.00
+         13:46 P   CJ    13078  E SUBE Norma                                                        200.00        4,107.54 EFTVO             200.00
+11/07    08:09 P   CJ    13079  E HAT mano MAGNANI                                                2,243.00        1,864.54 EFTVO           2,243.00
+12/07    12:16 P   CJ    13080  E SUBE                                                            1,000.00          864.54 EFTVO           1,000.00
+         12:17 P   CJ    13081  E SUBE                                                              800.00           64.54 EFTVO             800.00
+         12:18 P   CJ    13082  E Aracor                                                             47.00           17.54 EFTVO              47.00
+         12:19 P   CJ    13083  E Depino                                                             46.00          -28.46 EFTVO              46.00
+         12:20 P   CJ    13084  E SUBE galarza                                                      200.00         -228.46 EFTVO             200.00
+         12:20 P   CJ    13085  E HAT mano NACHER                                                 1,325.00       -1,553.46 EFTVO           1,325.00
+13/07    06:44 P   TI    13086  E transf caja 2                                  22,954.10                       21,400.64 EFTVO          22,954.10
+         13:37 P   CJ    13087  E HAT mano Greco                                                  1,116.00       20,284.64 EFTVO           1,116.00
+         13:37 P   CJ    13088  E Destapaciones                                                  16,870.00        3,414.64 EFTVO          16,870.00
+         13:38 P   CJ    13089  E SUBE                                                            1,400.00        2,014.64 EFTVO           1,400.00
+16/07    09:18 P   CJ    13090  E 1 camara pepe                                                     350.00        1,664.64 EFTVO             350.00
+         09:36 P   CJ    13091  E norma sube                                                        200.00        1,464.64 EFTVO             200.00
+         10:20 P   CJ    13092  E NAFTA GOMEZ                                                        50.83        1,413.81 EFTVO              50.83
+         10:31 P   CJ    13093  E caja cauvin                                                       400.00        1,013.81 EFTVO             400.00
+         10:32 P   CJ    13094  E sube                                                            1,900.00         -886.19 EFTVO           1,900.00
+         11:43 P   CJ    13095  E emprego fc, 7581                                                  488.53       -1,374.72 EFTVO             488.53
+         11:44 P   CJ    13096  E el mundo de la bolsa fc. 96813                                  1,224.91       -2,599.63 EFTVO           1,224.91
+         13:40 P   CJ    13097  E bonif. karmiol                                                    202.00       -2,801.63 EFTVO             202.00
+
+Fumigadora Paulista S.R.L.                                 Detalle de Movimientos por Caja                                                 Página: 5
+27/09/18                                                   del 01/06/18 1200 al 28/09/18 1200                                              08:30:30
+                                                           Caja:  2 Arrastrar Saldos:Desde Dia/Hora  -  Consolidado:No
+
+
+Fecha    Hora  Cod Comprobante    Observaciones                                    Importe         Importe        Arrastre Ru-              Importe Observaciones de
+Comp     Comp  Emp Movimiento     Comprobante                                     Ingresos         Egresos           Saldo bro              Detalle Detalle del movimiento
+-------- ----- --- ------------   ---------------------------------------- --------------- --------------- --------------- -------- --------------- ---------------------------------
+17/07    09:05 P   CJ    13098  E fernando sube                                                     200.00       -3,001.63 EFTVO             200.00
+         09:19 P   CJ    13099  E bonif. jalle                                                      412.00       -3,413.63 EFTVO             412.00
+         09:19 P   CJ    13100  E bonif. piñeiro                                                  2,062.00       -5,475.63 EFTVO           2,062.00
+         09:20 P   CJ    13101  E bonif. larrea schmahl                                             804.00       -6,279.63 EFTVO             804.00
+         09:54 P   CJ    13102  E nafta gomez                                                        45.04       -6,324.67 EFTVO              45.04
+         12:33 P   CJ    13103  E bonif. adm. cora                                                2,200.00       -8,524.67 EFTVO           2,200.00
+         13:06 P   CJ    13104  E di feo baliza                                                     145.20       -8,669.87 EFTVO             145.20
+         13:08 P   CJ    13105  E matafuego y gancho                                                 45.00       -8,714.87 EFTVO              45.00
+         14:29 P   CJ    13106  E nafta gomez                                                        40.34       -8,755.21 EFTVO              40.34
+         14:33 P   CJ    13107  E bonificacion nogueira                                             353.00       -9,108.21 EFTVO             353.00
+         15:08 P   CJ    13108  E vero                                                           25,000.00      -34,108.21 EFTVO          25,000.00
+         16:03 P   CJ    13109  E sube leandro                                                      200.00      -34,308.21 EFTVO             200.00
+         16:09 P   TI    13110  E transferencia                                  44,771.50                       10,463.29 EFTVO          44,771.50
+18/07    10:06 P   CJ    13111  E expensas las heras                                              1,914.37        8,548.92 EFTVO           1,914.37
+         10:50 P   CJ    13112  E correo y fotocopias                                               385.00        8,163.92 EFTVO             385.00
+         11:49 P   CJ    13113  E sube                                                              400.00        7,763.92 EFTVO             400.00
+         13:22 P   CJ    13114  E bonificacion alta                                                 635.00        7,128.92 EFTVO             635.00
+         14:26 P   CJ    13115  E bonificacion croce                                                475.00        6,653.92 EFTVO             475.00
+         15:49 P   CJ    13116  E fer                                                            35,000.00      -28,346.08 EFTVO          35,000.00
+         15:51 P   CJ    13117  E rivafer articulos ferreteria fc. 826                            2,194.00      -30,540.08 EFTVO           2,194.00
+         15:57 P   TI    13120  E transferencia                                  42,692.20                       12,152.12 EFTVO          42,692.20
+19/07    09:21 P   CJ    13121  E nafta gomez                                                        50.14       12,101.98 EFTVO              50.14
+         09:47 P   CJ    13122  E bonif. mabel de rota                                              765.00       11,336.98 EFTVO             765.00
+         10:11 P   CJ    13123  E destapaciones                                                   4,400.00        6,936.98 EFTVO           4,400.00
+         12:15 P   CJ    13124  E sube                                                            1,600.00        5,336.98 EFTVO           1,600.00
+         13:57 P   CJ    13125  E bonif. solimano                                                   645.00        4,691.98 EFTVO             645.00
+         13:57 P   CJ    13126  E bonificacion dra costas                                           165.00        4,526.98 EFTVO             165.00
+         14:49 P   CJ    13127  E diferencia solimano                                               172.00        4,354.98 EFTVO             172.00
+         14:51 P   CJ    13128  E sube norma                                                        200.00        4,154.98 EFTVO             200.00
+         15:08 P   TI    13129  E transferencia                                  17,373.86                       21,528.84 EFTVO          17,373.86
+20/07    09:20 P   CJ    13130  E sube fer                                                          200.00       21,328.84 EFTVO             200.00
+         09:23 P   CJ    13131  E bonificacion federoci                                           1,630.00       19,698.84 EFTVO           1,630.00
+         09:23 P   CJ    13132  E bonificacion castagnino                                           415.00       19,283.84 EFTVO             415.00
+         09:23 P   CJ    13133  E bonificacion perez virasoro                                     1,059.00       18,224.84 EFTVO           1,059.00
+         09:24 P   CJ    13134  E bonificacion costantino                                           815.00       17,409.84 EFTVO             815.00
+         09:39 P   CJ    13135  E sube                                                            1,500.00       15,909.84 EFTVO           1,500.00
+         10:36 P   CJ    13136  E nafta gomez                                                        45.00       15,864.84 EFTVO              45.00
+         10:58 P   CJ    13137  E glade y desodorante baño                                          180.00       15,684.84 EFTVO             180.00
+         11:22 P   CJ    13138  E guantes dist. cabrera fc. 4004                                    396.88       15,287.96 EFTVO             396.88
+         14:28 P   CJ    13140  E nafta gomez                                                        40.14       15,247.82 EFTVO              40.14
+         14:49 P   CJ    13141  E pastillas para freno                                              450.01       14,797.81 EFTVO             450.01
+         15:00 P   CJ    13142  E bonif. chas                                                     1,714.00       13,083.81 EFTVO           1,714.00
+         15:11 P   CJ    13143  E fer                                                            50,000.00      -36,916.19 EFTVO          50,000.00
+         15:24 P   TI    13146  E transferencia                                  45,310.22                        8,394.03 EFTVO          45,310.22
+23/07    09:44 P   CJ    13147  E AGIP ASPREA                                                     1,680.00        6,714.03 EFTVO           1,680.00
+         10:26 P   CJ    13148  E bonificacion marzano                                              205.00        6,509.03 EFTVO             205.00
+         14:03 P   CJ    13149  E nafta moto                                                         40.20        6,468.83 EFTVO              40.20
+         15:03 P   CJ    13150  E sube                                                            1,000.00        5,468.83 EFTVO           1,000.00
+         15:19 P   CJ    13151  E fer                                                            50,000.00      -44,531.17 EFTVO          50,000.00
+         16:10 P   TI    13152  E transferencia                                  49,276.10                        4,744.93 EFTVO          49,276.10
+         16:17 P   CJ    13153  E diferencia regidor                                                 35.00        4,709.93 EFTVO              35.00
+24/07    09:23 P   CJ    13154  E norma                                                             200.00        4,509.93 EFTVO             200.00
+         09:45 P   CJ    13155  E bonif. echeveste                                                  767.00        3,742.93 EFTVO             767.00
+         10:17 P   CJ    13156  E sube                                                            1,200.00        2,542.93 EFTVO           1,200.00
+         10:20 P   CJ    13157  E caja gaston                                                       400.00        2,142.93 EFTVO             400.00
+         11:42 P   CJ    13158  E ingreso bonif. iceruk en caja 1 por erro        1,511.00                        3,653.93 EFTVO           1,511.00
+         13:08 P   CJ    13159  E sube fernando                                                     200.00        3,453.93 EFTVO             200.00
+         13:09 P   CJ    13160  E bonif. szperling                                                  437.00        3,016.93 EFTVO             437.00
+         14:50 P   CJ    13161  E nafta gomez                                                        45.21        2,971.72 EFTVO              45.21
+         15:36 P   TI    13162  E transferencia                                   5,250.40                        8,222.12 EFTVO           5,250.40
+25/07    11:55 P   CJ    13163  E lavadero                                                          400.00        7,822.12 EFTVO             400.00
+         11:58 P   CJ    13164  E correo                                                            380.00        7,442.12 EFTVO             380.00
+         11:59 P   CJ    13165  E sube                                                            1,000.00        6,442.12 EFTVO           1,000.00
+
+Fumigadora Paulista S.R.L.                                 Detalle de Movimientos por Caja                                                 Página: 6
+27/09/18                                                   del 01/06/18 1200 al 28/09/18 1200                                              08:30:30
+                                                           Caja:  2 Arrastrar Saldos:Desde Dia/Hora  -  Consolidado:No
+
+
+Fecha    Hora  Cod Comprobante    Observaciones                                    Importe         Importe        Arrastre Ru-              Importe Observaciones de
+Comp     Comp  Emp Movimiento     Comprobante                                     Ingresos         Egresos           Saldo bro              Detalle Detalle del movimiento
+-------- ----- --- ------------   ---------------------------------------- --------------- --------------- --------------- -------- --------------- ---------------------------------
+         12:00 P   CJ    13166  E ingreso caja cauvin                                40.00                        6,482.12 EFTVO              40.00
+         12:46 P   CJ    13167  E bonificacion sackman                                              207.00        6,275.12 EFTVO             207.00
+         13:37 P   CJ    13168  E norma sube                                                        200.00        6,075.12 EFTVO             200.00
+         14:47 P   CJ    13169  E nafta gomez                                                        45.06        6,030.06 EFTVO              45.06
+         15:00 P   CJ    13170  E bonif. federoci                                                   540.00        5,490.06 EFTVO             540.00
+         15:06 P   CJ    13171  E bonif. costoya                                                  1,385.00        4,105.06 EFTVO           1,385.00
+         15:07 P   CJ    13172  E sueldos fer                                                       658.00        3,447.06 EFTVO             658.00
+         15:25 P   CJ    13173  E motoverde fc. 1716                                              1,924.00        1,523.06 EFTVO           1,924.00
+26/07    11:01 P   CJ    13174  E sube                                                              700.00          823.06 EFTVO             700.00
+         11:05 P   CJ    13175  E sueldos fer                                                       877.00          -53.94 EFTVO             877.00
+         11:36 P   CJ    13176  E azucar                                                             27.00          -80.94 EFTVO              27.00
+         12:21 P   CJ    13177  E bonificacion sobron                                               285.00         -365.94 EFTVO             285.00
+         13:45 P   CJ    13178  E nafta gomez                                                        45.06         -411.00 EFTVO              45.06
+         15:07 P   CJ    13179  E servicio neumatico fc. 3927                                       350.00         -761.00 EFTVO             350.00
+         15:09 P   CJ    13180  E lubricantes y liquido de freno                                    469.99       -1,230.99 EFTVO             469.99
+         15:30 P   TI    13181  E transferencia                                  45,941.01                       44,710.02 EFTVO          45,941.01
+27/07    09:29 P   CJ    13182  E destapaciones                                                   5,600.00       39,110.02 EFTVO           5,600.00
+         09:48 P   CJ    13183  E fer sube                                                          200.00       38,910.02 EFTVO             200.00
+         10:02 P   CJ    13184  E destapaciones                                                  15,200.00       23,710.02 EFTVO          15,200.00
+         14:00 P   CJ    13185  E kaplan bonificacion                                               465.00       23,245.02 EFTVO             465.00
+         14:04 P   CJ    13186  E nafta gomez                                                        45.21       23,199.81 EFTVO              45.21
+         15:02 P   CJ    13187  E sube                                                            2,000.00       21,199.81 EFTVO           2,000.00
+         15:08 P   CJ    13188  E fer                                                            50,000.00      -28,800.19 EFTVO          50,000.00
+         15:41 P   TI    13189  E transferencia                                  38,693.50                        9,893.31 EFTVO          38,693.50
+30/07    11:52 P   CJ    13190  E SUBE alvarez gerardo                                              200.00        9,693.31 EFTVO             200.00
+         11:53 P   CJ    13191  E HAT mano CORMAX                                                   887.00        8,806.31 EFTVO             887.00
+31/07    10:09 P   CJ    13192  E azucar                                                             25.00        8,781.31 EFTVO              25.00
+         10:58 P   CJ    13193  E nafta gomez                                                        45.21        8,736.10 EFTVO              45.21
+         11:02 P   CJ    13194  E bonificacion pintos                                               730.00        8,006.10 EFTVO             730.00
+         11:30 P   CJ    13195  E sube                                                            1,800.00        6,206.10 EFTVO           1,800.00
+         13:02 P   CJ    13196  E correo                                                            380.00        5,826.10 EFTVO             380.00
+         13:44 P   CJ    13197  E sube norma                                                        200.00        5,626.10 EFTVO             200.00
+         14:27 P   CJ    13198  E sancor vero                                                       147.36        5,478.74 EFTVO             147.36
+         14:37 P   CJ    13199  E vero                                                           23,000.00      -17,521.26 EFTVO          23,000.00
+         14:40 P   TI    13200  E transferencia                                  29,425.90                       11,904.64 EFTVO          29,425.90
+01/08    08:59 P   CJ    13201  E nafta pepe                                                        410.00       11,494.64 EFTVO             410.00
+         09:37 P   CJ    13202  E gestion cobranza                                                6,720.00        4,774.64 EFTVO           6,720.00
+         09:56 P   CJ    13203  E sube                                                              800.00        3,974.64 EFTVO             800.00
+         10:57 P   CJ    13204  E caja cauvin                                                       400.00        3,574.64 EFTVO             400.00
+         13:46 P   CJ    13205  E sube fer                                                          200.00        3,374.64 EFTVO             200.00
+         13:54 P   CJ    13206  E nafta gomez                                                        50.57        3,324.07 EFTVO              50.57
+         14:49 P   CJ    13207  E camara moto gomez                                                 450.00        2,874.07 EFTVO             450.00
+         15:49 P   TI    13208  E transferencia                                  22,365.40                       25,239.47 EFTVO          22,365.40
+02/08    09:56 P   CJ    13209  E sube                                                            1,900.00       23,339.47 EFTVO           1,900.00
+         13:48 P   CJ    13210  E nafta gomez                                                        50.00       23,289.47 EFTVO              50.00
+         13:48 P   CJ    13211  E sandwichs vero                                                     56.00       23,233.47 EFTVO              56.00
+         14:39 P   CJ    13212  E leandro                                                           200.00       23,033.47 EFTVO             200.00
+         15:02 P   CJ    13213  E vero                                                           19,000.00        4,033.47 EFTVO          19,000.00
+         15:04 P   TI    13214  E transferencia                                   3,516.00                        7,549.47 EFTVO           3,516.00
+03/08    11:00 P   CJ    13215  E sube                                                            1,000.00        6,549.47 EFTVO           1,000.00
+         11:03 P   CJ    13216  E diferencia cemiba                                                  15.25        6,534.22 EFTVO              15.25
+         12:03 P   CJ    13217  E sueldos fer 1966 y 2012                                         2,978.00        3,556.22 EFTVO           2,978.00
+         15:14 P   TI    13218  E transferencia                                  10,681.00                       14,237.22 EFTVO          10,681.00
+         15:19 P   CJ    13219  E emanuel refrigerio                                                 20.00       14,217.22 EFTVO              20.00
+         15:47 P   CJ    13220  E sube edu dias 22,21,19/6                                          176.50       14,040.72 EFTVO             176.50
+06/08    08:56 P   CJ    13221  E bonif. karmiol                                                  1,500.00       12,540.72 EFTVO           1,500.00
+         09:49 P   CJ    13222  E sube                                                            1,200.00       11,340.72 EFTVO           1,200.00
+         12:54 P   CJ    13223  E libreria ganchitos                                                 58.00       11,282.72 EFTVO              58.00
+         14:03 P   CJ    13224  E empanada vero                                                      28.00       11,254.72 EFTVO              28.00
+         14:07 P   CJ    13225  E sube fernando                                                     200.00       11,054.72 EFTVO             200.00
+         15:17 P   TI    13226  E transferncia                                    8,446.00                       19,500.72 EFTVO           8,446.00
+         15:48 P   CJ    13227  E diferencia resmacon                                               615.00       18,885.72 EFTVO             615.00
+07/08    08:33 P   CJ    13228  E vero                                           11,000.00                       29,885.72 EFTVO          11,000.00
+
+Fumigadora Paulista S.R.L.                                 Detalle de Movimientos por Caja                                                 Página: 7
+27/09/18                                                   del 01/06/18 1200 al 28/09/18 1200                                              08:30:30
+                                                           Caja:  2 Arrastrar Saldos:Desde Dia/Hora  -  Consolidado:No
+
+
+Fecha    Hora  Cod Comprobante    Observaciones                                    Importe         Importe        Arrastre Ru-              Importe Observaciones de
+Comp     Comp  Emp Movimiento     Comprobante                                     Ingresos         Egresos           Saldo bro              Detalle Detalle del movimiento
+-------- ----- --- ------------   ---------------------------------------- --------------- --------------- --------------- -------- --------------- ---------------------------------
+         08:34 P   CJ    13229  E cargas                                                         11,087.50       18,798.22 EFTVO          11,087.50
+         09:09 P   CJ    13230  E nafta jose                                                        400.00       18,398.22 EFTVO             400.00
+         11:16 P   CJ    13231  E diferencia nafta jose                                              10.00       18,388.22 EFTVO              10.00
+         11:18 P   CJ    13232  E materiales gustavo                                              5,569.94       12,818.28 EFTVO           5,569.94
+         11:18 P   CJ    13233  E dap quim fc. 6195                                                 439.07       12,379.21 EFTVO             439.07
+         11:56 P   CJ    13234  E expensas del 3 piso                            12,868.62                       25,247.83 EFTVO          12,868.62
+         14:02 P   CJ    13235  E nafta gomez                                                        40.18       25,207.65 EFTVO              40.18
+         14:36 P   TI    13236  E transferencia                                  14,905.00                       40,112.65 EFTVO          14,905.00
+         16:17 P   CJ    13237  E caja cauvin                                                       400.00       39,712.65 EFTVO             400.00
+08/08    10:17 P   CJ    13238  E SUBE                                                            1,500.00       38,212.65 EFTVO           1,500.00
+         12:48 P   CJ    13239  E EMPANADA VERO                                                      27.00       38,185.65 EFTVO              27.00
+         15:06 P   CJ    13240  E DIF. ARACOR                                                       236.00       37,949.65 EFTVO             236.00
+         15:07 P   TI    13241  E transferencia                                   1,199.00                       39,148.65 EFTVO           1,199.00
+09/08    09:44 P   CJ    13242  E destapaciones                                                  11,700.00       27,448.65 EFTVO          11,700.00
+         10:16 P   CJ    13243  E sube                                                            1,800.00       25,648.65 EFTVO           1,800.00
+         10:40 P   CJ    13244  E ingreso caja cauvin                                75.00                       25,723.65 EFTVO              75.00
+         11:31 P   CJ    13245  E moises saad                                                     7,500.00       18,223.65 EFTVO           7,500.00
+         11:36 P   CJ    13246  E manijas vero                                                    1,700.00       16,523.65 EFTVO           1,700.00
+         14:50 P   CJ    13247  E nafta gomez                                                        50.02       16,473.63 EFTVO              50.02
+         14:51 P   CJ    13248  E bizcochitos vero                                                   20.00       16,453.63 EFTVO              20.00
+         15:00 P   CJ    13249  E repuestos moto                                                    580.00       15,873.63 EFTVO             580.00
+         15:23 P   CJ    13250  E fer sube                                                          200.00       15,673.63 EFTVO             200.00
+         15:30 P   TI    13251  E transferencia                                   7,175.00                       22,848.63 EFTVO           7,175.00
+         15:39 P   CJ    13252  E vero                                                           14,000.00        8,848.63 EFTVO          14,000.00
+10/08    09:11 P   CJ    13253  E sube norma                                                        200.00        8,648.63 EFTVO             200.00
+         10:36 P   CJ    13254  E sube                                                              600.00        8,048.63 EFTVO             600.00
+         15:16 P   CJ    13255  E dif. subito                                                       136.00        7,912.63 EFTVO             136.00
+         15:26 P   CJ    13256  E sergio frojmowich bonificacion                                  1,161.75        6,750.88 EFTVO           1,161.75
+         15:38 P   TI    13257  E transferencia                                  10,413.00                       17,163.88 EFTVO          10,413.00
+13/08    10:04 P   CJ    13258  E nafta gomez                                                        45.18       17,118.70 EFTVO              45.18
+         10:27 P   CJ    13259  E camara moto                                                       219.99       16,898.71 EFTVO             219.99
+         10:28 P   CJ    13260  E armado y desarmado                                                100.00       16,798.71 EFTVO             100.00
+         12:20 P   CJ    13261  E sube                                                            1,500.00       15,298.71 EFTVO           1,500.00
+         13:33 P   CJ    13262  E nafta gomez                                                        40.12       15,258.59 EFTVO              40.12
+         13:55 P   CJ    13263  E dif. regidor fc. 1254                                              65.50       15,193.09 EFTVO              65.50
+         14:02 P   CJ    13264  E cubierta pepe                                                   1,110.01       14,083.08 EFTVO           1,110.01
+         14:03 P   CJ    13265  E motoverde fc. 1738                                                230.00       13,853.08 EFTVO             230.00
+         14:14 P   CJ    13266  E bonificacion piñeiro                                            1,225.00       12,628.08 EFTVO           1,225.00
+         14:17 P   CJ    13267  E bonif. magnani                                                  2,240.00       10,388.08 EFTVO           2,240.00
+         14:49 P   CJ    13268  E neumaticos palermo desarme moto pepe                              120.00       10,268.08 EFTVO             120.00
+         15:06 P   CJ    13269  E subito fc,1147                                                    147.49       10,120.59 EFTVO             147.49
+         15:33 P   TI    13270  E transferencias                                  6,582.25                       16,702.84 EFTVO           6,582.25
+14/08    10:28 P   CJ    13271  E sube                                                            1,200.00       15,502.84 EFTVO           1,200.00
+         11:06 P   CJ    13272  E nafta pepe camioneta                                              410.00       15,092.84 EFTVO             410.00
+         13:15 P   CJ    13273  E grecco bonif.                                                   1,115.00       13,977.84 EFTVO           1,115.00
+         13:24 P   CJ    13274  E sube fernando                                                     200.00       13,777.84 EFTVO             200.00
+15/08    08:58 P   CJ    13275  E gomez combustible                                                  50.11       13,727.73 EFTVO              50.11
+         09:06 P   CJ    13276  E bonif. de rota                                                  1,024.00       12,703.73 EFTVO           1,024.00
+         09:13 P   CJ    13277  E sube                                                              800.00       11,903.73 EFTVO             800.00
+         09:35 P   CJ    13278  E caja cauvin                                                       400.00       11,503.73 EFTVO             400.00
+         10:11 P   CJ    13279  E bonif. costantino                                                 815.00       10,688.73 EFTVO             815.00
+         10:22 P   CJ    13280  E jalle bonif.                                                      419.00       10,269.73 EFTVO             419.00
+         10:39 P   CJ    13281  E reintegro caja cauvin                              70.00                       10,339.73 EFTVO              70.00
+         10:51 P   CJ    13282  E vero                                                           30,000.00      -19,660.27 EFTVO          30,000.00
+         11:20 P   CJ    13283  E coto desodorante baño y jabon liquido                             368.72      -20,028.99 EFTVO             368.72
+         12:20 P   CJ    13284  E bonif. nacher                                                   1,320.00      -21,348.99 EFTVO           1,320.00
+         12:22 P   CJ    13285  E bonif. cora                                                     2,420.00      -23,768.99 EFTVO           2,420.00
+         13:14 P   CJ    13286  E sube norma                                                        200.00      -23,968.99 EFTVO             200.00
+         14:21 P   CJ    13287  E nafta gomez                                                        42.91      -24,011.90 EFTVO              42.91
+         14:23 P   CJ    13288  E reintegro bonif. mabel de rota                    149.00                      -23,862.90 EFTVO             149.00
+         15:01 P   CJ    13289  E empanada vero                                                      28.00      -23,890.90 EFTVO              28.00
+         15:02 P   TI    13290  E transferencia                                  39,247.90                       15,357.00 EFTVO          39,247.90
+16/08    09:18 P   CJ    13291  E SUBE                                                              800.00       14,557.00 EFTVO             800.00
+
+Fumigadora Paulista S.R.L.                                 Detalle de Movimientos por Caja                                                 Página: 8
+27/09/18                                                   del 01/06/18 1200 al 28/09/18 1200                                              08:30:30
+                                                           Caja:  2 Arrastrar Saldos:Desde Dia/Hora  -  Consolidado:No
+
+
+Fecha    Hora  Cod Comprobante    Observaciones                                    Importe         Importe        Arrastre Ru-              Importe Observaciones de
+Comp     Comp  Emp Movimiento     Comprobante                                     Ingresos         Egresos           Saldo bro              Detalle Detalle del movimiento
+-------- ----- --- ------------   ---------------------------------------- --------------- --------------- --------------- -------- --------------- ---------------------------------
+         12:35 P   CJ    13292  E jaboneria lavandinas                                              330.00       14,227.00 EFTVO             330.00
+         13:26 P   CJ    13293  E nafta gomez                                                        50.11       14,176.89 EFTVO              50.11
+         14:00 P   CJ    13294  E sube fer                                                          200.00       13,976.89 EFTVO             200.00
+         14:26 P   CJ    13295  E diferencia auto Jose                                              718.00       13,258.89 EFTVO             718.00
+         14:47 P   CJ    13296  E disco amoladora, fratacho                                         244.99       13,013.90 EFTVO             244.99
+         15:41 P   CJ    13297  E bonif. solimano                                                 2,107.00       10,906.90 EFTVO           2,107.00
+         15:42 P   CJ    13298  E bonif nogueira                                                    175.00       10,731.90 EFTVO             175.00
+         15:42 P   CJ    13299  E bonif. schmahl                                                    804.00        9,927.90 EFTVO             804.00
+         15:43 P   CJ    13300  E destapaciones                                                   7,600.00        2,327.90 EFTVO           7,600.00
+         15:43 P   CJ    13301  E bonif. karmiol                                                  2,110.00          217.90 EFTVO           2,110.00
+         15:49 P   TI    13302  E transferencia                                  34,147.81                       34,365.71 EFTVO          34,147.81
+17/08    09:20 P   CJ    13303  E jalle bonif.                                                      100.00       34,265.71 EFTVO             100.00
+         09:20 P   CJ    13304  E sube norma                                                        200.00       34,065.71 EFTVO             200.00
+         09:24 P   CJ    13305  E bonif. chas                                                     1,840.00       32,225.71 EFTVO           1,840.00
+         10:01 P   CJ    13306  E bonif, perez virasoro                                           1,355.00       30,870.71 EFTVO           1,355.00
+         10:19 P   CJ    13307  E bonif. alta                                                       819.00       30,051.71 EFTVO             819.00
+         10:33 P   CJ    13308  E SUBE                                                            1,800.00       28,251.71 EFTVO           1,800.00
+         15:09 P   CJ    13309  E nafta gomez                                                        50.02       28,201.69 EFTVO              50.02
+         15:23 P   CJ    13310  E pago facil gustavo                                                931.00       27,270.69 EFTVO             931.00
+         15:25 P   CJ    13311  E fer                                                            45,000.00      -17,729.31 EFTVO          45,000.00
+         15:31 P   CJ    13312  E reintegro chas                                    157.00                      -17,572.31 EFTVO             157.00
+         15:34 P   TI    13313  E transferencia                                  21,754.75                        4,182.44 EFTVO          21,754.75
+21/08    09:50 P   CJ    13314  E nafta gaston                                                      400.00        3,782.44 EFTVO             400.00
+         10:08 P   CJ    13315  E destapacion emanuel autorizo gustavo                              500.00        3,282.44 EFTVO             500.00
+         10:46 P   CJ    13316  E sube                                                            1,400.00        1,882.44 EFTVO           1,400.00
+         10:53 P   CJ    13317  E Destap Rosario 765 1º B RM-23-37                  970.00                        2,852.44 EFTVO             970.00
+         11:48 P   CJ    13318  E bonf. perez virasoro                                              812.00        2,040.44 EFTVO             812.00
+         12:03 P   CJ    13319  E lisotto fc. 7879 llave desagote                                 2,558.90         -518.46 EFTVO           2,558.90
+         14:10 P   CJ    13320  E bonif. marzano                                                    205.00         -723.46 EFTVO             205.00
+         14:53 P   CJ    13321  E sanitarios 1 cupla                                                 35.09         -758.55 EFTVO              35.09
+         15:35 P   CJ    13322  E sube fernando                                                     200.00         -958.55 EFTVO             200.00
+         15:40 P   TI    13323  E transferencia                                  21,990.30                       21,031.75 EFTVO          21,990.30
+22/08    08:59 P   CJ    13324  E sube norma                                                        200.00       20,831.75 EFTVO             200.00
+         09:41 P   CJ    13325  E reintegto bonif. perezvirasoro mov 13318          812.00                       21,643.75 EFTVO             812.00
+         09:44 P   CJ    13326  E bonif. federoci                                                 1,677.00       19,966.75 EFTVO           1,677.00
+         09:47 P   CJ    13327  E nafta gomez                                                        40.12       19,926.63 EFTVO              40.12
+         10:06 P   CJ    13328  E reintefro caja cauvin                                              20.00       19,906.63 EFTVO              20.00
+         12:23 P   CJ    13329  E sube                                                            1,500.00       18,406.63 EFTVO           1,500.00
+         14:23 P   CJ    13330  E nafta gomez                                                        50.42       18,356.21 EFTVO              50.42
+         15:26 P   CJ    13331  E anulac. mov. 13328                                 20.00                       18,376.21 EFTVO              20.00
+         15:26 P   CJ    13332  E reintegro caja cauvin                              20.00                       18,396.21 EFTVO              20.00
+         15:28 P   TI    13333  E transferncia                                   28,532.00                       46,928.21 EFTVO          28,532.00
+23/08    09:38 P   CJ    13334  E destapaciones                                                   7,400.00       39,528.21 EFTVO           7,400.00
+         11:19 P   CJ    13335  E papel higienico                                                   100.00       39,428.21 EFTVO             100.00
+         13:15 P   CJ    13336  E nafta gomez                                                        50.11       39,378.10 EFTVO              50.11
+         13:19 P   CJ    13337  E bonif, sackman                                                    387.00       38,991.10 EFTVO             387.00
+         13:25 P   CJ    13338  E diferencia emprego                                                  5.00       38,986.10 EFTVO               5.00
+         14:06 P   CJ    13339  E emprego                                                           488.53       38,497.57 EFTVO             488.53
+         14:15 P   CJ    13340  E bomba pepe                                                      2,330.00       36,167.57 EFTVO           2,330.00
+         15:19 P   CJ    13341  E fer                                                            60,000.00      -23,832.43 EFTVO          60,000.00
+         15:27 P   TI    13342  E transferencia                                  40,576.65                       16,744.22 EFTVO          40,576.65
+24/08    09:09 P   CJ    13343  E expensas las heras                                              1,915.00       14,829.22 EFTVO           1,915.00
+         09:16 P   CJ    13344  E sube fer                                                          200.00       14,629.22 EFTVO             200.00
+         09:33 P   CJ    13345  E sube leandro                                                      200.00       14,429.22 EFTVO             200.00
+         09:33 P   CJ    13346  E caja gaston                                                       400.00       14,029.22 EFTVO             400.00
+         09:44 P   CJ    13347  E nafta gomez                                                        20.17       14,009.05 EFTVO              20.17
+         09:47 P   CJ    13348  E sube                                                              600.00       13,409.05 EFTVO             600.00
+         10:50 P   CJ    13349  E bonif. echeveste                                                  767.00       12,642.05 EFTVO             767.00
+         10:50 P   CJ    13350  E bonif. kaplan                                                     430.00       12,212.05 EFTVO             430.00
+         10:50 P   CJ    13351  E bonif. perez virasaro                                             811.00       11,401.05 EFTVO             811.00
+         10:51 P   CJ    13352  E castagnino bonif.                                                 187.60       11,213.45 EFTVO             187.60
+         10:51 P   CJ    13353  E bonif. costoya                                                  3,855.00        7,358.45 EFTVO           3,855.00
+         10:53 P   CJ    13354  E distrib. cabrera fc. 4107 remaches                                 95.40        7,263.05 EFTVO              95.40
+
+Fumigadora Paulista S.R.L.                                 Detalle de Movimientos por Caja                                                 Página: 9
+27/09/18                                                   del 01/06/18 1200 al 28/09/18 1200                                              08:30:30
+                                                           Caja:  2 Arrastrar Saldos:Desde Dia/Hora  -  Consolidado:No
+
+
+Fecha    Hora  Cod Comprobante    Observaciones                                    Importe         Importe        Arrastre Ru-              Importe Observaciones de
+Comp     Comp  Emp Movimiento     Comprobante                                     Ingresos         Egresos           Saldo bro              Detalle Detalle del movimiento
+-------- ----- --- ------------   ---------------------------------------- --------------- --------------- --------------- -------- --------------- ---------------------------------
+         13:41 P   CJ    13355  E ingreso suipacha 1022 cbza 74746                   14.00                        7,277.05 EFTVO              14.00
+         14:03 P   CJ    13356  E sube norma                                                        200.00        7,077.05 EFTVO             200.00
+         14:03 P   CJ    13357  E bonif. croce                                                      475.00        6,602.05 EFTVO             475.00
+         14:24 P   CJ    13358  E motoverde repuestos varios fc 1750                              2,000.00        4,602.05 EFTVO           2,000.00
+         14:29 P   CJ    13359  E nafta gomez                                                        45.18        4,556.87 EFTVO              45.18
+         15:24 P   CJ    13360  E agua fisico quimico                                                26.00        4,530.87 EFTVO              26.00
+         15:38 P   CJ    13361  E fernando                                                       25,000.00      -20,469.13 EFTVO          25,000.00
+         15:45 P   TI    13362  E transferencia                                  25,570.52                        5,101.39 EFTVO          25,570.52
+27/08    09:54 P   CJ    13363  E reintegro caja cauvin                              53.00                        5,154.39 EFTVO              53.00
+         10:29 P   CJ    13364  E desodorante piso                                                  200.00        4,954.39 EFTVO             200.00
+         10:33 P   CJ    13365  E sube                                                            3,000.00        1,954.39 EFTVO           3,000.00
+         14:31 P   CJ    13366  E sandwich vero                                                      28.00        1,926.39 EFTVO              28.00
+         15:39 P   CJ    13367  E nafta gomez                                                        30.38        1,896.01 EFTVO              30.38
+         15:54 P   CJ    13368  E imcom fc 3330                                                   1,754.74          141.27 EFTVO           1,754.74
+         15:55 P   TI    13369  E transferencia                                  16,621.30                       16,762.57 EFTVO          16,621.30
+28/08    09:10 P   CJ    13370  E bonif. sobron                                                     827.00       15,935.57 EFTVO             827.00
+         09:14 P   CJ    13371  E sube gomez                                                         50.00       15,885.57 EFTVO              50.00
+         10:43 P   CJ    13372  E sube                                                            2,200.00       13,685.57 EFTVO           2,200.00
+         10:43 P   CJ    13373  E pepe camara nueva                                                 350.00       13,335.57 EFTVO             350.00
+         13:31 P   CJ    13374  E sube fernando                                                     200.00       13,135.57 EFTVO             200.00
+         13:48 P   CJ    13375  E bonif. cormax                                                     305.00       12,830.57 EFTVO             305.00
+         14:10 P   CJ    13376  E reintegro bonif sobron                            827.00                       13,657.57 EFTVO             827.00
+         15:35 P   TI    13377  E transferencia                                  12,341.00                       25,998.57 EFTVO          12,341.00
+29/08    09:12 P   CJ    13378  E norma sube                                                        200.00       25,798.57 EFTVO             200.00
+         09:16 P   CJ    13379  E caja cauvin                                                       400.00       25,398.57 EFTVO             400.00
+         09:16 P   CJ    13380  E sube                                                              400.00       24,998.57 EFTVO             400.00
+         09:18 P   CJ    13381  E reintegro caja cauvin                              70.00                       25,068.57 EFTVO              70.00
+         10:21 P   CJ    13382  E nafta gomez                                                        50.17       25,018.40 EFTVO              50.17
+         14:23 P   CJ    13383  E tornillos pepe                                                    146.04       24,872.36 EFTVO             146.04
+         15:30 P   TI    13384  E transferencia                                  16,425.10                       41,297.46 EFTVO          16,425.10
+30/08    11:33 P   CJ    13385  E SUBE                                                              600.00       40,697.46 EFTVO             600.00
+         14:52 P   CJ    13386  E fer                                                            40,000.00          697.46 EFTVO          40,000.00
+         15:01 P   TI    13387  E transferencias                                 14,944.65                       15,642.11 EFTVO          14,944.65
+31/08    09:05 P   CJ    13388  E nafta gomez                                                        30.04       15,612.07 EFTVO              30.04
+         10:03 P   CJ    13389  E bonif. morone de ayacucho se saca el 20                         1,072.00       14,540.07 EFTVO           1,072.00
+         10:30 P   CJ    13390  E bonificacion perez virasoro anticipo                            2,000.00       12,540.07 EFTVO           2,000.00
+         11:10 P   CJ    13391  E correo                                                            380.00       12,160.07 EFTVO             380.00
+         11:10 P   CJ    13392  E fotocopias                                                          5.00       12,155.07 EFTVO               5.00
+         11:57 P   CJ    13393  E sube                                                              900.00       11,255.07 EFTVO             900.00
+         12:03 P   CJ    13394  E dist. cabrera mechas                                              737.08       10,517.99 EFTVO             737.08
+03/09    09:29 P   CJ    13395  E destapaciones                                                  12,200.00       -1,682.01 EFTVO          12,200.00
+         09:30 P   CJ    13396  E destapaciones                                                  12,200.00      -13,882.01 EFTVO          12,200.00
+         09:44 P   CJ    13397  E nafta gomez                                                        50.48      -13,932.49 EFTVO              50.48
+         10:41 P   CJ    13398  E caja cauvin                                                       400.00      -14,332.49 EFTVO             400.00
+         10:49 P   CJ    13399  E gestion de cobranza                                             6,720.00      -21,052.49 EFTVO           6,720.00
+         11:24 P   CJ    13400  E sube                                                              600.00      -21,652.49 EFTVO             600.00
+         11:40 P   CJ    13401  E dif. cemiba                                                        15.00      -21,667.49 EFTVO              15.00
+         13:50 P   CJ    13402  E nafta camioneta                                                   497.42      -22,164.91 EFTVO             497.42
+         14:04 P   CJ    13403  E vero                                                           30,000.00      -52,164.91 EFTVO          30,000.00
+         14:07 P   CJ    13404  E anulacion mov. 13395                           12,200.00                      -39,964.91 EFTVO          12,200.00
+         14:11 P   CJ    13405  E vero                                           12,000.00                      -27,964.91 EFTVO          12,000.00
+         14:50 P   TI    13406  E transferencia                                  40,763.80                       12,798.89 EFTVO          40,763.80
+         15:56 P   CJ    13407  E dif. masilla                                                      299.00       12,499.89 EFTVO             299.00
+04/09    09:36 P   CJ    13408  E sube                                                            2,000.00       10,499.89 EFTVO           2,000.00
+         09:51 P   CJ    13409  E fernando sube                                                     200.00       10,299.89 EFTVO             200.00
+         10:02 P   CJ    13410  E treintegro masilla                                 10.00                       10,309.89 EFTVO              10.00
+         13:37 P   CJ    13411  E gomez nafta                                                        50.00       10,259.89 EFTVO              50.00
+         15:37 P   TI    13412  E transferencia                                   1,470.60                       11,730.49 EFTVO           1,470.60
+05/09    08:46 P   CJ    13413  E bonif.montini figueron                                            485.00       11,245.49 EFTVO             485.00
+         09:37 P   CJ    13414  E guantes                                                           438.00       10,807.49 EFTVO             438.00
+         09:38 P   CJ    13415  E sube                                                            1,800.00        9,007.49 EFTVO           1,800.00
+         11:42 P   CJ    13416  E nafta gomez                                                        40.18        8,967.31 EFTVO              40.18
+         12:34 P   CJ    13417  E nafta gomez                                                        50.02        8,917.29 EFTVO              50.02
+
+Fumigadora Paulista S.R.L.                                 Detalle de Movimientos por Caja                                                 Página:10
+27/09/18                                                   del 01/06/18 1200 al 28/09/18 1200                                              08:30:30
+                                                           Caja:  2 Arrastrar Saldos:Desde Dia/Hora  -  Consolidado:No
+
+
+Fecha    Hora  Cod Comprobante    Observaciones                                    Importe         Importe        Arrastre Ru-              Importe Observaciones de
+Comp     Comp  Emp Movimiento     Comprobante                                     Ingresos         Egresos           Saldo bro              Detalle Detalle del movimiento
+-------- ----- --- ------------   ---------------------------------------- --------------- --------------- --------------- -------- --------------- ---------------------------------
+         14:52 P   CJ    13418  E diferencia guantes                                                 40.00        8,877.29 EFTVO              40.00
+         15:21 P   CJ    13419  E reintegro montini figueron                        485.00                        9,362.29 EFTVO             485.00
+         15:26 P   TI    13420  E transferencia                                   8,841.30                       18,203.59 EFTVO           8,841.30
+06/09    09:39 P   CJ    13421  E sube                                                              900.00       17,303.59 EFTVO             900.00
+         09:43 P   CJ    13422  E diferencia aracor                                                 152.00       17,151.59 EFTVO             152.00
+         13:34 P   CJ    13423  E empanada jamon y queso                                             30.00       17,121.59 EFTVO              30.00
+         14:57 P   CJ    13424  E cambio de cheque por efectivo adm lavora        2,603.00                       19,724.59 EFTVO           2,603.00
+         16:06 P   CJ    13425  E caja cauvin                                                       400.00       19,324.59 EFTVO             400.00
+         16:15 P   TI    13426  E transferencia                                   5,440.00                       24,764.59 EFTVO           5,440.00
+07/09    09:01 P   CJ    13427  E veronica                                       12,000.00                       36,764.59 EFTVO          12,000.00
+         09:01 P   CJ    13428  E cargas sociales                                                12,213.51       24,551.08 EFTVO          12,213.51
+         09:35 P   CJ    13429  E sube                                                              600.00       23,951.08 EFTVO             600.00
+         09:36 P   CJ    13430  E caja cauvin reintegro                              25.00                       23,976.08 EFTVO              25.00
+         09:51 P   CJ    13431  E sube norma 300 fernando 200                                       500.00       23,476.08 EFTVO             500.00
+         10:24 P   CJ    13432  E rapipago                                                          580.00       22,896.08 EFTVO             580.00
+         11:28 P   CJ    13433  E dif. de pino                                                       13.55       22,882.53 EFTVO              13.55
+         14:27 P   CJ    13434  E refrigerio emanuel                                                 20.00       22,862.53 EFTVO              20.00
+         14:32 P   CJ    13435  E fer                                                            40,000.00      -17,137.47 EFTVO          40,000.00
+         14:52 P   CJ    13436  E dist. cabrera fc 4143                                             938.00      -18,075.47 EFTVO             938.00
+         14:59 P   TI    13437  E transferencia                                  24,449.00                        6,373.53 EFTVO          24,449.00
+10/09    10:06 P   CJ    13438  E SUBE                                                            1,200.00        5,173.53 EFTVO           1,200.00
+         11:26 P   CJ    13439  E el mundo de la bolsa fc. 97205                                    937.47        4,236.06 EFTVO             937.47
+         13:47 P   CJ    13440  E nafta gomez                                                        40.25        4,195.81 EFTVO              40.25
+         14:06 P   CJ    13441  E bonif. magnani                                                  2,210.00        1,985.81 EFTVO           2,210.00
+         14:43 P   TI    13442  E transferencia                                   4,966.00                        6,951.81 EFTVO           4,966.00
+11/09    09:47 P   CJ    13443  E sube fernando                                                     200.00        6,751.81 EFTVO             200.00
+         11:12 P   CJ    13444  E camioneta aceite, etc                                           2,452.34        4,299.47 EFTVO           2,452.34
+         11:15 P   CJ    13445  E sube                                                            1,200.00        3,099.47 EFTVO           1,200.00
+         11:20 P   CJ    13446  E correo                                                            380.00        2,719.47 EFTVO             380.00
+         11:21 P   CJ    13447  E fotocopias correo                                                   5.00        2,714.47 EFTVO               5.00
+         13:11 P   CJ    13448  E diferencia aracor                                                 259.00        2,455.47 EFTVO             259.00
+12/09    09:01 P   CJ    13449  E sube                                                            1,700.00          755.47 EFTVO           1,700.00
+         09:02 P   CJ    13450  E caja cauvin                                                       400.00          355.47 EFTVO             400.00
+         09:04 P   CJ    13451  E reintegro caja cauvin                              20.00                          375.47 EFTVO              20.00
+         09:38 P   CJ    13452  E gomez nafta                                                        50.02          325.45 EFTVO              50.02
+         10:14 P   CJ    13453  E expensas 3 piso                                13,645.93                       13,971.38 EFTVO          13,645.93
+         11:43 P   CJ    13454  E dif. dalla valle fc. 444/446                                      175.00       13,796.38 EFTVO             175.00
+         13:16 P   CJ    13455  E bonif. nacher                                                   1,574.00       12,222.38 EFTVO           1,574.00
+         14:40 P   CJ    13456  E 3 discos corte                                                    180.00       12,042.38 EFTVO             180.00
+         15:18 P   TI    13457  E transferencia                                  32,069.30                       44,111.68 EFTVO          32,069.30
+13/09    09:00 P   CJ    13458  E destapaciones 9100 y 2000                                      11,100.00       33,011.68 EFTVO          11,100.00
+         09:23 P   CJ    13459  E sube                                                            1,000.00       32,011.68 EFTVO           1,000.00
+         09:25 P   CJ    13460  E sube norma 300 fernando 200                                       500.00       31,511.68 EFTVO             500.00
+         09:32 P   CJ    13461  E bonif. greco                                                    1,115.00       30,396.68 EFTVO           1,115.00
+         10:59 P   CJ    13462  E canepa producto                                                 5,462.00       24,934.68 EFTVO           5,462.00
+         11:19 P   CJ    13463  E la casa del fumigador fc. 1024                                    850.03       24,084.65 EFTVO             850.03
+         12:05 P   CJ    13464  E 5 pares de botas                                                1,893.65       22,191.00 EFTVO           1,893.65
+         13:51 P   CJ    13465  E vero calabaza                                                      45.00       22,146.00 EFTVO              45.00
+         14:11 P   CJ    13466  E gomez nafta                                                        30.18       22,115.82 EFTVO              30.18
+         14:13 P   CJ    13467  E leandro sube                                                      200.00       21,915.82 EFTVO             200.00
+         14:46 P   CJ    13468  E veronica                                                       30,000.00       -8,084.18 EFTVO          30,000.00
+         14:54 P   TI    13469  E transferencia                                  18,992.46                       10,908.28 EFTVO          18,992.46
+14/09    09:10 P   CJ    13470  E bonif. piñeiro mitchel                                            945.00        9,963.28 EFTVO             945.00
+         09:12 P   CJ    13471  E bonif. schmahl larrea                                             804.00        9,159.28 EFTVO             804.00
+         09:49 P   CJ    13472  E bonific. karmio                                                 3,995.00        5,164.28 EFTVO           3,995.00
+         09:51 P   CJ    13473  E sube                                                            1,000.00        4,164.28 EFTVO           1,000.00
+         09:51 P   CJ    13474  E caja cauvin                                                       400.00        3,764.28 EFTVO             400.00
+         10:05 P   CJ    13475  E bonif. karmiol la anterior fue de transf                        6,130.00       -2,365.72 EFTVO           6,130.00
+         10:09 P   CJ    13476  E bonif. frojmovich                                               1,225.00       -3,590.72 EFTVO           1,225.00
+         10:13 P   CJ    13477  E anulacion mov. 13476                            1,225.00                       -2,365.72 EFTVO           1,225.00
+         10:14 P   CJ    13478  E bonif. frojmovich                                               1,232.00       -3,597.72 EFTVO           1,232.00
+         14:11 P   CJ    13479  E gomez nafta                                                        50.02       -3,647.74 EFTVO              50.02
+         15:31 P   TI    13480  E transferencias                                 17,124.70                       13,476.96 EFTVO          17,124.70
+
+Fumigadora Paulista S.R.L.                                 Detalle de Movimientos por Caja                                                 Página:11
+27/09/18                                                   del 01/06/18 1200 al 28/09/18 1200                                              08:30:30
+                                                           Caja:  2 Arrastrar Saldos:Desde Dia/Hora  -  Consolidado:No
+
+
+Fecha    Hora  Cod Comprobante    Observaciones                                    Importe         Importe        Arrastre Ru-              Importe Observaciones de
+Comp     Comp  Emp Movimiento     Comprobante                                     Ingresos         Egresos           Saldo bro              Detalle Detalle del movimiento
+-------- ----- --- ------------   ---------------------------------------- --------------- --------------- --------------- -------- --------------- ---------------------------------
+17/09    09:30 P   CJ    13481  E sube                                                            1,200.00       12,276.96 EFTVO           1,200.00
+         09:32 P   CJ    13482  E reintegro caja cauvin                                              40.00       12,236.96 EFTVO              40.00
+         13:12 P   CJ    13483  E sube fer                                                          300.00       11,936.96 EFTVO             300.00
+         13:28 P   CJ    13484  E anulacion mov. 13482                               40.00                       11,976.96 EFTVO              40.00
+         13:29 P   CJ    13485  E reintegro caja cauvin                              40.00                       12,016.96 EFTVO              40.00
+         14:21 P   CJ    13486  E gomez nafta                                                        30.18       11,986.78 EFTVO              30.18
+         14:55 P   CJ    13487  E vero                                                           20,000.00       -8,013.22 EFTVO          20,000.00
+         15:13 P   TI    13488  E transferencias                                 23,200.32                       15,187.10 EFTVO          23,200.32
+18/09    09:42 P   CJ    13489  E sube                                                            1,000.00       14,187.10 EFTVO           1,000.00
+         09:43 P   CJ    13490  E suedlos fer                                                       756.00       13,431.10 EFTVO             756.00
+         13:17 P   CJ    13491  E vaselina para fumi                                                129.50       13,301.60 EFTVO             129.50
+         13:17 P   CJ    13492  E nafta camioneta pepe                                              501.26       12,800.34 EFTVO             501.26
+         13:29 P   CJ    13493  E bonificacion alta                                               1,252.00       11,548.34 EFTVO           1,252.00
+         13:29 P   CJ    13494  E sube norma                                                        300.00       11,248.34 EFTVO             300.00
+         13:36 P   CJ    13495  E bonif. szperling junio/julio y actual                           1,308.00        9,940.34 EFTVO           1,308.00
+         15:10 P   CJ    13496  E bolso por rapipago                                                320.00        9,620.34 EFTVO             320.00
+         15:19 P   TI    13497  E transferencias                                  9,369.00                       18,989.34 EFTVO           9,369.00
+19/09    09:05 P   CJ    13498  E bonif. mabel de rota                                              815.00       18,174.34 EFTVO             815.00
+         09:07 P   CJ    13499  E bonif. perez virasoro                                           1,877.00       16,297.34 EFTVO           1,877.00
+         09:08 P   CJ    13500  E bonif. dra. costas                                                165.00       16,132.34 EFTVO             165.00
+         09:12 P   CJ    13501  E sube                                                            1,500.00       14,632.34 EFTVO           1,500.00
+         09:51 P   CJ    13502  E nafta gomez  $ 50.09 y  $ 30.08                                    80.17       14,552.17 EFTVO              80.17
+         12:14 P   CJ    13503  E reintegro bonif. no cobramos szperling          1,308.00                       15,860.17 EFTVO           1,308.00
+         12:19 P   CJ    13504  E reintegro bonif. dra.costas pago efvo             165.00                       16,025.17 EFTVO             165.00
+         12:24 P   CJ    13505  E dist. cabrera fc. 4209                                            285.02       15,740.15 EFTVO             285.02
+         12:37 P   CJ    13506  E bonif. costantino                                                 814.00       14,926.15 EFTVO             814.00
+         12:43 P   CJ    13507  E diferencia subito                                                 172.00       14,754.15 EFTVO             172.00
+         14:12 P   CJ    13508  E bonificacion croce                                                476.00       14,278.15 EFTVO             476.00
+         15:29 P   CJ    13509  E caja cauvin                                                       400.00       13,878.15 EFTVO             400.00
+         15:49 P   CJ    13510  E nafta gomez                                                        40.35       13,837.80 EFTVO              40.35
+         16:00 P   CJ    13511  E fer                                                            40,000.00      -26,162.20 EFTVO          40,000.00
+         16:00 P   TI    13512  E transferencia                                  37,252.26                       11,090.06 EFTVO          37,252.26
+20/09    12:59 P   CJ    13513  E bonif. cora                                                     2,360.00        8,730.06 EFTVO           2,360.00
+         13:04 P   CJ    13514  E bonif. castagnino                                                 415.00        8,315.06 EFTVO             415.00
+         13:23 P   CJ    13515  E sube fernando                                                     300.00        8,015.06 EFTVO             300.00
+         14:35 P   CJ    13516  E nafta gomez                                                        50.25        7,964.81 EFTVO              50.25
+         15:48 P   CJ    13517  E hat solimano                                                    1,462.00        6,502.81 EFTVO           1,462.00
+         15:55 P   CJ    13518  E bonif. adm. nogueira                                              176.00        6,326.81 EFTVO             176.00
+         15:55 P   CJ    13519  E caja cauvin                                                       400.00        5,926.81 EFTVO             400.00
+         15:56 P   CJ    13520  E sube                                                            1,600.00        4,326.81 EFTVO           1,600.00
+         16:04 P   CJ    13521  E gustavo fer                                                     1,400.00        2,926.81 EFTVO           1,400.00
+         16:05 P   CJ    13522  E bonif. kaplan                                                     398.00        2,528.81 EFTVO             398.00
+         16:10 P   CJ    13523  E anulacion mov. 13519                              400.00                        2,928.81 EFTVO             400.00
+         16:13 P   TI    13524  E transferencia                                  11,304.03                       14,232.84 EFTVO          11,304.03
+21/09    09:25 P   CJ    13525  E sube                                                            1,300.00       12,932.84 EFTVO           1,300.00
+         11:54 P   CJ    13526  E nafta jose                                                        400.00       12,532.84 EFTVO             400.00
+         14:09 P   CJ    13527  E bonif. echeveste                                                  767.00       11,765.84 EFTVO             767.00
+         14:43 P   CJ    13528  E bonificacion federoci                                           2,200.00        9,565.84 EFTVO           2,200.00
+         15:08 P   CJ    13529  E caja cauvin                                                       400.00        9,165.84 EFTVO             400.00
+         15:43 P   CJ    13530  E peaje a tigre pepe                                                 36.00        9,129.84 EFTVO              36.00
+24/09    09:02 P   CJ    13531  E afip iingresos brutos jose                                      1,680.00        7,449.84 EFTVO           1,680.00
+         09:31 P   CJ    13532  E sube leandro                                                      200.00        7,249.84 EFTVO             200.00
+         09:32 P   CJ    13533  E sube                                                            1,400.00        5,849.84 EFTVO           1,400.00
+         09:51 P   CJ    13534  E nafta gomez                                                        50.00        5,799.84 EFTVO              50.00
+         10:33 P   CJ    13535  E reintegro bonif. federoci                                         464.00        5,335.84 EFTVO             464.00
+         10:34 P   CJ    13536  E anulacion mov. 13535                              464.00                        5,799.84 EFTVO             464.00
+         10:34 P   CJ    13537  E reintegro bonif. federoci no pago todo            464.00                        6,263.84 EFTVO             464.00
+         11:18 P   CJ    13538  E diferencia masilla                                                 51.00        6,212.84 EFTVO              51.00
+         12:58 P   CJ    13539  E sackman bonificacion                                              207.00        6,005.84 EFTVO             207.00
+         13:08 P   CJ    13540  E llave esferica, etc fc. 7272                                    1,900.02        4,105.82 EFTVO           1,900.02
+         13:32 P   CJ    13541  E bonificacion marzano                                              205.00        3,900.82 EFTVO             205.00
+         14:04 P   CJ    13542  E nafta gomez                                                        50.19        3,850.63 EFTVO              50.19
+         14:13 P   CJ    13543  E vero                                                           55,000.00      -51,149.37 EFTVO          55,000.00
+
+Fumigadora Paulista S.R.L.                                 Detalle de Movimientos por Caja                                                 Página:12
+27/09/18                                                   del 01/06/18 1200 al 28/09/18 1200                                              08:30:30
+                                                           Caja:  2 Arrastrar Saldos:Desde Dia/Hora  -  Consolidado:No
+
+
+Fecha    Hora  Cod Comprobante    Observaciones                                    Importe         Importe        Arrastre Ru-              Importe Observaciones de
+Comp     Comp  Emp Movimiento     Comprobante                                     Ingresos         Egresos           Saldo bro              Detalle Detalle del movimiento
+-------- ----- --- ------------   ---------------------------------------- --------------- --------------- --------------- -------- --------------- ---------------------------------
+         14:25 P   CJ    13544  E fer el viermes 21/9                                            40,000.00      -91,149.37 EFTVO          40,000.00
+         14:34 P   TI    13545  E transferencias                                101,267.89                       10,118.52 EFTVO         101,267.89
+26/09    10:08 P   CJ    13546  E sube norma                                                        300.00        9,818.52 EFTVO             300.00
+         10:09 P   CJ    13547  E sube                                                              800.00        9,018.52 EFTVO             800.00
+         10:09 P   CJ    13548  E nafta moto pepe                                                   100.00        8,918.52 EFTVO             100.00
+         10:10 P   CJ    13549  E bonif. chas                                                     1,620.00        7,298.52 EFTVO           1,620.00
+         10:22 P   CJ    13550  E nafta gomez                                                        50.02        7,248.50 EFTVO              50.02
+         13:41 P   CJ    13551  E bonificacion eva costoya                                        1,484.00        5,764.50 EFTVO           1,484.00
+         13:44 P   CJ    13552  E sube fernando                                                     300.00        5,464.50 EFTVO             300.00
+         15:41 P   TI    13553  E transferencia                                  22,459.40                       27,923.90 EFTVO          22,459.40
+                                  ---------------------------------------- --------------- --------------- ---------------
+                                  Totales del periodo                        20,374,167.76   20,346,243.86       27,923.90
+                                  ---------------------------------------- --------------- --------------- ---------------
+                                  Totales al 28/09/18                        20,374,167.76   20,346,243.86       27,923.90
+
+
+
+Rubro Nombre                                   Ingresos       Egresos           Saldo
+----- ----------------------------------- ------------- ------------- ---------------
+    1 EFECTIVO                             1,637,089.29  1,604,214.55       32,874.74
+                                          ------------- ------------- ---------------
+                                           1,637,089.29  1,604,214.55       32,874.74
+

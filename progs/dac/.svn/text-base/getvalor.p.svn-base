@@ -1,0 +1,49 @@
+/*=============================================================================================*/
+/*                DADO UN VALOR DE DATO DETERMINADO, DEVUELVE EL VALOR ASOCIADO                */
+/*=============================================================================================*/
+
+DEFINE INPUT  PARAMETER p-cadena    AS CHARACTER.
+DEFINE INPUT  PARAMETER p-rotulo    AS CHARACTER.
+DEFINE INPUT  PARAMETER p-jotaesima AS INTEGER.
+DEFINE OUTPUT PARAMETER p-valor     AS CHARACTER.
+
+DEFINE VARIABLE pos-start           AS INTEGER.
+DEFINE VARIABLE pos-valor           AS INTEGER.
+DEFINE VARIABLE len-valor           AS INTEGER.
+DEFINE VARIABLE p1                  AS INTEGER.
+DEFINE VARIABLE p2                  AS INTEGER.
+DEFINE VARIABLE k                   AS INTEGER.
+DEFINE VARIABLE straux              AS CHARACTER.
+
+      /* Averiguamos la posicion de comienzo del valor en el string de entrada */
+
+straux = p-cadena.
+DO k = 1 TO p-jotaesima - 1:
+    p1 = INDEX(straux,"<" + p-rotulo + ">").
+    IF p1 <> 0 
+    THEN DO:
+         p2 = INDEX(straux,"</" + p-rotulo + ">").
+         straux = SUBSTRING(straux,p2 + LENGTH("</" + p-rotulo + ">")).
+    END.
+    ELSE DO:
+         straux = "".
+    END.     
+END.
+
+p1 = INDEX(straux,"<" + p-rotulo + ">").
+IF p1 <> 0
+THEN DO:
+   p2 = INDEX(straux,"</" + p-rotulo + ">").
+   IF p2 <> 0
+   THEN DO:
+        pos-valor = p1 + LENGTH("<" + p-rotulo + ">").
+        len-valor = p2 - pos-valor.
+        p-valor = SUBSTRING(straux,pos-valor,len-valor).
+   END.
+   ELSE DO:
+        p-valor = ?.
+   END.      
+END.
+ELSE DO:
+   p-valor = ?.
+END.   

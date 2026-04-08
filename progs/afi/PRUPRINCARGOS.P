@@ -1,0 +1,15 @@
+DEFINE VARIABLE p-que_empresa      AS CHARACTER INITIAL "A,C,R,T,N".
+DEFINE VARIABLE p-des_cobrador     LIKE Cobrador.cdg_cobrador INITIAL "002".
+DEFINE VARIABLE p-has_cobrador     LIKE Cobrador.cdg_cobrador INITIAL "002".
+DEFINE VARIABLE p-des_fecha        AS DATE INITIAL 03/01/2002.
+DEFINE VARIABLE p-has_fecha        AS DATE INITIAL 03/31/2002.
+DEFINE VARIABLE p-id_lote          AS CHARACTER INITIAL "".
+
+compile princargos.p save.
+
+RUN princargos.p ( INPUT  p-que_empresa,
+                   INPUT  p-des_cobrador,
+                   INPUT  p-has_cobrador,
+                   INPUT  p-des_fecha,
+                   INPUT  p-has_fecha,
+                   INPUT  p-id_lote).

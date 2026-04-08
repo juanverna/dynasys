@@ -1,0 +1,19 @@
+DEFINE VARIABLE v-fch_proceso AS DATE LABEL "Fecha Proceso".
+UPDATE v-fch_proceso 
+       WITH FRAME f-proc FONT 4 THREE-D SIDE-LABELS TITLE "Indique fecha" VIEW-AS DIALOG-BOX.
+
+connect -pf cnviva.pf.
+IF CONNECTED('viva')
+THEN DO:
+
+     RUN COPMAESTROS.P.
+     DISCONNECT viva.
+     MESSAGE "COPIA TERMINADA" VIEW-AS ALERT-BOX MESSAGE.
+   
+END.
+ELSE DO:
+
+      MESSAGE "No pudo conectarse la base ACTUAL"
+              VIEW-AS ALERT-BOX MESSAGE TITLE "Error de conexión".
+END.                 
+

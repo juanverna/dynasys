@@ -1,0 +1,8 @@
+                            /* OJO !!!!!!!!!!!!!!!! */
+
+FIND FIRST Localidad WHERE Localidad.dsc_localidad = "CAPITAL FEDERAL" NO-LOCK NO-ERROR.
+IF AVAILABLE Localidad 
+   THEN v-cod_capital = Localidad.cdg_localidad.
+   ELSE v-cod_capital = ?.
+
+                            /* -------------------- */ 

@@ -1,0 +1,3 @@
+FOR EACH {1} EXCLUSIVE-LOCK:
+    DELETE {1}.
+END.    

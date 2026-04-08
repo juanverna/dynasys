@@ -1,0 +1,4 @@
+FIND FIRST Tipcolor WHERE Tipcolor.cdg_tipoemr = des_tipoemr NO-LOCK.
+deshas_color = Tipcolor.color_emr + "-".
+FIND FIRST Tipcolor WHERE Tipcolor.cdg_tipoemr = has_tipoemr NO-LOCK.
+deshas_color = deshas_color + Tipcolor.color_emr.

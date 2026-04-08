@@ -1,0 +1,55 @@
+/*=================================================================================*/
+/*                  CHEQUES EMITIDOS DE UNA CUENTA BANCARIA                        */
+/*=================================================================================*/
+
+DEFINE INPUT PARAMETER rid_cuenta AS ROWID.
+DEFINE INPUT PARAMETER des_fecha  LIKE Caj_header.fecha.
+DEFINE INPUT PARAMETER has_fecha  LIKE Caj_header.fecha.
+
+/*{VPERSINM.I}*/
+/*{VRSHARED.I}*/
+{RBFECHAS.I}
+{DFVRBUIL.I}
+
+DEFINE VARIABLE que_empresa       LIKE Empresa.nombre.
+DEFINE VARIABLE fecha_lis         AS DATE.
+DEFINE VARIABLE hora_lis          AS CHARACTER.
+
+DEFINE VARIABLE hubo_cheque       AS LOGICAL.
+DEFINE VARIABLE tot_importes      AS DECIMAL.
+DEFINE VARIABLE fecha_fr          AS CHARACTER.
+DEFINE VARIABLE hora_fr           AS CHARACTER.
+
+DEFINE VARIABLE lest              AS INTEGER.
+DEFINE VARIABLE Total             AS DECIMAL.
+
+/*=================================================================================*/
+/*                              BLOQUE PRINCIPAL                                   */
+/*=================================================================================*/
+
+FIND Cuenta_bancaria WHERE ROWID(Cuenta_bancaria) = rid_cuenta NO-LOCK. 
+FIND Empresa OF Cuenta_bancaria NO-LOCK.
+
+RUN rbfecha.p ( INPUT des_fecha, OUTPUT ch_des_fecha ).
+RUN rbfecha.p ( INPUT has_fecha, OUTPUT ch_has_fecha ).
+
+v-params = "p-empresa=" + Empresa.nombre + "~n" + 
+           "p-rango_fechas=" + STRING(des_fecha,"99/99/9999") + 
+                      " al " + STRING(has_fecha,"99/99/9999") + "~n" + 
+           "p-titulo=Cheques por Cuenta Bancaria" + "~n". 
+
+v-filtro = "Cuenta_bancaria.cdg_cuenta_ban = '" + Cuenta_bancaria.cdg_cuenta_ban + "'" + 
+           " AND Cta_cte_bco.fecha_efectiva <= " + ch_has_fecha + 
+           " AND Cta_cte_bco.fecha_efectiva >= " + ch_des_fecha + 
+           " AND ( Cta_cte_bco.tip_comprob = 'CH')" +
+           " AND Cta_cte_bco.anulado = NO". 
+
+/*MESSAGE V-FILTRO VIEW-AS ALERT-BOX MESSAGE.*/
+           
+RUN exreport.p (  INPUT  ".\prl\sic.prl",                 /* Librería desde la que se ejecuta */
+                  INPUT "Librado por Cuenta Bancaria",    /* Nombre del reporte a ejecutar    */
+                  INPUT  v-filtro,                        /* Filtro de registros a imponer    */
+                  INPUT  "D",                             /* Salida de datos    (ver cPrinter)*/
+                  INPUT  "",                              /* Impresora de destino del listado */
+                  INPUT  v-params                         /* Parametros de Ejecucion          */
+               )   

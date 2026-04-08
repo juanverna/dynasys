@@ -1,0 +1,27 @@
+FIND valor WHERE cdg_empresa = "F" 
+             AND estado = "00"
+             AND Valor.cdg_banco       = 191
+             AND Valor.nro_valor       = 99999        
+             AND Valor.numero_cheque   = 987654321 
+             NO-LOCK NO-ERROR.
+/* FIND estado WHERE estado.cdg_estado = Valor.estado. */
+IF NOT AVAILABLE valor THEN DO:
+
+CREATE valor.
+ASSIGN
+     Valor.cdg_banco       = 191
+     Valor.cdg_caja        = 4
+     Valor.cdg_empresa     = "F"
+     Valor.cdg_sucurbanco  = 000
+     Valor.dias_clearing   = 2
+     Valor.estado          = "00"
+     Valor.fecha_acredita  = 01/01/06
+     Valor.fecha_deposito  = 01/01/06
+     Valor.fecha_emision   = 01/01/06
+     Valor.fecha_recepcion = today
+     Valor.importe         = 7971.50
+     Valor.nro_valor       = 99999
+     Valor.numero_cheque   = 987654321
+     Valor.observacion     = "ajuste de saldos por leo".
+
+END.

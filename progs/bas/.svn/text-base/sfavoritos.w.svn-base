@@ -1,0 +1,667 @@
+&ANALYZE-SUSPEND _VERSION-NUMBER AB_v10r12 GUI ADM2
+&ANALYZE-RESUME
+&Scoped-define WINDOW-NAME CURRENT-WINDOW
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CUSTOM _DEFINITIONS sObject 
+/*------------------------------------------------------------------------
+
+  File:
+
+  Description: from SMART.W - Template for basic ADM2 SmartObject
+
+  Author:
+  Created:
+
+------------------------------------------------------------------------*/
+/*          This .W file was created with the Progress AppBuilder.      */
+/*----------------------------------------------------------------------*/
+
+/* Create an unnamed pool to store all the widgets created 
+     by this procedure. This is a good default which assures
+     that this procedure's triggers and internal procedures 
+     will execute in this procedure's storage, and that proper
+     cleanup will occur on deletion of the procedure. */
+
+CREATE WIDGET-POOL.
+
+/* ***************************  Definitions  ************************** */
+
+/* Parameters Definitions ---                                           */
+
+/* Local Variable Definitions ---                                       */
+
+{src/adm2/widgetprto.i}
+DEFINE VARIABLE hbut AS WIDGET-HANDLE EXTENT 50 NO-UNDO.
+
+DEFINE VARIABLE ANCHO_BOTON AS INT NO-UNDO INITIAL 27. /*el icono es de 24x24 + 3 de cada sombra*/
+DEFINE VARIABLE ALTO_BOTON AS INT NO-UNDO INITIAL 27.
+DEFINE VARIABLE ofx AS INT NO-UNDO INITIAL 2.
+DEFINE VARIABLE ofY AS INT NO-UNDO INITIAL 2.
+DEFINE VARIABLE MAX_favoritos AS INT NO-UNDO INITIAL 21. /*cantidad maxima de favoritos en la paleta*/
+DEF VAR contenedor AS HANDLE NO-UNDO.
+DEF VAR MAX_x AS INT NO-UNDO.
+DEF VAR MAX_y AS INT NO-UNDO.
+DEF VAR centraX AS INT NO-UNDO.
+DEF VAR centraY AS INT NO-UNDO.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-PREPROCESSOR-BLOCK 
+
+/* ********************  Preprocessor Definitions  ******************** */
+
+&Scoped-define PROCEDURE-TYPE SmartObject
+&Scoped-define DB-AWARE no
+
+/* Name of designated FRAME-NAME and/or first browse and/or first query */
+&Scoped-define FRAME-NAME F-Main
+
+/* Standard List Definitions                                            */
+&Scoped-Define ENABLED-OBJECTS RECT-1 
+
+/* Custom List Definitions                                              */
+/* List-1,List-2,List-3,List-4,List-5,List-6                            */
+
+/* _UIB-PREPROCESSOR-BLOCK-END */
+&ANALYZE-RESUME
+
+
+/* ************************  Function Prototypes ********************** */
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _FUNCTION-FORWARD queX sObject 
+FUNCTION queX RETURNS INTEGER
+  ( INPUT apos AS INT )  FORWARD.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _FUNCTION-FORWARD queY sObject 
+FUNCTION queY RETURNS INTEGER
+  ( INPUT apos AS INT )  FORWARD.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+/* ***********************  Control Definitions  ********************** */
+
+
+/* Definitions of the field level widgets                               */
+DEFINE BUTTON btn_borrar 
+     IMAGE-UP FILE "iconos24/application_delete.jpg":U
+     IMAGE-INSENSITIVE FILE "iconos24i/application_delete.jpg":U NO-FOCUS FLAT-BUTTON
+     LABEL "B" 
+     SIZE 5.4 BY 1.29
+     FONT 6.
+
+DEFINE RECTANGLE RECT-1
+     EDGE-PIXELS 2 GRAPHIC-EDGE  NO-FILL   
+     SIZE 123 BY 1.67.
+
+
+/* ************************  Frame Definitions  *********************** */
+
+DEFINE FRAME F-Main
+     btn_borrar AT ROW 1.24 COL 117 WIDGET-ID 4
+     RECT-1 AT ROW 1 COL 1 WIDGET-ID 2
+    WITH 1 DOWN NO-BOX KEEP-TAB-ORDER OVERLAY 
+         SIDE-LABELS NO-UNDERLINE THREE-D 
+         AT COL 1 ROW 1 SCROLLABLE  WIDGET-ID 100.
+
+
+/* *********************** Procedure Settings ************************ */
+
+&ANALYZE-SUSPEND _PROCEDURE-SETTINGS
+/* Settings for THIS-PROCEDURE
+   Type: SmartObject
+   Allow: Basic
+   Frames: 1
+   Add Fields to: Neither
+   Other Settings: PERSISTENT-ONLY COMPILE
+ */
+
+/* This procedure should always be RUN PERSISTENT.  Report the error,  */
+/* then cleanup and return.                                            */
+IF NOT THIS-PROCEDURE:PERSISTENT THEN DO:
+  MESSAGE "{&FILE-NAME} should only be RUN PERSISTENT.":U
+          VIEW-AS ALERT-BOX ERROR BUTTONS OK.
+  RETURN.
+END.
+
+&ANALYZE-RESUME _END-PROCEDURE-SETTINGS
+
+/* *************************  Create Window  ************************** */
+
+&ANALYZE-SUSPEND _CREATE-WINDOW
+/* DESIGN Window definition (used by the UIB) 
+  CREATE WINDOW sObject ASSIGN
+         HEIGHT             = 1.95
+         WIDTH              = 125.4.
+/* END WINDOW DEFINITION */
+                                                                        */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CUSTOM _INCLUDED-LIB sObject 
+/* ************************* Included-Libraries *********************** */
+
+{src/adm2/visual.i}
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+
+
+/* ***********  Runtime Attributes and AppBuilder Settings  *********** */
+
+&ANALYZE-SUSPEND _RUN-TIME-ATTRIBUTES
+/* SETTINGS FOR WINDOW sObject
+  VISIBLE,,RUN-PERSISTENT                                               */
+/* SETTINGS FOR FRAME F-Main
+   NOT-VISIBLE FRAME-NAME Size-to-Fit                                   */
+ASSIGN 
+       FRAME F-Main:SCROLLABLE       = FALSE
+       FRAME F-Main:HIDDEN           = TRUE.
+
+/* SETTINGS FOR BUTTON btn_borrar IN FRAME F-Main
+   NO-ENABLE                                                            */
+/* _RUN-TIME-ATTRIBUTES-END */
+&ANALYZE-RESUME
+
+
+/* Setting information for Queries and Browse Widgets fields            */
+
+&ANALYZE-SUSPEND _QUERY-BLOCK FRAME F-Main
+/* Query rebuild information for FRAME F-Main
+     _Options          = "NO-LOCK"
+     _Query            is NOT OPENED
+*/  /* FRAME F-Main */
+&ANALYZE-RESUME
+
+ 
+
+
+
+/* ************************  Control Triggers  ************************ */
+
+&Scoped-define SELF-NAME btn_borrar
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL btn_borrar sObject
+ON CHOOSE OF btn_borrar IN FRAME F-Main /* B */
+DO:
+  DEFINE VARIABLE sino-msg AS LOGICAL.
+  sino-msg = NO.
+  RUN mensajepregunta.p ( INPUT "", INPUT "PREG051", INPUT-OUTPUT sino-msg).
+  IF sino-msg
+  THEN DO:
+      DO TRANSACTION:
+          FOR EACH Mfavorito 
+              WHERE Mfavorito.nro_usuario = Usuario.nro_usuario 
+                AND Mfavorito.cdg_empresa = Usuario.cdg_empresa:
+              Mfavorito.opcion = "E".
+          END.
+          RUN borrar_favoritos.
+          btn_borrar:SENSITIVE IN FRAME {&FRAME-NAME} = NO.
+      END.
+  END.
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&UNDEFINE SELF-NAME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CUSTOM _MAIN-BLOCK sObject 
+
+
+/* ***************************  Main Block  *************************** */
+
+/* If testing in the UIB, initialize the SmartObject. */  
+&IF DEFINED(UIB_IS_RUNNING) <> 0 &THEN          
+  RUN initializeObject.
+&ENDIF
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+/* **********************  Internal Procedures  *********************** */
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE addFavorito sObject 
+PROCEDURE addFavorito :
+/*------------------------------------------------------------------------------
+  Purpose:     Lo agregamos a los favoritos
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+  DEFINE INPUT  PARAMETER clave   AS CHARACTER  NO-UNDO.
+
+  DEFINE VARIABLE apos AS INTEGER NO-UNDO.
+  DEFINE VARIABLE hTMP AS HANDLE NO-UNDO.
+
+  FIND Treemenu WHERE Treemenu.cdg_item = clave
+                  AND Treemenu.cdg_empresa = Empresa.cdg_empresa NO-LOCK.
+
+  IF Treemenu.accion = "" 
+      THEN RETURN.
+
+ /*existe?*/
+  FIND FIRST Mfavorito WHERE Mfavorito.nro_usuario = Usuario.nro_usuario 
+                         AND Mfavorito.cdg_empresa = Empresa.cdg_empresa
+                         AND Mfavorito.NodeKey = clave 
+                             NO-ERROR.
+  IF AVAILABLE Mfavorito THEN RETURN.
+  /*agregamos al final*/
+  FIND LAST Mfavorito WHERE Mfavorito.nro_usuario = Usuario.nro_usuario NO-ERROR.
+  IF NOT AVAILABLE Mfavorito THEN apos = 0.
+  ELSE apos = Mfavorito.posicion.
+  
+  IF apos > MAX_favoritos THEN DO:
+      /*hacer lugar*/
+      FIND FIRST Mfavorito WHERE Mfavorito.nro_usuario = Usuario.nro_usuario
+                             AND Mfavorito.cdg_empresa = Empresa.cdg_empresa
+                             AND Mfavorito.opcion = "V" AND fhasta < TODAY 
+                                 NO-ERROR.
+      IF AVAILABLE Mfavorito THEN Mfavorito.opcion = "E".
+      ELSE DO:
+          FOR FIRST Mfavorito WHERE Mfavorito.nro_usuario = Usuario.nro_usuario 
+                                AND Mfavorito.cdg_empresa = Empresa.cdg_empresa
+                                AND Mfavorito.opcion = "R" BY Mfavorito.fhasta:
+             Mfavorito.opcion = "E".
+          END.
+      END.
+  END.
+  FIND FIRST Mfavorito WHERE Mfavorito.nro_usuario = Usuario.nro_usuario 
+                         AND Mfavorito.cdg_empresa = Empresa.cdg_empresa
+                         AND Mfavorito.opcion = "E" NO-ERROR.
+  IF AVAILABLE Mfavorito 
+  THEN DO:
+      IF Mfavorito.opcion = "E" THEN RUN refrescar.
+  END.
+
+  apos = apos + 1.
+
+  RUN crea_boton( apos , clave , Treemenu.titulo , Treemenu.archivo_icono , OUTPUT hTmp ).
+
+  IF VALID-HANDLE(htmp) THEN DO:
+      CREATE Mfavorito.
+      ASSIGN Mfavorito.NodeKey      = clave
+             Mfavorito.posicion     = apos
+             Mfavorito.nro_usuario  = Usuario.nro_usuario
+             Mfavorito.cdg_empresa  = Empresa.cdg_empresa
+             Mfavorito.opcion       = "R" /*reemplazable*/
+             Mfavorito.fhasta       = TODAY.
+      hbut[apos] = hTmp.
+      btn_borrar:SENSITIVE IN FRAME {&FRAME-NAME} = YES.
+  END.
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE bicon sObject 
+PROCEDURE bicon :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+/*DEFINE INPUT PARAMETER clave AS CHAR.
+DEFINE VARIABLE ok AS LOGICAL.
+DEFINE VARIABLE x-icono AS CHARACTER.
+DEFINE VARIABLE x-carpeta_inicial AS CHARACTER.
+DEFINE VARIABLE x-carpeta_default AS CHARACTER INITIAL ".\".
+DEFINE VARIABLE x-separador AS CHARACTER INITIAL "\".
+DEFINE VARIABLE j-carpeta AS INTEGER.
+DEFINE VAR puso_ok AS LOGICAL.
+
+FIND Treemenu WHERE Treemenu.cdg_item = clave
+                  AND Treemenu.cdg_empresa = empresa.cdg_empresa NO-LOCK.
+
+
+    x-icono = Treemenu.archivo_icono.
+    x-icono = REPLACE(x-icono,"/","\").
+    x-carpeta_inicial = "iconos24".
+    DO j-carpeta = 1 TO NUM-ENTRIES(x-icono,x-separador) - 1:
+        x-carpeta_inicial = x-carpeta_inicial + x-separador + ENTRY(j-carpeta,x-icono,x-separador).
+    END.
+    x-carpeta_inicial = SUBSTRING(x-carpeta_inicial,2).
+    
+    IF x-carpeta_inicial = ""
+        THEN x-carpeta_inicial = x-carpeta_default.
+    
+    SYSTEM-DIALOG GET-FILE x-icono
+          FILTERS "Imagenes (*.jpg)" "*.jpg",
+                  "Iconos (*.ico)" "*.ico"
+          INITIAL-FILTER 1
+          MUST-EXIST
+          DEFAULT-EXTENSION ".jpg"
+          INITIAL-DIR x-carpeta_inicial
+          RETURN-TO-START-DIR 
+          TITLE "Seleccione la imagen" 
+          USE-FILENAME
+          UPDATE puso_ok.
+
+  IF puso_ok 
+  THEN DO:
+      FILE-INFO:FILE-NAME = ".".
+      ASSIGN x-icono = REPLACE(x-icono,FILE-INFO:FULL-PATHNAME + "\","").
+      DISPLAY x-icono @ Treemenu.accion
+                  WITH FRAME {&FRAME-NAME}.
+      IF SEARCH(x-icono) = ? AND search(entry(1,x-icono,".") + ".r" ) = ? THEN 
+          MESSAGE "Tenga en cuenta que esta imagen no existe"
+              VIEW-AS ALERT-BOX INFO BUTTONS OK.
+  END.
+
+END.
+
+
+
+
+
+
+
+
+*/
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE borrar_favoritos sObject 
+PROCEDURE borrar_favoritos :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+
+    FOR EACH Mfavorito 
+        WHERE Mfavorito.nro_usuario = Usuario.nro_usuario
+          AND Mfavorito.cdg_empresa = Usuario.cdg_empresa EXCLUSIVE-LOCK:
+        IF Mfavorito.opcion = "E" THEN do:
+            DELETE WIDGET hbut[Mfavorito.posicion].
+            DELETE Mfavorito.
+        END.
+    END.
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE bprop sObject 
+PROCEDURE bprop :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+DEFINE VAR vopcion AS char
+     view-as radio-set radio-buttons
+                            "&Reemplazable", "R":U,
+                            "&Permanente", "P":U,
+                            "&Eliminar", "E":U ,
+                            "&Vence", "V":U LABEL "Opcion".
+def button btn-ok           label "  OK  " auto-go.
+def button btn-cancel       label "  Cancel  " auto-endkey.
+
+define frame bprop
+   space(6) vopcion SKIP(1) 
+   space(6) Mfavorito.fhasta LABEL "Vence" SKIP(2)
+   space(3) btn-ok SPACE(5)
+   btn-cancel
+   with SIDE-LABELS view-as dialog-box title "Propiedades" three-d.
+
+{findempresa.i}
+
+DO TRANSACTION:
+    FIND Mfavorito 
+        WHERE Mfavorito.posicion = INT(SELF:PRIVATE-DATA)
+          AND Mfavorito.nro_usuario = Usuario.nro_usuario
+          AND Mfavorito.cdg_empresa = Empresa.cdg_empresa
+              EXCLUSIVE-LOCK.
+    vopcion = Mfavorito.opcion.
+    UPDATE vopcion Mfavorito.fhasta  btn-ok btn-cancel WITH FRAME bprop.
+    ASSIGN Mfavorito.opcion = vopcion.
+END.
+
+IF vopcion = "E" THEN RUN refrescar.
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE crea_boton sObject 
+PROCEDURE crea_boton :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+
+DEFINE INPUT PARAMETER apos AS INT NO-UNDO.
+DEFINE INPUT PARAMETER clave AS CHAR NO-UNDO.
+DEFINE INPUT PARAMETER ctool AS CHAR NO-UNDO.
+DEFINE INPUT PARAMETER pcImage AS CHAR NO-UNDO.
+DEFINE OUTPUT PARAMETER hTmp AS HANDLE.
+
+DEF VAR cUIBMode AS CHAR NO-UNDO.
+CREATE BUTTON hTmp
+   ASSIGN NO-FOCUS = TRUE
+          LABEL = clave
+          FRAME = FRAME {&FRAME-NAME}:HANDLE
+          FLAT-BUTTON = TRUE
+          TOOLTIP = ctool          
+          SENSITIVE = TRUE
+          HIDDEN = FALSE
+          HEIGHT-PIXELS = ALTO_BOTON
+          WIDTH-PIXELS =  ANCHO_BOTON
+          PRIVATE-DATA = STRING(apos)
+          CONVERT-3D-COLORS = FALSE
+          X = queX(apos) 
+          Y = queY(apos).
+
+ hbut [apos] = hTmp. 
+
+ pcImage = REPLACE(pcImage,"iconos16","iconos24").
+ IF pcImage > "" THEN DO:
+     hTmp:LOAD-IMAGE( pcImage).
+ END.
+    
+ ELSE
+    hTmp:LOAD-IMAGE( "iconos24\application.jpg" ).
+  
+ /* No triggers or sensitive actions at design time */
+ {get UIBMode cUIBMode}.
+
+ IF cUIBMode <> "Design":U THEN DO:
+   ON CHOOSE OF hTmp 
+       PERSISTENT RUN onChoose IN TARGET-PROCEDURE (clave).
+
+   ON 'MOUSE-MENU-CLICK':U OF hTmp
+       PERSISTENT RUN bprop IN TARGET-PROCEDURE.
+   ON 'MOUSE-EXTEND-CLICK':U OF hTmp
+       PERSISTENT RUN bicon IN TARGET-PROCEDURE (clave).
+
+ END.
+ ELSE /* disable at design time */ 
+   hTmp:SENSITIVE = FALSE.
+
+ END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE disable_UI sObject  _DEFAULT-DISABLE
+PROCEDURE disable_UI :
+/*------------------------------------------------------------------------------
+  Purpose:     DISABLE the User Interface
+  Parameters:  <none>
+  Notes:       Here we clean-up the user-interface by deleting
+               dynamic widgets we have created and/or hide 
+               frames.  This procedure is usually called when
+               we are ready to "clean-up" after running.
+------------------------------------------------------------------------------*/
+  /* Hide all frames. */
+  HIDE FRAME F-Main.
+  IF THIS-PROCEDURE:PERSISTENT THEN DELETE PROCEDURE THIS-PROCEDURE.
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE initializeObject sObject 
+PROCEDURE initializeObject :
+/*------------------------------------------------------------------------------
+  Purpose:     Super Override
+  Parameters:  
+  Notes:       
+------------------------------------------------------------------------------*/
+
+  DEFINE VARIABLE hTMP AS HANDLE NO-UNDO.
+  DEFINE VARIABLE hay_favoritos AS LOGICAL NO-UNDO.
+
+  /* Code placed here will execute PRIOR to standard behavior. */
+
+  RUN SUPER.
+
+  {findempresa.i}
+
+  hay_favoritos = NO.
+  contenedor = RECT-1:HANDLE IN FRAME {&FRAME-NAME}.
+  MAX_x = truncate( contenedor:WIDTH-PIXELS / ( ANCHO_BOTON + ofx ), 0 ).
+  MAX_y = truncate(contenedor:HEIGHT-PIXELS / ( ALTO_BOTON + ofy ), 0 ).
+  centrax = TRUNCATE((contenedor:WIDTH-PIXELS - ( ANCHO_BOTON + ofx ) * MAX_x ) / 2 , 0 ) + contenedor:X.
+  centray = TRUNCATE((contenedor:HEIGHT-PIXELS - ( ALTO_BOTON + ofy ) * MAX_y ) / 2 , 0 ) + contenedor:Y.
+  FOR EACH Mfavorito WHERE Mfavorito.nro_usuario = Usuario.nro_usuario 
+                       AND Mfavorito.cdg_empresa = Empresa.cdg_empresa
+                       AND Mfavorito.opcion = "P" NO-LOCK, 
+    FIRST Treemenu WHERE Treemenu.cdg_item = Mfavorito.nodekey
+                     AND Treemenu.cdg_empresa = Mfavorito.cdg_empresa NO-LOCK:
+
+      RUN crea_boton( Mfavorito.posicion , Treemenu.cdg_item , Treemenu.titulo , Treemenu.archivo_icono , OUTPUT hTmp ).
+
+      hay_favoritos = YES.
+
+  END.
+
+  btn_borrar:SENSITIVE IN FRAME {&FRAME-NAME} = hay_favoritos.
+  
+  /* Code placed here will execute AFTER standard behavior.    */
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE onChoose sObject 
+PROCEDURE onChoose :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+DEFINE INPUT PARAMETER clave AS CHAR.
+PUBLISH "tvNodeEvent" ("DoubleClick", clave).
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE refrescar sObject 
+PROCEDURE refrescar :
+/*------------------------------------------------------------------------------
+  Purpose: refresca el los botones del panel si alguno se vencio lo elimina o
+           esta dado de baja
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+
+    DEF VAR htmp AS HANDLE NO-UNDO.
+    DEF VAR k AS INT NO-UNDO.
+
+    DO TRANSACTION:
+    
+        /*borrar lo que no va mas*/
+        RUN borrar_favoritos.
+
+        /*reacomodar*/
+        k = 1.
+        FOR EACH Mfavorito 
+            WHERE Mfavorito.nro_usuario = Usuario.nro_usuario
+              AND Mfavorito.cdg_empresa = Usuario.cdg_empresa EXCLUSIVE-LOCK:
+        
+                IF Mfavorito.posicion <> k OR NOT VALID-HANDLE( hbut[Mfavorito.posicion] ) THEN DO:
+                ASSIGN  hbut[Mfavorito.posicion]:X = queX(k)
+                        hbut[Mfavorito.posicion]:Y = queY(k)
+                        hbut[Mfavorito.posicion]:PRIVATE-DATA = STRING(k)
+                        Mfavorito.posicion = k.
+                END.
+                k = k + 1.
+        END.
+    
+    END.
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE tvNodeEvent sObject 
+PROCEDURE tvNodeEvent :
+/*------------------------------------------------------------------------------
+  Purpose:     recive los eventos del link tvNodeEvent y reacciona en consecuencia
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+DEFINE INPUT  PARAMETER pcEvent   AS CHARACTER  NO-UNDO.
+DEFINE INPUT  PARAMETER pcnodeKey AS CHARACTER  NO-UNDO.
+      
+/*IF lTraceEvents THEN addToEdMsg(STRING(pcEvent,FILL("X",25)) + pcnodeKey + "~n").*/
+
+CASE pcEvent:
+   WHEN "DoubleClick"      THEN RUN addFavorito (pcnodeKey).
+END CASE.
+ 
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+/* ************************  Function Implementations ***************** */
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _FUNCTION queX sObject 
+FUNCTION queX RETURNS INTEGER
+  ( INPUT apos AS INT ) :
+/*------------------------------------------------------------------------------
+  Purpose:  
+    Notes:  
+------------------------------------------------------------------------------*/
+
+  IF apos > MAX_y * MAX_x THEN RETURN 0.
+RETURN  centrax + INT(( apos - 1 - truncate( (apos - 1 ) / MAX_x , 0 ) * MAX_x  ) * ( ANCHO_BOTON + ofx )  ).   /* Function return value. */
+
+
+END FUNCTION.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _FUNCTION queY sObject 
+FUNCTION queY RETURNS INTEGER
+  ( INPUT apos AS INT ) :
+/*------------------------------------------------------------------------------
+  Purpose:  
+    Notes:  
+------------------------------------------------------------------------------*/
+IF apos > MAX_y * MAX_x THEN RETURN 0.
+RETURN centray + int( TRUNCATE ( (apos - 1 ) / MAX_x , 0 )) *  ( ANCHO_BOTON + ofy ) .   /* Function return value. */
+END FUNCTION.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+

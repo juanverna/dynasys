@@ -1,0 +1,42 @@
+DEF VAR opcion AS LOG INIT YES.
+
+DEF VAR Desde AS DATE.
+DEF VAR Hasta AS DATE.
+
+DEF VAR cdesd AS CHAR.
+DEF VAR chast AS CHAR.
+
+DEF VAR par AS CHAR.
+DEF VAR fil AS CHAR.
+
+MESSAGE "Si presiona ""No"" seleccionará un rango de fechas" VIEW-AS ALERT-BOX QUESTION
+        BUTTONS YES-NO TITLE "¿Quiere el mes en curso?    (DETALLE)" UPDATE opcion.
+        
+IF opcion THEN DO:
+    desde = DATE(MONTH(TODAY),1,YEAR(TODAY)).
+    FIND LAST Ficha NO-LOCK.
+    hasta = fch_alta.
+    IF desde > hasta THEN DO:
+        desde = DATE(MONTH(fch_alta) - 1,1,YEAR(fch_alta)).
+    END.
+END.
+ELSE DO:
+    UPDATE Desde Hasta SKIP WITH SIDE-LABELS VIEW-AS
+    DIALOG-BOX THREE-D TITLE "Indique período".
+END.
+
+RUN rbfecha.p (INPUT desde, OUTPUT cdesd).
+RUN rbfecha.p (INPUT hasta, OUTPUT chast).
+                    
+par = "desde = " + STRING(Desde,"99/99/99") + "~n" +
+      "hasta = " + STRING(Hasta,"99/99/99") + "~n".
+
+fil = "Ficha.fch_alta >= " + cdesd + " AND Ficha.fch_alta <= " +
+       chast + " AND Ficha.cdg_destino <> 'a' AND LOOKUP(Ficha.cdg_tipoemr,'d,5') = 0".
+       
+RUN exreport.p (INPUT "raséc.prl",
+                INPUT "detalle x tipo",
+                INPUT fil,
+                INPUT "D",
+                INPUT SESSION:PRINTER-NAME,
+                INPUT par).

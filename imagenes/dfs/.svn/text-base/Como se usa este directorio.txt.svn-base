@@ -1,0 +1,8 @@
+En este directorio se lleva el tracking de todas las implementaciones de Dynasys de los clientes en lo referido a las estructuras de las Bases de Datos exclusivamente.
+No se sincronizan ninguna otra extension referida a las intalaciones.
+
+Para ello el sistema ignorara cualquier otra extension referida a las bases.
+dichas extensiones estan contenidas en el cvsignore.
+
+Fernando 30-4-2006
+___________________________________________________________________

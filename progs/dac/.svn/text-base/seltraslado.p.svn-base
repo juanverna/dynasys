@@ -1,0 +1,14 @@
+/*=================================================================================*/
+/*                                                                                 */
+/*                      SELECCION DE MOTIVOS DE LLAMADA                            */
+/*                                                                                 */
+/*=================================================================================*/
+
+&GLOBAL-DEFINE TABLA           Motivo
+&GLOBAL-DEFINE CODIGO          cdg_motivo
+&GLOBAL-DEFINE NOMBRE          dsc_motivo
+&GLOBAL-DEFINE CONDICION       Motivo.cdg_motivo BEGINS "04." and 
+&GLOBAL-DEFINE TITULO-BROWSE   Tipee un nombre o seleccione de la lista
+&GLOBAL-DEFINE TITULO-FRAME    Seleccion de Tipos de Traslado
+
+{SELBROWS.I}

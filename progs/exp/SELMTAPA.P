@@ -1,0 +1,9 @@
+&GLOBAL-DEFINE TABLA           Marca_Tapa
+&GLOBAL-DEFINE CODIGO          cdg_mtapa
+&GLOBAL-DEFINE NOMBRE          desc_mtapa   
+&GLOBAL-DEFINE TITULO-BROWSE   Seleccione la Marca de tapa o ingrese nombre
+&GLOBAL-DEFINE TITULO-FRAME    Seleccion de Marcas de tapa
+&GLOBAL-DEFINE PROCESO         ACBRWMTA
+&GLOBAL-DEFINE ULT_REGISTRO    ult_mtapa
+
+{SELBROWS.I}

@@ -1,0 +1,780 @@
+&ANALYZE-SUSPEND _VERSION-NUMBER UIB_v8r12 GUI
+&ANALYZE-RESUME
+&Scoped-define WINDOW-NAME CURRENT-WINDOW
+&Scoped-define FRAME-NAME Dialog-Frame
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CUSTOM _DEFINITIONS Dialog-Frame 
+/*------------------------------------------------------------------------
+
+  File: 
+
+  Description: 
+
+  Input Parameters:
+      <none>
+
+  Output Parameters:
+      <none>
+
+  Author: 
+
+  Created: 
+------------------------------------------------------------------------*/
+/*          This .W file was created with the Progress UIB.             */
+/*----------------------------------------------------------------------*/
+
+/* ***************************  Definitions  ************************** */
+
+/* Parameters Definitions ---                                           */
+
+&IF DEFINED(UIB_is_running) EQ 0
+&THEN
+DEFINE INPUT PARAMETER que_archivo AS CHARACTER INITIAL "lsasnven.txt".
+DEFINE INPUT PARAMETER que_font    AS INTEGER INITIAL 8.
+&ELSE
+DEFINE VARIABLE que_archivo AS CHARACTER INITIAL "c:\sic-temp\w-sumasysaldosxcuenta.txt".
+DEFINE VARIABLE que_font    AS INTEGER INITIAL 8.
+&ENDIF
+
+/* Local Variable Definitions ---                                       */
+
+{vrcomunes.i}
+
+{parlocales.i}
+
+DEFINE VARIABLE aux_archivo     AS CHARACTER INITIAL "lsasnven.txt".
+DEFINE VARIABLE lin_pagina      AS INTEGER INITIAL 55.
+DEFINE VARIABLE modo_sel        AS INTEGER.
+DEFINE VARIABLE modo_hoja       AS INTEGER INITIAL 0 LABEL "Hoja"
+       VIEW-AS RADIO-SET HORIZONTAL RADIO-BUTTONS "Vertical",0,"Impresora",1,"Horizontal",2.
+DEFINE VARIABLE p_printed       AS LOGICAL.
+DEFINE VARIABLE puso_ok         AS LOGICAL.
+DEFINE VARIABLE que_buscar      AS CHARACTER.
+DEFINE VARIABLE que_poner       AS CHARACTER.
+DEFINE VARIABLE modo_buscar     AS INTEGER INITIAL 17.
+DEFINE VARIABLE v-fonts         AS CHARACTER INITIAL "020,021,022,023,024".
+DEFINE VARIABLE vec-fonts       AS INTEGER EXTENT 5 INITIAL [20,21,22,23,24].
+DEFINE VARIABLE nfont           AS INTEGER INITIAL 3.
+DEFINE VARIABLE impresor_batch  AS CHARACTER.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-PREPROCESSOR-BLOCK 
+
+/* ********************  Preprocessor Definitions  ******************** */
+
+&Scoped-define PROCEDURE-TYPE DIALOG-BOX
+&Scoped-define DB-AWARE no
+
+/* Name of first Frame and/or Browse and/or first Query                 */
+&Scoped-define FRAME-NAME Dialog-Frame
+
+/* Standard List Definitions                                            */
+&Scoped-Define ENABLED-OBJECTS resultados 
+&Scoped-Define DISPLAYED-OBJECTS resultados 
+
+/* Custom List Definitions                                              */
+/* List-1,List-2,List-3,List-4,List-5,List-6                            */
+
+/* _UIB-PREPROCESSOR-BLOCK-END */
+&ANALYZE-RESUME
+
+
+
+/* ***********************  Control Definitions  ********************** */
+
+/* Define a dialog box                                                  */
+
+/* Menu Definitions                                                     */
+DEFINE SUB-MENU m_Modo_Impresion 
+       MENU-ITEM m_Vertical     LABEL "Vertical"      
+              TOGGLE-BOX
+       MENU-ITEM m_Horizontal   LABEL "Horizontal"    
+              TOGGLE-BOX
+       MENU-ITEM m_Segn_Impresora LABEL "Según Impresora"
+              TOGGLE-BOX.
+
+DEFINE MENU POPUP-MENU-EDITOR-2 
+       MENU-ITEM m_Guardar      LABEL "&Guardar"      
+       MENU-ITEM m_Guardar_como LABEL "Guardar &como..."
+       RULE
+       MENU-ITEM m_Font         LABEL "&Fonts"        
+       MENU-ITEM m_Zoom         LABEL "&Zoom"         
+       MENU-ITEM m_Guardar_Definicin LABEL "Guardar De&finición"
+       RULE
+       MENU-ITEM m_Imprimir     LABEL "Im&primir"     
+       MENU-ITEM m_Impresora    LABEL "Seteo &Impresora..."
+       SUB-MENU  m_Modo_Impresion LABEL "&Modo Impresion..."
+       MENU-ITEM m_Imprimir_Batch LABEL "Imprimir Batch"
+       RULE
+       MENU-ITEM m_Enviar_por_Mail LABEL "Enviar por &Mail"
+       RULE
+       MENU-ITEM m_Retornar     LABEL "&Retornar"     .
+
+
+/* Definitions of the field level widgets                               */
+DEFINE VARIABLE resultados AS CHARACTER 
+     VIEW-AS EDITOR NO-WORD-WRAP SCROLLBAR-HORIZONTAL SCROLLBAR-VERTICAL LARGE
+     SIZE 180 BY 27.14
+     BGCOLOR 15 FGCOLOR 9 FONT 8 NO-UNDO.
+
+
+/* ************************  Frame Definitions  *********************** */
+
+DEFINE FRAME Dialog-Frame
+     resultados AT ROW 1 COL 1 NO-LABEL
+    WITH VIEW-AS DIALOG-BOX KEEP-TAB-ORDER 
+         SIDE-LABELS NO-UNDERLINE THREE-D  SCROLLABLE 
+         TITLE "<insert dialog title>".
+
+
+/* *********************** Procedure Settings ************************ */
+
+&ANALYZE-SUSPEND _PROCEDURE-SETTINGS
+/* Settings for THIS-PROCEDURE
+   Type: DIALOG-BOX
+   Allow: Basic,Browse,DB-Fields,Query
+   Other Settings: COMPILE
+ */
+&ANALYZE-RESUME _END-PROCEDURE-SETTINGS
+
+
+
+/* ***********  Runtime Attributes and AppBuilder Settings  *********** */
+
+&ANALYZE-SUSPEND _RUN-TIME-ATTRIBUTES
+/* SETTINGS FOR DIALOG-BOX Dialog-Frame
+                                                                        */
+ASSIGN 
+       FRAME Dialog-Frame:SCROLLABLE       = FALSE
+       FRAME Dialog-Frame:HIDDEN           = TRUE.
+
+ASSIGN 
+       resultados:POPUP-MENU IN FRAME Dialog-Frame       = MENU POPUP-MENU-EDITOR-2:HANDLE.
+
+/* _RUN-TIME-ATTRIBUTES-END */
+&ANALYZE-RESUME
+
+ 
+
+
+
+/* ************************  Control Triggers  ************************ */
+
+&Scoped-define SELF-NAME Dialog-Frame
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL Dialog-Frame Dialog-Frame
+ON WINDOW-CLOSE OF FRAME Dialog-Frame /* <insert dialog title> */
+DO:
+  APPLY "END-ERROR":U TO SELF.
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME m_Font
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL m_Font Dialog-Frame
+ON CHOOSE OF MENU-ITEM m_Font /* Fonts */
+DO:
+  
+  RUN quefont.p ( INPUT resultados:FONT IN FRAME {&FRAME-NAME}).
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME m_Guardar
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL m_Guardar Dialog-Frame
+ON CHOOSE OF MENU-ITEM m_Guardar /* Guardar */
+DO:
+   como_fue = resultados:SAVE-FILE(que_archivo) IN FRAME {&FRAME-NAME}.
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME m_Guardar_como
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL m_Guardar_como Dialog-Frame
+ON CHOOSE OF MENU-ITEM m_Guardar_como /* Guardar como... */
+DO:
+    SYSTEM-DIALOG GET-FILE aux_archivo
+        TITLE      "Guardar el archivo como ..."
+        SAVE-AS
+        ASK-OVERWRITE
+        CREATE-TEST-FILE
+        USE-FILENAME
+        UPDATE puso_ok.
+
+    IF puso_ok
+    THEN DO:
+       como_fue = resultados:SAVE-FILE(aux_archivo) IN FRAME {&FRAME-NAME}.
+    END.
+
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME m_Guardar_Definicin
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL m_Guardar_Definicin Dialog-Frame
+ON CHOOSE OF MENU-ITEM m_Guardar_Definicin /* Guardar Definición */
+DO:
+
+  RUN saverepdef.w ( INPUT ENTRY(NUM-ENTRIES(que_archivo,"\"),que_archivo,"\"),
+                     INPUT modo_hoja,
+                     INPUT lin_pagina,
+                     INPUT resultados:FONT IN FRAME {&FRAME-NAME}).
+
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME m_Horizontal
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL m_Horizontal Dialog-Frame
+ON VALUE-CHANGED OF MENU-ITEM m_Horizontal /* Horizontal */
+DO:
+  modo_hoja = 2.
+  RUN poner_titulo.
+  
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME m_Impresora
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL m_Impresora Dialog-Frame
+ON CHOOSE OF MENU-ITEM m_Impresora /* Impresora... */
+DO:
+     SYSTEM-DIALOG PRINTER-SETUP.
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME m_Imprimir
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL m_Imprimir Dialog-Frame
+ON CHOOSE OF MENU-ITEM m_Imprimir /* Imprimir */
+DO:
+
+   RUN _osprint.p ( INPUT  CURRENT-WINDOW:HANDLE,                  /* HANDLE de la WINDOW    */
+                    INPUT  que_archivo,                            /* Archivo a imprimir     */
+                    INPUT  resultados:FONT IN FRAME {&FRAME-NAME}, /* FONT a utilizar        */
+                    INPUT  modo_hoja,                              /* Print Flags 2=Apaisado */
+                    INPUT  lin_pagina,                             /* Lineas por Pagina      */
+                    INPUT  0,                                      /* 0= Todo, <>0 seleccion */
+                    OUTPUT p_Printed ).                            /* Se imprimió o no       */
+
+   IF p_Printed 
+      THEN MESSAGE "El archivo ha sido enviado a impresión"
+                   VIEW-AS ALERT-BOX MESSAGE TITLE "Mensaje del Sistema".
+
+      ELSE MESSAGE "El archivo NO ha sido impreso"
+                   VIEW-AS ALERT-BOX MESSAGE TITLE "Mensaje del Sistema".
+
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME m_Imprimir_Batch
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL m_Imprimir_Batch Dialog-Frame
+ON CHOOSE OF MENU-ITEM m_Imprimir_Batch /* Imprimir Batch */
+DO:
+  
+  DEFINE VARIABLE nombre_archivo AS CHARACTER.
+  DEFINE VARIABLE nombre_con_atributos AS CHARACTER.
+
+  nombre_archivo = ENTRY(NUM-ENTRIES(que_archivo,"\"),que_archivo,"\").
+  nombre_con_atributos = IF modo_hoja = 2 THEN "A" ELSE "H".
+  nombre_con_atributos = impresor_batch + "\" + 
+                         nombre_con_atributos + 
+                         STRING(resultados:FONT IN FRAME {&FRAME-NAME},"99") + 
+                         STRING(lin_pagina,"99") + 
+                         nombre_archivo.
+
+  como_fue = resultados:SAVE-FILE(nombre_con_atributos) IN FRAME {&FRAME-NAME}.    
+
+  IF como_fue 
+      THEN MESSAGE nombre_con_atributos
+                   VIEW-AS ALERT-BOX INFO TITLE "Archivo enviado a impresión".
+      ELSE MESSAGE nombre_con_atributos
+                VIEW-AS ALERT-BOX ERROR TITLE "ARCHIVO NO PUDO ENVIARSE A IMPRESIÓN".
+
+  
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME m_Retornar
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL m_Retornar Dialog-Frame
+ON CHOOSE OF MENU-ITEM m_Retornar /* Retornar */
+DO:
+    APPLY "END-ERROR":U TO FRAME Dialog-Frame.
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME m_Segn_Impresora
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL m_Segn_Impresora Dialog-Frame
+ON VALUE-CHANGED OF MENU-ITEM m_Segn_Impresora /* Según Impresora */
+DO:
+  modo_hoja = 1.
+  RUN poner_titulo.
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME m_Vertical
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL m_Vertical Dialog-Frame
+ON VALUE-CHANGED OF MENU-ITEM m_Vertical /* Vertical */
+DO:
+  modo_hoja = 0.
+  RUN poner_titulo.
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME m_Zoom
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL m_Zoom Dialog-Frame
+ON CHOOSE OF MENU-ITEM m_Zoom /* Zoom */
+DO:
+   IF nfont = NUM-ENTRIES(v-fonts,",")  
+   THEN DO:
+        nfont = 1.
+   END.
+   ELSE DO:
+        nfont = nfont + 1.
+        resultados:FONT IN FRAME {&FRAME-NAME} = INTEGER(ENTRY(nfont,v-fonts,",")).
+   END.     
+   RUN poner_titulo.
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME resultados
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL resultados Dialog-Frame
+ON CTRL-CURSOR-DOWN OF resultados IN FRAME Dialog-Frame
+DO:
+   IF nfont = 1  
+   THEN DO:
+        BELL.
+   END.
+   ELSE DO:
+        nfont = nfont - 1.
+        resultados:VISIBLE IN FRAME {&FRAME-NAME} = NO.
+      /*resultados:FONT IN FRAME {&FRAME-NAME} = INTEGER(ENTRY(nfont,v-fonts,",")).*/
+        resultados:FONT IN FRAME {&FRAME-NAME} = vec-fonts [ nfont ].
+        resultados:VISIBLE IN FRAME {&FRAME-NAME} = YES.
+   END.     
+/* RUN poner_titulo. */
+
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL resultados Dialog-Frame
+ON CTRL-CURSOR-LEFT OF resultados IN FRAME Dialog-Frame
+DO:
+      resultados:HEIGHT-PIXELS IN FRAME {&FRAME-NAME} = resultados:HEIGHT-PIXELS  IN FRAME {&FRAME-NAME} + 5.
+
+      MESSAGE "W:"
+      STRING(resultados:WIDTH-PIXELS  IN FRAME {&FRAME-NAME}) SKIP
+       "H:"
+      STRING(resultados:HEIGHT-PIXELS IN FRAME {&FRAME-NAME}) VIEW-AS ALERT-BOX MESSAGE.
+  
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL resultados Dialog-Frame
+ON CTRL-CURSOR-RIGHT OF resultados IN FRAME Dialog-Frame
+DO:
+      resultados:WIDTH-PIXELS  IN FRAME {&FRAME-NAME} = resultados:WIDTH-PIXELS  IN FRAME {&FRAME-NAME} + 5.
+
+      MESSAGE "W:"
+      STRING(resultados:WIDTH-PIXELS  IN FRAME {&FRAME-NAME}) SKIP
+       "H:"
+      STRING(resultados:HEIGHT-PIXELS IN FRAME {&FRAME-NAME}) VIEW-AS ALERT-BOX MESSAGE.
+
+  
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL resultados Dialog-Frame
+ON CTRL-CURSOR-UP OF resultados IN FRAME Dialog-Frame
+DO:
+   IF nfont = NUM-ENTRIES(v-fonts,",")  
+   THEN DO:
+        BELL.
+   END.
+   ELSE DO:
+        nfont = nfont + 1.
+        resultados:VISIBLE IN FRAME {&FRAME-NAME} = NO.
+      /*resultados:FONT IN FRAME {&FRAME-NAME} = INTEGER(ENTRY(nfont,v-fonts,",")).*/
+        resultados:FONT IN FRAME {&FRAME-NAME} = vec-fonts [ nfont ].
+        resultados:VISIBLE IN FRAME {&FRAME-NAME} = YES.
+   END.     
+/* RUN poner_titulo.*/
+  
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL resultados Dialog-Frame
+ON CTRL-F OF resultados IN FRAME Dialog-Frame
+DO:
+
+  IF resultados:SELECTION-TEXT <> "" THEN que_buscar = resultados:SELECTION-TEXT.
+  como_fue = resultados:CLEAR-SELECTION().
+  
+  RUN getstringfind.p ( INPUT-OUTPUT que_buscar, OUTPUT modo_buscar, OUTPUT puso_ok).
+  IF puso_ok
+  THEN DO:
+       DO WITH FRAME {&FRAME-NAME}:
+            como_fue = resultados:CLEAR-SELECTION().
+            como_fue = resultados:SEARCH(que_buscar,modo_buscar).
+            IF como_fue 
+            THEN DO:
+                 como_fue = resultados:SET-SELECTION(resultados:CURSOR-OFFSET - LENGTH(que_buscar),resultados:CURSOR-OFFSET). 
+            END.
+       END.
+  END.     
+
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL resultados Dialog-Frame
+ON CTRL-R OF resultados IN FRAME Dialog-Frame
+DO:
+
+  IF resultados:SELECTION-TEXT <> "" THEN que_buscar = resultados:SELECTION-TEXT.
+  como_fue = resultados:CLEAR-SELECTION().
+
+  RUN getstringreplace.p ( INPUT-OUTPUT que_buscar, 
+                           INPUT-OUTPUT que_poner, 
+                           OUTPUT modo_buscar, 
+                           OUTPUT puso_ok).
+  IF puso_ok
+  THEN DO:
+       DO WITH FRAME {&FRAME-NAME}:
+            como_fue = resultados:CLEAR-SELECTION().
+            como_fue = resultados:REPLACE(que_buscar,que_poner,modo_buscar).
+            IF como_fue 
+            THEN DO:
+                 como_fue = resultados:SET-SELECTION(resultados:CURSOR-OFFSET - LENGTH(que_buscar),resultados:CURSOR-OFFSET). 
+            END.
+       END.
+  END.     
+  
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL resultados Dialog-Frame
+ON F9 OF resultados IN FRAME Dialog-Frame
+DO:
+    DO WITH FRAME {&FRAME-NAME}:
+
+         IF resultados:SELECTION-TEXT <> "" THEN que_buscar = resultados:SELECTION-TEXT.
+         como_fue = resultados:CLEAR-SELECTION().
+
+         como_fue = resultados:SEARCH(que_buscar,modo_buscar).
+         IF como_fue 
+         THEN DO:
+              como_fue = resultados:SET-SELECTION(resultados:CURSOR-OFFSET - LENGTH(que_buscar),resultados:CURSOR-OFFSET). 
+         END.
+
+    END.
+
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&UNDEFINE SELF-NAME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CUSTOM _MAIN-BLOCK Dialog-Frame 
+
+
+/* ***************************  Main Block  *************************** */
+
+/* Parent the dialog-box to the ACTIVE-WINDOW, if there is no parent.   */
+IF VALID-HANDLE(ACTIVE-WINDOW) AND FRAME {&FRAME-NAME}:PARENT eq ?
+THEN FRAME {&FRAME-NAME}:PARENT = ACTIVE-WINDOW.
+
+/* Now enable the interface and wait for the exit condition.            */
+/* (NOTE: handle ERROR and END-KEY so cleanup code will always fire.    */
+
+RUN iniciar_variables.
+
+
+IF SEARCH(que_archivo) = ?
+   THEN que_archivo = dire_tmp + que_archivo.
+
+IF SEARCH(que_archivo) = ?
+THEN DO:
+    BELL.
+    MESSAGE "No puede hallarse el archivo " que_archivo
+            VIEW-AS ALERT-BOX MESSAGE TITLE "Archivo no hallado...".
+END.   
+ELSE DO:
+    MAIN-BLOCK:
+    DO ON ERROR   UNDO MAIN-BLOCK, LEAVE MAIN-BLOCK
+       ON END-KEY UNDO MAIN-BLOCK, LEAVE MAIN-BLOCK:
+    
+      RUN enable_UI.
+
+      RUN levantar_atributos.
+
+      IF impresor_batch <> ?
+      THEN DO:
+          FILE-INFO:FILE-NAME = impresor_batch. 
+          MENU-ITEM m_Imprimir_Batch:SENSITIVE IN MENU POPUP-MENU-EDITOR-2 = FILE-INFO:FULL-PATHNAME <> ?.
+      END.
+      ELSE DO:
+          MENU-ITEM m_Imprimir_Batch:SENSITIVE IN MENU POPUP-MENU-EDITOR-2 = NO.
+      END.
+
+      nfont = LOOKUP(STRING(que_font,"999"),v-fonts).
+      IF nfont = 0 THEN nfont = 3. /* Asume tamaño 3 por defecto */
+      resultados:FONT = INTEGER(ENTRY(nfont,v-fonts)).
+/*
+      CURRENT-WINDOW:WIDTH       = SESSION:WIDTH.
+      CURRENT-WINDOW:HEIGHT      = SESSION:HEIGHT.
+      
+      FRAME {&FRAME-NAME}:WIDTH  = SESSION:WIDTH.
+      FRAME {&FRAME-NAME}:HEIGHT = SESSION:HEIGHT.
+
+      resultados:WIDTH  IN FRAME {&FRAME-NAME} = SESSION:WIDTH - 2.0.
+      resultados:HEIGHT IN FRAME {&FRAME-NAME} = SESSION:HEIGHT - 2.0.
+*/
+
+      como_fue = resultados:READ-FILE(que_archivo).
+      IF como_fue 
+      THEN DO:
+          RUN poner_titulo.
+          WAIT-FOR GO OF FRAME {&FRAME-NAME}.
+      END.
+      ELSE DO:
+          MESSAGE "No pudo cargarse el archivo: " que_archivo
+                  VIEW-AS ALERT-BOX ERROR TITLE "Error en la carga". 
+      END.
+      
+    END.
+END.
+RUN disable_UI.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+/* **********************  Internal Procedures  *********************** */
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE despachar_mail Dialog-Frame 
+PROCEDURE despachar_mail :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+    
+    DEFINE VARIABLE retCode    AS INT NO-UNDO.
+
+    RUN mail(    "",
+                "Reporte:" + que_archivo,
+                "Se envia el reporte " + que_archivo,
+                que_archivo,                /* files to send               */           
+                0,                                              /* show dialog window */
+                OUTPUT retCode).
+
+    IF retCode <> 0 THEN MESSAGE "Error nùmero:" retCode VIEW-AS ALERT-BOX INFO TITLE "Error de mail".
+
+END PROCEDURE.
+
+PROCEDURE mail EXTERNAL "xpMail.dll":
+    DEFINE INPUT  PARAMETER mailto                  AS CHAR.
+    DEFINE INPUT  PARAMETER mailsubject         AS CHAR.
+    DEFINE INPUT  PARAMETER mailText            AS CHAR.
+    DEFINE INPUT  PARAMETER mailFiles           AS CHAR.
+    DEFINE INPUT  PARAMETER mailDialog          AS LONG.
+    DEFINE OUTPUT PARAMETER retCode                 AS LONG.
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE disable_UI Dialog-Frame  _DEFAULT-DISABLE
+PROCEDURE disable_UI :
+/*------------------------------------------------------------------------------
+  Purpose:     DISABLE the User Interface
+  Parameters:  <none>
+  Notes:       Here we clean-up the user-interface by deleting
+               dynamic widgets we have created and/or hide 
+               frames.  This procedure is usually called when
+               we are ready to "clean-up" after running.
+------------------------------------------------------------------------------*/
+  /* Hide all frames. */
+  HIDE FRAME Dialog-Frame.
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE enable_UI Dialog-Frame  _DEFAULT-ENABLE
+PROCEDURE enable_UI :
+/*------------------------------------------------------------------------------
+  Purpose:     ENABLE the User Interface
+  Parameters:  <none>
+  Notes:       Here we display/view/enable the widgets in the
+               user-interface.  In addition, OPEN all queries
+               associated with each FRAME and BROWSE.
+               These statements here are based on the "Other 
+               Settings" section of the widget Property Sheets.
+------------------------------------------------------------------------------*/
+  DISPLAY resultados 
+      WITH FRAME Dialog-Frame.
+  ENABLE resultados 
+      WITH FRAME Dialog-Frame.
+  VIEW FRAME Dialog-Frame.
+  {&OPEN-BROWSERS-IN-QUERY-Dialog-Frame}
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE iniciar_variables Dialog-Frame 
+PROCEDURE iniciar_variables :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+
+/*=================================================================================*/
+/*                CARGA DESDE LOS PARAMETROS LAS VARIABLES COMUNES                 */
+/*=================================================================================*/
+
+   {findempresa.i}
+   
+   RUN getparametro.p (  INPUT  "CSSONIDO",
+                         OUTPUT v-valor_c,
+                         OUTPUT v-valor_d,
+                         OUTPUT v-valor_l,
+                         OUTPUT v-valor_n,
+                         OUTPUT v-observacion ).
+
+   sonido = v-valor_l.
+
+   RUN getparametro.p (  INPUT  "DIRECTMP",
+                         OUTPUT v-valor_c,
+                         OUTPUT v-valor_d,
+                         OUTPUT v-valor_l,
+                         OUTPUT v-valor_n,
+                         OUTPUT v-observacion ).
+
+   dire_tmp = v-valor_c.
+
+   RUN getparametro.p (  INPUT  "DIRPRMON",
+                         OUTPUT v-valor_c,
+                         OUTPUT v-valor_d,
+                         OUTPUT v-valor_l,
+                         OUTPUT v-valor_n,
+                         OUTPUT v-observacion ).
+
+   impresor_batch = v-valor_c.
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE levantar_atributos Dialog-Frame 
+PROCEDURE levantar_atributos :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+
+  DEFINE VARIABLE nombre_reporte AS CHARACTER.
+  nombre_reporte = ENTRY(NUM-ENTRIES(que_archivo,"\"),que_archivo,"\").
+
+  FIND Ctl_reporte WHERE Ctl_reporte.nom_reporte = nombre_reporte NO-LOCK NO-ERROR.
+  IF AVAILABLE Ctl_reporte
+  THEN DO:
+       ASSIGN
+            modo_hoja  = INTEGER(Ctl_reporte.modo_impresion) 
+            que_font   = Ctl_reporte.numero_font
+            lin_pagina = Ctl_reporte.lineas_pp.
+  END.
+  
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE poner_titulo Dialog-Frame 
+PROCEDURE poner_titulo :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+
+  DEFINE VARIABLE chr-modo AS CHARACTER.
+
+  CASE modo_hoja:
+       WHEN 0 THEN chr-modo = "Vertical".
+       WHEN 1 THEN chr-modo = "Impresora".
+       WHEN 2 THEN chr-modo = "Horizontal".
+  END.
+
+  FRAME {&FRAME-NAME}:TITLE = "Archivo:" + que_archivo + 
+                              " - FONT:" + STRING(resultados:FONT) + 
+                              " - Impresión:" + chr-modo. 
+  
+  MENU-ITEM m_Vertical:CHECKED IN MENU m_Modo_Impresion = modo_hoja = 0.
+  MENU-ITEM m_Segn_Impresora:CHECKED IN MENU m_Modo_Impresion = modo_hoja = 1.
+  MENU-ITEM m_Horizontal:CHECKED IN MENU m_Modo_Impresion = modo_hoja = 2.
+
+  
+  
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+

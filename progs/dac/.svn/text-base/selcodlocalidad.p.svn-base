@@ -1,0 +1,9 @@
+/*========================================================================================*/
+/*                    SELECCIONA UNA SERIE DE CODIGOS DE EMPRESA                          */
+/*========================================================================================*/
+
+&GLOBAL-DEFINE TABLA   Localidad
+&GLOBAL-DEFINE CODIGO  cdg_localidad 
+&GLOBAL-DEFINE NOMBRE  dsc_localidad
+
+{selectacodigos.i}

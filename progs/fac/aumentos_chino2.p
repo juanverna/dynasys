@@ -1,0 +1,50 @@
+INPUT FROM C:\wproceso\FER.csv.
+
+
+DEFINE VAR n01f AS INT NO-UNDO.
+DEFINE VAR n05m AS INT NO-UNDO.
+FIND articulo WHERE articulo.cdg_articulo = "01f".
+n01f = nro_articulo.
+FIND articulo WHERE articulo.cdg_articulo = "05m".
+n05m = nro_articulo.
+DEFINE VAR a AS INT.
+DEFINE VAR b AS char.
+DEFINE VAR c AS DECIMAL decimals 2.
+REPEAT:
+    IMPORT DELIMITER ";" a b c.
+    FIND contrato_hd WHERE nro_contrato = a NO-ERROR.
+    IF NOT AVAILABLE contrato_hd THEN do:
+        DISPLAY a.
+    NEXT.
+    END.
+    FIND articulo WHERE cdg_articulo = b NO-ERROR.
+    IF NOT AVAILABLE articulo THEN DISPLAY "Artic" + b.
+    FIND FIRST contrato_dt WHERE contrato_dt.nro_contrato = a AND
+        contrato_dt.nro_articulo = articulo.nro_articulo NO-ERROR.
+    IF NOT AVAILABLE contrato_dt THEN DISPLAY a b.
+    ELSE DO:
+         
+    ASSIGN  contrato_dt.precio = contrato_dt.precio + TRUNCATE( c / 1.21 , 2 )
+            contrato_dt.precio_cf = contrato_dt.precio_cf + c
+            contrato_dt.subtotal_bruto = contrato_dt.precio
+            contrato_dt.subtotal_bruto_cf = contrato_dt.precio_cf
+            contrato_dt.subtotal_neto_cf = contrato_dt.precio_cf
+            contrato_dt.subtotal_gral = contrato_dt.subtotal_bruto_cf
+            contrato_dt.subtotal_neto = contrato_dt.precio
+            contrato_dt.subtotal_neto_cf = contrato_dt.precio_cf.
+    END.
+     ASSIGN 
+        contrato_hd.imp_bruto = 0
+        contrato_hd.imp_iva = 0
+        contrato_hd.imp_neto = 0
+        contrato_hd.imp_total = 0.
+     FOR EACH contrato_dt OF contrato_hd:
+        ASSIGN
+        contrato_hd.imp_bruto = contrato_hd.imp_bruto + contrato_dt.subtotal_bruto
+        contrato_hd.imp_iva = contrato_hd.imp_iva + contrato_dt.precio_cf - contrato_dt.precio
+        contrato_hd.imp_neto = contrato_hd.imp_neto + contrato_dt.subtotal_neto
+        contrato_hd.imp_total = contrato_hd.imp_total + contrato_dt.subtotal_gral.
+    END.
+END. 
+
+

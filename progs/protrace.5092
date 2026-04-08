@@ -1,0 +1,123 @@
+=====================================================
+PROGRESS stack trace as of Mon Jun 11 08:39:16 2018
+=====================================================
+Startup parameters:
+-pf C:\Progress102\OpenEdge\startup.pf,-cpinternal ISO8859-1,-cpstream ISO8859-1,-cpcoll Spanish9,-cpcase Basic,-d dmy,-numsep 46,-numdec 44,(end .pf),-p largar.p,-db c:\bases\dynasys102,-ld sic,-T c:\temp,-basekey INI,-ininame c:\dynasys10\procs\dynasys10.ini,-s 200,-inp 8192,-nb 150,-l 4000,-bibufs 25,-q,-rr
+
+Exception code: E0000003 
+Fault address:  7539C54F 01:0000B54F C:\Windows\syswow64\KERNELBASE.dll
+
+Registers:
+EAX:0018F4D8
+EBX:00000002
+ECX:004F4558
+EDX:00000002
+ESI:02044A2C
+EDI:00000002
+CS:EIP:0023:7539C54F
+SS:ESP:002B:0018F4D8  EBP:0018F528
+DS:002B  ES:002B  FS:0053  GS:002B
+Flags:00000246
+
+Call Stack:
+Address   Frame
+7539C54F  00000000  RaiseException+58
+10491764  00000000  dbut_utIsDir+1264
+
+
+** ABL Stack Trace **
+
+--> adm-hide v-dsc_cliente.w (.\fac\v-dsc_cliente.r) at line 0
+    broker-notify adm/objects/broker.p (C:\Progress102\OpenEdge\gui\adm\objects\broker.r) at line 6094
+    broker-select-page adm/objects/broker.p (C:\Progress102\OpenEdge\gui\adm\objects\broker.r) at line 3494
+    select-page w-consorcios-cli.w (.\PAU\w-consorcios-cli.r) at line 1320
+    label-trigger adm/objects/folder.w (C:\Progress102\OpenEdge\gui\adm\objects\folder.r) at line 1361
+    w-tareas-red.w (.\cpy\w-tareas-red.r) at line -1
+    USER-INTERFACE-TRIGGER w-dynasys.w (.\bas\w-dynasys.r) at line 5977
+    w-dynasys.w (.\bas\w-dynasys.r) at line 6508
+    rundynasys-noquit.p (.\bas\rundynasys-noquit.r) at line 104
+
+** Persistent procedures/Classes **
+
+Handle  File Name
+001956  .\fac\b-comprobantes1.r
+001954  .\fac\v-dsc_cliente.r
+001904  .\PAU\q-domicilio.r
+001893  .\bas\p-updspa.r
+001891  .\fac\v-cliente_contacto.r
+001887  .\fac\b-cliente_contacto.r
+001885  .\PAU\v-dsc_unico-domicilio.r
+001883  .\fac\v-dsc_cliente.r
+001858  .\cpy\v-temp_tarea1.r
+001847  .\cpy\b-busc-tarea.r
+001845  .\fac\v-dsc_cliente.r
+001747  .\opr\v-evento.r
+001739  .\bas\p-soloedita.r
+001735  .\opr\b-eventocli.r
+001730  .\bas\p-excel.r
+001728  .\fac\v-dsc_cliente.r
+001604  .\bas\p-soloedita.r
+001600  .\opr\v-evento.r
+001593  .\opr\b-eventos_recursos.r
+001588  .\bas\p-excel.r
+001584  .\opr\v-agenda_recurso.r
+001579  .\opr\b-recurso.r
+001576  .\opr\w-agenda_recurso.r
+001478  .\PAU\q-cliente_otros_datos.r
+001467  .\bas\p-updspa.r
+001465  .\PAU\v-otros_datos1.r
+001463  .\fac\v-dsc_cliente.r
+001452  .\bas\p-updspa.r
+001450  .\PAU\vo-cliente.r
+001439  .\bas\p-updspa.r
+001437  .\opr\v-canal.r
+001435  .\PAU\v-consorcios.r
+001431  .\opr\b-canal.r
+001426  .\PAU\b.r
+001423  C:\Progress102\OpenEdge\gui\adm\objects\folder.r
+001420  .\PAU\w-consorcios-cli.r
+001283  .\cpy\v-temp_tareaD.r
+001266  .\bas\p-soloedita.r
+001261  .\cpy\v-tarea-red11.r
+001258  .\cpy\v-temp_tarea1.r
+001256  .\cpy\v-tarea-red2.r
+001255  .\PAU\q-cliente.r
+001247  .\bas\p-soloedita.r
+001242  .\cpy\v-tarea-redsolotel.r
+001231  .\cpy\b-tareas-red.r
+001227  C:\Progress102\OpenEdge\gui\adm\objects\folder.r
+001224  C:\Progress102\OpenEdge\gui\adm\objects\broker.r
+001039  .\bas\pure4gltv.r
+001021  .\bas\sfavoritos.r
+001013  C:\Progress102\OpenEdge\gui\adm2\containr.r
+001011  C:\Progress102\OpenEdge\gui\adm2\visual.r
+001006  C:\Progress102\OpenEdge\gui\adm2\smart.r
+001002  .\bas\Winfunc.r
+001001  .\bas\Windows.r
+
+//=====================================================
+PROGRESS stack trace as of Mon Jun 11 08:39:16 2018
+//=====================================================
+Exception code: E0000003 
+Fault address:  7539C54F 01:0000B54F C:\Windows\syswow64\KERNELBASE.dll
+
+Registers:
+EAX:0018F4D8
+EBX:00000002
+ECX:004F4558
+EDX:00000002
+ESI:02044A2C
+EDI:00000002
+CS:EIP:0023:7539C54F
+SS:ESP:002B:0018F544  EBP:0018F528
+DS:002B  ES:002B  FS:0053  GS:002B
+Flags:00000246
+
+Call Stack:
+Address   Frame
+7539C54F  0018F54C  RaiseException+58
+10021E94  0018F580  0001:00020E94 C:\Progress102\OpenEdge\bin\prow32.dll
+10023933  0018F618  0001:00022933 C:\Progress102\OpenEdge\bin\prow32.dll
+1027F6AF  0018F6DC  pam_get_item+7A6CF
+10032E87  0018F714  0001:00031E87 C:\Progress102\OpenEdge\bin\prow32.dll
+

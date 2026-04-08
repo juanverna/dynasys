@@ -1,0 +1,22 @@
+/*----------------------------------------------------------------------------------*/ 
+/*                    Carga inicial de tablas de SIC                                */
+/*----------------------------------------------------------------------------------*/
+
+/*---------------------- Carga de datos de la Empresa ----------------------------*/
+
+MESSAGE "Ingresamos los datos de la Empresa, los cuales pueden ser luego"
+        "modificados. Es obligatorio indicar un Codigo Postal que exista."
+        VIEW-AS ALERT-BOX MESSAGE TITLE "Mensaje de instalacion: Empresa".
+       
+INSERT Empresa 
+       WITH 2 COLUMNS SIDE-LABELS CENTERED FRAME B 
+       TITLE "Ingrese datos de la Empresa".
+
+HIDE FRAME B.
+
+MESSAGE "Seguidamente, procedemos a importar los datos de las tablas imprescindibles"
+        "para el funcionamiento del sistema, los cuales pueden ser luego"
+        "modificados. Por favor, oprima ENTER o seleccione ACEPTAR"
+        VIEW-AS ALERT-BOX MESSAGE TITLE "Mensaje de instalacion: Tablas".
+
+RUN UTIMTABL.P.

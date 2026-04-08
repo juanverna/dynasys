@@ -1,0 +1,200 @@
+/*=================================================================================*/
+/*               MOVIMIENTOS POR RUBRO DE CAJA DE CAMBIO ENTRE FECHAS              */
+/*=================================================================================*/
+
+DEFINE INPUT PARAMETER que_caja     LIKE Caja.cdg_caja.
+DEFINE INPUT PARAMETER des_fecha    LIKE Caj_header.fecha.
+DEFINE INPUT PARAMETER has_fecha    LIKE Caj_header.fecha.
+DEFINE INPUT PARAMETER des_rubro    LIKE Rubro.cdg_rubro.
+DEFINE INPUT PARAMETER has_rubro    LIKE Rubro.cdg_rubro.
+DEFINE INPUT PARAMETER todos_mov    AS LOGICAL.
+DEFINE INPUT PARAMETER consolidado  AS LOGICAL.
+
+/*---------------------------------------------------------------------------------*/
+/*                       VARIABLES, BUFFERS Y TABLAS TEMPORARIAS                   */
+/*---------------------------------------------------------------------------------*/
+
+{dfvarimp.i}
+{parlocales.i}
+{wglistar.i}
+
+DEFINE VARIABLE nom_rubro           LIKE Rubro.nombre.
+DEFINE VARIABLE nom_caja            LIKE Caja.nombre.
+
+DEFINE VARIABLE chr_caja            AS CHARACTER.
+
+DEFINE VARIABLE que_comprob         AS CHARACTER FORMAT "X(16)".
+DEFINE VARIABLE titulo_det          AS CHARACTER FORMAT "X(50)".
+DEFINE VARIABLE saldo               AS DECIMAL FORMAT "->,>>>,>>9.99" LABEL "Saldo".
+DEFINE VARIABLE tot_ingreso         AS DECIMAL FORMAT ">,>>>,>>9.99" LABEL "Ingresos".
+DEFINE VARIABLE tot_egreso          AS DECIMAL FORMAT ">,>>>,>>9.99" LABEL "Egresos".
+DEFINE VARIABLE tgn_ingreso         AS DECIMAL FORMAT ">,>>>,>>9.99" LABEL "Ingresos".
+DEFINE VARIABLE tgn_egreso          AS DECIMAL FORMAT ">,>>>,>>9.99" LABEL "Egresos".
+DEFINE VARIABLE lst_e               AS DECIMAL FORMAT "->,>>>,>>9.99".
+DEFINE VARIABLE lst_i               AS DECIMAL FORMAT "->,>>>,>>9.99".
+
+DEFINE VARIABLE ant_comprob         AS CHARACTER FORMAT "X(20)".
+
+DEFINE VARIABLE pri_movi            AS LOGICAL.
+DEFINE VARIABLE pri_fech            AS LOGICAL.
+
+DEFINE BUFFER B-Rubro FOR Rubro.
+
+/*---------------------------------------------------------------------------------*/
+/*                                FRAMES                                           */
+/*---------------------------------------------------------------------------------*/
+
+DEFINE FRAME frm-titulo HEADER
+  que_empresa 
+  "Movimientos en Divisas de Caja:" AT 65 
+  nom_caja
+  "Página:" AT 167 PAGE-NUMBER FORMAT "99999" AT 174
+  SKIP  
+  fecha_lis   
+  "del" AT 65
+  des_fecha
+  "al" 
+  has_fecha 
+  hora_lis AT 155
+  SKIP
+  nom_rubro AT 65
+  SKIP(1)
+  WITH WIDTH 195 FRAME frm-titulo TOP-ONLY PAGE-TOP STREAM-IO.
+
+DEFINE FRAME frm-listado
+  Caj_header.fecha          COLUMN-LABEL "Fecha!Movim"
+  que_comprob               COLUMN-LABEL "Número de !Comprobante"
+  Caj_header.cdg_empresa    COLUMN-LABEL "Em-!prs" FORMAT "X(3)"
+  Caj_header.estado         COLUMN-LABEL "An!ul"
+  Caj_header.observacion    COLUMN-LABEL "Observación!Movimiento"
+  lst_i                     COLUMN-LABEL "Importe!Ingresos"
+  lst_e                     COLUMN-LABEL "Importe!Egresos"
+  saldo                     COLUMN-LABEL "Importe!Saldo"
+  Caj_detalle.cambio        COLUMN-LABEL "Razón de!Cambio"
+  Caj_detalle.observacion   COLUMN-LABEL "Observación!Detalle" 
+  WITH WIDTH 280 DOWN CENTERED USE-TEXT STREAM-IO.
+
+/*=================================================================================*/
+/*                          B L O Q U E   P R I N C I P A L                        */
+/*=================================================================================*/
+
+{findempresa.i}
+que_empresa = Empresa.nombre.
+  
+RUN LISTAR.
+
+/*=================================================================================*/
+/*                          P R O C E D I M I E N T O S                            */
+/*=================================================================================*/
+
+PROCEDURE LISTAR:
+
+   FIND Caja WHERE Caja.cdg_caja = que_caja NO-LOCK.
+   titulo_det = "Caja:" + STRING(que_caja,">>9") + " " + 
+                "Anulaciones:" + STRING(todos_mov,"Si/No") + "  -  " +
+                "Consolidado:" + STRING(consolidado,"Si/No").
+   nom_caja = Caja.nombre.
+
+   {dirprinfile.i}
+ 
+   tgn_ingreso = 0.
+   tgn_egreso = 0.
+
+  FOR EACH Rubro WHERE Rubro.cdg_rubro <= has_rubro
+                   AND Rubro.cdg_rubro >= des_rubro
+                   AND Rubro.tipo = "C"
+                 BREAK BY Rubro.cdg_rubro:
+                     
+       nom_rubro = STRING(Rubro.cdg_rubro,"9999") + "-" + Rubro.nombre.
+       pri_movi = YES.
+
+       tot_ingreso = 0.
+       tot_egreso = 0.
+       ant_comprob = "".
+
+       FOR EACH  Caj_detalle OF Rubro, FIRST Caj_header OF Caj_detalle
+          WHERE ( Caj_header.cdg_empresa = Empresa.cdg_empresa OR consolidado ) 
+            AND CAN-DO (Usuario.lista_empresas,Caj_header.cdg_empresa)
+            AND   Caj_header.cdg_caja = Caja.cdg_caja 
+            AND   Caj_header.fecha >= des_fecha 
+            AND   Caj_header.fecha <= has_fecha
+            AND ( Caj_header.estado <> "A" OR todos_mov ) 
+          BREAK BY Caj_header.fecha 
+                BY Caj_header.tip_comprob 
+                BY Caj_header.prf_comprob 
+                BY Caj_header.nro_comprob 
+                   WITH FRAME frm-listado:
+      
+          VIEW FRAME frm-titulo.
+
+          IF pri_movi
+          THEN DO:
+               RUN CALCULAR_EIRUBRO ( caj_header.cdg_caja, INPUT Rubro.cdg_rubro, 
+des_fecha, consolidado, empresa.cdg_empresa, 
+                                 OUTPUT tot_egreso, 
+                                 OUTPUT tot_ingreso ).
+               saldo = tot_ingreso - tot_egreso.
+               DISPLAY des_fecha - 1   @ Caj_header.fecha
+                       "Saldo Inicial" @ Caj_header.observacion
+                       saldo
+                       WITH FRAME frm-listado.
+               DOWN WITH FRAME frm-listado.
+               pri_movi = NO.
+          END.     
+
+          IF Caj_header.estado <> "A"
+          THEN DO:
+                IF Caj_header.tipo_mov = "I" 
+                THEN DO:
+                     tot_ingreso = tot_ingreso + Caj_detalle.divisas.
+                     lst_i = Caj_detalle.divisas.
+                END.
+                ELSE DO:
+                     tot_egreso = tot_egreso + Caj_detalle.divisas.
+                     lst_e = Caj_detalle.divisas.
+                END.
+          END.
+
+          que_comprob = Caj_header.tip_comprob + " " + 
+                        STRING(Caj_header.prf_comprob,"9999") + " " + 
+                        STRING(Caj_header.nro_comprob,"99999999").
+                              
+          saldo = tot_ingreso - tot_egreso.
+          DISPLAY Caj_header.fecha           WHEN FIRST-OF(Caj_header.fecha)
+                  que_comprob                WHEN que_comprob <> ant_comprob
+                  Caj_header.estado          WHEN que_comprob <> ant_comprob
+                  Caj_header.cdg_empresa     WHEN que_comprob <> ant_comprob
+                  Caj_header.observacion     WHEN que_comprob <> ant_comprob
+                  lst_i                      WHEN Caj_header.tipo_mov = "I"
+                  lst_e                      WHEN Caj_header.tipo_mov = "E"
+                  saldo                      WHEN Caj_header.estado <> "A" 
+                  Caj_detalle.cambio                  
+                  Caj_detalle.observacion 
+                  WITH FRAME frm-listado.
+          DOWN WITH FRAME frm-listado.
+                
+          ant_comprob = que_comprob.
+
+       END.
+
+       tgn_ingreso = tgn_ingreso + tot_ingreso.
+       tgn_egreso  = tgn_egreso  + tot_egreso .
+
+       UNDERLINE lst_i 
+                 lst_e 
+                 saldo
+                 Caj_detalle.cambio                  
+                 Caj_detalle.observacion 
+                 WITH FRAME frm-listado.
+       DOWN WITH FRAME frm-listado.
+
+       IF NOT LAST(Rubro.cdg_rubro) THEN PAGE.
+     
+  END.
+
+  OUTPUT CLOSE.
+  RUN veresult.w ( INPUT arch_salida,
+                   INPUT 22 ).
+
+END PROCEDURE.  
+{calculareicaja.i}

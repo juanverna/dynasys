@@ -1,0 +1,9 @@
+FOR EACH sic.cliente WHERE sic.Cliente.nom_cliente > "VIOLA":
+    FOR EACH sic.fac_header WHERE sic.fac_header.nro_admin = sic.cliente.nro_cliente:
+        FIND paulista.fac_header WHERE paulista.fac_header.nro_factura = sic.fac_header.nro_factura NO-ERROR.
+        IF NOT AVAILABLE paulista.fac_header THEN NEXT.
+        IF sic.Fac_header.estado_2_impresion <>  paulista.Fac_header.estado_2_impresion THEN 
+sic.Fac_header.estado_2_impresion = paulista.Fac_header.estado_2_impresion . 
+/*DISPLAY paulista.Fac_header.nro_factura paulista.Fac_header.nro_comprob paulista.Fac_header.nro_comprob sic.Fac_header.estado_2_impresion  paulista.Fac_header.estado_2_impresion.*/
+    END.
+END.

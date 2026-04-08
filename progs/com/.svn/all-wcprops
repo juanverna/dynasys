@@ -1,0 +1,653 @@
+K 25
+svn:wc:ra_dav:version-url
+V 35
+/svn/Paulista/!svn/ver/20/progs/com
+END
+d-ver_imputacion_remprov.w
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/Paulista/!svn/ver/1/progs/com/d-ver_imputacion_remprov.w
+END
+cmbeocop.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/com/cmbeocop.p
+END
+cmbeocor.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/com/cmbeocor.p
+END
+rlocmfec.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/com/rlocmfec.p
+END
+calcrpro.i
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/com/calcrpro.i
+END
+b-itemconcpre.w
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/Paulista/!svn/ver/1/progs/com/b-itemconcpre.w
+END
+b-ocm_detalle.w
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/Paulista/!svn/ver/1/progs/com/b-ocm_detalle.w
+END
+v-comprador.w
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/1/progs/com/v-comprador.w
+END
+w-art-prov-ocm.w
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/com/w-art-prov-ocm.w
+END
+v-concpre.w
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/Paulista/!svn/ver/1/progs/com/v-concpre.w
+END
+emitir_remprov.p
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/com/emitir_remprov.p
+END
+PRUOCM.P
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/svn/Paulista/!svn/ver/1/progs/com/PRUOCM.P
+END
+c-orden_de_compra.w
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/Paulista/!svn/ver/1/progs/com/c-orden_de_compra.w
+END
+b-proveedores_compras.w
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/Paulista/!svn/ver/1/progs/com/b-proveedores_compras.w
+END
+imprimir_ocompra.p
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/Paulista/!svn/ver/1/progs/com/imprimir_ocompra.p
+END
+w-cerrar_ocompra.w
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/Paulista/!svn/ver/1/progs/com/w-cerrar_ocompra.w
+END
+d-detocompra_articulos.w
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/Paulista/!svn/ver/1/progs/com/d-detocompra_articulos.w
+END
+prdvp000.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/com/prdvp000.p
+END
+genera_alloc.p
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/Paulista/!svn/ver/1/progs/com/genera_alloc.p
+END
+c-remito_proveedor.w
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/Paulista/!svn/ver/1/progs/com/c-remito_proveedor.w
+END
+d-seleccionar_item_ocompra.w
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/Paulista/!svn/ver/1/progs/com/d-seleccionar_item_ocompra.w
+END
+emitir_remprov_sinvaluacion.p
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/Paulista/!svn/ver/1/progs/com/emitir_remprov_sinvaluacion.p
+END
+v-ocm_hdabiertas.w
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/Paulista/!svn/ver/1/progs/com/v-ocm_hdabiertas.w
+END
+cmbeocrf.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/com/cmbeocrf.p
+END
+v-cotiza_adj.w
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/Paulista/!svn/ver/1/progs/com/v-cotiza_adj.w
+END
+seltipar.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/com/seltipar.p
+END
+d-seldomicilio_proveedor.w
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/Paulista/!svn/ver/1/progs/com/d-seldomicilio_proveedor.w
+END
+b-proveedores_art.w
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/Paulista/!svn/ver/1/progs/com/b-proveedores_art.w
+END
+prrpv000.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/com/prrpv000.p
+END
+detalle_ocompra.p
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/com/detalle_ocompra.p
+END
+lsocompra_xarticulo_partida.p
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/Paulista/!svn/ver/1/progs/com/lsocompra_xarticulo_partida.p
+END
+tgbdocom.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/com/tgbdocom.p
+END
+v-cotiza.w
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/com/v-cotiza.w
+END
+w-lsocompra_xarticulo_partida.w
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/Paulista/!svn/ver/1/progs/com/w-lsocompra_xarticulo_partida.w
+END
+q-ofertas.w
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/Paulista/!svn/ver/1/progs/com/q-ofertas.w
+END
+cmbeocoa.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/com/cmbeocoa.p
+END
+cmbeoccm.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/com/cmbeoccm.p
+END
+v-cotiza-all.w
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/Paulista/!svn/ver/1/progs/com/v-cotiza-all.w
+END
+b-ocm_entrega.w
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/Paulista/!svn/ver/1/progs/com/b-ocm_entrega.w
+END
+emitir_ocompra.p
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/com/emitir_ocompra.p
+END
+lsrecibido_xarticulo.p
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/Paulista/!svn/ver/1/progs/com/lsrecibido_xarticulo.p
+END
+cmbeococ.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/com/cmbeococ.p
+END
+rlocesta.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/com/rlocesta.p
+END
+d-detalle_remprov.w
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/Paulista/!svn/ver/1/progs/com/d-detalle_remprov.w
+END
+lsocompra_xfecha.p
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/Paulista/!svn/ver/1/progs/com/lsocompra_xfecha.p
+END
+w-generar_oc.w
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/Paulista/!svn/ver/1/progs/com/w-generar_oc.w
+END
+genera_ocmp.p
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/1/progs/com/genera_ocmp.p
+END
+w-entregar_ocm.w
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/com/w-entregar_ocm.w
+END
+b-conc-reqs.w
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/1/progs/com/b-conc-reqs.w
+END
+w-lsrecibido_xarticulo.w
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/Paulista/!svn/ver/1/progs/com/w-lsrecibido_xarticulo.w
+END
+selcompr.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/com/selcompr.p
+END
+w-lsocompra_xfecha.w
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/Paulista/!svn/ver/1/progs/com/w-lsocompra_xfecha.w
+END
+w-compradores.w
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/Paulista/!svn/ver/1/progs/com/w-compradores.w
+END
+w-aporereq.w
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/1/progs/com/w-aporereq.w
+END
+d-seleccionar_remprov.w
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/Paulista/!svn/ver/1/progs/com/d-seleccionar_remprov.w
+END
+lsocmfec.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/com/lsocmfec.p
+END
+v-ocm_entrega.w
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/Paulista/!svn/ver/1/progs/com/v-ocm_entrega.w
+END
+xprocm501.p
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/Paulista/!svn/ver/1/progs/com/xprocm501.p
+END
+v-cierre_concurso.w
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/Paulista/!svn/ver/1/progs/com/v-cierre_concurso.w
+END
+tgbtcamboc.i
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/1/progs/com/tgbtcamboc.i
+END
+selmacom.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/com/selmacom.p
+END
+caldvpro.i
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/com/caldvpro.i
+END
+b-ocm_detalle-recepcion.w
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/Paulista/!svn/ver/1/progs/com/b-ocm_detalle-recepcion.w
+END
+v-btn_generar_ocs.w
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/Paulista/!svn/ver/1/progs/com/v-btn_generar_ocs.w
+END
+w-concpre.w
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/Paulista/!svn/ver/1/progs/com/w-concpre.w
+END
+procm501.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/com/procm501.p
+END
+b-dtreqpen.w
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/1/progs/com/b-dtreqpen.w
+END
+calcularemprov.i
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/com/calcularemprov.i
+END
+v-concurso_obs.w
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/com/v-concurso_obs.w
+END
+CALCOCOM.I
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/com/CALCOCOM.I
+END
+v-cant_concurso.w
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/com/v-cant_concurso.w
+END
+w-ocompra.w
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/Paulista/!svn/ver/1/progs/com/w-ocompra.w
+END
+v-nom_concurso.w
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/com/v-nom_concurso.w
+END
+d-bonificaciones_detocompra.w
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/Paulista/!svn/ver/1/progs/com/d-bonificaciones_detocompra.w
+END
+prdvp501.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/com/prdvp501.p
+END
+emirepro.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/com/emirepro.p
+END
+gencotiza.p
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/Paulista/!svn/ver/1/progs/com/gencotiza.p
+END
+d-bonificaciones_ocompra.w
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/Paulista/!svn/ver/1/progs/com/d-bonificaciones_ocompra.w
+END
+b-proveedores.w
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/Paulista/!svn/ver/1/progs/com/b-proveedores.w
+END
+camestoc.i
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/com/camestoc.i
+END
+v-ocm_detalle-recepcion.w
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/Paulista/!svn/ver/1/progs/com/v-ocm_detalle-recepcion.w
+END
+selnovoc.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/com/selnovoc.p
+END
+lsocompra_xarticulo.p
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/Paulista/!svn/ver/1/progs/com/lsocompra_xarticulo.p
+END
+b-ofertas.w
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/Paulista/!svn/ver/1/progs/com/b-ofertas.w
+END
+cmbeocaa.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/com/cmbeocaa.p
+END
+b-concpre_adj.w
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/Paulista/!svn/ver/1/progs/com/b-concpre_adj.w
+END
+d-seleccionar_ocompra.w
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/Paulista/!svn/ver/1/progs/com/d-seleccionar_ocompra.w
+END
+b-proveedores-old.w
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/Paulista/!svn/ver/1/progs/com/b-proveedores-old.w
+END
+b-pend-prov.w
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/1/progs/com/b-pend-prov.w
+END
+imprimir_remprov.p
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/Paulista/!svn/ver/1/progs/com/imprimir_remprov.p
+END
+anular_ocompra.p
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/com/anular_ocompra.p
+END
+procompra.p
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/Paulista/!svn/ver/1/progs/com/procompra.p
+END
+rlentfec.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/com/rlentfec.p
+END
+b-compradores.w
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/Paulista/!svn/ver/1/progs/com/b-compradores.w
+END
+w-lsocompra_xarticulo.w
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/Paulista/!svn/ver/1/progs/com/w-lsocompra_xarticulo.w
+END
+traerocm.i
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/com/traerocm.i
+END
+procm114.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/com/procm114.p
+END
+findproveedor.p
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/Paulista/!svn/ver/1/progs/com/findproveedor.p
+END
+calcular_ocompra.p
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/Paulista/!svn/ver/1/progs/com/calcular_ocompra.p
+END
+procm510.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/com/procm510.p
+END
+w-apfinocm.w
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/1/progs/com/w-apfinocm.w
+END
+dvprodoc.i
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/com/dvprodoc.i
+END
+cmbeocob.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/com/cmbeocob.p
+END
+procm118.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/com/procm118.p
+END
+w-emfirocm.w
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/1/progs/com/w-emfirocm.w
+END
+cmbeocof.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/com/cmbeocof.p
+END
+b-concpre.w
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/Paulista/!svn/ver/1/progs/com/b-concpre.w
+END
+w-aporeocm.w
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/1/progs/com/w-aporeocm.w
+END

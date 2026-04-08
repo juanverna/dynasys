@@ -1,0 +1,150 @@
+/*Crea el aviso de un evento en el rango de fechas a la asignacion del evento principal y a las restricciones de AVISO* del contrato*/
+{tiempo.i}
+{advtexto.i}
+    
+DEFINE INPUT PARAMETER rev AS ROWID.
+DEFINE VAR aviso_nro_tipo_evento LIKE tipo_evento.nro_tipo_evento NO-UNDO.
+DEFINE VAR aviso_origen LIKE tipo_evento.origen NO-UNDO.
+DEFINE BUFFER bevento FOR evento.
+DEFINE BUFFER baevento FOR evento.
+DEFINE VAR duraviso AS INT INITIAL 15 NO-UNDO.
+DEFINE VAR revalor  AS CHAR.
+FIND evento WHERE ROWID(evento) = rev NO-LOCK.
+IF evento.sub_evento > 1 AND evento.nro_tipo_evento <> 8 THEN LEAVE.
+IF evento.nro_tipo_evento <> 1 AND  evento.nro_tipo_evento <> 3 AND  evento.nro_tipo_evento <> 8 THEN LEAVE.
+IF evento.fasignado = ? THEN LEAVE.
+IF evento.anulado THEN LEAVE.
+FIND cliente OF evento NO-LOCK.
+FIND tipo_evento WHERE tipo_evento.cdg_tipo_evento = "AV" NO-LOCK.
+aviso_nro_tipo_evento = tipo_evento.nro_tipo_evento.
+aviso_origen = tipo_evento.origen.
+
+RELEASE tipo_evento.
+FIND FIRST bevento WHERE
+         bevento.nro_tipo_evento = aviso_nro_tipo_evento AND
+         bevento.refevento = evento.nro_evento AND NOT bevento.anulado NO-LOCK NO-ERROR.
+IF AVAILABLE bevento THEN RETURN.
+IF evento.nro_tipo_evento = aviso_nro_tipo_evento THEN LEAVE.
+IF evento.origen = "CONTRATO" THEN DO:
+          find restriccion no-lock WHERE restriccion.cdg_restriccion BEGINS "AVISO" AND 
+                  restriccion.nro_tipo_evento = evento.nro_tipo_evento NO-ERROR.
+          IF NOT AVAILABLE restriccion THEN RETURN.
+          FIND FIRST contrato_restriccion WHERE contrato_restriccion.nro_contrato = evento.nro_identificacion AND
+                       contrato_restriccion.sub_evento = evento.sub_evento AND 
+                       contrato_restriccion.nro_restriccion = restriccion.nro_restriccion NO-LOCK NO-ERROR.
+END.
+revalor = "2|3|E|".
+IF AVAILABLE contrato_restriccion THEN revalor = contrato_restriccion.valor.
+IF ENTRY(3 , revalor ,"|" ) <> "L"  AND ENTRY(3 , revalor ,"|" ) <> "E" THEN RETURN.
+     
+CREATE bevento. /*creando AVISO*/
+IF ENTRY(3 , revalor ,"|" ) = "E" THEN DO: /*lo tiene que generar*/
+    ASSIGN 
+     bevento.origen = aviso_origen
+     bEvento.Duracion = duraviso /*por default duraviso minutos*/
+     bEvento.FAsignado = ?
+     bEvento.FRealizado = ?
+     bevento.Leyenda = ENTRY(4 , revalor, "|" )
+     bEvento.FCreado = TODAY
+     bevento.impreso = FALSE
+     bEvento.nro_evento = NEXT-VALUE(proximo_evento)
+     bEvento.nro_evento_padre = 0
+     bEvento.nro_identificacion = evento.nro_identificacion
+     bEvento.nro_tipo_evento = aviso_nro_tipo_evento
+     bevento.nro_planasignar = evento.nro_planasignar 
+     bEvento.Recursos = ""
+     bevento.nro_cliente = evento.nro_cliente
+     bevento.sub_evento = evento.sub_evento
+     bevento.RefEvento = evento.nro_evento
+     bevento.Periodo = evento.Periodo.
+     bevento.observacion = agregaAdvTexto("Fasig:"+ STRING( evento.fasignado ) + " " + cliente.direccion ,bevento.observacion).
+     bevento.evaluar = true.
+     bevento.entrega = 0.
+     IF int(ENTRY( 2 , revalor , "|" )) >= 7 THEN 
+        bevento.fmax = resta_dia_habil( evento.fasignado , int(ENTRY( 2 , revalor , "|" )),"234567" ).
+     ELSE
+        bevento.fmax = resta_dia_habil( evento.fasignado  , 7, "234567" ).
+     bevento.fmin = resta_dia_habil( evento.fasignado  , 10, "234567" ). 
+     IF bevento.fmax <= TODAY  THEN DO:
+        MESSAGE "AVISO ASIGNADO PARA HOY:" bevento.nro_evento " , asignelo ahora manualmente" VIEW-AS ALERT-BOX ERROR.
+     END.
+     IF bevento.fmin > bevento.fmax THEN bevento.fmin = bevento.fmax.
+END.
+ELSE IF ENTRY(3 , revalor ,"|" ) = "L" THEN DO: /*lleva el operario lo tiene que llevar en el mes inmediato anterior al periodo del aviso*/
+    ASSIGN 
+    bevento.origen = aviso_origen
+    bEvento.Duracion = 1 /*incluido en el tiempo del trabajo la entrega del aviso*/
+    bEvento.FRealizado = ?
+    bevento.leyenda = ENTRY(4 , revalor, "|")
+    bEvento.FCreado = TODAY
+    bEvento.nro_evento = NEXT-VALUE(proximo_evento)
+    bEvento.nro_evento_padre = 0
+    bEvento.nro_identificacion = evento.nro_identificacion
+    bevento.RefEvento = evento.nro_evento
+    bEvento.nro_tipo_evento = aviso_nro_tipo_evento
+    bevento.nro_planasignar = evento.nro_planasignar 
+    bevento.nro_cliente = evento.nro_cliente
+    bevento.sub_evento = evento.sub_evento
+    bevento.evaluar = TRUE
+    bevento.impreso = FALSE
+    bevento.periodo = evento.periodo
+    bevento.fmin = evento.fasignado
+    bevento.fmax = evento.fasignado.
+    /*tiene que generar el aviso en el evento asignado del mes anterior si aun no paso la fecha de asignado sino es del tipo "E" como el anterior*/
+    /*buscando el evento anterior*/
+    RELEASE baevento.
+    FOR EACH baevento where
+       baevento.nro_tipo_evento = evento.nro_tipo_evento AND
+       baevento.nro_identificacion = evento.nro_identificacion and
+       baevento.sub_evento = 1 and
+       NOT baevento.anulado AND
+       baevento.frealizado = ? AND
+       baevento.origen = evento.origen AND
+       baevento.fasignado > TODAY AND baevento.fasignado <> ? AND
+       baevento.periodo < evento.periodo AND
+       ROWID(baevento) <> ROWID(evento) BY baevento.fasignado DESC:
+        LEAVE.
+    END.
+    IF AVAILABLE baevento THEN do:
+     IF evento.periodo - baevento.periodo = 1 THEN DO:
+      ASSIGN
+       bevento.Recursos = ENTRY(1,baevento.recursos) /*se le asigna el primero de los operarios del anterior*/
+       bevento.FAsignado = baevento.fasignado
+       bevento.fmin = baevento.fasignado
+       bevento.fmax = baevento.fasignado.  
+       bevento.periodo = baevento.periodo.
+       bevento.evsigue = baevento.nro_evento.
+       bevento.entrega = 1.
+       bevento.observacion = agregaAdvTexto("Aviso lleva " + STRING(evento.nro_evento) + ":" + STRING( evento.fasignado ) + " " + cliente.direccion ,bevento.observacion).
+     /*grabar en agenda*/
+      FIND recurso_agenda WHERE recurso_agenda.cdg_recurso = bevento.Recursos AND
+                                recurso_agenda.nro_evento = bevento.nro_evento NO-ERROR.
+      IF NOT AVAILABLE recurso_agenda THEN DO:
+          CREATE recurso_agenda.
+          ASSIGN recurso_agenda.cdg_recurso = bevento.Recursos
+                 recurso_agenda.nro_evento = bevento.nro_evento.
+      END.
+      ASSIGN  recurso_agenda.fecha = bevento.FAsignado.
+     END.
+    END.
+    ELSE DO: /*si es de fumi no asignar sino funcionara como E porque ya paso la fecha*/
+     /*IF evento.nro_tipo_evento <> 1 THEN DO:*/
+         ASSIGN
+           bEvento.Duracion = duraviso /*por default duraviso minutos*/
+           bEvento.recursos = ""
+           bEvento.FAsignado = ?.
+           bevento.entrega = 0.
+           IF int(ENTRY( 2 , revalor , "|" )) >= 7 THEN 
+            bevento.fmax = resta_dia_habil( evento.fasignado , int(ENTRY( 2 , revalor , "|" )),"234567" ).
+         ELSE
+            bevento.fmax = resta_dia_habil( evento.fasignado  , 7, "234567" ).
+         bevento.fmin = resta_dia_habil( evento.fasignado  , 10, "234567" ). 
+         IF bevento.fmax <= TODAY THEN DO:
+            MESSAGE "AVISO " bevento.nro_evento " ASIGNADO PARA HOY, asignelo ahora manualmente" VIEW-AS ALERT-BOX ERROR.
+         END.
+         IF bevento.fmin > bevento.fmax THEN bevento.fmin = bevento.fmax.
+           bevento.periodo = YEAR(bevento.fmin) * 100 + MONTH(bevento.fmin). /*es el periodo de asignacion del evento*/
+           bevento.observacion = agregaAdvTexto("Este mes funciona como tipo E-Genera Eventos , el mes que viene sera LLeva",bevento.observacion). 
+        END.
+    /*END.*/
+END.

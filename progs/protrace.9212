@@ -1,0 +1,120 @@
+=====================================================
+PROGRESS stack trace as of Mon Jun 11 08:38:02 2018
+=====================================================
+Startup parameters:
+-pf C:\Progress102\OpenEdge\startup.pf,-cpinternal ISO8859-1,-cpstream ISO8859-1,-cpcoll Spanish9,-cpcase Basic,-d dmy,-numsep 46,-numdec 44,(end .pf),-p largar.p,-db c:\bases\dynasys102,-ld sic,-T c:\temp,-basekey INI,-ininame c:\dynasys10\procs\dynasys10.ini,-s 200,-inp 8192,-nb 150,-l 4000,-bibufs 25,-q,-rr
+
+Exception code: E0000003 
+Fault address:  7539C54F 01:0000B54F C:\Windows\syswow64\KERNELBASE.dll
+
+Registers:
+EAX:0018F4D8
+EBX:00000002
+ECX:00614470
+EDX:00000000
+ESI:02014A1C
+EDI:00000002
+CS:EIP:0023:7539C54F
+SS:ESP:002B:0018F4D8  EBP:0018F528
+DS:002B  ES:002B  FS:0053  GS:002B
+Flags:00000246
+
+Call Stack:
+Address   Frame
+7539C54F  00000000  RaiseException+58
+10491764  00000000  dbut_utIsDir+1264
+
+
+** ABL Stack Trace **
+
+--> label-trigger adm/objects/folder.w (C:\Progress102\OpenEdge\gui\adm\objects\folder.r) at line 0
+    w-tareas-red.w (.\cpy\w-tareas-red.r) at line -1
+    USER-INTERFACE-TRIGGER w-dynasys.w (.\bas\w-dynasys.r) at line 5977
+    w-dynasys.w (.\bas\w-dynasys.r) at line 6508
+    rundynasys-noquit.p (.\bas\rundynasys-noquit.r) at line 104
+
+** Persistent procedures/Classes **
+
+Handle  File Name
+002151  .\tes\b-caja_valor.r
+002147  .\tes\b-valores_rendicion.r
+002143  .\tes\b-comprobante_rendicion-adm.r
+002139  .\afi\b-rendicion_adm.r
+002137  .\PAU\v-resumen.r
+002039  .\opr\v-evento.r
+002031  .\bas\p-soloedita.r
+002027  .\opr\b-eventocli.r
+002022  .\bas\p-excel.r
+002020  .\fac\v-dsc_cliente.r
+002006  .\fac\b-comprobantes1.r
+002004  .\fac\v-dsc_cliente.r
+001963  .\cpy\v-temp_tareaC.r
+001686  .\PAU\q-domicilio.r
+001675  .\bas\p-updspa.r
+001671  .\fac\b-cliente_contacto.r
+001669  .\fac\v-cliente_contacto_sindir.r
+001667  .\PAU\vo-administraciones.r
+001656  .\bas\p-updspa.r
+001645  .\bas\p-updspa.r
+001643  .\opr\v-canal.r
+001639  .\opr\b-canal.r
+001637  .\PAU\v-administrador.r
+001632  .\PAU\b-administracion.r
+001629  C:\Progress102\OpenEdge\gui\adm\objects\folder.r
+001626  .\PAU\w-administraciones.r
+001528  .\PAU\q-cliente_otros_datos.r
+001517  .\bas\p-updspa.r
+001515  .\PAU\v-otros_datos1.r
+001513  .\fac\v-dsc_cliente.r
+001502  .\bas\p-updspa.r
+001500  .\PAU\vo-cliente.r
+001489  .\bas\p-updspa.r
+001487  .\opr\v-canal.r
+001485  .\PAU\v-consorcios.r
+001481  .\opr\b-canal.r
+001476  .\PAU\b.r
+001473  C:\Progress102\OpenEdge\gui\adm\objects\folder.r
+001470  .\PAU\w-consorcios-cli.r
+001420  .\cpy\v-temp_tareaC.r
+001266  .\bas\p-soloedita.r
+001261  .\cpy\v-tarea-red11.r
+001256  .\cpy\v-tarea-red2.r
+001255  .\PAU\q-cliente.r
+001247  .\bas\p-soloedita.r
+001242  .\cpy\v-tarea-redsolotel.r
+001231  .\cpy\b-tareas-red.r
+001227  C:\Progress102\OpenEdge\gui\adm\objects\folder.r
+001224  C:\Progress102\OpenEdge\gui\adm\objects\broker.r
+001039  .\bas\pure4gltv.r
+001021  .\bas\sfavoritos.r
+001013  C:\Progress102\OpenEdge\gui\adm2\containr.r
+001011  C:\Progress102\OpenEdge\gui\adm2\visual.r
+001006  C:\Progress102\OpenEdge\gui\adm2\smart.r
+001002  .\bas\Winfunc.r
+001001  .\bas\Windows.r
+
+//=====================================================
+PROGRESS stack trace as of Mon Jun 11 08:38:02 2018
+//=====================================================
+Exception code: E0000003 
+Fault address:  7539C54F 01:0000B54F C:\Windows\syswow64\KERNELBASE.dll
+
+Registers:
+EAX:0018F4D8
+EBX:00000002
+ECX:00614470
+EDX:00000000
+ESI:02014A1C
+EDI:00000002
+CS:EIP:0023:7539C54F
+SS:ESP:002B:0018F544  EBP:0018F528
+DS:002B  ES:002B  FS:0053  GS:002B
+Flags:00000246
+
+Call Stack:
+Address   Frame
+7539C54F  0018F54C  RaiseException+58
+10021E94  0018F580  0001:00020E94 C:\Progress102\OpenEdge\bin\prow32.dll
+10023933  0018F614  0001:00022933 C:\Progress102\OpenEdge\bin\prow32.dll
+71327390  0018F648  strnicmp+135
+

@@ -1,0 +1,267 @@
+<?xml version="1.0"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="" xmlns:prodata="urn:schemas-progress-com:xml-prodata:0001">
+  <xsd:element name="dset" prodata:proDataSet="true">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="ttcopias" minOccurs="0" maxOccurs="unbounded" prodata:undo="true">
+          <xsd:complexType>
+            <xsd:sequence>
+              <xsd:element name="unico" type="xsd:int" nillable="true"/>
+              <xsd:element name="nro_factura" type="xsd:int" nillable="true" prodata:format="ZZZZZZZ9" prodata:label="Nro.Factura" prodata:columnLabel="N.Factura" prodata:help="Numero interno de la factura."/>
+              <xsd:element name="nro_copia" type="xsd:int" nillable="true"/>
+            </xsd:sequence>
+          </xsd:complexType>
+        </xsd:element>
+        <xsd:element name="ttheader" minOccurs="0" maxOccurs="unbounded" prodata:undo="true">
+          <xsd:complexType>
+            <xsd:sequence>
+              <xsd:element name="nro_factura" type="xsd:int" nillable="true" prodata:format="ZZZZZZZ9" prodata:label="Nro.Factura" prodata:columnLabel="N.Factura" prodata:help="Numero interno de la factura."/>
+              <xsd:element name="cdg_empresa" type="xsd:string" nillable="true" prodata:label="Código" prodata:columnLabel="Código!Empresa" prodata:help="Código de la empresa"/>
+              <xsd:element name="tip_comprob" type="xsd:string" nillable="true" prodata:format="X(3)" prodata:label="Tipo" prodata:columnLabel="Doc" prodata:help="Tipo de comprobante"/>
+              <xsd:element name="prf_comprob" type="xsd:int" nillable="true" prodata:format="9999" prodata:label="Prefijo" prodata:columnLabel="Pref." prodata:help="Prefijo de 4 digitos del comprobante"/>
+              <xsd:element name="nro_comprob" type="xsd:int" nillable="true" prodata:format="ZZZZZZZ9" prodata:label="Nro." prodata:columnLabel="Numero" prodata:help="Nro. de comprobante"/>
+              <xsd:element name="nro_cliente" type="xsd:int" nillable="true" prodata:format=">>>>>9" prodata:label="Nro.interno" prodata:columnLabel="Nro.Int." prodata:help="Ingrese el Nro. Interno del cliente."/>
+              <xsd:element name="fecha" type="xsd:date" nillable="true" prodata:format="99/99/9999" prodata:label="Fecha" prodata:columnLabel="Fecha" prodata:help="Fecha de emision"/>
+              <xsd:element name="ultima_linea" type="xsd:int" nillable="true" prodata:format=">>>>9" prodata:label="Ult.linea" prodata:columnLabel="Ult.linea" prodata:help="Ultima linea ingresada"/>
+              <xsd:element name="nro_usuario" type="xsd:int" nillable="true" prodata:format=">>,>>9" prodata:label="Codigo" prodata:columnLabel="Codigo" prodata:help="Codigo"/>
+              <xsd:element name="nro_vendedor" type="xsd:int" nillable="true" prodata:format=">>9" prodata:label="Nro.Vend." prodata:columnLabel="#V." prodata:help="Nro. de vendedor"/>
+              <xsd:element name="cdg_condiva" type="xsd:int" nillable="true" prodata:format="99" prodata:label="C.Iva." prodata:columnLabel="C.Iva" prodata:help="Codigo de condicion impositiva"/>
+              <xsd:element name="nro_cndventa" type="xsd:int" nillable="true" prodata:format=">>>>>9" prodata:label="Nro.interno" prodata:columnLabel="Nro.Int." prodata:help="Ingrese el Nro. Interno de la condicion de venta."/>
+              <xsd:element name="imp_neto" type="xsd:decimal" nillable="true" prodata:format="->,>>>,>>>,>>9.99" prodata:label="Neto" prodata:columnLabel="Neto" prodata:help="Importe Neto (sin impuestos)" prodata:decimals="2"/>
+              <xsd:element name="imp_iva" type="xsd:decimal" nillable="true" prodata:format="->,>>>,>>>,>>9.99" prodata:label="Iva" prodata:columnLabel="Iva" prodata:help="Importe de IVA" prodata:decimals="2"/>
+              <xsd:element name="imp_total" type="xsd:decimal" nillable="true" prodata:format="->,>>>,>>>,>>9.99" prodata:label="Total" prodata:columnLabel="Total" prodata:help="Importe Total (incluyendo impuestos)" prodata:decimals="2"/>
+              <xsd:element name="imp_bruto" type="xsd:decimal" nillable="true" prodata:format="->,>>>,>>>,>>9.99" prodata:label="Bruto" prodata:columnLabel="Bruto" prodata:help="Importe Bruto (neto sin descuentos)" prodata:decimals="2"/>
+              <xsd:element name="estado" type="xsd:string" nillable="true" prodata:format="X(1)" prodata:label="St." prodata:columnLabel="St." prodata:help="Estado del comprobante"/>
+              <xsd:element name="origen" type="xsd:string" nillable="true" prodata:format="X(1)" prodata:label="Origen" prodata:columnLabel="Or." prodata:help="Origen (V=mostrador, C=Cuenta Corriente)"/>
+              <xsd:element name="nro_ocm" type="xsd:string" nillable="true" prodata:format="X(10)" prodata:label="Nro.O/C" prodata:columnLabel="N.O/C" prodata:help="Numero de O/C que da origen a esta factura"/>
+              <xsd:element name="cta_cte" type="xsd:boolean" nillable="true" prodata:format="SI/NO" prodata:label="C.Cte." prodata:columnLabel="C.C." prodata:help="Seleccione en caso de tratarse de Cta. Cte. en vez de Contado"/>
+              <xsd:element name="nro_deposito" type="xsd:int" nillable="true" prodata:format=">>9" prodata:label="Nro.Deposito" prodata:columnLabel="Nro.Deposito" prodata:help="Nro. de deposito"/>
+              <xsd:element name="nro_remito" type="xsd:int" nillable="true" prodata:format="ZZZZZZZ9" prodata:label="Nro.Remito" prodata:columnLabel="Nro.Remito" prodata:help="Nro. de remito que da origen a esta factura"/>
+              <xsd:element name="nro_moneda" type="xsd:int" nillable="true" prodata:format=">>9" prodata:label="Moneda" prodata:columnLabel="Moneda" prodata:help="Codigo de moneda"/>
+              <xsd:element name="cambio" type="xsd:decimal" nillable="true" prodata:format="->>,>>9.9999" prodata:label="Cambio" prodata:columnLabel="Cambio" prodata:help="Cambio a aplicar para la emision del documento" prodata:decimals="4"/>
+              <xsd:element name="nro_transaccion" type="xsd:int" nillable="true" prodata:label="Nro.Trans." prodata:columnLabel="N.Txn." prodata:help="Nro. de transaccion de caja que corresponde al pago"/>
+              <xsd:element name="cdg_imputacion" type="xsd:int" nillable="true" prodata:format="ZZ9" prodata:label="C.Concepto" prodata:columnLabel="C.Concepto" prodata:help="Codigo del Concepto de Documento"/>
+              <xsd:element name="leyenda" type="xsd:string" nillable="true" prodata:format="X(300)" prodata:label="Leyenda" prodata:columnLabel="Leyenda" prodata:help="Leyenda"/>
+              <xsd:element name="anulado" type="xsd:boolean" nillable="true" prodata:format="Si/No" prodata:label="Anulado" prodata:columnLabel="Nul." prodata:help="Indique si el comprobante se halla anulado o no"/>
+              <xsd:element name="cdg_lista" type="xsd:int" nillable="true" prodata:format=">>9" prodata:label="Nro." prodata:columnLabel="Nro." prodata:help="Nro. de la lista de precios"/>
+              <xsd:element name="afecta_stock" type="xsd:boolean" nillable="true" default="true" prodata:format="Si/No" prodata:label="Afecta Stock" prodata:columnLabel="Stk." prodata:help="Indique si el documento afecta stock o no"/>
+              <xsd:element name="proc_estad" type="xsd:boolean" nillable="true" prodata:label="Procesado Estadisticas" prodata:columnLabel="Est." prodata:help="Procesado para estadisticas?"/>
+              <xsd:element name="cambio_dolar" type="xsd:decimal" nillable="true" prodata:format="->>,>>9.9999" prodata:label="Dólar" prodata:columnLabel="Dólar" prodata:help="Cambio del dolar a aplicar para la emision del documento" prodata:decimals="4"/>
+              <xsd:element name="fecha_ocm" type="xsd:date" nillable="true" prodata:format="99/99/9999" prodata:label="Fecha O/C" prodata:columnLabel="Fecha!O/C" prodata:help="Fecha de la orden de compra"/>
+              <xsd:element name="nro_domicilio" type="xsd:int" nillable="true" prodata:format=">>>9" prodata:label="Nro.domicilio" prodata:columnLabel="Nro.domic." prodata:help="Numero de cliente de destino dentro de este cliente"/>
+              <xsd:element name="nombre" type="xsd:string" nillable="true" prodata:format="X(40)" prodata:label="Razon Social" prodata:columnLabel="Razon Social" prodata:help="Razon Social del cliente"/>
+              <xsd:element name="cuit" type="xsd:string" nillable="true" prodata:format="X(15)" prodata:label="C.U.I.T." prodata:columnLabel="C.U.I.T." prodata:help="C.U.I.T."/>
+              <xsd:element name="direccion" type="xsd:string" nillable="true" prodata:format="X(45)" prodata:label="Direccion" prodata:columnLabel="Direc." prodata:help="Ingrese la direccion del cliente"/>
+              <xsd:element name="localidad" type="xsd:string" nillable="true" prodata:format="X(15)" prodata:label="Localidad" prodata:columnLabel="Localidad" prodata:help="Ingrese la localidad"/>
+              <xsd:element name="cdg_postal" type="xsd:string" nillable="true" prodata:label="Codigo Postal" prodata:columnLabel="CP" prodata:help="Ingrese el Codigo postal"/>
+              <xsd:element name="cdg_provincia" type="xsd:string" nillable="true" prodata:format="X(2)" prodata:label="Provincia" prodata:columnLabel="Provincia" prodata:help="Ingrese la Provincia"/>
+              <xsd:element name="cdg_zonag" type="xsd:string" nillable="true" prodata:format="X(2)" prodata:label="Cdg. zona geografica" prodata:columnLabel="C. zona geog." prodata:help="Ingrese el codigo de zona geografica."/>
+              <xsd:element name="nro_entidad" type="xsd:int" nillable="true" prodata:label="Nro.Entidad." prodata:columnLabel="Nro.Entidad." prodata:help="Nro. de entidad (independiente del codigo)"/>
+              <xsd:element name="nro_obra" type="xsd:int" nillable="true" prodata:label="Nro.Obra." prodata:columnLabel="Nro.Obra." prodata:help="Nro. de obra (independiente del codigo)"/>
+              <xsd:element name="monto_letras" type="xsd:string" nillable="true" prodata:format="X(60)" prodata:label="Monto en Letras" prodata:columnLabel="Monto en!Letras" prodata:help="Monto en letras"/>
+              <xsd:element name="num_sucursal" type="xsd:string" nillable="true" prodata:format="X(4)" prodata:label="Código de sucursal" prodata:columnLabel="Código de!sucursal" prodata:help="Código de sucursal"/>
+              <xsd:element name="prc_canje" type="xsd:decimal" nillable="true" prodata:format=">>9.99" prodata:label="Canje Máximo %" prodata:columnLabel="% Canje!Máximo" prodata:help="% Máximo de canje" prodata:decimals="2"/>
+              <xsd:element name="leyenda_cc" type="xsd:string" nillable="true" prodata:format="X(50)" prodata:label="Obs.Cta.Cte." prodata:columnLabel="Observación!Cuenta Corriente" prodata:help="Observaciones para la cuenta corriente"/>
+              <xsd:element name="mes" type="xsd:int" nillable="true" prodata:format="99" prodata:label="Imputa Mes" prodata:columnLabel="Mes!Imputa"/>
+              <xsd:element name="ano" type="xsd:int" nillable="true" prodata:format="9999" prodata:label="Año Imputa" prodata:columnLabel="Año!Imputa" prodata:help="Año al que imputa este registro de cuenta corriente"/>
+              <xsd:element name="impreso" type="xsd:string" nillable="true" prodata:format="X(1)" prodata:label="Impreso" prodata:columnLabel="Im-!preso" prodata:help="Indica si el comprobante se halla impreso"/>
+              <xsd:element name="imp_descuentos" type="xsd:decimal" nillable="true" prodata:format="->,>>>,>>>,>>9.99" prodata:label="Descuentos" prodata:columnLabel="Importe!Descuentos" prodata:help="Importe de los descuentos" prodata:decimals="2"/>
+              <xsd:element name="fecha_iva" type="xsd:date" nillable="true" prodata:format="99/99/9999" prodata:label="Fecha IVA" prodata:columnLabel="Fecha!IVA" prodata:help="Fecha de vigencia del IVA"/>
+              <xsd:element name="modo_abasto" type="xsd:string" nillable="true" prodata:label="Abasto" prodata:columnLabel="Abasto"/>
+              <xsd:element name="ibrutos_sino" type="xsd:boolean" nillable="true" default="true" prodata:format="Si/No" prodata:label="I.Brutos" prodata:columnLabel="I.B." prodata:help="Indique si el documento tributa Ingresos Brutos o no"/>
+              <xsd:element name="fecha_precios" type="xsd:date" nillable="true" prodata:format="99/99/9999" prodata:label="Fecha Precios" prodata:columnLabel="Fecha!Precios" prodata:help="Fecha de vigencia de la lista de precios"/>
+              <xsd:element name="cdg_comprobante" type="xsd:string" nillable="true" prodata:label="Código" prodata:columnLabel="Código!Comprobante" prodata:help="Código del comprobante"/>
+              <xsd:element name="cant_hojas" type="xsd:int" nillable="true" prodata:label="Hojas" prodata:columnLabel="Cant!Hojas" prodata:help="Cantidad de hojas impresas de este formulario"/>
+              <xsd:element name="nombre_leg" type="xsd:string" nillable="true" prodata:format="X(40)" prodata:label="Razon Social" prodata:columnLabel="Razon!Social" prodata:help="Nombre del domicilio legal"/>
+              <xsd:element name="direccion_leg" type="xsd:string" nillable="true" prodata:format="X(45)" prodata:label="Direccion" prodata:columnLabel="Dirección!Legal" prodata:help="Ingrese la direccion legal del cliente"/>
+              <xsd:element name="localidad_leg" type="xsd:string" nillable="true" prodata:format="X(15)" prodata:label="Localidad" prodata:columnLabel="Localidad!Legal" prodata:help="Ingrese la localidad legal"/>
+              <xsd:element name="cdg_postal_leg" type="xsd:string" nillable="true" prodata:label="Codigo Postal" prodata:columnLabel="CP!Legal" prodata:help="Ingrese el Codigo postal legal"/>
+              <xsd:element name="cdg_provincia_leg" type="xsd:string" nillable="true" prodata:format="X(2)" prodata:label="Provincia" prodata:columnLabel="Provincia!Legal" prodata:help="Ingrese la Provincia del domicilio legal"/>
+              <xsd:element name="rige_hasta" type="xsd:date" nillable="true" prodata:format="99/99/9999" prodata:label="Hasta" prodata:columnLabel="Rige!Hasta" prodata:help="Fecha de vencimiento del CAI"/>
+              <xsd:element name="cai" type="xsd:string" nillable="true" prodata:format="X(25)" prodata:label="CAI" prodata:columnLabel="C.A.I." prodata:help="CAI que corresponde a la factura"/>
+              <xsd:element name="nombre_domicilio" type="xsd:string" nillable="true" prodata:format="X(40)" prodata:label="Razon Social" prodata:columnLabel="Razon!Social" prodata:help="Denominación del domicilio de entrega"/>
+              <xsd:element name="aplica_minimos" type="xsd:boolean" nillable="true" default="true" prodata:label="Mínimos" prodata:columnLabel="Mí-!nimos" prodata:help="deben tenerse en cuenta los importes mínimos de los impuestos"/>
+              <xsd:element name="pc_name" type="xsd:string" nillable="true" prodata:format="X(15)" prodata:label="Pc!Name" prodata:columnLabel="Pc!Name" prodata:help="Nombre del puesto de trabajo con que se cargó el despacho"/>
+              <xsd:element name="hora" type="xsd:string" nillable="true" prodata:label="Hora!Alta" prodata:columnLabel="Hora!Alta" prodata:help="Hora de alta del despacho"/>
+              <xsd:element name="fecha_grab" type="xsd:date" nillable="true" prodata:format="99/99/9999" prodata:label="Grabado" prodata:columnLabel="Grab." prodata:help="Ingrese fecha de grabacion del asiento"/>
+              <xsd:element name="hora_grab" type="xsd:int" nillable="true" prodata:label="Hora" prodata:columnLabel="Hora" prodata:help="Ingrese hora de grabacion del asiento"/>
+              <xsd:element name="nro_contrato" type="xsd:int" nillable="true" prodata:format="ZZZZZ9" prodata:label="Nro.Contrato" prodata:columnLabel="Numero!Contgrato" prodata:help="Numero interno del contrato"/>
+              <xsd:element name="observacion" type="xsd:string" nillable="true" prodata:format="X(40)" prodata:label="Observacion" prodata:columnLabel="Observacion!Asociada" prodata:help="Ingrese una observacion (opcional)"/>
+              <xsd:element name="modo_remito" type="xsd:string" nillable="true" prodata:label="Modo Remito" prodata:columnLabel="Modo!Remito" prodata:help="Indica el modo en el que se debe generar un remito"/>
+              <xsd:element name="nro_administrador" type="xsd:int" nillable="true" prodata:label="Nro. Adminis" prodata:columnLabel="Nro.!Adminis" prodata:help="Número de cliente administrador"/>
+              <xsd:element name="clausula_dolar" type="xsd:boolean" nillable="true" prodata:label="Cláusula Dólar" prodata:columnLabel="Cláusula!Dólar" prodata:help="Indica si las operaciones con el cliente se ajustan por dólar"/>
+              <xsd:element name="cdg_administrador" type="xsd:string" nillable="true" prodata:label="C.Adm" prodata:columnLabel="Código!Administrador" prodata:help="Codigo de Administrador"/>
+              <xsd:element name="nom_Administrador" type="xsd:string" nillable="true" prodata:format="X(40)" prodata:label="Razón Social" prodata:columnLabel="Razón!Social" prodata:help="Razon Social del Administrador"/>
+              <xsd:element name="direccion_administrador" type="xsd:string" nillable="true" prodata:format="X(45)" prodata:label="Direccion" prodata:columnLabel="Direccion" prodata:help="Direccion"/>
+              <xsd:element name="localidad_administrador" type="xsd:string" nillable="true" prodata:format="X(30)" prodata:label="Localidad" prodata:columnLabel="Localidad" prodata:help="Localidad"/>
+              <xsd:element name="texto_condicion_venta" type="xsd:string" nillable="true" prodata:format="X(50)" prodata:label="Texto" prodata:columnLabel="Texto" prodata:help="Observaciones. estan disponibles las operaciones cortar y peg`r"/>
+              <xsd:element name="texto_iva" type="xsd:string" nillable="true" prodata:format="X(25)" prodata:label="Texto" prodata:columnLabel="Texto" prodata:help="Texto para las facturas"/>
+              <xsd:element name="codigo_cliente" type="xsd:string" nillable="true" prodata:label="C.Cliente" prodata:columnLabel="Código!Cliente" prodata:help="Codigo de Cliente"/>
+              <xsd:element name="mostrar_admin" type="xsd:boolean" nillable="true" default="true" prodata:format="Si/No" prodata:label="Mostrar Addmin" prodata:columnLabel="Mostrar!Admin"/>
+            </xsd:sequence>
+          </xsd:complexType>
+        </xsd:element>
+        <xsd:element name="ttdetalle" minOccurs="0" maxOccurs="unbounded" prodata:undo="true">
+          <xsd:complexType>
+            <xsd:sequence>
+              <xsd:element name="nro_factura" type="xsd:int" nillable="true" prodata:format="ZZZZZZZ9" prodata:label="Nro.Factura" prodata:columnLabel="N.Factura" prodata:help="Numero interno de la factura."/>
+              <xsd:element name="nro_linea" type="xsd:int" nillable="true" prodata:format=">>9" prodata:label="Linea" prodata:columnLabel="Linea" prodata:help="Nro.linea"/>
+              <xsd:element name="precio" type="xsd:decimal" nillable="true" prodata:format=">>>>>>9.9999" prodata:label="Precio" prodata:columnLabel="Precio" prodata:help="Precio" prodata:decimals="4"/>
+              <xsd:element name="nro_articulo" type="xsd:int" nillable="true" prodata:label="Nro.Prod." prodata:columnLabel="Nro.Prod" prodata:help="Nro. de producto (independiente del codigo)"/>
+              <xsd:element name="nro_partida" type="xsd:int" nillable="true" prodata:format="ZZZZ9" prodata:label="Nro.Partida" prodata:columnLabel="N.Partida" prodata:help="Numero de partida"/>
+              <xsd:element name="granel" type="xsd:decimal" nillable="true" prodata:format="->>>,>>>,>>9.99" prodata:label="Granel" prodata:columnLabel="Granel" prodata:help="Cantidad a granel" prodata:decimals="2"/>
+              <xsd:element name="a_granel" type="xsd:boolean" nillable="true" prodata:format="Si/No" prodata:label="Granel" prodata:columnLabel="Gr." prodata:help="Seleccione si el articulo se vende a granel (Kg., m., etc.)"/>
+              <xsd:element name="detallada" type="xsd:string" nillable="true" prodata:format="X(200)" prodata:label="Descripcion detallada" prodata:columnLabel="Descripcion detallada" prodata:help="Descripcion detallada del item"/>
+              <xsd:element name="ver_unidades" type="xsd:boolean" nillable="true" prodata:format="Si/No" prodata:label="Ver unidades" prodata:columnLabel="V.Un." prodata:help="Seleccione para ver las unidades en la impresion del detalle"/>
+              <xsd:element name="ver_codigo" type="xsd:boolean" nillable="true" prodata:format="Si/No" prodata:label="Ver codigo" prodata:columnLabel="V.Cd." prodata:help="Seleccione para ver el codigo de articulo en la impresion"/>
+              <xsd:element name="subtotal_neto" type="xsd:decimal" nillable="true" prodata:format="->,>>>,>>>,>>9.99" prodata:label="Sub. Neto" prodata:columnLabel="Subtotal!Neto" prodata:help="Subtotal del renglon de facturas aplicadas todas las bonifi." prodata:decimals="2"/>
+              <xsd:element name="subtotal_bruto" type="xsd:decimal" nillable="true" prodata:format="->,>>>,>>>,>>9.99" prodata:label="Sub. Bruto" prodata:columnLabel="Subtotal!Bruto" prodata:help="Subtotal del renglon de facturas con bonificaciones de item" prodata:decimals="2"/>
+              <xsd:element name="cantidad" type="xsd:decimal" nillable="true" prodata:format="->>>,>>>,>>9.99" prodata:label="Cantidad" prodata:columnLabel="Cantidad" prodata:help="Cantidad" prodata:decimals="2"/>
+              <xsd:element name="nro_obra" type="xsd:int" nillable="true" prodata:label="Nro.Obra." prodata:columnLabel="Nro.Obra." prodata:help="Nro. de obra (independiente del codigo)"/>
+              <xsd:element name="nro_entidad" type="xsd:int" nillable="true" prodata:label="Nro.Entidad." prodata:columnLabel="Nro.Entidad." prodata:help="Nro. de entidad (independiente del codigo)"/>
+              <xsd:element name="precio_cf" type="xsd:decimal" nillable="true" prodata:format=">>>>>>9.9999" prodata:label="Precio C.F." prodata:columnLabel="Precio!Cons. Final" prodata:help="Precio a consumidor final" prodata:decimals="4"/>
+              <xsd:element name="subtotal_neto_cf" type="xsd:decimal" nillable="true" prodata:format="->,>>>,>>>,>>9.99" prodata:label="Sub. Neto" prodata:columnLabel="Subtotal!Neto C.F." prodata:help="Subtotal del renglon de facturas a consumidor final" prodata:decimals="2"/>
+              <xsd:element name="subtotal_bruto_cf" type="xsd:decimal" nillable="true" prodata:format="->,>>>,>>>,>>9.99" prodata:label="Sub. Bruto C.F." prodata:columnLabel="Subtotal!Bruto a C.F." prodata:help="Subtotal del renglon de facturas a consumidor final" prodata:decimals="2"/>
+              <xsd:element name="costo" type="xsd:decimal" nillable="true" prodata:format="->>,>>9.9999" prodata:label="Costo" prodata:columnLabel="Costo" prodata:help="Costo del artículo" prodata:decimals="4"/>
+              <xsd:element name="pcom_ventas" type="xsd:string" nillable="true" prodata:label="Procesado Com.Ventas" prodata:columnLabel="Proc!Cvent" prodata:help="Procesado para las comisiones por ventas"/>
+              <xsd:element name="pcom_cobranzas" type="xsd:string" nillable="true" prodata:label="Procesado Com.Cobr" prodata:columnLabel="Proc!CCobr" prodata:help="Procesado para las comisiones por cobranzas"/>
+              <xsd:element name="subtotal_gral_cf" type="xsd:decimal" nillable="true" prodata:format="->,>>>,>>>,>>9.99" prodata:label="Sub. Bruto C.F." prodata:columnLabel="Subtotal!Bruto a C.F." prodata:help="Subtotal del renglon de facturas a consumidor final" prodata:decimals="2"/>
+              <xsd:element name="subtotal_general" type="xsd:decimal" nillable="true" prodata:format="->,>>>,>>>,>>9.99" prodata:label="Sub. Bruto" prodata:columnLabel="Subtotal!Bruto.Gral." prodata:help="Subtotal del renglon de facturas sin aplicar bonificaciones" prodata:decimals="2"/>
+              <xsd:element name="liquido_sino" type="xsd:boolean" nillable="true" prodata:label="Proc.Liq.Prod" prodata:columnLabel="Liquido!Producto" prodata:help="Indica si ya se ha emitido el  liquido producto"/>
+              <xsd:element name="relacion_granel" type="xsd:decimal" nillable="true" default="1.0" prodata:format=">>,>>9.99999999" prodata:label="Relación" prodata:columnLabel="Relacion!Granel" prodata:help="Unidades de granel por unidad de cantidad" prodata:decimals="8"/>
+              <xsd:element name="lista_imputaciones" type="xsd:string" nillable="true" prodata:label="Imputaciones" prodata:columnLabel="Lista!Imputaciones" prodata:help="Lista de imputaciones"/>
+            </xsd:sequence>
+          </xsd:complexType>
+        </xsd:element>
+      </xsd:sequence>
+    </xsd:complexType>
+    <xsd:unique name="para_imprimir">
+      <xsd:selector xpath=".//ttheader"/>
+      <xsd:field xpath="cdg_empresa"/>
+      <xsd:field xpath="tip_comprob"/>
+      <xsd:field xpath="prf_comprob"/>
+      <xsd:field xpath="impreso"/>
+      <xsd:field xpath="nro_comprob"/>
+    </xsd:unique>
+    <xsd:unique name="por_cliente">
+      <xsd:selector xpath=".//ttheader"/>
+      <xsd:field xpath="nro_cliente"/>
+      <xsd:field xpath="cdg_empresa"/>
+      <xsd:field xpath="tip_comprob"/>
+      <xsd:field xpath="prf_comprob"/>
+      <xsd:field xpath="nro_comprob"/>
+    </xsd:unique>
+    <xsd:unique name="por_documento">
+      <xsd:selector xpath=".//ttheader"/>
+      <xsd:field xpath="cdg_empresa"/>
+      <xsd:field xpath="tip_comprob"/>
+      <xsd:field xpath="prf_comprob"/>
+      <xsd:field xpath="nro_comprob"/>
+    </xsd:unique>
+    <xsd:unique name="por_numero" prodata:primaryIndex="true">
+      <xsd:selector xpath=".//ttheader"/>
+      <xsd:field xpath="nro_factura"/>
+    </xsd:unique>
+    <xsd:unique name="ttdetalle_por_documento" prodata:primaryIndex="true">
+      <xsd:selector xpath=".//ttdetalle"/>
+      <xsd:field xpath="nro_factura"/>
+      <xsd:field xpath="nro_linea"/>
+    </xsd:unique>
+    <xsd:keyref name="headerdetalle" refer="por_numero">
+      <xsd:selector xpath=".//ttdetalle"/>
+      <xsd:field xpath="nro_factura"/>
+    </xsd:keyref>
+  </xsd:element>
+  <xsd:annotation>
+    <xsd:appinfo>
+      <prodata:index name="unico" prodata:primaryIndex="true">
+        <prodata:table name="ttcopias"/>
+        <prodata:field name="unico"/>
+      </prodata:index>
+      <prodata:index name="cai">
+        <prodata:table name="ttheader"/>
+        <prodata:field name="cai"/>
+      </prodata:index>
+      <prodata:index name="direccion" prodata:wordIndex="true">
+        <prodata:table name="ttheader"/>
+        <prodata:field name="direccion"/>
+      </prodata:index>
+      <prodata:index name="nombre" prodata:wordIndex="true">
+        <prodata:table name="ttheader"/>
+        <prodata:field name="nombre"/>
+      </prodata:index>
+      <prodata:index name="porcdgcomprobante">
+        <prodata:table name="ttheader"/>
+        <prodata:field name="cdg_comprobante"/>
+        <prodata:field name="cdg_empresa"/>
+        <prodata:field name="fecha"/>
+      </prodata:index>
+      <prodata:index name="por_administrador">
+        <prodata:table name="ttheader"/>
+        <prodata:field name="nro_administrador"/>
+      </prodata:index>
+      <prodata:index name="por_contrato">
+        <prodata:table name="ttheader"/>
+        <prodata:field name="nro_contrato"/>
+      </prodata:index>
+      <prodata:index name="por_fecha">
+        <prodata:table name="ttheader"/>
+        <prodata:field name="cdg_empresa"/>
+        <prodata:field name="fecha"/>
+        <prodata:field name="tip_comprob"/>
+        <prodata:field name="prf_comprob"/>
+        <prodata:field name="nro_comprob"/>
+      </prodata:index>
+      <prodata:index name="por_periodo">
+        <prodata:table name="ttheader"/>
+        <prodata:field name="cdg_empresa"/>
+        <prodata:field name="ano"/>
+        <prodata:field name="mes"/>
+        <prodata:field name="tip_comprob"/>
+        <prodata:field name="prf_comprob"/>
+        <prodata:field name="nro_comprob"/>
+      </prodata:index>
+      <prodata:index name="ref_entidad">
+        <prodata:table name="ttheader"/>
+        <prodata:field name="nro_entidad"/>
+      </prodata:index>
+      <prodata:index name="ref_obra">
+        <prodata:table name="ttheader"/>
+        <prodata:field name="nro_obra"/>
+      </prodata:index>
+      <prodata:index name="sintipcomprob">
+        <prodata:table name="ttheader"/>
+        <prodata:field name="cdg_empresa"/>
+        <prodata:field name="prf_comprob"/>
+        <prodata:field name="nro_comprob"/>
+        <prodata:field name="impreso"/>
+      </prodata:index>
+      <prodata:index name="wix_leyenda" prodata:wordIndex="true">
+        <prodata:table name="ttheader"/>
+        <prodata:field name="leyenda"/>
+      </prodata:index>
+      <prodata:index name="wix_observacion" prodata:wordIndex="true">
+        <prodata:table name="ttheader"/>
+        <prodata:field name="observacion"/>
+      </prodata:index>
+      <prodata:index name="por_articulo">
+        <prodata:table name="ttdetalle"/>
+        <prodata:field name="nro_articulo"/>
+        <prodata:field name="nro_partida"/>
+      </prodata:index>
+      <prodata:index name="ref_entidad">
+        <prodata:table name="ttdetalle"/>
+        <prodata:field name="nro_entidad"/>
+      </prodata:index>
+      <prodata:index name="ref_obra">
+        <prodata:table name="ttdetalle"/>
+        <prodata:field name="nro_obra"/>
+      </prodata:index>
+      <prodata:index name="wix_imputaciones" prodata:wordIndex="true">
+        <prodata:table name="ttdetalle"/>
+        <prodata:field name="lista_imputaciones"/>
+      </prodata:index>
+      <prodata:relation name="copias" prodata:parent="ttcopias" prodata:child="ttheader" prodata:relationFields="nro_factura,nro_factura"/>
+    </xsd:appinfo>
+  </xsd:annotation>
+</xsd:schema>

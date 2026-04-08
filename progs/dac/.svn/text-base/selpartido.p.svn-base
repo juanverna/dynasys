@@ -1,0 +1,14 @@
+/*=================================================================================*/
+/*                                                                                 */
+/*                      SELECCION DE LOCALIDADES                                   */
+/*                                                                                 */
+/*=================================================================================*/
+
+&GLOBAL-DEFINE TABLA           Partido
+&GLOBAL-DEFINE CODIGO          cdg_partido
+&GLOBAL-DEFINE NOMBRE          nom_partido
+&GLOBAL-DEFINE TITULO-BROWSE   Tipee un nombre o seleccione de la lista
+&GLOBAL-DEFINE TITULO-FRAME    Seleccion de Partidos
+&GLOBAL-DEFINE FORMATO         "X(40)"
+ 
+{SELBROWS.I}

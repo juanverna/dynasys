@@ -1,0 +1,41 @@
+  /*-------------------------------------------------------------------------------*/
+  /*  DIRECCIONA EL ARCHIVO DE SALIDA Y AJUSTA LA CANTIDAD DE LINEAS DE LA PAGINA  */
+  /*-------------------------------------------------------------------------------*/
+
+  fecha_lis = STRING(TODAY,"99/99/99").
+  hora_lis = STRING(TIME,"HH:MM:SS").
+
+  DEFINE VARIABLE quien_llama AS CHARACTER.
+  DEFINE VARIABLE lin-pag AS INTEGER.
+  DEFINE VARIABLE j-llama AS INTEGER.
+
+
+  RUN getparametro.p (  INPUT  "DIRECTMP",
+                        OUTPUT v-valor_c,
+                        OUTPUT v-valor_d,
+                        OUTPUT v-valor_l,
+                        OUTPUT v-valor_n,
+                        OUTPUT v-observacion ).
+
+  IF v-valor_c = ? THEN v-valor_c = SESSION:TEMP-DIRECTORY.
+
+  /*{showstack.i}*/
+
+  quien_llama = "".
+  DO j-llama = 1 TO 9 WHILE SUBSTRING(quien_llama,2,1) <> "-": 
+     quien_llama = PROGRAM-NAME(j-llama).
+  END.
+  quien_llama = SUBSTRING(quien_llama,1,INDEX(quien_llama,".") - 1).
+
+  arch_salida = v-valor_c + quien_llama + ".txt".
+
+  &IF DEFINED(LIN-PAG)
+  &THEN
+        lin-pag = {&LIN-PAG}.
+  &ELSE
+        FIND Ctl_reporte WHERE Ctl_reporte.nom_reporte = quien_llama + ".txt" NO-LOCK NO-ERROR.
+        IF AVAILABLE Ctl_reporte
+          THEN  lin-pag = Ctl_reporte.lineas_pp.
+          ELSE  lin-pag = 80.
+  &ENDIF
+  OUTPUT TO VALUE(arch_salida) PAGE-SIZE VALUE(lin-pag) .

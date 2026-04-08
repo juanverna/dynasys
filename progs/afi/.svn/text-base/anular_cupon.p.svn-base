@@ -1,0 +1,31 @@
+/*====================================================================================*/
+/*                 ANULACION DE CUPONES                   */
+/*====================================================================================*/
+
+DEFINE INPUT PARAMETER p-cdg_empresa LIKE Cupon.cdg_empresa.
+DEFINE INPUT PARAMETER p-tip_comprob LIKE Cupon.tip_comprob.
+DEFINE INPUT PARAMETER p-prf_comprob LIKE Cupon.prf_comprob.
+DEFINE INPUT PARAMETER p-nro_comprob LIKE Cupon.nro_comprob.
+
+/*====================================================================================*/
+/*                                    VARIABLES                                       */
+/*====================================================================================*/
+
+
+/*====================================================================================*/
+/*                                 BLOQUE PRINCIPAL                                   */
+/*====================================================================================*/
+
+DO TRANSACTION:
+
+    FIND Cupon 
+        WHERE Cupon.cdg_empresa  = p-cdg_empresa
+          AND Cupon.tip_comprob  = p-tip_comprob
+          AND Cupon.prf_comprob  = p-prf_comprob
+          AND Cupon.nro_comprob  = p-nro_comprob
+              EXCLUSIVE-LOCK NO-ERROR.
+
+    IF AVAILABLE Cupon 
+       THEN Cupon.estado = "5".
+       
+END.       

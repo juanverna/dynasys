@@ -1,0 +1,329 @@
+/*=================================================================================*/
+/*         LISTADO DE MOVIMIENTOS DE CAJA POR CUENTA CONTABLE                      */
+/*=================================================================================*/
+
+DEFINE INPUT PARAMETER des_fecha    LIKE Caj_header.fecha.
+DEFINE INPUT PARAMETER has_fecha    LIKE Caj_header.fecha.
+DEFINE INPUT PARAMETER des_cuenta   LIKE Cuenta.cdg_cuenta.
+DEFINE INPUT PARAMETER has_cuenta   LIKE Cuenta.cdg_cuenta.
+DEFINE INPUT PARAMETER ver_movim    AS LOGICAL.
+DEFINE INPUT PARAMETER ver_resumen  AS LOGICAL.
+DEFINE INPUT PARAMETER todos_mov    AS LOGICAL.
+DEFINE INPUT PARAMETER consolidado  AS LOGICAL.
+
+{dfvarimp.i}
+{parlocales.i}
+
+DEFINE VARIABLE que_caja            LIKE Caj_header.cdg_caja LABEL "Caja Nro.".
+DEFINE VARIABLE chr_caja            AS CHARACTER.
+
+DEFINE VARIABLE saldo               AS DECIMAL FORMAT "->,>>>,>>9.99" LABEL "Saldo".
+DEFINE VARIABLE tot_ingreso         AS DECIMAL FORMAT ">,>>>,>>9.99" LABEL "Ingresos".
+DEFINE VARIABLE tot_egreso          AS DECIMAL FORMAT ">,>>>,>>9.99" LABEL "Egresos".
+DEFINE VARIABLE tgn_ingreso         AS DECIMAL FORMAT ">,>>>,>>9.99" LABEL "Ingresos".
+DEFINE VARIABLE tgn_egreso          AS DECIMAL FORMAT ">,>>>,>>9.99" LABEL "Egresos".
+DEFINE VARIABLE lst_e               AS DECIMAL FORMAT ">,>>>,>>9.99".
+DEFINE VARIABLE lst_i               AS DECIMAL FORMAT ">,>>>,>>9.99".
+
+DEFINE VARIABLE pri_cuen            AS LOGICAL.
+DEFINE VARIABLE pri_fech            AS LOGICAL.
+
+{WGLISTAR.I}
+
+DEFINE BUFFER B-Cuenta FOR Cuenta.
+
+DEFINE WORK-TABLE Acumulado
+   FIELD tipo         AS INTEGER
+   FIELD cdg_cuenta   LIKE Cuenta.cdg_cuenta
+   FIELD saldo        AS DECIMAL FORMAT "->,>>>,>>9.99".
+
+DEFINE FRAME frm-titulo HEADER
+  que_empresa 
+  "Resumen de Movimientos por Cuenta" AT 52 
+  "Pagina:" AT 117 PAGE-NUMBER FORMAT ">9" AT 124
+  SKIP  
+  fecha_lis   
+  "del" AT 52
+  des_fecha
+  "al" 
+  has_fecha 
+  hora_lis AT 117
+  "desde Cta." AT 52
+  des_cuenta
+  "hasta" 
+  has_cuenta 
+  SKIP(1)
+  WITH WIDTH 155 FRAME frm-titulo TOP-ONLY PAGE-TOP STREAM-IO.
+
+DEFINE FRAME frm-tlistado
+  Cuenta.cdg_cuenta
+  Cuenta.nombre
+  SKIP
+  "-------------------------------------------------------------------------------------------" SKIP
+  WITH WIDTH 155 DOWN CENTERED NO-UNDERLINE USE-TEXT STREAM-IO.
+
+
+DEFINE FRAME frm-listado
+  Caj_header.fecha          COLUMN-LABEL "Fecha"
+  Caj_header.tip_comprob    COLUMN-LABEL "Cmp"
+  Caj_header.nro_comprob    COLUMN-LABEL "Numero"
+  Caj_header.observacion    FORMAT "X(20)"
+  lst_i                     COLUMN-LABEL "Ingresos"
+  lst_e                     COLUMN-LABEL "Egresos"
+  Rubro.abrevia
+  Caj_detalle.importe 
+  WITH WIDTH 155 DOWN CENTERED USE-TEXT STREAM-IO.
+
+DEFINE FRAME frm-titulo-r HEADER
+  que_empresa 
+  "Saldos por Cuenta" AT 40 
+  "Página:" AT 68 PAGE-NUMBER FORMAT ">9" AT 76
+  SKIP  
+  fecha_lis   
+  "del" AT 40
+  des_fecha
+  "al" 
+  has_fecha 
+  hora_lis AT 68
+  "desde Cta." AT 40
+  des_cuenta
+  "hasta" 
+  has_cuenta 
+  SKIP(1)
+  WITH WIDTH 80 FRAME frm-titulo-r TOP-ONLY PAGE-TOP STREAM-IO.
+
+DEFINE FRAME frm-listado-r
+  SPACE(3)
+  Cuenta.cdg_cuenta
+  Cuenta.nombre 
+  lst_i  FORMAT "->,>>>,>>9.99"  COLUMN-LABEL "Debitos"
+  lst_e  FORMAT "->,>>>,>>9.99"  COLUMN-LABEL "Creditos"
+  WITH WIDTH 80 DOWN CENTERED USE-TEXT STREAM-IO.
+
+/*=================================================================================*/
+/*                          B L O Q U E   P R I N C I P A L                        */
+/*=================================================================================*/
+
+{findempresa.i}
+que_empresa = Empresa.nombre.
+  
+RUN LISTAR.
+
+/*=================================================================================*/
+/*                          P R O C E D I M I E N T O S                            */
+/*=================================================================================*/
+
+PROCEDURE LISTAR:
+
+   {dirprinfile.i}
+  
+   tgn_ingreso = 0.
+   tgn_egreso = 0.
+
+   FIND FIRST Acumulado NO-ERROR.
+   IF AVAILABLE Acumulado
+   THEN DO:
+      FOR EACH Acumulado:
+          DELETE Acumulado.
+      END.    
+   END.
+
+   FOR EACH CUENTA WHERE Cuenta.cdg_cuenta <= has_cuenta
+                     AND Cuenta.cdg_cuenta >= des_cuenta
+                     AND CAN-FIND(FIRST Caj_header OF Cuenta
+                                        WHERE Caj_header.cdg_empresa = Empresa.cdg_empresa
+                                          AND Caj_header.fecha >= des_fecha 
+                                          AND Caj_header.fecha <= has_fecha
+                                          AND CAN-DO (Usuario.lista_empresas,Caj_header.cdg_empresa)
+                                          AND Caj_header.estado <> "A") 
+                     BREAK BY Cuenta.cdg_cuenta:
+                     
+       pri_cuen = YES.
+       tot_ingreso = 0.
+       tot_egreso = 0.
+       IF ver_movim 
+          THEN DO:
+               VIEW FRAME frm-titulo.
+               DISPLAY Cuenta.cdg_cuenta   WHEN pri_cuen
+                       Cuenta.nombre       WHEN pri_cuen
+                       WITH FRAME frm-tlistado.
+          END.
+
+       FOR EACH  Caj_header OF Cuenta
+           WHERE Caj_header.cdg_empresa = Empresa.cdg_empresa
+             AND Caj_header.fecha >= des_fecha 
+             AND Caj_header.fecha <= has_fecha
+              AND CAN-DO (Usuario.lista_empresas,Caj_header.cdg_empresa)
+             AND Caj_header.estado <> "A" 
+          BREAK BY Caj_header.fecha WITH FRAME frm-listado:
+        
+          IF Caj_header.tipo_mov = "I" 
+          THEN DO:
+              tot_ingreso = tot_ingreso + Caj_header.importe.
+              lst_i = Caj_header.importe.
+          END.
+          ELSE DO:
+              tot_egreso = tot_egreso + Caj_header.importe.
+              lst_e = Caj_header.importe.
+          END.
+                            
+          IF FIRST-OF(Caj_header.fecha) THEN pri_fech = YES.
+
+          FOR EACH Caj_detalle OF Caj_header,
+              EACH Rubro OF Caj_detalle BREAK BY Caj_detalle.nro_transaccion:
+      
+              IF ver_movim
+              THEN DO:
+                 DISPLAY Caj_header.fecha    WHEN pri_fech
+                         Caj_header.tip_comprob WHEN FIRST-OF(Caj_detalle.nro_transaccion)
+                         Caj_header.nro_comprob WHEN FIRST-OF(Caj_detalle.nro_transaccion)
+                         Caj_header.observacion WHEN FIRST-OF(Caj_detalle.nro_transaccion)
+                         lst_i WHEN Caj_header.tipo_mov = "I" AND FIRST-OF(Caj_detalle.nro_transaccion)
+                         lst_e WHEN Caj_header.tipo_mov = "E" AND FIRST-OF(Caj_detalle.nro_transaccion)
+                         Rubro.abrevia
+                         Caj_detalle.importe 
+                         WITH FRAME frm-listado.
+                 DOWN WITH FRAME frm-listado.
+              END.   
+              
+              IF ver_resumen
+              THEN DO:
+                 FIND B-Cuenta OF Rubro NO-LOCK.
+                 FIND FIRST Acumulado 
+                      WHERE Acumulado.cdg_cuenta = B-Cuenta.cdg_cuenta NO-ERROR.
+                 IF NOT AVAILABLE Acumulado
+                 THEN DO:
+                    CREATE Acumulado.
+                    ASSIGN 
+                       Acumulado.tipo       = 2
+                       Acumulado.cdg_cuenta = B-Cuenta.cdg_cuenta.
+                 END.
+                 
+                 IF Caj_detalle.tipo_mov = "I"
+                    THEN Acumulado.saldo = Acumulado.saldo + Caj_detalle.importe.
+                    ELSE Acumulado.saldo = Acumulado.saldo - Caj_detalle.importe.
+              
+              END.      
+              pri_fech = NO.                     
+              pri_cuen = NO.
+              
+          END.   
+         
+      END.
+
+     IF ver_movim
+     THEN DO:
+        UNDERLINE lst_i 
+                  lst_e 
+                  Rubro.abrevia 
+                  Caj_detalle.importe 
+                  WITH FRAME frm-listado.
+        DISPLAY tot_ingreso @ lst_i
+                tot_egreso  @ lst_e
+                "Saldo"     @ Rubro.abrevia
+                tot_ingreso - tot_egreso @ Caj_detalle.importe
+                WITH FRAME frm-listado.
+        DOWN 2 WITH FRAME frm-listado.     
+     END.
+
+     IF ver_resumen
+     THEN DO:
+        FIND B-Cuenta OF Caj_header NO-LOCK.
+        FIND FIRST Acumulado 
+             WHERE Acumulado.cdg_cuenta = B-Cuenta.cdg_cuenta NO-ERROR.
+        IF NOT AVAILABLE Acumulado
+        THEN DO:
+           CREATE Acumulado.
+           ASSIGN Acumulado.tipo       = 1
+                  Acumulado.cdg_cuenta = B-Cuenta.cdg_cuenta.
+        END.
+                 
+        Acumulado.saldo = tot_ingreso - tot_egreso.
+                      
+     END.      
+       
+     tgn_ingreso = tgn_ingreso + tot_ingreso.
+     tgn_egreso  = tgn_egreso  + tot_egreso .
+     
+  END.
+
+  IF ver_movim
+  THEN DO:
+     UNDERLINE lst_i 
+               lst_e 
+               Rubro.abrevia 
+               Caj_detalle.importe 
+               WITH FRAME frm-listado.
+     DISPLAY tgn_ingreso @ lst_i
+             tgn_egreso  @ lst_e
+             "Saldo"     @ Rubro.abrevia
+             tgn_ingreso - tgn_egreso @ Caj_detalle.importe
+             WITH FRAME frm-listado.
+     DOWN 2 WITH FRAME frm-listado.     
+  END.
+
+  IF ver_resumen
+  THEN DO:
+  
+     tgn_ingreso = 0.
+     tgn_egreso = 0.
+
+     FOR EACH Acumulado BY Acumulado.tipo BY Acumulado.cdg_cuenta:
+
+         lst_i = Acumulado.saldo.
+         lst_e = lst_i.
+
+         IF Acumulado.tipo = 1
+            THEN tgn_ingreso = tgn_ingreso + Acumulado.saldo.
+            ELSE tgn_egreso  = tgn_egreso  + Acumulado.saldo.
+            
+         VIEW FRAME frm-titulo-r.
+         FIND Cuenta WHERE Cuenta.cdg_cuenta = Acumulado.cdg_cuenta NO-LOCK.
+         DISPLAY Cuenta.cdg_cuenta
+                 Cuenta.nombre
+                 lst_i WHEN Acumulado.tipo = 1
+                 lst_e WHEN Acumulado.tipo = 2
+                 WITH FRAME frm-listado-r.
+         DOWN WITH FRAME frm-listado-r.
+         
+     END.
+     UNDERLINE lst_i 
+               lst_e 
+               WITH FRAME frm-listado-r.
+     DISPLAY tgn_ingreso @ lst_i
+             tgn_egreso  @ lst_e
+             WITH FRAME frm-listado-r.
+
+  END.       
+
+  OUTPUT CLOSE.
+  PAUSE 0.
+  HIDE FRAME frm-espere.
+  RUN veresult.w ( INPUT arch_salida,
+                   INPUT 22 ).
+
+END PROCEDURE.  
+
+/* Calcula el total de Egresos/Ingresos a la fecha */
+PROCEDURE CALCULAR_EI:
+
+   DEFINE OUTPUT PARAMETER tot_egresogr AS DECIMAL.
+   DEFINE OUTPUT PARAMETER tot_ingresong AS DECIMAL.
+
+   tot_egresogr = 0.
+   tot_ingresong = 0.
+
+   /* Busca por Caj_header desde principio de mes a la fecha */
+   FOR EACH Caj_header OF Caja
+       WHERE Caj_header.cdg_empresa = Empresa.cdg_empresa
+         AND Caj_header.fecha <  des_fecha
+         AND Caj_header.estado <> "A":
+
+      IF Caj_header.tipo_mov = "E" 
+         THEN tot_egresogr = tot_egresogr + Caj_header.importe.
+         ELSE tot_ingresong = tot_ingresong + Caj_header.importe.
+
+   END.
+   
+END PROCEDURE.
+

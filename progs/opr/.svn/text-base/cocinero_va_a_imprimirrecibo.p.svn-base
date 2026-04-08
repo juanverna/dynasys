@@ -1,0 +1,22 @@
+DEFINE VAR fmin AS DATE NO-UNDO.
+DEFINE VAR fmax AS DATE NO-UNDO.
+FIND evento  167210.
+fmin = DATE( int( SUBSTRING( string( evento.periodo,"999999") , 5 , 2 ) ) , 1 , int( SUBSTRING( string(evento.periodo,"999999"), 1 , 4 ) ) ).
+    fmax = fmin + 32.
+    fmax = DATE( MONTH(fmax), 1, YEAR(fmax)).
+    fmax = fmax - 1.
+IF evento.origen = "CONTRATO" THEN DO:
+    FOR EACH fac_header WHERE fac_header.tip_comprob BEGINS "F" AND 
+        fac_header.nro_contrato = evento.nro_identificacion AND
+        fac_header.fecha >= fmin AND fac_header.fecha <= fmax AND
+        NOT fac_header.anulado BY fac_header.fecha:
+            FIND FIRST fac_detalle OF fac_header.
+            FIND articulo OF fac_detalle.
+            IF articulo.nro_tipo_evento <> evento.nro_tipo_evento THEN NEXT.
+            DISPLAY fac_header.tip_comprob WHEN AVAILABLE fac_header
+                    fac_header.prf_comprob WHEN AVAILABLE fac_header
+                    fac_header.nro_comprob WHEN AVAILABLE fac_header.
+        DISPLAY Fac_header.estado_2_impresion = "OT".
+        LEAVE.
+    END.
+END.

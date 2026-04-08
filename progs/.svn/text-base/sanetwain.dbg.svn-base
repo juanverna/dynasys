@@ -1,0 +1,90 @@
+Debug session started. Version is v1,30
+Opening connection
+Message logged: Opening connection
+Opening socket on port 6566
+Message logged: Looking up host: 192.168.0.18
+Message logged: Connecting to host: 192.168.0.18
+Message logged: Connected to host: 192.168.0.18
+Logging on as PCUSER
+Got socket connection
+Message logged: Getting list of available devices
+Message logged: Retrieving option values
+Option created: 0, 
+	Option capabilities: 4
+Option created: 1, tl-x
+	Option capabilities: 5
+Option created: 2, tl-y
+	Option capabilities: 5
+Option created: 3, br-x
+	Option capabilities: 5
+Option created: 4, br-y
+	Option capabilities: 5
+Option created: 5, resolution
+	Option capabilities: 5
+Option created: 6, mode
+	Option capabilities: 5
+Option created: 7, source
+	Option capabilities: 5
+Option created: 8, paper-size
+	Option capabilities: 5
+Updating number option: resolution
+Using saved default value '150' for 'resolution'
+Message logged: Reloading scanner parameters
+Updating string option: mode
+Updating string option: source
+Updating string option: paper-size
+Message logged: Reloading scanner parameters
+Message logged: Reloading scanner parameters
+Message logged: Reloading scanner parameters
+Message logged: Invalid parameters
+Message logged: Reloading scanner parameters
+Message logged: Invalid parameters
+Message logged: Reloading option values
+Message logged: Retrieving option values
+Updating number option: 
+Updating number option: tl-x
+Updating number option: tl-y
+Updating number option: br-x
+Updating number option: br-y
+Updating string option: mode
+Updating string option: source
+Updating string option: paper-size
+Message logged: Reloading option values
+Message logged: Retrieving option values
+Updating number option: 
+Updating number option: tl-x
+Updating number option: tl-y
+Updating number option: br-x
+Updating number option: br-y
+Updating string option: mode
+Updating string option: source
+Updating string option: paper-size
+Message logged: Reloading option values
+Message logged: Retrieving option values
+Updating number option: 
+Updating number option: tl-x
+Updating number option: tl-y
+Updating number option: br-x
+Updating number option: br-y
+Updating string option: mode
+Updating string option: source
+Updating string option: paper-size
+Message logged: Reloading option values
+Message logged: Retrieving option values
+Updating number option: 
+Updating number option: tl-x
+Debug session started. Version is v1,30
+Opening connection
+Message logged: Opening connection
+Opening socket on port 6566
+Message logged: Looking up host: 192.168.0.18
+Message logged: Connecting to host: 192.168.0.18
+Message logged: Connected to host: 192.168.0.18
+Logging on as PCUSER
+Got socket connection
+Message logged: Getting list of available devices
+Message logged: Retrieving option values
+Option created: 0, 
+	Option capabilities: 4
+Option created: 1, tl-x
+	Option capabilities: 5

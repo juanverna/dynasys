@@ -1,0 +1,28 @@
+DEFINE BUFFER bevento FOR evento.
+DEFINE BUFFER btarea FOR tarea.
+DEFINE VAR fperiodo1 AS DATE NO-UNDO.
+DEFINE BUFFER administrador FOR cliente.
+DEFINE VAR p-vencimiento AS DATE INITIAL 06/30/2010.
+{Tiempo.i}
+fperiodo1 = ultimodia(sumarmeses(TODAY,2)).
+FIND tipo_evento WHERE tipo_evento.cdg_tipo_evento = "CO" NO-LOCK.
+FOR EACH administrador:
+            FOR EACH evento WHERE evento.nro_tipo_evento = tipo_evento.nro_tipo_evento AND 
+                       evento.nro_cliente = administrador.nro_cliente AND evento.frealizado = ? AND NOT evento.anulado BY nro_evento:
+                FOR each bevento WHERE bevento.nro_tipo_evento = tipo_evento.nro_tipo_evento AND 
+                           bevento.nro_cliente = evento.nro_cliente AND 
+                 evento.fasignado = bevento.Fasignado AND bevento.frealizado = ? AND NOT bevento.anulado AND
+                     bevento.nro_evento > evento.nro_evento :
+                    FOR each recurso_agenda OF evento: DELETE recurso_agenda. END.
+                    DELETE bevento.
+                END.
+            END.
+END.
+    FOR EACH tarea WHERE tarea.nro_cliente = administrador.nro_cliente AND
+             tarea.cdg_tipotarea="C" AND tarea.estado = "A":
+     FOR EACH btarea WHERE btarea.nro_cliente = administrador.nro_cliente AND
+             btarea.cdg_tipotarea="C" AND btarea.estado = "A" AND
+            ROWID(tarea)<> ROWID(btarea):
+            DELETE btarea.
+     END.
+    END.

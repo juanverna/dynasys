@@ -1,0 +1,187 @@
+/*====================================================================================*/
+/*                 EMISION DE UNA FACTURA EN REEMPLAZO DE OTRA                        */
+/*====================================================================================*/
+
+DEFINE INPUT PARAMETER p-tip_comprob       LIKE Fac_header.tip_comprob.
+DEFINE INPUT PARAMETER p-prf_comprob       LIKE Fac_header.prf_comprob.
+DEFINE INPUT PARAMETER p-nro_comprob       LIKE Fac_header.nro_comprob.
+DEFINE INPUT PARAMETER p-fch_anulacion     AS DATE.
+
+/*====================================================================================*/
+/*                             VARIABLES Y BUFFERS                                    */
+/*====================================================================================*/
+
+DEFINE TEMP-TABLE T-Fac_header             LIKE Fac_header.
+DEFINE TEMP-TABLE T-Fac_detalle            LIKE Fac_detalle.
+DEFINE TEMP-TABLE T-Registrable-factura    LIKE Registrable-factura.
+DEFINE TEMP-TABLE T-Sub_header_vta         LIKE Sub_header_vta.
+DEFINE TEMP-TABLE T-Sub_detalle_vta        LIKE Sub_detalle_vta.
+DEFINE TEMP-TABLE T-Fac_header-bon         LIKE Fac_header-bon.
+DEFINE TEMP-TABLE T-Fac_detalle-bon        LIKE Fac_detalle-bon.
+DEFINE TEMP-TABLE T-Fac_header_impuesto    LIKE Fac_header_impuesto.
+DEFINE TEMP-TABLE T-Fac_detalle_impuesto   LIKE Fac_detalle_impuesto.
+
+DEFINE BUFFER N-Fac_header FOR Fac_header.
+
+DEFINE VARIABLE v-prox_docum AS CHARACTER.
+
+DEFINE VARIABLE x-tip_comprob  LIKE Fac_header.tip_comprob.  
+DEFINE VARIABLE x-prf_comprob  LIKE Fac_header.prf_comprob.  
+DEFINE VARIABLE x-nro_comprob  LIKE Fac_header.nro_comprob.  
+
+/*====================================================================================*/
+/*                                BLOQUE PRINCIPAL                                    */
+/*====================================================================================*/
+
+{findempresa.i}
+
+DO TRANSACTION:
+
+    FIND Fac_header 
+        WHERE Fac_header.cdg_empresa  = Empresa.cdg_empresa
+          AND Fac_header.tip_comprob  = p-tip_comprob
+          AND Fac_header.prf_comprob  = p-prf_comprob
+          AND Fac_header.nro_comprob  = p-nro_comprob
+              EXCLUSIVE-LOCK.
+    
+/*====================================================================================*/
+/*             GENERAR LA NUEVA FACTURA ANULADA PARA RECUPERAR EL NUMERO              */
+/*====================================================================================*/
+
+    CREATE T-Fac_header.
+    BUFFER-COPY Fac_header TO T-Fac_header
+        ASSIGN T-Fac_header.fecha       = p-fch_anulacion
+               T-Fac_header.anulado     = YES
+               T-Fac_header.nro_factura = NEXT-VALUE(proxima_transaccion)
+               T-Fac_header.impreso     = "S".
+
+    FIND Tipocomprobante OF T-Fac_header NO-LOCK.
+    FIND Condicion_impos OF T-Fac_header NO-LOCK.
+
+    v-prox_docum = Tipocomprobante.prefijo_contador + STRING(T-Fac_header.prf_comprob,"9999").
+    T-Fac_header.tip_comprob =  Tipocomprobante.tip_comprob.    
+    IF Tipocomprobante.usa_letra
+    THEN DO:
+        v-prox_docum = REPLACE(v-prox_docum,"*",Condicion_impos.tipo_factura).
+        T-Fac_header.tip_comprob = REPLACE(T-Fac_header.tip_comprob,"*",Condicion_impos.tipo_factura).
+    END.
+
+    FIND Parametro WHERE Parametro.cdg_parametro = v-prox_docum 
+                     AND Parametro.cdg_empresa   = T-Fac_header.cdg_empresa 
+                         EXCLUSIVE-LOCK NO-ERROR.
+
+    IF NOT AVAILABLE Parametro
+    THEN DO:
+         CREATE Parametro.
+         ASSIGN Parametro.cdg_empresa   = T-Fac_header.cdg_empresa
+                Parametro.cdg_parametro = v-prox_docum
+                Parametro.descripcion   = "Contador autoagregado por " + PROGRAM-NAME(1)
+                Parametro.observacion   = ""
+                Parametro.tipo          = "N"
+                Parametro.valor_n       = 1.
+    END.         
+
+    ASSIGN
+       T-Fac_header.nro_comprob = Parametro.valor_n
+       Parametro.valor_n        = Parametro.valor_n + 1.
+
+    CREATE N-Fac_header.
+    BUFFER-COPY T-Fac_header TO N-Fac_header.
+
+    CREATE Sub_header_vta.
+    BUFFER-COPY N-Fac_header TO Sub_header_vta
+        ASSIGN Sub_header_vta.anulado     = YES.
+
+    RELEASE Parametro.
+    RELEASE Sub_header_vta.
+
+/*====================================================================================*/
+/* AHORA EN N-Fac_header, QUEDO EL NUMERO NUEVO Y EN Fac_header EL ANTERIOR, CON ESOS */
+/* DATOS, ACCEDEMOS A LAS TABLAS Y ACTUALIZAMOS LAS REFERENCIAS A LAS FACTURAS        */
+/*====================================================================================*/
+
+
+    FOR EACH Sub_header_vta WHERE Sub_header_vta.cdg_empresa = Fac_header.cdg_empresa
+                              AND Sub_header_vta.tip_comprob = Fac_header.tip_comprob 
+                              AND Sub_header_vta.prf_comprob = Fac_header.prf_comprob
+                              AND Sub_header_vta.nro_comprob = Fac_header.nro_comprob
+                                  EXCLUSIVE-LOCK:
+
+        ASSIGN Sub_header_vta.tip_comprob = N-Fac_header.tip_comprob 
+               Sub_header_vta.prf_comprob = N-Fac_header.prf_comprob
+               Sub_header_vta.nro_comprob = N-Fac_header.nro_comprob.
+
+    END.
+
+    FOR EACH Sub_detalle_vta WHERE Sub_detalle_vta.cdg_empresa = Fac_header.cdg_empresa
+                               AND Sub_detalle_vta.tip_comprob = Fac_header.tip_comprob 
+                               AND Sub_detalle_vta.prf_comprob = Fac_header.prf_comprob
+                               AND Sub_detalle_vta.nro_comprob = Fac_header.nro_comprob
+                                   EXCLUSIVE-LOCK:
+
+        ASSIGN Sub_detalle_vta.tip_comprob = N-Fac_header.tip_comprob 
+               Sub_detalle_vta.prf_comprob = N-Fac_header.prf_comprob
+               Sub_detalle_vta.nro_comprob = N-Fac_header.nro_comprob.
+
+    END.
+
+    FOR EACH Cta_cte WHERE Cta_cte.cdg_empresa = Fac_header.cdg_empresa
+                       AND Cta_cte.tip_comprob = Fac_header.tip_comprob 
+                       AND Cta_cte.prf_comprob = Fac_header.prf_comprob
+                       AND Cta_cte.nro_comprob = Fac_header.nro_comprob
+                           EXCLUSIVE-LOCK:
+
+        ASSIGN Cta_cte.tip_comprob = N-Fac_header.tip_comprob 
+               Cta_cte.prf_comprob = N-Fac_header.prf_comprob
+               Cta_cte.nro_comprob = N-Fac_header.nro_comprob.
+
+    END.
+
+    FOR EACH Cct_stock WHERE Cct_stock.cdg_empresa = Fac_header.cdg_empresa
+                         AND Cct_stock.tip_comprob = Fac_header.tip_comprob 
+                         AND Cct_stock.prf_comprob = Fac_header.prf_comprob
+                         AND Cct_stock.nro_comprob = Fac_header.nro_comprob
+                             EXCLUSIVE-LOCK:
+
+        ASSIGN Cct_stock.tip_comprob = N-Fac_header.tip_comprob 
+               Cct_stock.prf_comprob = N-Fac_header.prf_comprob
+               Cct_stock.nro_comprob = N-Fac_header.nro_comprob.
+
+    END.
+
+/*====================================================================================*/
+/*     MODIFICACMOS LA REFERENCIA EN EL CUPON PARA QUE APUNTE A LA NUEVA FACTURA      */
+/*====================================================================================*/
+
+    FIND Cupon 
+         WHERE Cupon.cdg_empresa = Fac_header.cdg_empresa
+           AND Cupon.tip_comprob = Fac_header.tip_comprob
+           AND Cupon.prf_comprob = Fac_header.prf_comprob
+           AND Cupon.nro_comprob = Fac_header.nro_comprob
+               EXCLUSIVE-LOCK NO-ERROR.
+
+    IF AVAILABLE Cupon
+        THEN ASSIGN Cupon.tip_comprob = N-Fac_header.tip_comprob
+                    Cupon.prf_comprob = N-Fac_header.prf_comprob
+                    Cupon.nro_comprob = N-Fac_header.nro_comprob.
+
+    RELEASE Cupon.
+
+/*====================================================================================*/
+/*     EFECTUAR EL INTERCAMBIO DE NUMERACION DE LAS FACTURAS ANULADA Y ANTERIOR       */
+/*====================================================================================*/
+
+    ASSIGN x-tip_comprob            = Fac_header.tip_comprob 
+           x-prf_comprob            = Fac_header.prf_comprob 
+           x-nro_comprob            = Fac_header.nro_comprob 
+
+           Fac_header.tip_comprob   = N-Fac_header.tip_comprob 
+           Fac_header.prf_comprob   = N-Fac_header.prf_comprob 
+           Fac_header.nro_comprob   = N-Fac_header.nro_comprob 
+           
+           N-Fac_header.tip_comprob = x-tip_comprob 
+           N-Fac_header.prf_comprob = x-prf_comprob 
+           N-Fac_header.nro_comprob = x-nro_comprob. 
+
+
+END.

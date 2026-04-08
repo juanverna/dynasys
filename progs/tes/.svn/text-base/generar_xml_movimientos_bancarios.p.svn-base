@@ -1,0 +1,159 @@
+/*=====================================================================================*/
+/*                  LISTADO DE MOVIMIENTOS Y SALDOS BANCARIOS                          */
+/*=====================================================================================*/
+
+DEFINE INPUT PARAMETER que_cuenta       LIKE Cuenta_bancaria.cdg_cuenta_ban.
+DEFINE INPUT PARAMETER des_fecha        AS DATE FORMAT "99/99/9999".
+DEFINE INPUT PARAMETER has_fecha        AS DATE FORMAT "99/99/9999".
+DEFINE INPUT-OUTPUT PARAMETER p-xfile   AS CHAR NO-UNDO.          
+
+/*=====================================================================================*/
+/*                               VARIABLES Y FRAMES                                    */
+/*=====================================================================================*/
+
+DEFINE VARIABLE que_comprob             AS CHARACTER FORMAT "X(16)".
+DEFINE VARIABLE v-creditos              AS DECIMAL FORMAT "-Z,ZZZ,ZZ9.99" LABEL "v-debitos".
+DEFINE VARIABLE v-debitos               AS DECIMAL FORMAT "-Z,ZZZ,ZZ9.99" LABEL "v-creditos".
+DEFINE VARIABLE saldo                   AS DECIMAL FORMAT "-Z,ZZZ,ZZ9.99" LABEL "S a l d o".
+DEFINE VARIABLE v-total_comp            AS DECIMAL FORMAT "-Z,ZZZ,ZZ9.99".
+
+DEFINE VARIABLE acum_debitos            AS DECIMAL FORMAT "-Z,ZZZ,ZZ9.99".
+DEFINE VARIABLE acum_creditos           AS DECIMAL FORMAT "-Z,ZZZ,ZZ9.99".
+DEFINE VARIABLE acum_saldo              AS DECIMAL FORMAT "-Z,ZZZ,ZZ9.99".
+
+DEFINE VARIABLE chr_cuenta              AS CHARACTER FORMAT "X(45)".
+DEFINE VARIABLE det_titulo              AS CHARACTER FORMAT "X(45)".
+DEFINE VARIABLE hubo_cuenta             AS LOGICAL.
+DEFINE VARIABLE ver_cuenta              AS LOGICAL.
+DEFINE VARIABLE desc_moneda             LIKE Moneda.descripcion.
+
+DEFINE TEMP-TABLE T-Movimientos NO-UNDO LIKE Cta_cte_bco
+    FIELD cdg_empresa     LIKE Empresa.cdg_empresa
+    FIELD saldo           AS DECIMAL.
+
+DEFINE TEMP-TABLE T-Empresa NO-UNDO LIKE Empresa.
+
+DEFINE DATASET dset FOR T-Movimientos,T-Empresa.
+  
+FUNCTION fnclaveperiodo RETURNS INTEGER ( INPUT p-fecha AS DATE):
+
+    RETURN YEAR(p-fecha) * 100 + MONTH(p-fecha).
+
+END FUNCTION.
+
+FUNCTION fnfechacumulado RETURNS DATE ( INPUT p-mes AS INTEGER, INPUT p-ano AS INTEGER):
+
+    DEFINE VARIABLE v-dia AS INTEGER.
+
+    v-dia = 1.
+    RUN findemes.p ( INPUT-OUTPUT v-dia, INPUT Acumulado_bancos.mes, INPUT Acumulado_bancos.ano ).
+
+    RETURN DATE(v-dia,p-mes,p-ano).
+
+END FUNCTION.
+
+{crystal_dyna.p}
+
+/*=================================================================================*/
+/*                          B L O Q U E   P R I N C I P A L                        */
+/*=================================================================================*/
+
+{findempresa.i}
+CREATE T-Empresa.
+BUFFER-COPY Empresa TO T-Empresa.
+
+RUN generar.
+
+IF p-xfile = "" OR p-xfile = ?
+      THEN p-xfile = tempfile("") + ".xml".
+
+DATASET dset:WRITE-XML ("FILE", p-xfile, TRUE, ?,"",YES,YES).
+
+/*=================================================================================*/
+/*                      P R O C E D I M I E N T O S                                */
+/*=================================================================================*/
+
+PROCEDURE generar:
+
+    FIND Cuenta_bancaria WHERE Cuenta_bancaria.cdg_cuenta_ban = que_cuenta NO-LOCK.
+
+    ASSIGN acum_debitos  = 0
+           acum_creditos = 0
+           acum_saldo    = 0
+           v-debitos       = 0
+           v-creditos      = 0
+           saldo         = 0.
+        
+    chr_cuenta = Cuenta_bancaria.cdg_cuenta_ban + "-" + Cuenta_bancaria.denominacion_cta.
+    det_titulo = "Movimientos del " + string(des_fecha)+ " al " + string(has_fecha).
+
+    RUN calcular_saldo ( INPUT des_fecha, OUTPUT v-debitos, OUTPUT v-creditos ).
+
+    CREATE T-Movimientos.
+    ASSIGN T-Movimientos.cdg_empresa     = Empresa.cdg_empresa
+           T-Movimientos.fecha_movimto   = des_fecha - 1
+           T-Movimientos.fecha_efectiva  = des_fecha - 1
+           T-Movimientos.credito         = 0
+           T-Movimientos.debito          = 0
+           T-Movimientos.saldo           = v-debitos - v-creditos
+           T-Movimientos.leyenda         = "Saldo al " + STRING(des_fecha - 1).
+
+    FOR EACH Cta_cte_bco NO-LOCK OF Cuenta_bancaria 
+             WHERE Cta_cte_bco.fecha_efectiva >= des_fecha
+               AND Cta_cte_bco.fecha_efectiva <= has_fecha
+               AND NOT Cta_cte_bco.anulado
+                   BREAK BY Cta_cte_bco.fecha_efectiva
+                         BY Cta_cte_bco.tip_comprob
+                         BY Cta_cte_bco.prf_comprob
+                         BY Cta_cte_bco.nro_comprob:
+
+        ASSIGN v-debitos = v-debitos + Cta_cte_bco.debito
+               v-creditos = v-creditos + Cta_cte_bco.credito.
+
+        CREATE T-Movimientos.
+        BUFFER-COPY Cta_cte_bco TO T-Movimientos
+            ASSIGN T-Movimientos.cdg_empresa     = Empresa.cdg_empresa
+                   T-Movimientos.saldo           = v-debitos - v-creditos.
+    END.            
+
+END PROCEDURE.
+
+PROCEDURE calcular_saldo:
+
+   DEFINE INPUT  PARAMETER a_que_fecha   AS DATE FORMAT "99/99/9999".
+   DEFINE OUTPUT PARAMETER tot_debitogr  AS DECIMAL.
+   DEFINE OUTPUT PARAMETER tot_creditogr AS DECIMAL.
+
+   DEFINE VARIABLE v-dia                 AS INTEGER.
+   DEFINE VARIABLE v-clave_periodo       AS INTEGER.
+   DEFINE VARIABLE ultima_fecha          AS DATE FORMAT "99/99/9999".
+
+   ASSIGN ultima_fecha    = 01/01/0001 - 1 /* Fin de la era romana */
+          tot_debitogr    = 0
+          tot_creditogr   = 0
+          v-clave_periodo = fnclaveperiodo(a_que_fecha). /* Encuentra el último período a acceder */
+
+   /* Accedemos a la tabla con variable v-clave_periodo en vez de la función por performance */
+   /* Si la tabla de acumulados está vacía, la ultima fecha queda igual y toma todos los movimientos*/
+
+   FOR EACH Acumulado_bancos OF Cuenta_bancaria WHERE Acumulado_bancos.clave_periodo < v-clave_periodo:
+
+       ASSIGN tot_debitogr  = tot_debitogr + Acumulado_bancos.tot_debitos
+              tot_creditogr = tot_creditogr + Acumulado_bancos.tot_creditos.
+              ultima_fecha  = fnfechacumulado(Acumulado_bancos.mes,Acumulado_bancos.ano).
+
+   END.
+
+   /* Termina de componer el saldo con los movimientos */
+
+   FOR EACH Cta_cte_bco OF Cuenta_bancaria 
+       WHERE Cta_cte_bco.fecha_efectiva > ultima_fecha
+         AND Cta_cte_bco.fecha_efectiva < a_que_fecha
+         AND NOT Cta_cte_bco.anulado:
+
+       ASSIGN tot_debitogr  = tot_debitogr + Cta_cte_bco.debito
+              tot_creditogr = tot_creditogr + Cta_cte_bco.credito.
+
+   END.
+
+END PROCEDURE.

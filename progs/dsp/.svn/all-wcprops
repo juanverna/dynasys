@@ -1,0 +1,1187 @@
+K 25
+svn:wc:ra_dav:version-url
+V 35
+/svn/Paulista/!svn/ver/20/progs/dsp
+END
+prrem724.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dsp/prrem724.p
+END
+b-pedidos_a_devolver.w
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/Paulista/!svn/ver/1/progs/dsp/b-pedidos_a_devolver.w
+END
+b-pendientes_de_informar.w
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/Paulista/!svn/ver/1/progs/dsp/b-pendientes_de_informar.w
+END
+camestpd.i
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dsp/camestpd.i
+END
+d-ver_imputacion_remito.w
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/Paulista/!svn/ver/1/progs/dsp/d-ver_imputacion_remito.w
+END
+b-pedidos_pendientes.w
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/Paulista/!svn/ver/1/progs/dsp/b-pedidos_pendientes.w
+END
+v-id-recorrido.w
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/dsp/v-id-recorrido.w
+END
+c-pedido_cliente.w
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/Paulista/!svn/ver/1/progs/dsp/c-pedido_cliente.w
+END
+d-ver_imputacion_compdespacho.w
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/Paulista/!svn/ver/1/progs/dsp/d-ver_imputacion_compdespacho.w
+END
+b-devoluciones_pendientes.w
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/Paulista/!svn/ver/1/progs/dsp/b-devoluciones_pendientes.w
+END
+efectuar_calce_devoluciones.p
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/Paulista/!svn/ver/1/progs/dsp/efectuar_calce_devoluciones.p
+END
+selesped.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dsp/selesped.p
+END
+stpedido.i
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dsp/stpedido.i
+END
+PRPED146.P
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dsp/PRPED146.P
+END
+CMBPEDHD-ZZ.p
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/1/progs/dsp/CMBPEDHD-ZZ.p
+END
+w-cambiaremito.w
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/dsp/w-cambiaremito.w
+END
+b-hst_pedido.w
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/Paulista/!svn/ver/1/progs/dsp/b-hst_pedido.w
+END
+cmbepdam.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dsp/cmbepdam.p
+END
+d-detremito_articulos.w
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/Paulista/!svn/ver/1/progs/dsp/d-detremito_articulos.w
+END
+b-remito_pedido.w
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/dsp/b-remito_pedido.w
+END
+d-detremito_servicios.w
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/Paulista/!svn/ver/1/progs/dsp/d-detremito_servicios.w
+END
+imprimir_pedido.p
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/dsp/imprimir_pedido.p
+END
+emitir_pedido.p
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/Paulista/!svn/ver/1/progs/dsp/emitir_pedido.p
+END
+tgbdpedi.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dsp/tgbdpedi.p
+END
+w-informar_rechazos.w
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/Paulista/!svn/ver/1/progs/dsp/w-informar_rechazos.w
+END
+w-lsremitos_xcliente.w
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/Paulista/!svn/ver/1/progs/dsp/w-lsremitos_xcliente.w
+END
+w-despachar_pedidos_existencia.w
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/Paulista/!svn/ver/1/progs/dsp/w-despachar_pedidos_existencia.w
+END
+v-cancelar_pedidos.w
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/Paulista/!svn/ver/1/progs/dsp/v-cancelar_pedidos.w
+END
+lslibro_del_viajante-hair.p
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/Paulista/!svn/ver/1/progs/dsp/lslibro_del_viajante-hair.p
+END
+cmpacbrw.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dsp/cmpacbrw.p
+END
+PRPED104.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dsp/PRPED104.p
+END
+exportaventas.p
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/Paulista/!svn/ver/1/progs/dsp/exportaventas.p
+END
+selFLETE.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dsp/selFLETE.p
+END
+v-numero_pedido.w
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/dsp/v-numero_pedido.w
+END
+lspedidos_xfecha.p
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/Paulista/!svn/ver/1/progs/dsp/lspedidos_xfecha.p
+END
+tgbtcambped.i
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/1/progs/dsp/tgbtcambped.i
+END
+v-aprobar_pedido-anterior.w
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/Paulista/!svn/ver/1/progs/dsp/v-aprobar_pedido-anterior.w
+END
+prrem100.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dsp/prrem100.p
+END
+CREA_PERMISO.p
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/Paulista/!svn/ver/1/progs/dsp/CREA_PERMISO.p
+END
+b-bonificacion.w
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/dsp/b-bonificacion.w
+END
+prrem104.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dsp/prrem104.p
+END
+w-lsremitos_xfecha.w
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/Paulista/!svn/ver/1/progs/dsp/w-lsremitos_xfecha.w
+END
+v-despachar_pedidos.w
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/Paulista/!svn/ver/1/progs/dsp/v-despachar_pedidos.w
+END
+w-lslibro_borrador.w
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/Paulista/!svn/ver/1/progs/dsp/w-lslibro_borrador.w
+END
+valuar_pedido.p
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/Paulista/!svn/ver/1/progs/dsp/valuar_pedido.p
+END
+cargar_copias_pedido.p
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/Paulista/!svn/ver/1/progs/dsp/cargar_copias_pedido.p
+END
+w-lslibro_del_viajante_char.w
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/Paulista/!svn/ver/1/progs/dsp/w-lslibro_del_viajante_char.w
+END
+w-lslibro_del_viajante.w
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/Paulista/!svn/ver/1/progs/dsp/w-lslibro_del_viajante.w
+END
+b-pedidos_a_despachar.w
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/Paulista/!svn/ver/1/progs/dsp/b-pedidos_a_despachar.w
+END
+prped000.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dsp/prped000.p
+END
+imprimir_remito_bdu.i
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/Paulista/!svn/ver/1/progs/dsp/imprimir_remito_bdu.i
+END
+lsremitos_facturados.p
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/Paulista/!svn/ver/1/progs/dsp/lsremitos_facturados.p
+END
+lsremitido_xtipoarticulo_y_prov.p
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/Paulista/!svn/ver/1/progs/dsp/lsremitido_xtipoarticulo_y_prov.p
+END
+lsremitido_xtipoarticulo.p
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/Paulista/!svn/ver/1/progs/dsp/lsremitido_xtipoarticulo.p
+END
+b-articulos_pedidos.w
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/Paulista/!svn/ver/1/progs/dsp/b-articulos_pedidos.w
+END
+lsremitido_xarticulo.p
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/Paulista/!svn/ver/1/progs/dsp/lsremitido_xarticulo.p
+END
+b-ped-aprobados.w
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/dsp/b-ped-aprobados.w
+END
+w-calzar_devoluciones.w
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/Paulista/!svn/ver/1/progs/dsp/w-calzar_devoluciones.w
+END
+v-aprobar_pedidos.w
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/Paulista/!svn/ver/1/progs/dsp/v-aprobar_pedidos.w
+END
+d-seleccionar_pedido_activo.w
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/Paulista/!svn/ver/1/progs/dsp/d-seleccionar_pedido_activo.w
+END
+exportar_pedidos.p
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/Paulista/!svn/ver/1/progs/dsp/exportar_pedidos.p
+END
+selsolic.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dsp/selsolic.p
+END
+w-informar_precios_remitos.w
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/Paulista/!svn/ver/1/progs/dsp/w-informar_precios_remitos.w
+END
+verificar_calce_devoluciones.p
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/Paulista/!svn/ver/1/progs/dsp/verificar_calce_devoluciones.p
+END
+lspedidos_xcliente.p
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/Paulista/!svn/ver/1/progs/dsp/lspedidos_xcliente.p
+END
+d-bonificaciones_remito.w
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/Paulista/!svn/ver/1/progs/dsp/d-bonificaciones_remito.w
+END
+v-aprobar_pedido.w
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/Paulista/!svn/ver/1/progs/dsp/v-aprobar_pedido.w
+END
+v-calzar_remitos.w
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/Paulista/!svn/ver/1/progs/dsp/v-calzar_remitos.w
+END
+detalle_pedido.p
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/dsp/detalle_pedido.p
+END
+b-depedido_pendiente.w
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/Paulista/!svn/ver/1/progs/dsp/b-depedido_pendiente.w
+END
+camestpd-dt.i
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/1/progs/dsp/camestpd-dt.i
+END
+PRPED114.P
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dsp/PRPED114.P
+END
+prped115.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dsp/prped115.p
+END
+b-ped-retenidos_credito.w
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/Paulista/!svn/ver/1/progs/dsp/b-ped-retenidos_credito.w
+END
+v-recorrido.w
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/1/progs/dsp/v-recorrido.w
+END
+b-pedidos-hd.w
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/Paulista/!svn/ver/1/progs/dsp/b-pedidos-hd.w
+END
+b-detalle_remitos_sincalzar.w
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/Paulista/!svn/ver/1/progs/dsp/b-detalle_remitos_sincalzar.w
+END
+prrem301.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dsp/prrem301.p
+END
+w-imprimir_pedidos.w
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/Paulista/!svn/ver/1/progs/dsp/w-imprimir_pedidos.w
+END
+prrem501.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dsp/prrem501.p
+END
+verificar_calce_posible.p
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/Paulista/!svn/ver/1/progs/dsp/verificar_calce_posible.p
+END
+lspedidos_xarticulo.p
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/Paulista/!svn/ver/1/progs/dsp/lspedidos_xarticulo.p
+END
+valorizar_pedidos.p
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/Paulista/!svn/ver/1/progs/dsp/valorizar_pedidos.p
+END
+verificar_credito.p
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/Paulista/!svn/ver/1/progs/dsp/verificar_credito.p
+END
+b-pedido_detalle.w
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/Paulista/!svn/ver/1/progs/dsp/b-pedido_detalle.w
+END
+cmbpedhd-ro.p
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/1/progs/dsp/cmbpedhd-ro.p
+END
+cmbpedhd-aa.p
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/1/progs/dsp/cmbpedhd-aa.p
+END
+w-armar_libro_viajante.w
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/Paulista/!svn/ver/1/progs/dsp/w-armar_libro_viajante.w
+END
+lslibro_del_viajante-char.p
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/Paulista/!svn/ver/1/progs/dsp/lslibro_del_viajante-char.p
+END
+lsestadopedidos.p
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/dsp/lsestadopedidos.p
+END
+b-detalle_remitos_precios.w
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/Paulista/!svn/ver/1/progs/dsp/b-detalle_remitos_precios.w
+END
+formulario_libro_viajante.p
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/Paulista/!svn/ver/1/progs/dsp/formulario_libro_viajante.p
+END
+b-ped-retenidos.w
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/dsp/b-ped-retenidos.w
+END
+w-cancelar_pedidos.w
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/Paulista/!svn/ver/1/progs/dsp/w-cancelar_pedidos.w
+END
+w-lspedidos_xarticulo.w
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/Paulista/!svn/ver/1/progs/dsp/w-lspedidos_xarticulo.w
+END
+d-bonificaciones_detalle.w
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/Paulista/!svn/ver/1/progs/dsp/d-bonificaciones_detalle.w
+END
+tgbtcambped-hd.i
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/dsp/tgbtcambped-hd.i
+END
+CMBPEDHD-GE.p
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/1/progs/dsp/CMBPEDHD-GE.p
+END
+v-rem-sincargo.w
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/dsp/v-rem-sincargo.w
+END
+prped124.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dsp/prped124.p
+END
+b-ped_detalle-pendiente.w
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/Paulista/!svn/ver/1/progs/dsp/b-ped_detalle-pendiente.w
+END
+b-recorridos.w
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/Paulista/!svn/ver/1/progs/dsp/b-recorridos.w
+END
+cmbpedhd-am.p
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/1/progs/dsp/cmbpedhd-am.p
+END
+w-lsestadopedidos.w
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/Paulista/!svn/ver/1/progs/dsp/w-lsestadopedidos.w
+END
+v-calzar_devoluciones.w
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/Paulista/!svn/ver/1/progs/dsp/v-calzar_devoluciones.w
+END
+imprimir_remito_tra.i
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/Paulista/!svn/ver/1/progs/dsp/imprimir_remito_tra.i
+END
+v-info_cliente.w
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/dsp/v-info_cliente.w
+END
+w-aprobar_pedidos.w
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/Paulista/!svn/ver/1/progs/dsp/w-aprobar_pedidos.w
+END
+d-nominar_remito.w
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/Paulista/!svn/ver/1/progs/dsp/d-nominar_remito.w
+END
+v-detalle_remitos_precios.w
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/Paulista/!svn/ver/1/progs/dsp/v-detalle_remitos_precios.w
+END
+prrem114.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dsp/prrem114.p
+END
+b-remitos_valor.w
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/dsp/b-remitos_valor.w
+END
+prrem016.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dsp/prrem016.p
+END
+lsremitos_xcliente.p
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/Paulista/!svn/ver/1/progs/dsp/lsremitos_xcliente.p
+END
+emitir_compdespacho.p
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/Paulista/!svn/ver/1/progs/dsp/emitir_compdespacho.p
+END
+CMBPEDHD-IR.p
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/1/progs/dsp/CMBPEDHD-IR.p
+END
+cambiar_numeracion_remitos.p
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/Paulista/!svn/ver/1/progs/dsp/cambiar_numeracion_remitos.p
+END
+w-generar_envios.w
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/Paulista/!svn/ver/1/progs/dsp/w-generar_envios.w
+END
+d-seleccionar_itempedido.w
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/Paulista/!svn/ver/1/progs/dsp/d-seleccionar_itempedido.w
+END
+b-remitos_a_despachar.w
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/Paulista/!svn/ver/1/progs/dsp/b-remitos_a_despachar.w
+END
+w-editar_remitos.w
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/Paulista/!svn/ver/1/progs/dsp/w-editar_remitos.w
+END
+d-selpedido_multiempresa.w
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/Paulista/!svn/ver/1/progs/dsp/d-selpedido_multiempresa.w
+END
+v-estado_crediticio.w
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/Paulista/!svn/ver/1/progs/dsp/v-estado_crediticio.w
+END
+d-bonificaciones_compdespacho.w
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/Paulista/!svn/ver/1/progs/dsp/d-bonificaciones_compdespacho.w
+END
+v-aprobar_ped.w
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/Paulista/!svn/ver/1/progs/dsp/v-aprobar_ped.w
+END
+v-cabecera_remitos_editar.w
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/Paulista/!svn/ver/1/progs/dsp/v-cabecera_remitos_editar.w
+END
+v-id-deposito.w
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/Paulista/!svn/ver/1/progs/dsp/v-id-deposito.w
+END
+b-remitos_precios.w
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/Paulista/!svn/ver/1/progs/dsp/b-remitos_precios.w
+END
+v-informar_pedidos.w
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/Paulista/!svn/ver/1/progs/dsp/v-informar_pedidos.w
+END
+w-calzar_pedidos.w
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/Paulista/!svn/ver/1/progs/dsp/w-calzar_pedidos.w
+END
+lsremitos_xfecha.p
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/Paulista/!svn/ver/1/progs/dsp/lsremitos_xfecha.p
+END
+q-arti-depo-ped.w
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/dsp/q-arti-depo-ped.w
+END
+lslibro_borrador.p
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/Paulista/!svn/ver/1/progs/dsp/lslibro_borrador.p
+END
+lspedidos_xvendedor.p
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/Paulista/!svn/ver/1/progs/dsp/lspedidos_xvendedor.p
+END
+d-seleccionar_compdespacho.w
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/Paulista/!svn/ver/1/progs/dsp/d-seleccionar_compdespacho.w
+END
+prrem000.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dsp/prrem000.p
+END
+b-articulos_a_despachar.w
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/Paulista/!svn/ver/1/progs/dsp/b-articulos_a_despachar.w
+END
+anular_pedido.p
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/Paulista/!svn/ver/1/progs/dsp/anular_pedido.p
+END
+valuar_remito.p
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/Paulista/!svn/ver/1/progs/dsp/valuar_remito.p
+END
+calcular_pedido.p
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/dsp/calcular_pedido.p
+END
+lslibro_del_viajante.p
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/Paulista/!svn/ver/1/progs/dsp/lslibro_del_viajante.p
+END
+v-complemento_remito.w
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/Paulista/!svn/ver/1/progs/dsp/v-complemento_remito.w
+END
+w-despachar_pedidos.w
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/Paulista/!svn/ver/1/progs/dsp/w-despachar_pedidos.w
+END
+borrar-detalle_remito.p
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/Paulista/!svn/ver/1/progs/dsp/borrar-detalle_remito.p
+END
+PRREM901.P
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dsp/PRREM901.P
+END
+prres103.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dsp/prres103.p
+END
+w-lspedidos_xfecha.w
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/Paulista/!svn/ver/1/progs/dsp/w-lspedidos_xfecha.w
+END
+w-lspedidos_xvendedor.w
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/Paulista/!svn/ver/1/progs/dsp/w-lspedidos_xvendedor.w
+END
+b-pedheader_a_despachar.w
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/Paulista/!svn/ver/1/progs/dsp/b-pedheader_a_despachar.w
+END
+efectuar_calce.p
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/dsp/efectuar_calce.p
+END
+d-copias_sector.w
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/dsp/d-copias_sector.w
+END
+w-recorridos.w
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/Paulista/!svn/ver/1/progs/dsp/w-recorridos.w
+END
+b-editar_remitos_detalle.w
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/Paulista/!svn/ver/1/progs/dsp/b-editar_remitos_detalle.w
+END
+cndeuda.i
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/svn/Paulista/!svn/ver/1/progs/dsp/cndeuda.i
+END
+anular_remprov.p
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/dsp/anular_remprov.p
+END
+CMBPEDHD-IC.p
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/1/progs/dsp/CMBPEDHD-IC.p
+END
+b-pedidos_a_cancelar.w
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/Paulista/!svn/ver/1/progs/dsp/b-pedidos_a_cancelar.w
+END
+anfrmrem.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dsp/anfrmrem.p
+END
+w-lsremitos_facturados.w
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/Paulista/!svn/ver/1/progs/dsp/w-lsremitos_facturados.w
+END
+emitir_compdespacho_bdu.p
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/Paulista/!svn/ver/1/progs/dsp/emitir_compdespacho_bdu.p
+END
+vrcntlde.i
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dsp/vrcntlde.i
+END
+w-lsremitido_xtipoarticulo.w
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/Paulista/!svn/ver/1/progs/dsp/w-lsremitido_xtipoarticulo.w
+END
+imprimir_compdespacho.p
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/Paulista/!svn/ver/1/progs/dsp/imprimir_compdespacho.p
+END
+b-remitos_sin_calzar.w
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/Paulista/!svn/ver/1/progs/dsp/b-remitos_sin_calzar.w
+END
+calcularemito.i
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/Paulista/!svn/ver/1/progs/dsp/calcularemito.i
+END
+d-detpedido_articulos.w
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/Paulista/!svn/ver/1/progs/dsp/d-detpedido_articulos.w
+END
+selrecor.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dsp/selrecor.p
+END
+v-detalle_remitos_editar.w
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/Paulista/!svn/ver/1/progs/dsp/v-detalle_remitos_editar.w
+END
+d-nominar_compdespacho.w
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/Paulista/!svn/ver/1/progs/dsp/d-nominar_compdespacho.w
+END
+autorizacion_hora.p
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/Paulista/!svn/ver/1/progs/dsp/autorizacion_hora.p
+END
+w-lsremitido_xarticulo.w
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/Paulista/!svn/ver/1/progs/dsp/w-lsremitido_xarticulo.w
+END
+lsremitos_sinfacturar.p
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/Paulista/!svn/ver/1/progs/dsp/lsremitos_sinfacturar.p
+END
+grabar_pedido.p
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/Paulista/!svn/ver/1/progs/dsp/grabar_pedido.p
+END
+camestpd-hd.i
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/1/progs/dsp/camestpd-hd.i
+END
+selplant.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dsp/selplant.p
+END
+w-exportar_pedidos.w
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/Paulista/!svn/ver/1/progs/dsp/w-exportar_pedidos.w
+END
+d-bonificaciones_pedido.w
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/Paulista/!svn/ver/1/progs/dsp/d-bonificaciones_pedido.w
+END
+detalle_remito.p
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/dsp/detalle_remito.p
+END
+c-pedido_subarticulos.w
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/Paulista/!svn/ver/1/progs/dsp/c-pedido_subarticulos.w
+END
+w-lspedidos_xcliente.w
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/Paulista/!svn/ver/1/progs/dsp/w-lspedidos_xcliente.w
+END
+q-recorrido.w
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/1/progs/dsp/q-recorrido.w
+END
+w-cumplir_pedidos.w
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/Paulista/!svn/ver/1/progs/dsp/w-cumplir_pedidos.w
+END
+w-lsremitos_sinfacturar.w
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/Paulista/!svn/ver/1/progs/dsp/w-lsremitos_sinfacturar.w
+END
+PRPED103.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dsp/PRPED103.p
+END
+PRPED112.P
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dsp/PRPED112.P
+END
+emitir_compdespacho1.p
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/Paulista/!svn/ver/1/progs/dsp/emitir_compdespacho1.p
+END
+b-editar_remitos.w
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/Paulista/!svn/ver/1/progs/dsp/b-editar_remitos.w
+END
+marcar_sin_pedido.p
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/Paulista/!svn/ver/1/progs/dsp/marcar_sin_pedido.p
+END
+d-seleccionar_pedido.w
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/Paulista/!svn/ver/1/progs/dsp/d-seleccionar_pedido.w
+END
+prrem001.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dsp/prrem001.p
+END
+prdev114.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/dsp/prdev114.p
+END
+c-comprobante_despacho.w
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/Paulista/!svn/ver/1/progs/dsp/c-comprobante_despacho.w
+END
+anular_compdespacho.p
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/Paulista/!svn/ver/1/progs/dsp/anular_compdespacho.p
+END
+armar_libro_viajante.p
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/Paulista/!svn/ver/1/progs/dsp/armar_libro_viajante.p
+END
+cmbpedhd-re.p
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/1/progs/dsp/cmbpedhd-re.p
+END
+calcular_compdespacho.p
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/Paulista/!svn/ver/1/progs/dsp/calcular_compdespacho.p
+END
+b-remito_detalle.w
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/Paulista/!svn/ver/1/progs/dsp/b-remito_detalle.w
+END

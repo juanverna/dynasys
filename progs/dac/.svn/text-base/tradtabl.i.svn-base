@@ -1,0 +1,4 @@
+FIND {1} {2} NO-LOCK NO-ERROR.
+IF AVAILABLE {1} THEN {3} = {1}.{4}.
+                 ELSE {3} = "".
+DISPLAY {3}.

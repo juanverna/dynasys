@@ -1,0 +1,157 @@
+/*===================================================================================*/
+/*             Emite el listado de servicios prestados POR o PARA                    */
+/*===================================================================================*/
+
+DEF INPUT PARAM p-des_fecha       AS DATE LABEL "De Fecha".
+DEF INPUT PARAM p-has_fecha       AS DATE LABEL "A Fecha".
+DEF INPUT PARAM p-lista_empresas  AS CHAR.
+
+DEF VAR tr           AS INT.
+DEF VAR ctr          AS CHAR LABEL "T.Resp.".
+DEF VAR que_{&TABLA} LIKE {&TABLA}.cdg_{&TABLA} LABEL "{&TABLA}".
+DEF VAR chr_{&TABLA} LIKE {&TABLA}.nom_{&TABLA}.
+
+{defvarcolores.i}
+
+DEF VAR v-domicilio  AS CHAR FORMAT "X(30)" COLUMN-LABEL "Domicilio".
+DEF VAR v-telefono   AS CHAR LABEL "Telefono".
+DEF VAR v-importe    AS DEC   COLUMN-LABEL "Importe".
+
+DEF VAR tot_importe  AS DEC   COLUMN-LABEL "Importe".
+DEF VAR tot_coseguro AS DEC   COLUMN-LABEL "Importe".
+DEF VAR tot_fichas   AS INT.
+
+DEF VAR tcl_importe  AS DEC   COLUMN-LABEL "Importe".
+DEF VAR tcl_coseguro AS DEC   COLUMN-LABEL "Importe".
+DEF VAR tcl_fichas   AS INT   COLUMN-LABEL "Total".
+
+DEF VAR servicios AS INT LABEL "Servicios   : " FORMAT ">>>>9".
+DEF VAR adicional AS INT LABEL "Adicionales : " FORMAT ">>>>9".
+DEF VAR movimient AS INT LABEL "Movimientos : " FORMAT ">>>>9".
+
+DEF VAR n_columna    AS INT   COLUMN-LABEL "Total".
+DEF VAR v-color-col  AS CHAR INITIAL "1,2,8,A,3,E,7,9,4,6,B,C,0,5,D".
+
+DEF VAR incidentes   AS INT FORMAT ">>>>9" EXTENT 15
+       LABEL "Rojo","Amar.","Marr.","Cel.","Verde","Pediat.","Lila","Event.","Azul","Naran.","Violeta","Flúo","Blanco","Negro","Gris".
+
+DEF VAR t-incidentes AS INT FORMAT ">>>>9" EXTENT 15
+       LABEL "Rojo","Amar.","Marr.","Cel.","Verde","Pediat.","Lila","Event.","Azul","Naran.","Violeta","Flúo","Blanco","Negro","Gris".
+
+DEF VAR v-color_emr  AS CHAR EXTENT 15
+       INITIAL ["Rojo","Amar.","Marr.","Cel.","Verde","Pediat.","Lila","Event.","Azul","Naran.","Violeta","Flúo","Blanco","Negro","Gris"].
+
+{formtitulo.i}
+
+FORM
+  {&FICHA-CAMPO}
+  {&TABLA}.nom_{&TABLA} FORMAT "X(18)"
+  tcl_fichas
+  WITH WIDTH 132 DOWN CENTERED FRAME frm-listado USE-TEXT STREAM-IO.
+  
+
+{cargaempresas.i}
+
+tot_coseguro = 0.
+tot_importe  = 0.
+tot_fichas   = 0.
+
+tcl_coseguro = 0.
+tcl_importe  = 0.
+tcl_fichas   = 0.
+
+t-incidentes = 0.
+
+ASSIGN chr_{&TABLA} = "Rango de " + STRING(p-des_fecha) + " a " + STRING(p-has_fecha).
+des_fecha = p-des_fecha.
+has_fecha = p-has_fecha.
+lista_empresas = p-lista_empresas.
+tit_filtro = p-lista_empresas.
+
+{setvarimpre.i}
+{drsalida.i "65"} /* Direcciona la salida de impresión */
+
+FOR EACH Ficha 
+    WHERE Ficha.fch_alta <= p-has_fecha 
+      AND Ficha.fch_alta >= p-des_fecha
+      AND LOOKUP(Ficha.cdg_empresa,lista_empresas) <> 0
+      AND Ficha.cdg_destino <> "A" NO-LOCK 
+      BREAK BY {&FICHA-CAMPO}
+            WITH FRAME f-listado:
+
+    VIEW FRAME frm-titulo.
+
+    FIND {&TABLA} OF Ficha NO-LOCK NO-ERROR.
+    
+    n_columna = LOOKUP(Ficha.cdg_tipoemr,v-color-col,",").
+    IF n_columna = 0 THEN n_columna = 11.
+    incidentes [ n_columna ] = incidentes [ n_columna ] + 1.
+    t-incidentes [ n_columna ] = t-incidentes [ n_columna ] + 1.
+
+    tot_fichas = tot_fichas + 1.
+    tcl_fichas = tcl_fichas + 1.
+    
+    servicios = t-incidentes[1] + t-incidentes[2] + t-incidentes[3] + t-incidentes[4] +
+                t-incidentes[5] + t-incidentes[6] + t-incidentes[7].
+            
+    adicional = t-incidentes [8] + t-incidentes [9] + t-incidentes [10] + t-incidentes [11] +
+                t-incidentes[12] + t-incidentes[13].
+            
+    movimient = t-incidentes[14] + t-incidentes[15].
+
+    IF LAST-OF({&FICHA-CAMPO})
+    THEN DO:
+
+         DISPLAY   {&FICHA-CAMPO}
+                   {&TABLA}.nom_{&TABLA} WHEN AVAILABLE {&TABLA}
+                   tcl_fichas
+                   incidentes
+                   WITH FRAME frm-listado.
+
+         tcl_fichas = 0.
+         incidentes = 0. 
+
+         DOWN WITH FRAME frm-listado.
+
+    END.
+
+END.            
+
+UNDERLINE {&FICHA-CAMPO}
+          {&TABLA}.nom_{&TABLA}
+          tcl_fichas
+          incidentes
+          WITH FRAME frm-listado.
+
+
+DISPLAY   "TOTAL"          @ {&TABLA}.nom_{&TABLA}
+          tot_fichas       @ tcl_fichas
+          t-incidentes[ 1] @ incidentes[ 1]
+          t-incidentes[ 2] @ incidentes[ 2]
+          t-incidentes[ 3] @ incidentes[ 3]
+          t-incidentes[ 4] @ incidentes[ 4]
+          t-incidentes[ 5] @ incidentes[ 5]
+          t-incidentes[ 6] @ incidentes[ 6]
+          t-incidentes[ 7] @ incidentes[ 7]
+          t-incidentes[ 8] @ incidentes[ 8]
+          t-incidentes[ 9] @ incidentes[ 9]
+          t-incidentes[10] @ incidentes[10]
+          t-incidentes[11] @ incidentes[11]
+          t-incidentes[12] @ incidentes[12]
+          t-incidentes[13] @ incidentes[13]
+          t-incidentes[14] @ incidentes[14]
+          t-incidentes[15] @ incidentes[15]
+          WITH FRAME frm-listado.
+          
+DISPLAY "     Totales por grupo"  SKIP(1)
+        "Servicios Médicos :"      SPACE(8) servicios SKIP
+        "Servicios Adicionales :"  SPACE(5) adicional SKIP
+        "Movimientos Operativos :" SPACE(3) movimient WITH NO-LABELS CENTERED.          
+
+OUTPUT CLOSE.
+
+   /* Visualiza en pantalla el archivo de salida */
+
+RUN veresult.w ( INPUT  arch_salida ,  /* Archivo */
+                 INPUT 8 ).            /* FONT a utilizar por default */               
+

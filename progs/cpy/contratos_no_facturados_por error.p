@@ -1,0 +1,81 @@
+FUNCTION cantmeses RETURNS INT (pp AS DATE) :
+DEFINE VAR kk AS INT.
+DEFINE VAR ff AS DATE.
+ff = DATE(MONTH(TODAY),1,YEAR(TODAY)).
+REPEAT:
+    IF MONTH(ff) = MONTH(pp) THEN RETURN kk + 1.
+            kk = kk + 1.
+            ff = DATE(MONTH( ff - 1 ),1,YEAR( ff - 1 )).
+END.
+END.
+ 
+
+FUNCTION ver_anticipos RETURNS DECIMAL
+  ( ) :
+/*------------------------------------------------------------------------------
+  Purpose:  
+    Notes:  
+------------------------------------------------------------------------------*/
+    DEF BUFFER bdetalle FOR contrato_dt.
+    DEF VAR v-anticipo AS DECIMAL NO-UNDO.
+    
+    FOR EACH bdetalle OF contrato_hd:
+        v-anticipo = bdetalle.anticipo.
+    END.
+    RETURN v-anticipo.   /* Function return value. */
+END FUNCTION.
+
+    OUTPUT TO "c:\wproceso\contratos_con_error1.txt".
+    DEF VAR minmes AS INT NO-UNDO.
+    DEF VAR it AS decimal .
+    DEF VAR cf AS INT .
+    DEF VAR minff AS DATE.
+    DEF TEMP-TABLE tt-contrato_hd NO-UNDO LIKE contrato_hd
+        FIELD imp_anticipo LIKE contrato_hd.imp_total
+        FIELD sumatoria_fac AS INT
+        FIELD cantidad_facturas AS INT.
+    /*DEF TEMP-TABLE tt-contrato_dt LIKE contrato_dt.*/
+    DEF TEMP-TABLE tt-fac_header NO-UNDO LIKE fac_header.
+    /*DEF TEMP-TABLE tt-fac_detalle LIKE fac_detalle.*/
+    DEFINE DATASET dset FOR tt-contrato_hd , tt-fac_header .
+        FOR EACH contrato_hd WHERE contrato_hd.fecha_baja = ? AND contrato_hd.rige_hasta >= TODAY AND contrato_hd.nro_tipo_evento = 3 
+                AND contrato_hd.cant_periodos <>contrato_hd.resto_periodo AND contrato_hd.rige_desde > 04/01/2018 BY contrato_hd.nro_contrato :
+    cf = 0.
+    it = 0.
+    FOR EACH fac_header OF contrato_hd NO-LOCK WHERE NOT fac_header.anulado BREAK BY fac_header.fecha DESC :
+        IF FIRST-OF(fac_header.fecha) THEN DO:
+                minmes = cantmeses( fac_header.fecha ).
+                minff = fac_header.fecha.
+        END.
+        it = it + ( IF fac_header.tip_comprob BEGINS "C" THEN -1 ELSE 1 ) * fac_header.imp_total.
+        cf = cf + ( IF fac_header.tip_comprob BEGINS "C" THEN -1 ELSE 1 ).
+    END.
+    
+    IF abs(it - contrato_hd.imp_total) > 1 AND  minmes > cf AND cf <> contrato_hd.cant_periodos  THEN DO:
+    
+    DISPLAY minff COLUMN-LABEL "FFac" 
+           LOGICAL(contrato_hd.anulado)  COLUMN-LABEL "ANU" FORMAT "S/N"
+            /*minmes COLUMN-LABEL "Teoria" FORMAT ">9"*/
+            contrato_hd.resto_periodo COLUMN-LABEL "Resta" FORMAT ">9" 
+            contrato_hd.cant_periodos COLUMN-LABEL "Cant!Peri" FORMAT ">9"  
+            cf COLUMN-LABEL "Cant" FORMAT ">9" LABEL "Cant!Fact"  
+            contrato_hd.nro_contrato  COLUMN-LABEL "Contr." FORMAT ">>>>9" 
+            it COLUMN-LABEL "IFact" FORMAT ">>>>>>9.9"  
+            contrato_hd.imp_total COLUMN-LABEL "TotCont." FORMAT ">>>>>>9.9" 
+
+        WITH WIDTH 300.
+        CREATE tt-contrato_hd.
+        BUFFER-COPY contrato_hd TO tt-contrato_hd.
+        tt-contrato_hd.imp_anticipo = ver_anticipos().
+        FOR EACH fac_header OF contrato_hd WHERE NOT fac_header.anulado NO-LOCK:
+            /*FIND fac_detalle OF fac_header NO-LOCK.*/
+            CREATE tt-fac_header.
+            BUFFER-COPY fac_header TO tt-fac_header.
+        END.
+    END.
+END.
+
+DATASET dset:WRITE-XML ("FILE", "c:\contratos_factura.xml",  TRUE,
+                                       ?,"",YES,YES).
+MESSAGE "c:\wproceso\contratos_con_error1.txt" VIEW-AS ALERT-BOX ERROR.
+

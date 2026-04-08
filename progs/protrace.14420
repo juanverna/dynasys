@@ -1,0 +1,106 @@
+=====================================================
+PROGRESS stack trace as of Tue Jul 25 14:39:58 2017
+=====================================================
+Startup parameters:
+-pf C:\Progress102\OpenEdge\startup.pf,-cpinternal ISO8859-1,-cpstream ISO8859-1,-cpcoll Spanish9,-cpcase Basic,-d dmy,-numsep 46,-numdec 44,(end .pf),-p xxmf.p,-db c:\bases\dynasys102,-ld sic,-T c:\temp,-basekey INI,-ininame c:\dynasys10\procs\dynasys10.ini,-s 200,-inp 8192,-nb 150
+
+Exception code: C0000005 ACCESS_VIOLATION
+Fault address:  10485384 01:00484384 C:\Progress102\OpenEdge\bin\prow32.dll
+
+Registers:
+EAX:0018F65C
+EBX:0018F704
+ECX:00000306
+EDX:00000000
+ESI:025CF7EA
+EDI:025CF7EA
+CS:EIP:0023:10485384
+SS:ESP:002B:0018F40C  EBP:0018F794
+DS:002B  ES:002B  FS:0053  GS:002B
+Flags:00210206
+
+Call Stack:
+Address   Frame
+10485384  00000000  dbut_term+84
+
+
+** ABL Stack Trace **
+
+--> traer_documento c-pos_cliente.w (.\PAU\c-pos_cliente.r) at line 4065
+    c-pos_cliente.w (.\PAU\c-pos_cliente.r) at line 2324
+    USER-INTERFACE-TRIGGER b-comprobantes.w (.\fac\b-comprobantes.r) at line 4056
+    w-busq_comprob.w (.\fac\w-busq_comprob.r) at line 1286
+    ejecutar w-dynasys.w (.\bas\w-dynasys.r) at line 1392
+    tvDoubleClick w-dynasys.w (.\bas\w-dynasys.r) at line 7328
+    tvnodeEvent w-dynasys.w (.\bas\w-dynasys.r) at line 7763
+    picLeftMouseEvent pure4gltv.w (.\bas\pure4gltv.r) at line 7293
+    labLeftMouseEvent pure4gltv.w (.\bas\pure4gltv.r) at line 6139
+    w-dynasys.w (.\bas\w-dynasys.r) at line 6508
+    rundynasys-noquit.p (.\bas\rundynasys-noquit.r) at line 104
+    largar.p (.\bas\largar.r) at line 2
+    w-busq_comprob.w (.\fac\w-busq_comprob.r) at line 1286
+    ejecutar w-dynasys.w (.\bas\w-dynasys.r) at line 1392
+    tvDoubleClick w-dynasys.w (.\bas\w-dynasys.r) at line 7328
+    tvnodeEvent w-dynasys.w (.\bas\w-dynasys.r) at line 7763
+    picLeftMouseEvent pure4gltv.w (.\bas\pure4gltv.r) at line 7293
+    labLeftMouseEvent pure4gltv.w (.\bas\pure4gltv.r) at line 6139
+    w-dynasys.w (.\bas\w-dynasys.r) at line 6508
+    rundynasys-noquit.p (.\bas\rundynasys-noquit.r) at line 104
+    largar.p (.\bas\largar.r) at line 2
+    adeuib/_uibmain.p (adeuib/_uibmain.r) at line 17274
+    _ab.p (C:\Progress102\OpenEdge\gui\_ab.r) at line 394
+    _RunTool adedesk/_desktop.p (adedesk/_desktop.r) at line 1635
+    USER-INTERFACE-TRIGGER adedesk/_desktop.p (adedesk/_desktop.r) at line 2146
+    adedesk/_desktop.p (adedesk/_desktop.r) at line 2834
+    _desk.p (C:\Progress102\OpenEdge\gui\_desk.r) at line 430
+
+** Persistent procedures/Classes **
+
+Handle  File Name
+005868  .\fac\b-comprobantes.r
+005679  .\bas\pure4gltv.r
+005661  .\bas\sfavoritos.r
+005578  adeuib/_semain.r
+005361  .\bas\pure4gltv.r
+005343  .\bas\sfavoritos.r
+005283  .\bas\p-CRejecutarSPPAU.r
+005261  .\fac\v-rng-facturas.r
+005207  adeuib/_semain.r
+002668  adeuib/_semain.r
+002383  adeuib/_semain.r
+002212  C:\Progress102\OpenEdge\gui\adm\objects\broker.r
+002135  C:\Progress102\OpenEdge\gui\adm2\appserver.r
+001912  C:\Progress102\OpenEdge\gui\adm2\containr.r
+001910  C:\Progress102\OpenEdge\gui\adm2\visual.r
+001905  C:\Progress102\OpenEdge\gui\adm2\smart.r
+001902  .\bas\Winfunc.r
+001901  .\bas\Windows.r
+001830  adecomm/as-utils.r
+001781  adecomm/_palette.r
+001780  protools/_protool.r
+001144  adecomm/_winmenu.r
+001143  adeshar/_mlmgr.r
+001020  adeuib/_abfuncs.r
+
+//=====================================================
+PROGRESS stack trace as of Tue Jul 25 14:40:01 2017
+//=====================================================
+Exception code: C0000005 ACCESS_VIOLATION
+Fault address:  10485384 01:00484384 C:\Progress102\OpenEdge\bin\prow32.dll
+
+Registers:
+EAX:0018F65C
+EBX:0018F704
+ECX:00000306
+EDX:00000000
+ESI:025CF7EA
+EDI:025CF7EA
+CS:EIP:0023:10485384
+SS:ESP:002B:0018F79C  EBP:0018F794
+DS:002B  ES:002B  FS:0053  GS:002B
+Flags:00210206
+
+Call Stack:
+Address   Frame
+10485384  0018F798  dbut_term+84
+

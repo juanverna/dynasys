@@ -1,0 +1,12 @@
+/*OUTPUT TO PRINTER PAGE-SIZE 80.*/
+FOR EACH Cupon 
+   WHERE Cupon.cdg_empresa ="A"
+     AND ( Cupon.tip_cupon = "FA" OR Cupon.tip_cupon = "FB"):
+     
+     DISPLAY Cupon.prf_cupon
+             Cupon.nro_cupon
+             Cupon.tip_comprob
+             Cupon.prf_comprob 
+             Cupon.nro_comprob 
+             Cupon.importe_cuota 
+             WITH USE-TEXT FONT 2 STREAM-IO WIDTH 90.

@@ -1,0 +1,187 @@
+/*===============================================================================================*/
+/*                 REALIZA EL CALCULO DE UN COMPROBANTE DE CLIENTE                               */
+/*===============================================================================================*/
+
+/*===============================================================================================*/
+/*                           DEFINICION DE LAS TABLAS TEMPORALES                                 */
+/*===============================================================================================*/
+
+DEFINE TEMP-TABLE T-Fac_header               NO-UNDO LIKE Fac_header.
+DEFINE TEMP-TABLE T-Fac_detalle              NO-UNDO LIKE Fac_detalle.
+DEFINE TEMP-TABLE T-Registrable-factura      NO-UNDO LIKE Registrable-factura.
+DEFINE TEMP-TABLE T-Fac_header-bon           NO-UNDO LIKE Fac_header-bon.
+DEFINE TEMP-TABLE T-Fac_detalle-bon          NO-UNDO LIKE Fac_detalle-bon.
+DEFINE TEMP-TABLE T-Fac_header_impuesto      NO-UNDO LIKE Fac_header_impuesto.
+DEFINE TEMP-TABLE T-Fac_detalle_impuesto     NO-UNDO LIKE Fac_detalle_impuesto.
+                                                                                                   
+/*===============================================================================================*/
+/*                               DEFINICION DE PARAMETROS                                        */
+/*===============================================================================================*/
+
+DEFINE INPUT PARAMETE p-rid_remito      AS ROWID.
+DEFINE INPUT-OUTPUT PARAMETER TABLE FOR T-Fac_header.
+DEFINE INPUT-OUTPUT PARAMETER TABLE FOR T-Fac_detalle.
+DEFINE INPUT-OUTPUT PARAMETER TABLE FOR T-Registrable-factura.
+DEFINE INPUT-OUTPUT PARAMETER TABLE FOR T-Fac_header-bon.
+DEFINE INPUT-OUTPUT PARAMETER TABLE FOR T-Fac_detalle-bon.
+DEFINE INPUT-OUTPUT PARAMETER TABLE FOR T-Fac_header_impuesto.
+DEFINE INPUT-OUTPUT PARAMETER TABLE FOR T-Fac_detalle_impuesto.
+
+/*===============================================================================================*/
+/*                               DEFINICION DE VARIABLES                                         */
+/*===============================================================================================*/
+
+DEFINE BUFFER Comprobante_destino FOR Tipocomprobante.
+
+DEFINE VARIABLE hay_varios_remitos AS LOGICAL.
+DEFINE VARIABLE v-pto_venta AS INTEGER.
+
+DEFINE VARIABLE rid-1       AS ROWID.
+DEFINE VARIABLE rid-2       AS ROWID.
+
+/*==================================================================================================*/
+/*                                        BLOQUE  PRINCIPAL                                         */
+/*==================================================================================================*/
+
+RUN proceso.
+
+/*==================================================================================================*/
+/*                                      PROCEDIMIENTOS INTERNOS                                     */
+/*==================================================================================================*/
+
+PROCEDURE proceso:
+
+  {findempresa.i}
+
+  FIND Rem_header WHERE ROWID(Rem_header) = p-rid_remito NO-LOCK.
+  FIND FIRST T-Fac_header.
+
+   /* --------------------------------------------------- */
+   /* Verifica la consistencia de todos los remitos se-   */
+   /* leccionados para facturar. Si no hay error, la lis- */
+   /* ta de errores viene vacia                           */
+   /* --------------------------------------------------- */
+
+  FIND Cliente OF Rem_header NO-LOCK.
+  FIND Condicion_venta WHERE Condicion_venta.cdg_cndventa = Cliente.dfl_cndventa NO-LOCK.
+  FIND Domicilio OF Rem_header NO-LOCK.
+  FIND Condicion_impos OF Rem_header NO-LOCK.
+  FIND Tipocomprobante OF Rem_header NO-LOCK. 
+
+  BUFFER-COPY Rem_header 
+       EXCEPT tip_comprob prf_comprob nro_comprob cdg_imputacion fecha fecha_precios cdg_comprobante
+              TO T-Fac_header 
+       ASSIGN T-Fac_header.origen               = "R"
+              T-Fac_header.estado               = "P"
+              T-Fac_header.cta_cte              = Cliente.tiene_ctacte
+              T-Fac_header.nro_administrador    = rem_header.nro_administrador
+              T-Fac_header.nro_deposito         = Rem_header.nro_deposito
+              T-Fac_header.nro_factura          = 0
+              T-Fac_header.fecha_precios        = Rem_header.fecha
+              T-Fac_header.fecha_iva            = Rem_header.fecha
+              T-Fac_header.impreso              = ""
+              T-Fac_header.proc_estad           = NO
+              T-Fac_header.ultima_linea         = 0.
+
+  FIND Imputacion OF T-Fac_header NO-LOCK.
+  CASE Cliente.paga_abasto:
+       WHEN "N" THEN T-Fac_header.modo_abasto    = "N".
+       WHEN "D" THEN T-Fac_header.modo_abasto    = Imputacion.modo_abasto.
+       WHEN "S" THEN T-Fac_header.modo_abasto    = "S".
+  END CASE.
+
+  FIND FIRST Relacion_comprobante 
+      WHERE Relacion_comprobante.cdg_comproborigen = Rem_header.cdg_comprobante
+        AND Relacion_comprobante.cdg_empresa       = Rem_header.cdg_empresa
+            NO-LOCK NO-ERROR.
+
+  IF AVAILABLE Relacion_comprobante 
+  THEN DO:
+      FIND Comprobante_destino 
+           WHERE Comprobante_destino.cdg_comprobante = Relacion_comprobante.cdg_comprobdestino
+             AND Comprobante_destino.cdg_empresa     = Relacion_comprobante.cdg_empresa
+                 NO-LOCK.
+      ASSIGN T-Fac_header.cdg_comprobante = Comprobante_destino.cdg_comprobante
+             T-Fac_header.tip_comprob     = Comprobante_destino.tip_comprob.  
+
+  END.
+  ELSE DO:
+      MESSAGE "No se encuentra el comprobante de destino para el origen " Tipocomprobante.cdg_comprobante
+              "Empresa" T-Fac_header.cdg_empresa 
+          VIEW-AS ALERT-BOX ERROR TITLE "ERROR DE IMPLEMENTACION:FACTURAR_REMITOS.P".
+  END.
+
+  IF CAN-FIND(Tipo_punto 
+              WHERE Tipo_punto.cdg_puntovta = Rem_header.prf_comprob 
+                AND Tipo_punto.cdg_comprobante = T-Fac_header.cdg_comprobante)
+  THEN DO:
+      ASSIGN T-Fac_header.prf_comprob = Rem_header.prf_comprob.
+  END.
+
+  FIND Vendedor OF T-Fac_header NO-LOCK.
+  FIND Obra WHERE Obra.cdg_obra = Vendedor.cdg_vendedor NO-LOCK.
+  ASSIGN T-Fac_header.nro_entidad = Cliente.nro_entidad
+         T-Fac_header.nro_obra    = Obra.nro_obra.             
+
+   FOR EACH Rem_detalle OF Rem_header NO-LOCK:
+
+      FIND FIRST T-Fac_detalle OF T-Fac_header 
+          WHERE T-Fac_detalle.nro_articulo = Rem_detalle.nro_articulo EXCLUSIVE-LOCK NO-ERROR.
+
+      IF NOT AVAILABLE T-Fac_detalle 
+      THEN DO:
+          T-Fac_header.ultima_linea  = T-Fac_header.ultima_linea + 1.
+          CREATE T-Fac_detalle.
+          BUFFER-COPY Rem_detalle TO T-Fac_detalle
+               ASSIGN T-Fac_detalle.cantidad     = 0
+                      T-Fac_detalle.granel       = 0
+                      T-Fac_detalle.nro_entidad  = T-Fac_header.nro_entidad
+                      T-Fac_detalle.nro_obra     = T-Fac_header.nro_obra
+                      T-Fac_detalle.nro_factura  = T-Fac_header.nro_factura
+                      T-Fac_detalle.nro_linea    = T-Fac_header.ultima_linea.
+
+      END.
+
+      ASSIGN T-Fac_detalle.cantidad     = T-Fac_detalle.cantidad + Rem_detalle.cantidad
+             T-Fac_detalle.granel       = T-Fac_detalle.granel   + Rem_detalle.granel
+             T-Fac_detalle.precio       = Rem_detalle.precio.
+
+      FOR EACH Rem_detalle-bon OF Rem_detalle NO-LOCK:
+
+           CREATE T-Fac_detalle-bon.
+           BUFFER-COPY Rem_detalle-bon TO T-Fac_detalle-bon
+               ASSIGN T-Fac_detalle-bon.importe          = 0
+                      T-Fac_detalle-bon.nro_factura      = T-Fac_header.nro_factura.
+
+      END.        
+
+      FOR EACH Registrable-remito OF Rem_detalle NO-LOCK:
+
+           CREATE T-Registrable-factura.
+           BUFFER-COPY Registrable-remito TO T-Registrable-factura
+               ASSIGN T-Registrable-factura.nro_factura      = T-Fac_detalle.nro_factura
+                      T-Registrable-factura.nro_linea        = T-Fac_detalle.nro_linea.
+
+      END.        
+
+  END.
+
+  FOR EACH Rem_header-bon OF Rem_header NO-LOCK:
+
+      FIND FIRST T-Fac_header-bon OF T-Fac_header 
+           WHERE T-Fac_header-bon.cdg_bonificacion = Rem_header-bon.cdg_bonificacion NO-ERROR.
+      IF NOT AVAILABLE T-Fac_header-bon
+      THEN DO:
+          CREATE T-Fac_header-bon.
+          BUFFER-COPY Rem_header-bon TO T-Fac_header-bon       
+               ASSIGN T-Fac_header-bon.importe          = 0
+                      T-Fac_header-bon.nro_factura      = T-Fac_header.nro_factura.
+
+      END.
+
+  END.
+
+  RELEASE Rem_header.
+
+END PROCEDURE.
+

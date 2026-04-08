@@ -1,0 +1,6 @@
+  /*====================================================================================*/
+  /*        VALIDA LA EJECUCION DEL PROGRAMA DE LISTADO POR RECEPTOR                    */
+  /*====================================================================================*/
+
+  RUN valida_run.p ( INPUT "LSSXRECE", INPUT "w-lsxreceptor.w").
+  

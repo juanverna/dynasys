@@ -1,0 +1,12 @@
+@ECHO OFF
+for /f  "usebackq tokens=1,2,3 delims=/" %%i in (`date /t`) do set tmpfecha=%%k%%j%%i
+for /f  "usebackq tokens=1,2,3 delims= " %%i in (`echo %tmpfecha%`) do set mifecha=%%i%%j%%k
+
+set DLC=C:\Progress\OpenEdge
+set PATH=%DLC%\BIN;%PATH%
+set LIB=%DLC%\LIB;%LIB%
+call probkup online c:\bases\dyn35user c:\bakups\dyn%mifecha%.bkp > nul 
+.\zip -m  c:\bakups\BKP%mifecha% c:\bakups\dyn%mifecha%.bkp
+del nul
+
+

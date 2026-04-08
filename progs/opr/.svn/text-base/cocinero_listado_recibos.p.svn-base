@@ -1,0 +1,32 @@
+DEFINE TEMP-TABLE tt
+FIELD cdg_cliente LIKE cliente.cdg_cliente
+FIELD prf_comprob LIKE fac_header.prf_comprob
+FIELD nro_comprob LIKE fac_header.nro_comprob.
+DEFINE TEMP-TABLE T-orden       
+    FIELD orden AS INT
+    FIELD rfac AS ROWID
+INDEX orden orden.
+DEFINE VAR xfile AS CHAR NO-UNDO.
+{findempresa.i}
+{tt2xls.i}
+RUN prinresumenesrec.p ( INPUT Empresa.cdg_empresa,
+                     INPUT "",
+                     INPUT "ZZZZZZZZ",
+                     INPUT 04/30/2010,
+                     INPUT 01/01/3000,
+                     INPUT "*" , /*LISTA DE PUNTOS DE VENTA*/
+                     INPUT 2,
+                     OUTPUT TABLE t-orden,
+                     OUTPUT xfile).
+FOR EACH t-orden:
+    FIND fac_header WHERE ROWID(fac_header) = t-orden.rfac NO-LOCK.
+    FIND cliente WHERE cliente.nro_cliente = fac_header.nro_admin NO-LOCK.
+    CREATE tt.
+ASSIGN tt.cdg_cliente = cliente.cdg_cliente
+tt.prf_comprob = fac_header.prf_comprob.
+tt.nro_comprob = fac_header.nro_comprob.
+END.
+RUN pTT2XLS                                                              
+  ( INPUT TEMP-TABLE tt:DEFAULT-BUFFER-HANDLE,                       
+    INPUT 'c:\temp\a.xls',                                               
+    INPUT 'PageSetup:PrintGridlines=Y|PageSetup:PrintTitleRows=$1:$1' ). 

@@ -1,0 +1,34 @@
+/*=========================================================================================*/
+/*                      VALIDACION DE BAJAS DE depositoES                              */
+/*=========================================================================================*/
+
+DEFINE INPUT  PARAMETER rid_area AS ROWID.
+DEFINE OUTPUT PARAMETER hay_error  AS LOGICAL.
+
+FIND Area WHERE ROWID(Area) = rid_area NO-LOCK.
+RUN VALIDAR_BAJA.
+
+RETURN.
+
+PROCEDURE VALIDAR_BAJA:
+
+  hay_error = YES.
+
+  IF CAN-FIND(FIRST Copias_ocompra WHERE Copias_ocompra.nro_area = Area.nro_area) OR
+     CAN-FIND(FIRST Copias_pedido WHERE Copias_pedido.nro_area = Area.nro_area) OR
+     CAN-FIND(FIRST Copias_requisicion WHERE Copias_requisicion.nro_area = Area.nro_area) OR
+     CAN-FIND(FIRST Emb_header_prv WHERE Emb_header_prv.nro_area = Area.nro_area) OR
+     CAN-FIND(FIRST Ocm_header WHERE Ocm_header.nro_area = Area.nro_area) OR
+     CAN-FIND(FIRST Ped_header WHERE Ped_header.nro_area = Area.nro_area) OR
+     CAN-FIND(FIRST Rem_header WHERE Rem_header.nro_area = Area.nro_area) OR
+     CAN-FIND(FIRST Rem_header_prv WHERE Rem_header_prv.nro_area = Area.nro_area) OR
+     CAN-FIND(FIRST Rqs_header WHERE Rqs_header.nro_area = Area.nro_area) OR
+     CAN-FIND(FIRST Sector-deposito WHERE Sector-deposito.nro_area = Area.nro_area) OR
+     CAN-FIND(FIRST Transdep_hd WHERE Transdep_hd.nro_area = Area.nro_area) OR
+     CAN-FIND(FIRST Valeinv_hd WHERE Valeinv_hd.nro_area = Area.nro_area)
+     THEN RETURN.
+
+  hay_error = NO.
+
+END PROCEDURE.
+

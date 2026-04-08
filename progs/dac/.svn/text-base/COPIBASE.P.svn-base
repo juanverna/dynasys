@@ -1,0 +1,33 @@
+/*============================================================================================*/
+/*         COPIA TODAS LAS FICHAS CERRADAS DE LA BASE VIVA A LA BASE HISTORICA                */
+/*============================================================================================*/
+
+DEFINE VARIABLE v-fch_proceso AS DATE LABEL "Fecha Proceso".
+
+IF INDEX(DBPARAM("despacho"),"dspviv") <> 0
+THEN DO:
+     MESSAGE "ESTE PROCESO DEBE EJECUTARSE DESDE LA CONEXION DE LA BASE HISTORICA."
+             "POR FAVOR, SALGA DEL SISTEMA Y VUELVA A CONECTARSE CON OTRO ICONO"
+                  VIEW-AS ALERT-BOX ERROR TITLE "Error de conexión".
+END.
+ELSE DO:
+
+    UPDATE v-fch_proceso 
+           WITH FRAME f-proc FONT 4 THREE-D SIDE-LABELS TITLE "Indique fecha" VIEW-AS DIALOG-BOX.
+
+    connect -pf .\procs\cnviva.pf.
+    IF CONNECTED('viva')
+    THEN DO:
+    
+         RUN COPFICHS.P ( INPUT v-fch_proceso ).
+         DISCONNECT viva.
+         MESSAGE "COPIA TERMINADA"VIEW-AS ALERT-BOX MESSAGE.
+       
+    END.
+    ELSE DO:
+    
+          MESSAGE "No pudo conectarse la base ACTUAL"
+                  VIEW-AS ALERT-BOX MESSAGE TITLE "Error de conexión".
+    END.                 
+
+END.

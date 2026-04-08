@@ -1,0 +1,47 @@
+/*===================================================================================*/
+/*            IMPORTA LAS FICHAS DE DESPACHO DEL ARCHIVO DE INTERFACE                */
+/*===================================================================================*/
+
+DEFINE VARIABLE v1 AS CHARACTER FORMAT "X(50)".
+DEFINE VARIABLE v2 AS CHARACTER FORMAT "X(50)".
+DEFINE VARIABLE v3 AS CHARACTER FORMAT "X(50)".
+DEFINE VARIABLE ok AS LOGICAL.
+
+
+DEFINE STREAM Archivos.
+DEFINE STREAM Importacion.
+
+DEFINE TEMP-TABLE T-Ficha LIKE Ficha.
+
+SYSTEM-DIALOG GET-FILE v2
+    TITLE      "Seleccione interface a levantar ..."
+    FILTERS    "Interfaces (*.txt)"   "*.txt"
+    
+    INITIAL-DIR "c:\interfaces"
+    MUST-EXIST
+    USE-FILENAME
+    UPDATE OK.
+
+IF ok
+THEN DO:
+    INPUT STREAM Importacion FROM VALUE(v2).
+    REPEAT:
+          CREATE T-Ficha.
+          IMPORT STREAM Importacion T-Ficha.
+    END.
+    INPUT STREAM Importacion CLOSE.
+    FOR EACH T-Ficha BY T-Ficha.num_ficha:
+        FIND Ficha WHERE Ficha.num_ficha = T-Ficha.num_ficha NO-ERROR.
+        IF NOT AVAILABLE Ficha
+        THEN DO:
+             CREATE Ficha.
+             BUFFER-COPY T-Ficha TO Ficha.
+             CURRENT-VALUE(proxima_ficha) = T-Ficha.num_ficha.
+        END.
+    END.    
+    MESSAGE "Terminó la importación de " v2 VIEW-AS ALERT-BOX MESSAGE.
+
+END.
+ELSE DO:
+    MESSAGE "No se importaron archivos.Retornamos al programa anterior ..." VIEW-AS ALERT-BOX MESSAGE.
+END.

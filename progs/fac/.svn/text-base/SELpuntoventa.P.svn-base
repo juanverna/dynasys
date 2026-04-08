@@ -1,0 +1,15 @@
+/*============================================================================================*/
+/*                                   SELECCION DE prefijos                                  */
+/*============================================================================================*/
+
+&GLOBAL-DEFINE TABLA           punto-venta
+&GLOBAL-DEFINE CODIGO          cdg_puntovta
+&GLOBAL-DEFINE NOMBRE          dsc_puntovta
+&GLOBAL-DEFINE FORMATO-CODIGO  FORMAT "9999" 
+&GLOBAL-DEFINE TITULO-BROWSE   Seleccione De Prefijos
+&GLOBAL-DEFINE TITULO-FRAME    Seleccion de Prefijo
+&GLOBAL-DEFINE PROCESO         ACBRWVEN
+&GLOBAL-DEFINE ULT_REGISTRO    ult_puntovta
+&GLOBAL-DEFINE CONDICION       Punto-venta.Habilitado
+
+{SELBROWS.I}

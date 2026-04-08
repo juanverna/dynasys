@@ -1,0 +1,2 @@
+  MESSAGE "Falta poco para que esté terminado"
+  VIEW-AS ALERT-BOX WARNING TITLE "¡Paciencia!".

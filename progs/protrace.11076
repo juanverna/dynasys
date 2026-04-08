@@ -1,0 +1,104 @@
+=====================================================
+PROGRESS stack trace as of Wed Nov 01 09:01:05 2017
+=====================================================
+Startup parameters:
+-pf C:\Progress102\OpenEdge\startup.pf,-cpinternal ISO8859-1,-cpstream ISO8859-1,-cpcoll Spanish9,-cpcase Basic,-d dmy,-numsep 46,-numdec 44,(end .pf),-p largar.p,-db c:\bases\dynasys102,-ld sic,-T c:\temp,-basekey INI,-ininame c:\dynasys10\procs\dynasys10.ini,-s 200,-inp 8192,-nb 150,-l 4000,-bibufs 25,-q,-rr
+
+Exception code: C0000005 ACCESS_VIOLATION
+Fault address:  1013DE36 01:0013CE36 C:\Progress102\OpenEdge\bin\prow32.dll
+
+Registers:
+EAX:00000000
+EBX:025E7220
+ECX:00000000
+EDX:00000001
+ESI:00000000
+EDI:00000000
+CS:EIP:0023:1013DE36
+SS:ESP:002B:0018E60C  EBP:025E7248
+DS:002B  ES:002B  FS:0053  GS:002B
+Flags:00210206
+
+Call Stack:
+Address   Frame
+1013DE36  00000000  DllStartup+C69A6
+1029BAFD  00000000  pam_get_item+96B1D
+1033DF21  00000000  dbut_stnclr+11
+1048140B  00000000  wwProxInterfaceReadIcon+3EB3B
+10299E3E  00000000  pam_get_item+94E5E
+1029CFEF  00000000  pam_get_item+9800F
+102B16BD  00000000  pam_get_item+AC6DD
+1027940D  00000000  pam_get_item+7442D
+
+
+** ABL Stack Trace **
+
+--> USER-INTERFACE-TRIGGER b.w (.\PAU\b.r) at line 3801
+
+** Persistent procedures/Classes **
+
+Handle  File Name
+002903  .\rpt\crystal_view.r
+002783  .\cpy\q-cliente-contrato.r
+002772  .\bas\p-updspa.r
+002768  .\cpy\b-detalle_contrato.r
+002766  .\PAU\v-detalle_contrato1linea.r
+002758  .\bas\p-updspa-noadd.r
+002753  .\PAU\v-contrato_consorcios.r
+002750  .\fac\v-dsc_cliente.r
+002747  .\cpy\w-contrato.r
+002720  .\cpy\v-temp_tareaP.r
+001759  .\bas\p-soloedita.r
+001755  .\opr\v-evento.r
+001748  .\opr\b-eventos_recursos.r
+001743  .\bas\p-excel.r
+001739  .\opr\v-agenda_recurso.r
+001734  .\opr\b-recurso.r
+001731  .\opr\w-agenda_recurso.r
+001461  .\PAU\b.r
+001422  .\cpy\v-temp_tareaP.r
+001268  .\bas\p-soloedita.r
+001263  .\cpy\v-tarea-red11.r
+001258  .\cpy\v-tarea-red2.r
+001257  .\PAU\q-cliente.r
+001249  .\bas\p-soloedita.r
+001244  .\cpy\v-tarea-redsolotel.r
+001233  .\cpy\b-tareas-red.r
+001229  C:\Progress102\OpenEdge\gui\adm\objects\folder.r
+001223  C:\Progress102\OpenEdge\gui\adm\objects\broker.r
+001039  .\bas\pure4gltv.r
+001021  .\bas\sfavoritos.r
+001013  C:\Progress102\OpenEdge\gui\adm2\containr.r
+001011  C:\Progress102\OpenEdge\gui\adm2\visual.r
+001006  C:\Progress102\OpenEdge\gui\adm2\smart.r
+001002  .\bas\Winfunc.r
+001001  .\bas\Windows.r
+
+//=====================================================
+PROGRESS stack trace as of Wed Nov 01 09:01:06 2017
+//=====================================================
+Exception code: C0000005 ACCESS_VIOLATION
+Fault address:  1013DE36 01:0013CE36 C:\Progress102\OpenEdge\bin\prow32.dll
+
+Registers:
+EAX:00000000
+EBX:025E7220
+ECX:00000000
+EDX:00000001
+ESI:00000000
+EDI:00000000
+CS:EIP:0023:1013DE36
+SS:ESP:002B:0018E790  EBP:025E7248
+DS:002B  ES:002B  FS:0053  GS:002B
+Flags:00210206
+
+Call Stack:
+Address   Frame
+1013DE36  0018E79C  DllStartup+C69A6
+102B9514  0018E7A4  pam_get_item+B4534
+1013BE31  0018E7E4  DllStartup+C49A1
+10252520  0018E82C  pam_get_item+4D540
+10467782  0018E8E0  wwProxInterfaceReadIcon+24EB2
+104997D1  0018E9C8  utConvertToIx+7861
+02046530  0018EAC0  0001:00005530 c:\PROGRE~1\OpenEdge\bin\prox.dll
+

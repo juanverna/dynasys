@@ -1,0 +1,9 @@
+&GLOBAL-DEFINE TABLA           Consignatario
+&GLOBAL-DEFINE CODIGO          cdg_consignatario
+&GLOBAL-DEFINE NOMBRE          Nombre
+&GLOBAL-DEFINE TITULO-BROWSE   Seleccione el Consignatario o ingrese nombre
+&GLOBAL-DEFINE TITULO-FRAME    Seleccion de Consignatarios
+&GLOBAL-DEFINE PROCESO         ACTCONSG
+&GLOBAL-DEFINE ULT_REGISTRO    ult_consignatario
+
+{SELBROWS.I}

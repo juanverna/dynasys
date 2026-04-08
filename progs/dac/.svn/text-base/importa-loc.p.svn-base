@@ -1,0 +1,22 @@
+DEFINE VARIABLE v-cdg_localidad LIKE Localidad.cdg_localidad.
+DEFINE VARIABLE v-dsc_localidad LIKE Localidad.dsc_localidad.
+DEFINE VARIABLE v-kilometros    LIKE Localidad.kilometros.
+DEFINE VARIABLE v-cdg_partido   LIKE Localidad.cdg_partido.
+
+FOR EACH Localidad:
+   DELETE Localidad.
+END.
+
+input from "d:\desa\dac\r3.5\db\localidades.txt".
+
+REPEAT:
+
+  IMPORT DELIMITER "," v-cdg_localidad v-dsc_localidad v-kilometros v-cdg_partido ^ ^ ^.
+/*DISPLAY v-cdg_localidad v-dsc_localidad v-kilometros.*/
+  CREATE Localidad.
+  ASSIGN Localidad.cdg_localidad = v-cdg_localidad
+         Localidad.dsc_localidad = v-dsc_localidad
+         Localidad.kilometros    = v-kilometros
+         Localidad.cdg_partido   = v-cdg_partido.         
+
+END.

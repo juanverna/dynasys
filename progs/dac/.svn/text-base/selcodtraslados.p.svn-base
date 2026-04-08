@@ -1,0 +1,10 @@
+/*========================================================================================*/
+/*                    SELECCIONA UNA SERIE DE CODIGOS DE EMPRESA                          */
+/*========================================================================================*/
+
+&GLOBAL-DEFINE TABLA         Tipcolor
+&GLOBAL-DEFINE CODIGO        cdg_tipoemr 
+&GLOBAL-DEFINE NOMBRE        dsc_tipoemr
+&GLOBAL-DEFINE SUBCONDICION  Tipcolor.cdg_tiposervicio = "T"
+
+{selectacodigos.i}

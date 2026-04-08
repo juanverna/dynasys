@@ -1,0 +1,1828 @@
+&ANALYZE-SUSPEND _VERSION-NUMBER AB_v10r12 GUI
+&ANALYZE-RESUME
+/* Connected Databases 
+          sic              PROGRESS
+*/
+&Scoped-define WINDOW-NAME C-Win
+
+
+/* Temp-Table and Buffer definitions                                    */
+DEFINE BUFFER B-Caja FOR Caja.
+DEFINE TEMP-TABLE T-Cartera NO-UNDO LIKE Valor.
+
+
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CUSTOM _DEFINITIONS C-Win 
+/*------------------------------------------------------------------------
+
+  File: 
+
+  Description: 
+
+  Input Parameters:
+      <none>
+
+  Output Parameters:
+      <none>
+
+  Author: 
+
+  Created: 
+
+------------------------------------------------------------------------*/
+/*          This .W file was created with the Progress AppBuilder.      */
+/*----------------------------------------------------------------------*/
+
+/* Create an unnamed pool to store all the widgets created 
+     by this procedure. This is a good default which assures
+     that this procedure's triggers and internal procedures 
+     will execute in this procedure's storage, and that proper
+     cleanup will occur on deletion of the procedure. */
+
+CREATE WIDGET-POOL.
+
+/* ***************************  Definitions  ************************** */
+
+/* Parameters Definitions ---                                           */
+
+/* Local Variable Definitions ---                                       */
+
+  DEFINE VARIABLE que_empresa   LIKE Empresa.cdg_empresa.
+  DEFINE VARIABLE fecha_inicial AS DATE.
+  DEFINE VARIABLE fecha_elegida AS DATE.
+
+  DEFINE VARIABLE sino          AS LOGICAL.
+  DEFINE VARIABLE dire_tmp      AS CHARACTER.
+  DEFINE VARIABLE porden AS INT NO-UNDO.
+  DEFINE TEMP-TABLE t-seleccionados NO-UNDO LIKE sic.valor
+    FIELDS tselorden AS INT
+    INDEX tselorden IS UNIQUE PRIMARY tselorden.
+  {parlocales.i}
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-PREPROCESSOR-BLOCK 
+
+/* ********************  Preprocessor Definitions  ******************** */
+
+&Scoped-define PROCEDURE-TYPE Window
+&Scoped-define DB-AWARE no
+
+/* Name of designated FRAME-NAME and/or first browse and/or first query */
+&Scoped-define FRAME-NAME DEFAULT-FRAME
+&Scoped-define BROWSE-NAME BRW-DISPONIBLES
+
+/* Internal Tables (found by Frame, Query & Browse Queries)             */
+&Scoped-define INTERNAL-TABLES T-Cartera T-Seleccionados
+
+/* Definitions for BROWSE BRW-DISPONIBLES                               */
+&Scoped-define FIELDS-IN-QUERY-BRW-DISPONIBLES T-Cartera.numero_cheque ~
+T-Cartera.cdg_banco T-Cartera.cdg_sucurbanco T-Cartera.fecha_emision ~
+T-Cartera.importe T-Cartera.observacion 
+&Scoped-define ENABLED-FIELDS-IN-QUERY-BRW-DISPONIBLES 
+&Scoped-define QUERY-STRING-BRW-DISPONIBLES FOR EACH T-Cartera ~
+      WHERE T-Cartera.fecha_emision <= v-has_fecha ~
+ AND T-Cartera.fecha_emision >= v-des_fecha ~
+ AND T-Cartera.importe <= v-has_importe ~
+ AND T-Cartera.importe >= v-des_importe NO-LOCK ~
+    BY T-Cartera.fecha_emision INDEXED-REPOSITION
+&Scoped-define OPEN-QUERY-BRW-DISPONIBLES OPEN QUERY BRW-DISPONIBLES FOR EACH T-Cartera ~
+      WHERE T-Cartera.fecha_emision <= v-has_fecha ~
+ AND T-Cartera.fecha_emision >= v-des_fecha ~
+ AND T-Cartera.importe <= v-has_importe ~
+ AND T-Cartera.importe >= v-des_importe NO-LOCK ~
+    BY T-Cartera.fecha_emision INDEXED-REPOSITION.
+&Scoped-define TABLES-IN-QUERY-BRW-DISPONIBLES T-Cartera
+&Scoped-define FIRST-TABLE-IN-QUERY-BRW-DISPONIBLES T-Cartera
+
+
+/* Definitions for BROWSE BRW-SELECCIONADOS                             */
+&Scoped-define FIELDS-IN-QUERY-BRW-SELECCIONADOS ~
+T-Seleccionados.numero_cheque T-Seleccionados.cdg_banco ~
+T-Seleccionados.cdg_sucurbanco T-Seleccionados.fecha_deposito ~
+T-Seleccionados.importe T-Seleccionados.observacion 
+&Scoped-define ENABLED-FIELDS-IN-QUERY-BRW-SELECCIONADOS 
+&Scoped-define QUERY-STRING-BRW-SELECCIONADOS FOR EACH T-Seleccionados NO-LOCK INDEXED-REPOSITION
+&Scoped-define OPEN-QUERY-BRW-SELECCIONADOS OPEN QUERY BRW-SELECCIONADOS FOR EACH T-Seleccionados NO-LOCK INDEXED-REPOSITION.
+&Scoped-define TABLES-IN-QUERY-BRW-SELECCIONADOS T-Seleccionados
+&Scoped-define FIRST-TABLE-IN-QUERY-BRW-SELECCIONADOS T-Seleccionados
+
+
+/* Definitions for FRAME DEFAULT-FRAME                                  */
+&Scoped-define OPEN-BROWSERS-IN-QUERY-DEFAULT-FRAME ~
+    ~{&OPEN-QUERY-BRW-DISPONIBLES}~
+    ~{&OPEN-QUERY-BRW-SELECCIONADOS}
+
+/* Standard List Definitions                                            */
+&Scoped-Define ENABLED-OBJECTS RECT-1 RECT-4 RECT-6 RECT-8 RECT-9 RECT-7 ~
+v-cdg_caja v-cdg_cuenta_ban v-depocanje v-referencia btn_depositar ~
+v-cdg_rubro v-des_fecha v-has_fecha v-fecha_deposito btn_seltodos ~
+btn_desmarcar btn_listar v-des_importe v-has_importe v-cdg_banco ~
+v-numero_cheque BRW-DISPONIBLES BRW-SELECCIONADOS 
+&Scoped-Define DISPLAYED-OBJECTS v-cdg_caja v-nombre v-cdg_cuenta_ban ~
+v-denominacion_cta v-depocanje v-cantcheques v-totdeposito v-referencia ~
+v-cdg_rubro v-des_fecha v-has_fecha v-fecha_deposito v-des_importe ~
+v-has_importe v-cdg_banco v-numero_cheque 
+
+/* Custom List Definitions                                              */
+/* List-1,List-2,List-3,List-4,List-5,List-6                            */
+
+/* _UIB-PREPROCESSOR-BLOCK-END */
+&ANALYZE-RESUME
+
+
+
+/* ***********************  Control Definitions  ********************** */
+
+/* Define the widget handle for the window                              */
+DEFINE VAR C-Win AS WIDGET-HANDLE NO-UNDO.
+
+/* Definitions of the field level widgets                               */
+DEFINE BUTTON btn_depositar 
+     LABEL "&Depositar" 
+     SIZE 22 BY 1.14.
+
+DEFINE BUTTON btn_desmarcar 
+     LABEL "Desmarcar Todos" 
+     SIZE 22 BY 1.14.
+
+DEFINE BUTTON btn_listar 
+     LABEL "&Listar Marcados" 
+     SIZE 22 BY 1.14.
+
+DEFINE BUTTON btn_seltodos 
+     LABEL "&Marcar Todos" 
+     SIZE 22 BY 1.14.
+
+DEFINE VARIABLE v-cdg_rubro AS INTEGER FORMAT "->,>>>,>>9":U INITIAL 0 
+     VIEW-AS COMBO-BOX INNER-LINES 5
+     LIST-ITEM-PAIRS "Item 1",0
+     DROP-DOWN-LIST
+     SIZE 39 BY 1
+     BGCOLOR 15 FGCOLOR 9  NO-UNDO.
+
+DEFINE VARIABLE v-depocanje AS CHARACTER FORMAT "X(256)":U 
+     VIEW-AS COMBO-BOX INNER-LINES 2
+     LIST-ITEM-PAIRS "Depósito","D ",
+                     "Canje","C"
+     DROP-DOWN-LIST
+     SIZE 15 BY 1
+     BGCOLOR 15 FGCOLOR 9  NO-UNDO.
+
+DEFINE VARIABLE v-cantcheques AS INTEGER FORMAT ">>>9":U INITIAL 0 
+     LABEL "#" 
+     VIEW-AS FILL-IN 
+     SIZE 8 BY 1
+     BGCOLOR 15 FGCOLOR 9 FONT 6 NO-UNDO.
+
+DEFINE VARIABLE v-cdg_banco AS INTEGER FORMAT ">>>>>>>9":U INITIAL 0 
+     LABEL "Banco" 
+     VIEW-AS FILL-IN 
+     SIZE 7 BY 1
+     BGCOLOR 15 FGCOLOR 9  NO-UNDO.
+
+DEFINE VARIABLE v-cdg_caja AS INTEGER FORMAT "->,>>>,>>9" INITIAL 0 
+     LABEL "Caja" 
+     VIEW-AS FILL-IN 
+     SIZE 16 BY 1
+     BGCOLOR 15 FGCOLOR 9 .
+
+DEFINE VARIABLE v-cdg_cuenta_ban AS CHARACTER FORMAT "X(8)" 
+     LABEL "Cuenta" 
+     VIEW-AS FILL-IN 
+     SIZE 16 BY 1
+     BGCOLOR 15 FGCOLOR 9 .
+
+DEFINE VARIABLE v-denominacion_cta AS CHARACTER FORMAT "X(25)" 
+     VIEW-AS FILL-IN 
+     SIZE 78 BY 1
+     BGCOLOR 7 FGCOLOR 15 .
+
+DEFINE VARIABLE v-des_fecha AS DATE FORMAT "99/99/9999":U 
+     LABEL "Desde" 
+     VIEW-AS FILL-IN 
+     SIZE 17 BY 1
+     BGCOLOR 15 FGCOLOR 9  NO-UNDO.
+
+DEFINE VARIABLE v-des_importe AS DECIMAL FORMAT "->>>,>>>,>>9.99":U INITIAL 0 
+     LABEL "Desde" 
+     VIEW-AS FILL-IN 
+     SIZE 22 BY 1
+     BGCOLOR 15 FGCOLOR 9  NO-UNDO.
+
+DEFINE VARIABLE v-fecha_deposito AS DATE FORMAT "99/99/9999":U 
+     LABEL "Fecha Depósito" 
+     VIEW-AS FILL-IN 
+     SIZE 16 BY 1
+     BGCOLOR 14 FGCOLOR 9  NO-UNDO.
+
+DEFINE VARIABLE v-has_fecha AS DATE FORMAT "99/99/9999":U 
+     LABEL "Hasta" 
+     VIEW-AS FILL-IN 
+     SIZE 17 BY 1
+     BGCOLOR 15 FGCOLOR 9  NO-UNDO.
+
+DEFINE VARIABLE v-has_importe AS DECIMAL FORMAT "->>>,>>>,>>9.99":U INITIAL 0 
+     LABEL "Hasta" 
+     VIEW-AS FILL-IN 
+     SIZE 22 BY 1
+     BGCOLOR 15 FGCOLOR 9  NO-UNDO.
+
+DEFINE VARIABLE v-nombre AS CHARACTER FORMAT "X(25)" 
+     VIEW-AS FILL-IN 
+     SIZE 78 BY 1
+     BGCOLOR 7 FGCOLOR 15 .
+
+DEFINE VARIABLE v-numero_cheque AS INTEGER FORMAT ">>>>>>>9":U INITIAL 0 
+     LABEL "Nro. Cheque" 
+     VIEW-AS FILL-IN 
+     SIZE 18 BY 1
+     BGCOLOR 15 FGCOLOR 9  NO-UNDO.
+
+DEFINE VARIABLE v-referencia AS CHARACTER FORMAT "X(256)":U 
+     LABEL "Ref." 
+     VIEW-AS FILL-IN 
+     SIZE 29.4 BY 1
+     BGCOLOR 15 FGCOLOR 9  NO-UNDO.
+
+DEFINE VARIABLE v-totdeposito AS DECIMAL FORMAT ">>,>>>,>>9.99":U INITIAL 0 
+     LABEL "$" 
+     VIEW-AS FILL-IN 
+     SIZE 19 BY 1
+     BGCOLOR 15 FGCOLOR 9 FONT 6 NO-UNDO.
+
+DEFINE RECTANGLE RECT-1
+     EDGE-PIXELS 2 GRAPHIC-EDGE  NO-FILL   
+     SIZE 109 BY 3.33.
+
+DEFINE RECTANGLE RECT-4
+     EDGE-PIXELS 2 GRAPHIC-EDGE  NO-FILL   
+     SIZE 50 BY 3.33.
+
+DEFINE RECTANGLE RECT-6
+     EDGE-PIXELS 2 GRAPHIC-EDGE  NO-FILL   
+     SIZE 136 BY 2.67.
+
+DEFINE RECTANGLE RECT-7
+     EDGE-PIXELS 2 GRAPHIC-EDGE  NO-FILL   
+     SIZE 24 BY 5.48.
+
+DEFINE RECTANGLE RECT-8
+     EDGE-PIXELS 2 GRAPHIC-EDGE  NO-FILL   
+     SIZE 73.8 BY 2.62.
+
+DEFINE RECTANGLE RECT-9
+     EDGE-PIXELS 2 GRAPHIC-EDGE  NO-FILL   
+     SIZE 60.8 BY 2.62.
+
+/* Query definitions                                                    */
+&ANALYZE-SUSPEND
+DEFINE QUERY BRW-DISPONIBLES FOR 
+      T-Cartera SCROLLING.
+
+DEFINE QUERY BRW-SELECCIONADOS FOR 
+      T-Seleccionados SCROLLING.
+&ANALYZE-RESUME
+
+/* Browse definitions                                                   */
+DEFINE BROWSE BRW-DISPONIBLES
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _DISPLAY-FIELDS BRW-DISPONIBLES C-Win _STRUCTURED
+  QUERY BRW-DISPONIBLES NO-LOCK DISPLAY
+      T-Cartera.numero_cheque FORMAT ">>>>>>>9":U
+      T-Cartera.cdg_banco FORMAT "999":U
+      T-Cartera.cdg_sucurbanco FORMAT "999":U
+      T-Cartera.fecha_emision FORMAT "99/99/99":U
+      T-Cartera.importe FORMAT "->>>,>>>,>>9.99":U
+      T-Cartera.observacion FORMAT "X(40)":U
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+    WITH NO-ROW-MARKERS SEPARATORS SIZE 79 BY 18.1
+         BGCOLOR 15 FGCOLOR 9 
+         TITLE BGCOLOR 15 FGCOLOR 9 "Valores disponibles pendientes de depósito" FIT-LAST-COLUMN.
+
+DEFINE BROWSE BRW-SELECCIONADOS
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _DISPLAY-FIELDS BRW-SELECCIONADOS C-Win _STRUCTURED
+  QUERY BRW-SELECCIONADOS NO-LOCK DISPLAY
+      T-Seleccionados.numero_cheque
+      T-Seleccionados.cdg_banco
+      T-Seleccionados.cdg_sucurbanco
+      T-Seleccionados.fecha_deposito WIDTH 10
+      T-Seleccionados.importe
+      T-Seleccionados.observacion
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+    WITH NO-ROW-MARKERS SEPARATORS SIZE 80 BY 18.1
+         BGCOLOR 15 FGCOLOR 9 
+         TITLE BGCOLOR 15 FGCOLOR 9 "Valores seleccionados para depositar" FIT-LAST-COLUMN.
+
+
+/* ************************  Frame Definitions  *********************** */
+
+DEFINE FRAME DEFAULT-FRAME
+     v-cdg_caja AT ROW 1.48 COL 12 COLON-ALIGNED WIDGET-ID 44
+     v-nombre AT ROW 1.48 COL 29 COLON-ALIGNED NO-LABEL WIDGET-ID 62
+     v-cdg_cuenta_ban AT ROW 2.91 COL 12 COLON-ALIGNED WIDGET-ID 46
+     v-denominacion_cta AT ROW 2.91 COL 29 COLON-ALIGNED NO-LABEL WIDGET-ID 48
+     v-depocanje AT ROW 2.91 COL 110 COLON-ALIGNED NO-LABEL WIDGET-ID 50
+     v-cantcheques AT ROW 2.91 COL 128 COLON-ALIGNED WIDGET-ID 40
+     v-totdeposito AT ROW 2.91 COL 139 COLON-ALIGNED WIDGET-ID 68
+     v-referencia AT ROW 4.81 COL 104 COLON-ALIGNED WIDGET-ID 66
+     btn_depositar AT ROW 4.81 COL 138 WIDGET-ID 10
+     v-cdg_rubro AT ROW 6 COL 2 NO-LABEL WIDGET-ID 4
+     v-des_fecha AT ROW 6 COL 49 COLON-ALIGNED WIDGET-ID 52
+     v-has_fecha AT ROW 6 COL 80 COLON-ALIGNED WIDGET-ID 58
+     v-fecha_deposito AT ROW 6 COL 117 COLON-ALIGNED WIDGET-ID 56
+     btn_seltodos AT ROW 6 COL 138 WIDGET-ID 16
+     btn_desmarcar AT ROW 7.19 COL 138 WIDGET-ID 12
+     btn_listar AT ROW 8.38 COL 138 WIDGET-ID 14
+     v-des_importe AT ROW 8.86 COL 16.8 COLON-ALIGNED WIDGET-ID 54
+     v-has_importe AT ROW 8.86 COL 49 COLON-ALIGNED WIDGET-ID 60
+     v-cdg_banco AT ROW 8.86 COL 89.8 COLON-ALIGNED WIDGET-ID 42
+     v-numero_cheque AT ROW 8.86 COL 115 COLON-ALIGNED WIDGET-ID 64
+     BRW-DISPONIBLES AT ROW 10.29 COL 1 WIDGET-ID 300
+     BRW-SELECCIONADOS AT ROW 10.29 COL 81 WIDGET-ID 400
+     "   Seleccionar valor con numero y banco:" VIEW-AS TEXT
+          SIZE 59 BY 1 AT ROW 7.67 COL 76.8 WIDGET-ID 38
+          BGCOLOR 5 FGCOLOR 15 
+     "   Rango de importe de los valores a considerar:" VIEW-AS TEXT
+          SIZE 71.8 BY 1 AT ROW 7.67 COL 2 WIDGET-ID 32
+          BGCOLOR 5 FGCOLOR 15 
+     "  Rubro de Ingreso de los Valores" VIEW-AS TEXT
+          SIZE 39 BY 1 AT ROW 4.81 COL 2 WIDGET-ID 6
+          BGCOLOR 5 FGCOLOR 15 
+     "  Modalidad del depósito, valores e importe total" VIEW-AS TEXT
+          SIZE 48 BY 1 AT ROW 1.48 COL 112 WIDGET-ID 34
+          BGCOLOR 5 FGCOLOR 15 
+     "  Fechas de depósito de los valores a considerar:" VIEW-AS TEXT
+          SIZE 57 BY 1 AT ROW 4.81 COL 42 WIDGET-ID 36
+          BGCOLOR 5 FGCOLOR 15 
+     RECT-1 AT ROW 1 COL 1 WIDGET-ID 20
+     RECT-4 AT ROW 1 COL 111 WIDGET-ID 24
+     RECT-6 AT ROW 4.57 COL 1 WIDGET-ID 26
+     RECT-8 AT ROW 7.43 COL 1 WIDGET-ID 28
+     RECT-9 AT ROW 7.43 COL 75.8 WIDGET-ID 30
+     RECT-7 AT ROW 4.57 COL 137 WIDGET-ID 72
+    WITH 1 DOWN NO-BOX KEEP-TAB-ORDER OVERLAY 
+         SIDE-LABELS NO-UNDERLINE THREE-D 
+         AT COL 1 ROW 1
+         SIZE 160 BY 27.38 WIDGET-ID 100.
+
+
+/* *********************** Procedure Settings ************************ */
+
+&ANALYZE-SUSPEND _PROCEDURE-SETTINGS
+/* Settings for THIS-PROCEDURE
+   Type: Window
+   Allow: Basic,Browse,DB-Fields,Window,Query
+   Other Settings: COMPILE
+   Temp-Tables and Buffers:
+      TABLE: B-Caja B "?" ? sic Caja
+      TABLE: T-Cartera T "?" NO-UNDO sic Valor
+   END-TABLES.
+ */
+&ANALYZE-RESUME _END-PROCEDURE-SETTINGS
+
+/* *************************  Create Window  ************************** */
+
+&ANALYZE-SUSPEND _CREATE-WINDOW
+IF SESSION:DISPLAY-TYPE = "GUI":U THEN
+  CREATE WINDOW C-Win ASSIGN
+         HIDDEN             = YES
+         TITLE              = "Deposito de valores en cartera"
+         HEIGHT             = 27.38
+         WIDTH              = 160
+         MAX-HEIGHT         = 27.67
+         MAX-WIDTH          = 160
+         VIRTUAL-HEIGHT     = 27.67
+         VIRTUAL-WIDTH      = 160
+         RESIZE             = yes
+         SCROLL-BARS        = no
+         STATUS-AREA        = no
+         BGCOLOR            = ?
+         FGCOLOR            = ?
+         KEEP-FRAME-Z-ORDER = yes
+         THREE-D            = yes
+         MESSAGE-AREA       = no
+         SENSITIVE          = yes.
+ELSE {&WINDOW-NAME} = CURRENT-WINDOW.
+/* END WINDOW DEFINITION                                                */
+&ANALYZE-RESUME
+
+
+
+/* ***********  Runtime Attributes and AppBuilder Settings  *********** */
+
+&ANALYZE-SUSPEND _RUN-TIME-ATTRIBUTES
+/* SETTINGS FOR WINDOW C-Win
+  VISIBLE,,RUN-PERSISTENT                                               */
+/* SETTINGS FOR FRAME DEFAULT-FRAME
+   FRAME-NAME                                                           */
+/* BROWSE-TAB BRW-DISPONIBLES v-numero_cheque DEFAULT-FRAME */
+/* BROWSE-TAB BRW-SELECCIONADOS BRW-DISPONIBLES DEFAULT-FRAME */
+/* SETTINGS FOR FILL-IN v-cantcheques IN FRAME DEFAULT-FRAME
+   NO-ENABLE                                                            */
+/* SETTINGS FOR COMBO-BOX v-cdg_rubro IN FRAME DEFAULT-FRAME
+   ALIGN-L                                                              */
+/* SETTINGS FOR FILL-IN v-denominacion_cta IN FRAME DEFAULT-FRAME
+   NO-ENABLE                                                            */
+/* SETTINGS FOR FILL-IN v-nombre IN FRAME DEFAULT-FRAME
+   NO-ENABLE                                                            */
+/* SETTINGS FOR FILL-IN v-totdeposito IN FRAME DEFAULT-FRAME
+   NO-ENABLE                                                            */
+IF SESSION:DISPLAY-TYPE = "GUI":U AND VALID-HANDLE(C-Win)
+THEN C-Win:HIDDEN = no.
+
+/* _RUN-TIME-ATTRIBUTES-END */
+&ANALYZE-RESUME
+
+
+/* Setting information for Queries and Browse Widgets fields            */
+
+&ANALYZE-SUSPEND _QUERY-BLOCK BROWSE BRW-DISPONIBLES
+/* Query rebuild information for BROWSE BRW-DISPONIBLES
+     _TblList          = "Temp-Tables.T-Cartera"
+     _Options          = "NO-LOCK INDEXED-REPOSITION"
+     _OrdList          = "Temp-Tables.T-Cartera.fecha_emision|yes"
+     _Where[1]         = "Temp-Tables.T-Cartera.fecha_emision <= v-has_fecha
+ AND Temp-Tables.T-Cartera.fecha_emision >= v-des_fecha
+ AND Temp-Tables.T-Cartera.importe <= v-has_importe
+ AND Temp-Tables.T-Cartera.importe >= v-des_importe"
+     _FldNameList[1]   = Temp-Tables.T-Cartera.numero_cheque
+     _FldNameList[2]   = Temp-Tables.T-Cartera.cdg_banco
+     _FldNameList[3]   = Temp-Tables.T-Cartera.cdg_sucurbanco
+     _FldNameList[4]   = Temp-Tables.T-Cartera.fecha_emision
+     _FldNameList[5]   = Temp-Tables.T-Cartera.importe
+     _FldNameList[6]   = Temp-Tables.T-Cartera.observacion
+     _Query            is OPENED
+*/  /* BROWSE BRW-DISPONIBLES */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _QUERY-BLOCK BROWSE BRW-SELECCIONADOS
+/* Query rebuild information for BROWSE BRW-SELECCIONADOS
+     _TblList          = "Temp-Tables.T-Seleccionados"
+     _Options          = "NO-LOCK INDEXED-REPOSITION"
+     _FldNameList[1]   = Temp-Tables.T-Seleccionados.numero_cheque
+     _FldNameList[2]   = Temp-Tables.T-Seleccionados.cdg_banco
+     _FldNameList[3]   = Temp-Tables.T-Seleccionados.cdg_sucurbanco
+     _FldNameList[4]   > Temp-Tables.T-Seleccionados.fecha_deposito
+"T-Seleccionados.fecha_deposito" ? ? "date" ? ? ? ? ? ? no ? no no "10" yes no no "U" "" "" "" "" "" "" 0 no 0 no no
+     _FldNameList[5]   = Temp-Tables.T-Seleccionados.importe
+     _FldNameList[6]   = Temp-Tables.T-Seleccionados.observacion
+     _Query            is OPENED
+*/  /* BROWSE BRW-SELECCIONADOS */
+&ANALYZE-RESUME
+
+ 
+
+
+
+/* ************************  Control Triggers  ************************ */
+
+&Scoped-define SELF-NAME C-Win
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL C-Win C-Win
+ON END-ERROR OF C-Win /* Deposito de valores en cartera */
+OR ENDKEY OF {&WINDOW-NAME} ANYWHERE DO:
+  /* This case occurs when the user presses the "Esc" key.
+     In a persistently run window, just ignore this.  If we did not, the
+     application would exit. */
+  IF THIS-PROCEDURE:PERSISTENT THEN RETURN NO-APPLY.
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL C-Win C-Win
+ON WINDOW-CLOSE OF C-Win /* Deposito de valores en cartera */
+DO:
+  /* This event will close the window and terminate the procedure.  */
+    
+    sino = NO.
+    RUN mensajepregunta.p ( INPUT "",INPUT "PREG001", INPUT-OUTPUT sino ). 
+    IF sino
+    THEN DO:
+        APPLY "CLOSE":U TO THIS-PROCEDURE.
+        RETURN NO-APPLY.
+    END.
+    ELSE DO:
+        RETURN NO-APPLY.
+    END.
+
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define BROWSE-NAME BRW-DISPONIBLES
+&Scoped-define SELF-NAME BRW-DISPONIBLES
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL BRW-DISPONIBLES C-Win
+ON MOUSE-SELECT-DBLCLICK OF BRW-DISPONIBLES IN FRAME DEFAULT-FRAME /* Valores disponibles pendientes de depósito */
+DO:
+    APPLY "RETURN" TO BRW-DISPONIBLES.  
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL BRW-DISPONIBLES C-Win
+ON RETURN OF BRW-DISPONIBLES IN FRAME DEFAULT-FRAME /* Valores disponibles pendientes de depósito */
+DO:
+  IF AVAILABLE T-Cartera
+      THEN RUN marcar_valor.
+      ELSE MESSAGE "No hay valores disponibles"
+              VIEW-AS ALERT-BOX ERROR.
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define BROWSE-NAME BRW-SELECCIONADOS
+&Scoped-define SELF-NAME BRW-SELECCIONADOS
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL BRW-SELECCIONADOS C-Win
+ON MOUSE-SELECT-DBLCLICK OF BRW-SELECCIONADOS IN FRAME DEFAULT-FRAME /* Valores seleccionados para depositar */
+DO:
+  APPLY "RETURN" TO BRW-SELECCIONADOS.
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL BRW-SELECCIONADOS C-Win
+ON RETURN OF BRW-SELECCIONADOS IN FRAME DEFAULT-FRAME /* Valores seleccionados para depositar */
+DO:
+  IF AVAILABLE T-Seleccionados
+      THEN RUN desmarcar_valor.
+      ELSE MESSAGE "No hay valores seleccionados"
+              VIEW-AS ALERT-BOX ERROR.
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME btn_depositar
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL btn_depositar C-Win
+ON CHOOSE OF btn_depositar IN FRAME DEFAULT-FRAME /* Depositar */
+DO:
+
+   FIND Cuenta_bancaria WHERE Cuenta_bancaria.cdg_cuenta_ban = INPUT FRAME {&FRAME-NAME} v-cdg_cuenta_ban NO-LOCK NO-ERROR.
+   IF NOT AVAILABLE Cuenta_bancaria 
+   THEN DO:
+      RUN PONMENSJ.P ( INPUT "PRVL001" ).
+      RETURN NO-APPLY.
+   END.
+   ELSE DO:
+       v-denominacion_cta = Cuenta_bancaria.denominacion_cta.
+       DISPLAY v-denominacion_cta
+           WITH FRAME {&FRAME-NAME}.
+   END.
+
+   sino = NO.
+   MESSAGE "Realmente desea registrar el depósito de los valores seleccionados?" 
+           VIEW-AS ALERT-BOX QUESTION BUTTONS YES-NO
+           TITLE "Se pide confirmacion" UPDATE sino.
+   IF sino 
+   THEN DO:
+
+        ASSIGN FRAME {&FRAME-NAME} v-fecha_deposito
+               FRAME {&FRAME-NAME} v-referencia
+               FRAME {&FRAME-NAME} v-cdg_cuenta_ban.
+        
+        RUN depositar_cheques.
+
+        RUN abrir_query_seleccionados.
+
+        ASSIGN
+              v-cantcheques = 0
+              v-totdeposito = 0.
+
+        RUN mostrar_cantidad_cheques.
+
+        ASSIGN
+            v-denominacion_cta = ""
+            v-cdg_cuenta_ban  = "".
+        DISPLAY 
+            v-denominacion_cta
+            v-cdg_cuenta_ban
+            WITH FRAME {&FRAME-NAME}.
+
+
+   END.  
+
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME btn_desmarcar
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL btn_desmarcar C-Win
+ON CHOOSE OF btn_desmarcar IN FRAME DEFAULT-FRAME /* Desmarcar Todos */
+DO:
+   sino = NO.
+   MESSAGE "Realmente desea desseleccionar todos los valores elegidos?" 
+           VIEW-AS ALERT-BOX QUESTION BUTTONS YES-NO
+           TITLE "Se pide confirmacion" UPDATE sino.
+   IF sino 
+   THEN DO:
+        RUN desmarcar_todos.
+        RUN abrir_queries.
+   END.
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME btn_listar
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL btn_listar C-Win
+ON CHOOSE OF btn_listar IN FRAME DEFAULT-FRAME /* Listar Marcados */
+DO:
+
+   sino = NO.
+   MESSAGE "Desea listar los valores seleccionados?" 
+           VIEW-AS ALERT-BOX QUESTION BUTTONS YES-NO
+           TITLE "Se pide confirmacion" UPDATE sino.
+   IF sino 
+   THEN DO:
+
+        ASSIGN FRAME {&FRAME-NAME} v-fecha_deposito
+               FRAME {&FRAME-NAME} v-referencia
+               FRAME {&FRAME-NAME} v-cdg_cuenta_ban.
+        
+        RUN listar_cheques.
+   END.  
+  
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME btn_seltodos
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL btn_seltodos C-Win
+ON CHOOSE OF btn_seltodos IN FRAME DEFAULT-FRAME /* Marcar Todos */
+DO:
+   sino = NO.
+   MESSAGE "Realmente desea seleccionar todos los valores disponibles?" 
+           VIEW-AS ALERT-BOX QUESTION BUTTONS YES-NO
+           TITLE "Se pide confirmacion" UPDATE sino.
+   IF sino 
+   THEN DO:
+        RUN marcar_todos.
+        RUN abrir_queries.
+   END.
+  
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME v-cdg_caja
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL v-cdg_caja C-Win
+ON LEFT-MOUSE-DBLCLICK OF v-cdg_caja IN FRAME DEFAULT-FRAME /* Caja */
+OR "+" OF v-cdg_caja IN FRAME {&FRAME-NAME}
+OR "MOUSE-MENU-DOWN" OF v-cdg_caja IN FRAME {&FRAME-NAME}
+DO:
+  
+  DEFINE VARIABLE rid_caja AS ROWID.
+  RUN selncaja.p ( INPUT-OUTPUT rid_caja, INPUT YES).
+  IF rid_caja <> ?
+  THEN DO:
+       FIND B-Caja WHERE ROWID(B-Caja) = rid_caja NO-LOCK.
+       DISPLAY B-Caja.cdg_caja @ v-cdg_caja
+               WITH FRAME {&FRAME-NAME}.
+       APPLY "RETURN" TO SELF.
+       RETURN NO-APPLY.
+  END.             
+  
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL v-cdg_caja C-Win
+ON RETURN OF v-cdg_caja IN FRAME DEFAULT-FRAME /* Caja */
+DO:
+
+  FIND B-Caja WHERE B-Caja.cdg_caja = INPUT FRAME {&FRAME-NAME} v-cdg_caja NO-LOCK NO-ERROR.
+  IF NOT AVAILABLE B-Caja 
+  THEN DO:
+       RUN PONMENSJ.P ( 'CAJA021' ).
+       DISPLAY v-cdg_caja 
+               WITH FRAME {&FRAME-NAME}.     
+       RETURN NO-APPLY.
+  END.
+  ELSE DO:
+       IF NOT CAN-DO(B-Caja.lista_empresas,Empresa.cdg_empresa)
+       THEN DO:
+            RUN PONMENSJ.P ( 'CAJA021' ).
+            DISPLAY v-cdg_caja 
+                    WITH FRAME {&FRAME-NAME}.     
+            RETURN NO-APPLY.
+       END.
+  END.
+  
+  v-cdg_caja = B-Caja.cdg_caja.
+  v-nombre = B-Caja.nombre.
+  DISPLAY v-nombre 
+          WITH FRAME {&FRAME-NAME}. 
+
+  RUN levantar_valores.
+          
+  RUN setear_fecha_desde.
+  DISPLAY v-des_fecha
+        WITH FRAME {&FRAME-NAME}.
+
+  {&OPEN-QUERY-BRW-DISPONIBLES}
+
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME v-cdg_cuenta_ban
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL v-cdg_cuenta_ban C-Win
+ON MOUSE-MENU-DOWN OF v-cdg_cuenta_ban IN FRAME DEFAULT-FRAME /* Cuenta */
+OR "+" OF v-cdg_cuenta_ban IN FRAME {&FRAME-NAME}
+DO:
+  
+  DEFINE VARIABLE rid_cuentabancaria AS ROWID.
+  RUN selctbco.p ( INPUT-OUTPUT rid_cuentabancaria, INPUT YES).
+  IF rid_cuentabancaria <> ?
+  THEN DO:
+       FIND Cuenta_bancaria WHERE ROWID(Cuenta_bancaria) = rid_cuentabancaria NO-LOCK.
+       DISPLAY Cuenta_bancaria.cdg_cuenta_ban @ v-cdg_cuenta_ban
+               WITH FRAME {&FRAME-NAME}.
+       APPLY "RETURN" TO SELF.
+       RETURN NO-APPLY.
+  END.             
+  
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL v-cdg_cuenta_ban C-Win
+ON RETURN OF v-cdg_cuenta_ban IN FRAME DEFAULT-FRAME /* Cuenta */
+DO:
+
+  FIND Cuenta_bancaria WHERE Cuenta_bancaria.cdg_cuenta_ban = INPUT  FRAME {&FRAME-NAME} v-cdg_cuenta_ban AND NOT cuenta_bancaria.no_admite_deposito NO-LOCK NO-ERROR.
+  IF NOT AVAILABLE Cuenta_bancaria 
+  THEN DO:
+       RUN PONMENSJ.P ( 'CTAB001' ).
+       RETURN NO-APPLY.
+  END.
+  
+  ASSIGN
+     v-denominacion_cta = Cuenta_bancaria.denominacion_cta
+     v-cdg_cuenta_ban   = Cuenta_bancaria.cdg_cuenta_ban.
+  DISPLAY v-denominacion_cta 
+          WITH FRAME {&FRAME-NAME}.     
+          
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME v-cdg_rubro
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL v-cdg_rubro C-Win
+ON VALUE-CHANGED OF v-cdg_rubro IN FRAME DEFAULT-FRAME
+DO:
+    
+    ASSIGN v-cdg_rubro. 
+    /*RUN setear_fecha_desde.*/
+    DISPLAY v-des_fecha
+        WITH FRAME {&FRAME-NAME}.
+
+   RUN levantar_valores.
+   RUN abrir_query_disponibles.
+
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME v-depocanje
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL v-depocanje C-Win
+ON VALUE-CHANGED OF v-depocanje IN FRAME DEFAULT-FRAME
+DO:
+  ASSIGN  v-depocanje.
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME v-des_fecha
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL v-des_fecha C-Win
+ON LEAVE OF v-des_fecha IN FRAME DEFAULT-FRAME /* Desde */
+DO:
+    ASSIGN FRAME {&FRAME-NAME} v-des_fecha.
+    RUN abrir_query_disponibles.
+
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL v-des_fecha C-Win
+ON MOUSE-MENU-DOWN OF v-des_fecha IN FRAME DEFAULT-FRAME /* Desde */
+DO:
+
+  fecha_inicial = DATE(v-des_fecha:SCREEN-VALUE IN FRAME {&FRAME-NAME}) NO-ERROR.
+  IF fecha_inicial = ? THEN fecha_inicial = TODAY.
+  RUN d-calendario.w ( INPUT fecha_inicial, OUTPUT fecha_elegida).
+  IF fecha_elegida <> ?
+  THEN DO:
+       DISPLAY fecha_elegida @ v-des_fecha 
+               WITH FRAME {&FRAME-NAME}.
+       APPLY "TAB" TO SELF.        
+  END.               
+
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME v-des_importe
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL v-des_importe C-Win
+ON LEAVE OF v-des_importe IN FRAME DEFAULT-FRAME /* Desde */
+DO:
+    ASSIGN FRAME {&FRAME-NAME} v-des_importe.
+    RUN abrir_query_disponibles.
+  
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME v-fecha_deposito
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL v-fecha_deposito C-Win
+ON LEAVE OF v-fecha_deposito IN FRAME DEFAULT-FRAME /* Fecha Depósito */
+DO:
+  ASSIGN v-fecha_deposito.
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL v-fecha_deposito C-Win
+ON MOUSE-MENU-DOWN OF v-fecha_deposito IN FRAME DEFAULT-FRAME /* Fecha Depósito */
+DO:
+
+  fecha_inicial = DATE(v-fecha_deposito:SCREEN-VALUE IN FRAME {&FRAME-NAME}) NO-ERROR.
+  IF fecha_inicial = ? THEN fecha_inicial = TODAY.
+  RUN d-calendario.w ( INPUT fecha_inicial, OUTPUT fecha_elegida).
+  IF fecha_elegida <> ?
+  THEN DO:
+       DISPLAY fecha_elegida @ v-fecha_deposito 
+               WITH FRAME {&FRAME-NAME}.
+       APPLY "TAB" TO SELF.        
+  END.               
+  
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME v-has_fecha
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL v-has_fecha C-Win
+ON LEAVE OF v-has_fecha IN FRAME DEFAULT-FRAME /* Hasta */
+DO:
+    ASSIGN FRAME {&FRAME-NAME} v-has_fecha.
+    RUN abrir_query_disponibles.
+
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL v-has_fecha C-Win
+ON MOUSE-MENU-DOWN OF v-has_fecha IN FRAME DEFAULT-FRAME /* Hasta */
+DO:
+
+  fecha_inicial = DATE(v-has_fecha:SCREEN-VALUE IN FRAME {&FRAME-NAME}) NO-ERROR.
+  IF fecha_inicial = ? THEN fecha_inicial = TODAY.
+  RUN d-calendario.w ( INPUT fecha_inicial, OUTPUT fecha_elegida).
+  IF fecha_elegida <> ?
+  THEN DO:
+       DISPLAY fecha_elegida @ v-has_fecha 
+               WITH FRAME {&FRAME-NAME}.
+       APPLY "TAB" TO SELF.        
+  END.               
+
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME v-has_importe
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL v-has_importe C-Win
+ON LEAVE OF v-has_importe IN FRAME DEFAULT-FRAME /* Hasta */
+DO:
+    ASSIGN FRAME {&FRAME-NAME} v-has_importe.
+    RUN abrir_query_disponibles.
+
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME v-numero_cheque
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL v-numero_cheque C-Win
+ON RETURN OF v-numero_cheque IN FRAME DEFAULT-FRAME /* Nro. Cheque */
+DO: 
+  ASSIGN v-numero_cheque v-cdg_banco.
+
+  IF v-cdg_banco <> 0 
+  THEN DO:
+      FIND Banco WHERE Banco.cdg_banco = v-cdg_banco NO-ERROR.
+      IF NOT AVAILABLE Banco 
+      THEN DO:
+          RUN ponmensj.p ( INPUT "DEPF005" ).
+          RETURN NO-APPLY.
+      END.
+  END.
+  ELSE DO:
+      
+      IF v-cdg_banco = 0
+          THEN FIND T-Cartera WHERE T-Cartera.numero_cheque = v-numero_cheque NO-ERROR.
+          ELSE FIND T-Cartera WHERE T-Cartera.numero_cheque = v-numero_cheque 
+                                AND T-Cartera.cdg_banco = v-cdg_banco NO-ERROR.
+
+      IF AVAILABLE T-Cartera
+      THEN DO:
+          REPOSITION BRW-DISPONIBLES TO ROWID ROWID(T-Cartera) NO-ERROR.
+          IF ERROR-STATUS:ERROR
+          THEN DO:
+              RUN ponmensj.p ( INPUT "DEPF012" ).
+          END.
+          ELSE DO:
+              RUN marcar_valor.
+          END.
+      END.
+      ELSE DO:
+          IF AMBIGUOUS T-Cartera
+          THEN DO:
+              RUN ponmensj.p ( INPUT "DEPF006" ).
+          END.
+          ELSE DO:
+              RUN ponmensj.p ( INPUT "DEPF007" ).
+          END.
+      END.
+  END.
+
+  ASSIGN
+      v-cdg_banco = 0
+      v-numero_cheque = 0.
+  DISPLAY v-cdg_banco v-numero_cheque
+      WITH FRAME {&FRAME-NAME}.
+  RETURN NO-APPLY.
+     
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME v-referencia
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL v-referencia C-Win
+ON LEAVE OF v-referencia IN FRAME DEFAULT-FRAME /* Ref. */
+DO:
+  ASSIGN v-referencia.
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define BROWSE-NAME BRW-DISPONIBLES
+&UNDEFINE SELF-NAME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CUSTOM _MAIN-BLOCK C-Win 
+
+
+/* ***************************  Main Block  *************************** */
+
+/* Set CURRENT-WINDOW: this will parent dialog-boxes and frames.        */
+ASSIGN CURRENT-WINDOW                = {&WINDOW-NAME} 
+       THIS-PROCEDURE:CURRENT-WINDOW = {&WINDOW-NAME}.
+
+/* The CLOSE event can be used from inside or outside the procedure to  */
+/* terminate it.                                                        */
+ON CLOSE OF THIS-PROCEDURE 
+   RUN disable_UI.
+
+RUN inicializar.
+
+/* Best default for GUI applications is...                              */
+PAUSE 0 BEFORE-HIDE.
+
+/* Now enable the interface and wait for the exit condition.            */
+/* (NOTE: handle ERROR and END-KEY so cleanup code will always fire.    */
+MAIN-BLOCK:
+DO ON ERROR   UNDO MAIN-BLOCK, LEAVE MAIN-BLOCK
+   ON END-KEY UNDO MAIN-BLOCK, LEAVE MAIN-BLOCK:
+  RUN enable_UI.
+  RUN mostrar_cantidad_cheques.
+  IF NOT THIS-PROCEDURE:PERSISTENT THEN
+    WAIT-FOR CLOSE OF THIS-PROCEDURE.
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+/* **********************  Internal Procedures  *********************** */
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE abrir_queries C-Win 
+PROCEDURE abrir_queries :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+
+  RUN abrir_query_disponibles.
+  RUN abrir_query_seleccionados.
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE abrir_query_disponibles C-Win 
+PROCEDURE abrir_query_disponibles :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+
+  {&OPEN-QUERY-BRW-DISPONIBLES}
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE abrir_query_seleccionados C-Win 
+PROCEDURE abrir_query_seleccionados :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+
+  {&OPEN-QUERY-BRW-SELECCIONADOS}
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE depositar_cheques C-Win 
+PROCEDURE depositar_cheques :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+
+    DEFINE VARIABLE tot_Valors          AS INTEGER LABEL "Valores".
+    DEFINE VARIABLE tot_importes        LIKE Valor.importe LABEL "Importes".
+    DEFINE VARIABLE fecha_lis           AS DATE.
+    DEFINE VARIABLE hora_lis            AS CHARACTER.
+    DEFINE VARIABLE dire_tmp            AS CHARACTER.
+    DEFINE VARIABLE v-ultimo_cheque     AS CHARACTER.
+    DEFINE VARIABLE det_titulo          AS CHARACTER FORMAT "X(30)".
+    DEFINE VARIABLE titulo_f            AS CHARACTER FORMAT "X(33)".
+    DEFINE VARIABLE cod_efectivo        LIKE Rubro.cdg_rubro.
+
+    DEFINE FRAME frm-titulo HEADER
+        que_empresa FORMAT "X(25)"
+        titulo_f AT 30
+        "Página:" AT 70 PAGE-NUMBER FORMAT ">9" AT 77 
+        fecha_lis               
+        det_titulo AT 30
+        hora_lis AT 70  
+        WITH WIDTH 196 FRAME frm-titulo TOP-ONLY PAGE-TOP STREAM-IO.
+                
+    DEFINE FRAME frm-listado
+        Valor.cdg_banco "  " 
+        Banco.nombre "  " 
+        Valor.numero_cheque "  " 
+        Valor.estado "  " 
+        Valor.fecha_deposito "   " 
+        Valor.importe "  " 
+        WITH WIDTH 196 DOWN CENTERED FRAME frm-listado USE-TEXT STREAM-IO.
+
+    /* --------------------------------------------------------------------------------------- */
+    /*                            PROCESO DE VALORES                                           */
+    /* --------------------------------------------------------------------------------------- */
+    
+    RUN getparametro_n.p (  INPUT  "DFCCJEFV", OUTPUT cod_efectivo ).
+    
+    RUN getparametro_c.p ( INPUT "DIRECTMP", OUTPUT dire_tmp).
+
+    FIND Cuenta_bancaria WHERE Cuenta_bancaria.cdg_cuenta_ban = v-cdg_cuenta_ban NO-LOCK.
+    
+    FIND Cuenta WHERE Cuenta.nro_cuenta = Cuenta_bancaria.nro_cuenta_deposito NO-LOCK.
+    
+    FIND FIRST Moneda WHERE Moneda.es_local NO-LOCK.
+
+    FIND Tipocomprobante 
+        WHERE Tipocomprobante.cdg_empresa = Empresa.cdg_empresa
+          AND Tipocomprobante.cdg_comprobante = "DEPBANCO"
+              NO-LOCK NO-ERROR.
+
+    IF NOT AVAILABLE Tipocomprobante
+    THEN DO:
+        MESSAGE "No puede efectuarse del depósito porque no se hallo el comprobante DEPBANCO"
+            VIEW-AS ALERT-BOX INFO TITLE "ERROR DE IMPLEMENTACION".
+        RETURN.
+    END.
+
+    FIND FIRST Librocontable WHERE Librocontable.defecto NO-LOCK NO-ERROR.
+    IF NOT AVAILABLE Librocontable
+    THEN DO:
+        MESSAGE "No puede efectuarse del depósito porque no se hallo el libro contable por defecto"
+            VIEW-AS ALERT-BOX INFO TITLE "ERROR DE IMPLEMENTACION".
+        RETURN.
+    END.
+
+    DO TRANSACTION WITH FRAME frm-listado:
+
+        FIND Parametro 
+            WHERE Parametro.cdg_parametro = Tipocomprobante.prefijo_contador 
+              AND Parametro.cdg_empresa   = Empresa.cdg_empresa
+                         EXCLUSIVE-LOCK NO-ERROR.
+
+        IF NOT AVAILABLE Parametro
+        THEN DO:
+             CREATE Parametro.
+             ASSIGN Parametro.cdg_empresa   = Empresa.cdg_empresa
+                    Parametro.cdg_parametro = Tipocomprobante.prefijo_contador
+                    Parametro.descripcion   = "Contador autoagregado por " + PROGRAM-NAME(1)
+                    Parametro.observacion   = ""
+                    Parametro.tipo          = "N"
+                    Parametro.valor_n       = 1.
+        END.         
+
+  
+        CREATE Caj_header.
+        ASSIGN Caj_header.cdg_empresa       = Empresa.cdg_empresa
+               Caj_header.cdg_comprobante   = Tipocomprobante.cdg_comprobante
+               Caj_header.cdg_librocontable = Librocontable.cdg_librocontable
+               Caj_header.fecha             = v-fecha_deposito
+               Caj_header.hora              = TIME
+               Caj_header.ultima_linea      = 0
+               Caj_header.nro_transaccion   = NEXT-VALUE(proxima_transaccion)
+               Caj_header.nro_moneda        = Moneda.nro_moneda
+               Caj_header.cambio            = 1
+               Caj_header.ingreso           = 0
+               Caj_header.cdg_caja          = Caja.cdg_caja
+               Caj_header.nro_cuenta        = Cuenta_bancaria.nro_cuenta_deposito
+               Caj_header.emitir            = YES
+               Caj_header.importe           = 0 
+               Caj_header.nro_cliente       = 0
+               Caj_header.tipo_mov          = "E"
+               Caj_header.observacion       = v-referencia
+               Caj_header.tip_comprob       = "DP"
+               Caj_header.prf_comprob       = 0
+               Caj_header.nro_comprob       = Parametro.valor_n
+               Parametro.valor_n            = Parametro.valor_n + 1.
+  
+        CREATE Boleta_deposito_hd.
+        BUFFER-COPY Caj_header TO Boleta_deposito_hd
+             ASSIGN Boleta_deposito_hd.cdg_cuenta_ban  = Cuenta_bancaria.cdg_cuenta_ban
+                    Boleta_deposito_hd.efectivo        = 0 
+                    Boleta_deposito_hd.fecha_deposito  = v-fecha_deposito
+                    Boleta_deposito_hd.nro_boletadep   = NEXT-VALUE(proxima_boletadeposito)
+                    Boleta_deposito_hd.referencia      = v-referencia.
+  
+        ASSIGN  fecha_lis = TODAY
+                hora_lis = STRING(TIME,"HH:MM:SS")
+                titulo_f = "Valores depositados el " + STRING(v-fecha_deposito,"99/99/99")
+                det_titulo = Cuenta_bancaria.cdg_cuenta_ban + " - " + Cuenta_bancaria.denominacion_cta.
+             
+        OUTPUT TO VALUE(dire_tmp + "depvalor.txt") PAGED.
+      
+        tot_importes = 0.
+    
+        FOR EACH T-Seleccionados , FIRST Banco OF T-Seleccionados NO-LOCK:
+
+            FIND Valor WHERE Valor.nro_valor = T-Seleccionados.nro_valor EXCLUSIVE-LOCK.
+                                      
+            ASSIGN Caj_header.ultima_linea = Caj_header.ultima_linea + 1.
+                   Caj_header.importe      = Caj_header.importe + Valor.importe.
+             
+            CREATE Caj_detalle.
+            ASSIGN Caj_detalle.cambio           = 0
+                   Caj_detalle.cdg_rubro        = Valor.cdg_rubro
+                   Caj_detalle.divisas          = 0
+                   Caj_detalle.importe          = Valor.importe
+                   Caj_detalle.nro_linea        = Caj_header.ultima_linea
+                   Caj_detalle.nro_transaccion  = Caj_header.nro_transaccion
+                   Caj_detalle.nro_valor        = Valor.nro_valor
+                   Caj_detalle.observacion      = "" /* EMITIR_MOVCAJA.P LE PONE EL CHEQUE Y EL BANCO EN EL ASIENTO */
+                   Caj_detalle.tipo_mov         = Caj_header.tipo_mov
+                   Valor.selectado              = NO
+                   Valor.fecha_deposito         = Caj_header.fecha
+                   Valor.cdg_cuenta_ban         = Cuenta_bancaria.cdg_cuenta_ban
+                   Valor.user-id-sel            = ""
+                   Valor.estado                 = "01".
+
+            CREATE Boleta_deposito_dt.
+            ASSIGN Boleta_deposito_dt.nro_boletadep = Boleta_deposito_hd.nro_boletadep
+                   Boleta_deposito_dt.nro_valor     = Valor.nro_valor.
+
+            ASSIGN Valor.fecha_deposito = v-fecha_deposito. /* Actualizamos fecha de depósito */
+
+            RUN fecvalor.p ( INPUT-OUTPUT Valor.fecha_deposito, INPUT Valor.dias_clearing, OUTPUT Valor.fecha_acredita).
+
+            VIEW FRAME frm-titulo.
+            DISPLAY Valor.cdg_banco
+                    Banco.nombre
+                    Valor.numero_cheque
+                    Valor.estado
+                    Valor.fecha_deposito
+                    Valor.importe
+                    Valor.estado
+                    WITH FRAME frm-listado.
+
+            DOWN WITH FRAME frm-listado.
+            tot_importes = tot_importes + Valor.importe.
+            tot_Valors   = tot_Valors + 1.
+            
+            /* ------------------------------------------------------------------------------ */
+            /* Si la cuenta de saldo es igual a la de los depósitos, entonces es porque no se */
+            /* contabilizan los Valores pendientes de acreditar y luego su acreditación sino  */
+            /* que directamente se contabiliza contra el saldo.                               */
+            /* ------------------------------------------------------------------------------ */
+
+            IF Cuenta_bancaria.nro_cuenta_deposito = Cuenta_bancaria.nro_cuenta_acredita
+            THEN DO:
+                CREATE Cta_cte_bco.
+                ASSIGN Cta_cte_bco.tip_comprob     = Caj_header.tip_comprob
+                       Cta_cte_bco.prf_comprob     = Caj_header.prf_comprob
+                       Cta_cte_bco.nro_comprob     = Caj_header.nro_comprob
+                       Cta_cte_bco.fecha_efectiva  = Valor.fecha_acredita
+                       Cta_cte_bco.fecha_movimto   = Caj_header.fecha
+                       Cta_cte_bco.credito         = Valor.importe
+                       Cta_cte_bco.debito          = 0
+                       Cta_cte_bco.nro_cuenta      = 0
+                       Cta_cte_bco.cdg_cuenta_ban  = Cuenta_bancaria.cdg_cuenta_ban
+                       Cta_cte_bco.nro_valor       = Valor.nro_valor.
+            END.
+
+            v-ultimo_cheque = "CHQ " + 
+                              STRING(Valor.cdg_banco,"999") + 
+                              "-" + 
+                              STRING(Valor.numero_cheque,"99999999").
+            RELEASE Valor.
+
+            DELETE T-Seleccionados.
+
+        END.  
+
+        UNDERLINE Valor.cdg_banco
+                  Banco.nombre
+                  Valor.numero_cheque
+                  Valor.estado
+                  Valor.fecha_deposito
+                  Valor.importe
+                  WITH FRAME frm-listado.
+      
+        DISPLAY   "Total"      @ Banco.nombre
+                  tot_Valors   @ Valor.numero_cheque
+                  tot_importes @ Valor.importe 
+                  WITH FRAME frm-listado.
+        DOWN WITH FRAME frm-listado.
+      
+        OUTPUT CLOSE.
+      
+        RELEASE Parametro.
+
+        CREATE Caja-imputacion.
+        ASSIGN Caja-imputacion.nro_cuenta        = Cuenta_bancaria.nro_cuenta_deposito
+               Caja-imputacion.nro_entidad       = 0
+               Caja-imputacion.nro_obra          = 0
+               Caja-imputacion.nro_transaccion   = Caj_header.nro_transaccion
+               Caja-imputacion.observacion       = IF tot_valors = 1 THEN v-ultimo_cheque 
+                                                                     ELSE "Boleta de Deposito Nro. " + STRING(Boleta_deposito_hd.nro_comprob) 
+               Caja-imputacion.Valor             = tot_importes.
+
+        RUN emitir_movcaja.p ( INPUT ROWID(Caj_header) ).
+
+   END. /* De la transaccion de deposito */
+
+   RELEASE Parametro.
+            
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE desmarcar_todos C-Win 
+PROCEDURE desmarcar_todos :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+
+  DO TRANSACTION:
+
+     ASSIGN
+        v-cantcheques = 0
+        v-totdeposito = 0.
+
+     FOR EACH T-Seleccionados:
+         CREATE T-Cartera.
+         BUFFER-COPY T-Seleccionados TO T-Cartera.
+         DELETE T-Seleccionados.
+     END.
+     
+  END.
+
+  RUN abrir_queries.
+  RUN mostrar_cantidad_cheques.
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE desmarcar_valor C-Win 
+PROCEDURE desmarcar_valor :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+
+  DO TRANSACTION:
+      ASSIGN v-cantcheques = v-cantcheques - 1
+             v-totdeposito = v-totdeposito - T-Seleccionados.importe.
+      CREATE T-Cartera.
+      BUFFER-COPY T-Seleccionados TO T-Cartera.
+      DELETE T-Seleccionados.
+  END.
+
+  RUN abrir_queries.
+  RUN mostrar_cantidad_cheques.
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE disable_UI C-Win  _DEFAULT-DISABLE
+PROCEDURE disable_UI :
+/*------------------------------------------------------------------------------
+  Purpose:     DISABLE the User Interface
+  Parameters:  <none>
+  Notes:       Here we clean-up the user-interface by deleting
+               dynamic widgets we have created and/or hide 
+               frames.  This procedure is usually called when
+               we are ready to "clean-up" after running.
+------------------------------------------------------------------------------*/
+  /* Delete the WINDOW we created */
+  IF SESSION:DISPLAY-TYPE = "GUI":U AND VALID-HANDLE(C-Win)
+  THEN DELETE WIDGET C-Win.
+  IF THIS-PROCEDURE:PERSISTENT THEN DELETE PROCEDURE THIS-PROCEDURE.
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE enable_UI C-Win  _DEFAULT-ENABLE
+PROCEDURE enable_UI :
+/*------------------------------------------------------------------------------
+  Purpose:     ENABLE the User Interface
+  Parameters:  <none>
+  Notes:       Here we display/view/enable the widgets in the
+               user-interface.  In addition, OPEN all queries
+               associated with each FRAME and BROWSE.
+               These statements here are based on the "Other 
+               Settings" section of the widget Property Sheets.
+------------------------------------------------------------------------------*/
+  DISPLAY v-cdg_caja v-nombre v-cdg_cuenta_ban v-denominacion_cta v-depocanje 
+          v-cantcheques v-totdeposito v-referencia v-cdg_rubro v-des_fecha 
+          v-has_fecha v-fecha_deposito v-des_importe v-has_importe v-cdg_banco 
+          v-numero_cheque 
+      WITH FRAME DEFAULT-FRAME IN WINDOW C-Win.
+  ENABLE RECT-1 RECT-4 RECT-6 RECT-8 RECT-9 RECT-7 v-cdg_caja v-cdg_cuenta_ban 
+         v-depocanje v-referencia btn_depositar v-cdg_rubro v-des_fecha 
+         v-has_fecha v-fecha_deposito btn_seltodos btn_desmarcar btn_listar 
+         v-des_importe v-has_importe v-cdg_banco v-numero_cheque 
+         BRW-DISPONIBLES BRW-SELECCIONADOS 
+      WITH FRAME DEFAULT-FRAME IN WINDOW C-Win.
+  {&OPEN-BROWSERS-IN-QUERY-DEFAULT-FRAME}
+  VIEW C-Win.
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE inicializar C-Win 
+PROCEDURE inicializar :
+/*------------------------------------------------------------------------------
+  Purpose:     Override standard ADM method
+  Notes:       
+------------------------------------------------------------------------------*/
+
+  /* Code placed here will execute PRIOR to standard behavior. */
+
+  DEFINE VARIABLE ok AS LOGICAL.
+  DEFINE VARIABLE lista AS CHARACTER.
+
+  {findempresa.i}
+  que_empresa = Empresa.cdg_empresa.
+
+  DO WITH FRAME {&FRAME-NAME}:
+
+      lista = "".
+      FOR EACH Rubro WHERE Rubro.tipo = "V" NO-LOCK:
+          lista = lista + "," + Rubro.nombre + "," + STRING(Rubro.cdg_rubro).
+      END.
+      v-cdg_rubro:LIST-ITEM-PAIRS = SUBSTRING(lista,2).      
+      FIND FIRST Rubro WHERE Rubro.tipo = "V" NO-LOCK.
+      v-cdg_rubro = Rubro.cdg_rubro.  
+
+  END.          
+
+  {findempresa.i}
+  que_empresa = Empresa.cdg_empresa.
+
+  {findparametro.i "DIRECTMP" "dire_tmp" "valor_c"}
+
+  FIND FIRST Caja WHERE CAN-DO(Caja.lista_empresas,Empresa.cdg_empresa) NO-ERROR.
+  IF NOT AVAILABLE Caja
+  THEN DO:
+      MESSAGE "No se encuentran cajas habilitadas para la empresa actual"
+          VIEW-AS ALERT-BOX ERROR TITLE "ERROR DE IMPLEMENTACION".
+  END.
+  ELSE DO:
+      ASSIGN v-cdg_caja = Caja.cdg_caja
+             v-nombre   = Caja.nombre
+             v-des_importe = 0
+             v-has_importe = 9999999.99
+             v-fecha_deposito = TODAY
+             v-has_fecha = TODAY
+             v-depocanje = "D".
+      RUN levantar_valores.
+      RUN setear_fecha_desde.
+
+  END.
+
+  DISPLAY v-des_fecha
+          v-has_fecha
+          v-fecha_deposito
+          v-cdg_caja
+          v-nombre
+          v-cdg_rubro
+          WITH FRAME {&FRAME-NAME}.
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE levantar_valores C-Win 
+PROCEDURE levantar_valores :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+  
+  EMPTY TEMP-TABLE T-Cartera.
+  EMPTY TEMP-TABLE T-Seleccionados.
+  porden = 0.
+
+/*FOR EACH Valor OF Caja 
+      WHERE Valor.fecha_deposito >= v-des_fecha
+        AND Valor.fecha_deposito <= v-has_fecha
+        AND Valor.cdg_empresa = que_empresa
+        AND Valor.estado = "00" 
+        AND Valor.importe <= v-has_importe
+        AND Valor.importe >= v-des_importe 
+        AND Valor.cdg_rubro = v-cdg_rubro
+        AND Valor.user-id-sel = "" NO-LOCK,
+            EACH Banco OF Valor NO-LOCK:*/
+
+  DO TRANSACTION:
+
+      FOR EACH Valor
+          WHERE Valor.cdg_caja = v-cdg_caja
+            AND Valor.cdg_empresa = que_empresa
+            AND Valor.estado = "00" 
+            AND Valor.cdg_rubro = v-cdg_rubro
+                NO-LOCK:
+    
+          CREATE T-Cartera.
+          BUFFER-COPY Valor TO T-Cartera.
+                    
+      END.
+
+  END.
+
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE listar_cheques C-Win 
+PROCEDURE listar_cheques :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+
+    DEFINE VARIABLE tot_valors          AS INTEGER LABEL "T-Seleccionadoses".
+    DEFINE VARIABLE tot_importes        LIKE T-Seleccionados.importe LABEL "Importes".
+    DEFINE VARIABLE fecha_lis           AS DATE.
+    DEFINE VARIABLE aux-fecha_deposito  AS DATE.
+    DEFINE VARIABLE aux-fecha_acredita  AS DATE.
+
+    DEFINE VARIABLE hora_lis            AS CHARACTER.
+    DEFINE VARIABLE dire_tmp            AS CHARACTER.
+    DEFINE VARIABLE nom_empresa         AS CHARACTER FORMAT "X(30)".
+    DEFINE VARIABLE det_titulo          AS CHARACTER FORMAT "X(30)".
+    DEFINE VARIABLE titulo_f            AS CHARACTER FORMAT "X(33)".
+
+    DEFINE FRAME frm-titulo HEADER
+        nom_empresa FORMAT "X(25)"
+        titulo_f AT 30
+        "Página:" AT 70 PAGE-NUMBER FORMAT ">9" AT 77 SKIP
+        fecha_lis               
+        det_titulo AT 30
+        hora_lis AT 70  
+        WITH WIDTH 96 FRAME frm-titulo TOP-ONLY PAGE-TOP STREAM-IO.
+                
+    DEFINE FRAME frm-listado
+        T-Seleccionados.cdg_banco      COLUMN-LABEL "Código!Banco"
+        Banco.nombre         COLUMN-LABEL "Razón!Social"
+        T-Seleccionados.numero_cheque  COLUMN-LABEL "Número!Cheque"
+        T-Seleccionados.fecha_emision  COLUMN-LABEL "Fecha!Emisión" 
+        aux-fecha_acredita   COLUMN-LABEL "Fecha!Acredita" 
+        T-Seleccionados.importe        COLUMN-LABEL "Importe!Cheque" 
+        WITH WIDTH 96 DOWN CENTERED FRAME frm-listado STREAM-IO.
+    
+    {findparametro.i "DIRECTMP" "dire_tmp" "valor_c"}
+
+    FIND Cuenta_bancaria WHERE Cuenta_bancaria.cdg_cuenta_ban = v-cdg_cuenta_ban NO-LOCK NO-ERROR.
+
+    OUTPUT TO VALUE(dire_tmp + "depvalor.txt").
+
+    DO WITH FRAME frm-listado:
+  
+         fecha_lis = TODAY.
+         hora_lis = STRING(TIME,"HH:MM:SS").
+         titulo_f = "Valores seleccionados para depositar el " + STRING(v-fecha_deposito,"99/99/99").
+         IF AVAILABLE Cuenta_bancaria
+            THEN det_titulo = Cuenta_bancaria.cdg_cuenta_ban + " - " + 
+                              Cuenta_bancaria.denominacion_cta.
+            ELSE det_titulo = "No se especificó la Cuenta Bancaria".
+         nom_empresa = Empresa.nombre.
+       
+         VIEW FRAME frm-titulo.
+         
+         tot_importes = 0.
+         FOR EACH T-Seleccionados, FIRST Banco OF T-Seleccionados WITH FRAME frm-listado:
+
+             aux-fecha_deposito = v-fecha_deposito.
+             
+             RUN fecvalor.p ( INPUT-OUTPUT aux-fecha_deposito, 
+                              INPUT T-Seleccionados.dias_clearing, 
+                              OUTPUT aux-fecha_acredita).
+      
+             DISPLAY T-Seleccionados.cdg_banco
+                     Banco.nombre
+                     T-Seleccionados.numero_cheque
+                     T-Seleccionados.fecha_emision
+                     T-Seleccionados.importe
+                     aux-fecha_acredita
+                     WITH FRAME frm-listado.
+      
+             DOWN WITH FRAME frm-listado.
+             tot_importes = tot_importes + T-Seleccionados.importe.
+             tot_valors   = tot_valors + 1.
+            
+         END.  
+
+         UNDERLINE T-Seleccionados.cdg_banco
+                   Banco.nombre
+                   T-Seleccionados.numero_cheque
+                   T-Seleccionados.fecha_emision
+                   T-Seleccionados.importe
+                   aux-fecha_acredita
+                   WITH FRAME frm-listado.
+      
+         DISPLAY   "Total"      @ Banco.nombre
+                   tot_valors   @ T-Seleccionados.numero_cheque
+                   tot_importes @ T-Seleccionados.importe 
+                   WITH FRAME frm-listado.
+         DOWN WITH FRAME frm-listado.
+      
+         OUTPUT CLOSE.
+      
+         RUN veresult.w ( INPUT dire_tmp + "depvalor.txt",
+                          INPUT 22).
+      
+   END. /* De la impresion de los cheques */
+  
+   RELEASE Parametro.
+            
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE marcar_todos C-Win 
+PROCEDURE marcar_todos :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+
+  DO TRANSACTION:
+
+      RUN abrir_query_disponibles.
+
+      DO WHILE AVAILABLE T-Cartera:
+          RUN marcar_valor.
+          RUN abrir_query_disponibles.
+      END.
+     
+  END.
+
+  RUN abrir_queries.
+  RUN mostrar_cantidad_cheques.
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE marcar_todos_bak C-Win 
+PROCEDURE marcar_todos_bak :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+
+  DO TRANSACTION:
+
+      RUN abrir_query_disponibles.
+
+      GET FIRST BRW-DISPONIBLES.
+      DO WHILE AVAILABLE T-Cartera:
+         CREATE T-Seleccionados.
+         BUFFER-COPY T-Cartera TO T-Seleccionados
+         ASSIGN porden = porden + 1
+                T-Seleccionados.tselorden = porden.
+         ASSIGN v-cantcheques = v-cantcheques + 1
+                v-totdeposito = v-totdeposito + T-Seleccionados.importe.
+         DELETE T-Cartera.
+         GET NEXT BRW-DISPONIBLES.
+      END.
+     
+  END.
+
+  RUN abrir_queries.
+  RUN mostrar_cantidad_cheques.
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE marcar_valor C-Win 
+PROCEDURE marcar_valor :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+
+  DO TRANSACTION:
+      CREATE T-Seleccionados.
+      BUFFER-COPY T-Cartera TO T-Seleccionados
+      ASSIGN porden = porden + 1
+             T-Seleccionados.tselorden = porden.
+      DELETE T-Cartera.
+      ASSIGN v-cantcheques = v-cantcheques + 1
+             v-totdeposito = v-totdeposito + T-Seleccionados.importe.
+  END.
+
+  RUN abrir_queries.
+  RUN mostrar_cantidad_cheques.
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE mostrar_cantidad_cheques C-Win 
+PROCEDURE mostrar_cantidad_cheques :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+
+  DISPLAY  v-cantcheques
+           v-totdeposito
+           WITH FRAME {&FRAME-NAME}.
+
+  ASSIGN btn_depositar:SENSITIVE IN FRAME {&FRAME-NAME} = v-cantcheques > 0 
+         btn_listar:SENSITIVE IN FRAME {&FRAME-NAME} = v-cantcheques > 0 
+         v-cdg_caja:SENSITIVE IN FRAME {&FRAME-NAME} = v-cantcheques = 0 
+         v-cdg_rubro:SENSITIVE IN FRAME {&FRAME-NAME} = v-cantcheques = 0.
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE setear_fecha_desde C-Win 
+PROCEDURE setear_fecha_desde :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+
+   v-des_fecha = v-has_fecha.
+   FOR FIRST T-Cartera BY T-Cartera.fecha_deposito:
+       v-des_fecha = T-Cartera.fecha_deposito.
+   END.
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE sumar_valores C-Win 
+PROCEDURE sumar_valores :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+
+/*DO: 
+      DO TRANSACTION:
+        FIND CURRENT Valor EXCLUSIVE-LOCK.
+        IF Valor.user-id-sel = ""
+        THEN DO:
+             Valor.user-id-sel = "DP-" + USERID("sic").
+             v-cantcheques = v-cantcheques + 1.
+             v-totdeposito = v-totdeposito + Valor.importe.
+             RUN poner_color ( INPUT 0, INPUT 8).
+        END.
+        ELSE DO:
+             Valor.user-id-sel = "".
+             v-cantcheques = v-cantcheques - 1.
+             v-totdeposito = v-totdeposito - Valor.importe.
+             RUN poner_color ( INPUT 9, INPUT 15).
+    
+        END.
+      END.
+      DISPLAY  v-cantcheques
+               v-totdeposito
+               WITH FRAME {&FRAME-NAME}.
+    END. */
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+

@@ -1,0 +1,22 @@
+FOR EACH Ficha EXCLUSIVE-LOCK:
+
+  IF Ficha.hor_despacho <> ? THEN Ficha.hms_despacho = STRING(Ficha.hor_despacho,"HH:MM:SS").
+                             ELSE Ficha.hms_despacho = "".
+  IF Ficha.hor_salbas <> ? THEN Ficha.hms_salbas = STRING(Ficha.hor_salbas,"HH:MM:SS").
+                             ELSE Ficha.hms_salbas = "".
+  IF Ficha.hor_arrdom <> ? THEN Ficha.hms_arrdom = STRING(Ficha.hor_arrdom,"HH:MM:SS").
+                             ELSE Ficha.hms_arrdom = "".
+  IF Ficha.hor_saldom <> ? THEN Ficha.hms_saldom = STRING(Ficha.hor_saldom,"HH:MM:SS").
+                             ELSE Ficha.hms_saldom = "".
+  IF Ficha.hor_arrhos <> ? THEN Ficha.hms_arrhos = STRING(Ficha.hor_arrhos,"HH:MM:SS").
+                             ELSE Ficha.hms_arrhos = "".
+  IF Ficha.hor_salhos <> ? THEN Ficha.hms_salhos = STRING(Ficha.hor_salhos,"HH:MM:SS").
+                             ELSE Ficha.hms_salhos = "".
+  IF Ficha.hor_arrbas <> ? THEN Ficha.hms_arrbas = STRING(Ficha.hor_arrbas,"HH:MM:SS").
+                             ELSE Ficha.hms_arrbas = "".
+  IF Ficha.hor_disponible <> ? THEN Ficha.hms_disponible = STRING(Ficha.hor_disponible,"HH:MM:SS").
+                             ELSE Ficha.hms_disponible = "".
+  IF Ficha.hor_cierre  <> ? THEN Ficha.hms_cierre = STRING(Ficha.hor_cierre,"HH:MM:SS").
+                             ELSE Ficha.hms_cierre = "".
+
+END.

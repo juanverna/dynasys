@@ -1,0 +1,171 @@
+<?xml version="1.0"?>
+<tt xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <ttRow>
+    <cdg_empresa>P</cdg_empresa>
+    <cdg_parametro>AFCACHE</cdg_parametro>
+    <descripcion>AFIP WS archivo de cache PATH</descripcion>
+    <valor_n>0</valor_n>
+    <valor_c/>
+    <valor_d>0.0000</valor_d>
+    <valor_l>true</valor_l>
+    <tipo>N</tipo>
+    <observacion/>
+    <cdg_sigla-sic/>
+  </ttRow>
+  <ttRow>
+    <cdg_empresa>P</cdg_empresa>
+    <cdg_parametro>AFCERT</cdg_parametro>
+    <descripcion>AFIP WS archivo certificado .crt</descripcion>
+    <valor_n>0</valor_n>
+    <valor_c>C:\Dynasys10\procs\Paulista.crt</valor_c>
+    <valor_d>0.0000</valor_d>
+    <valor_l>true</valor_l>
+    <tipo>C</tipo>
+    <observacion>AFIP Certificado</observacion>
+    <cdg_sigla-sic/>
+  </ttRow>
+  <ttRow>
+    <cdg_empresa>P</cdg_empresa>
+    <cdg_parametro>AFHORA</cdg_parametro>
+    <descripcion>AFIP WS HORA del Ultimo Token de Login Procesado y valido ver AFTTL</descripcion>
+    <valor_n>0</valor_n>
+    <valor_c/>
+    <valor_d>0.0000</valor_d>
+    <valor_l>true</valor_l>
+    <tipo>C</tipo>
+    <observacion/>
+    <cdg_sigla-sic/>
+  </ttRow>
+  <ttRow>
+    <cdg_empresa>P</cdg_empresa>
+    <cdg_parametro>AFKEY</cdg_parametro>
+    <descripcion>AFIP WS archivo clave .key</descripcion>
+    <valor_n>0</valor_n>
+    <valor_c>C:\Dynasys10\procs\Paulista.key</valor_c>
+    <valor_d>0.0000</valor_d>
+    <valor_l>true</valor_l>
+    <tipo>C</tipo>
+    <observacion>AFIP Clave</observacion>
+    <cdg_sigla-sic/>
+  </ttRow>
+  <ttRow>
+    <cdg_empresa>P</cdg_empresa>
+    <cdg_parametro>AFLIB</cdg_parametro>
+    <descripcion>AFIP WS Wrapper lib especializadas httplib2, urllib2,pycurl</descripcion>
+    <valor_n>0</valor_n>
+    <valor_c/>
+    <valor_d>0.0000</valor_d>
+    <valor_l>true</valor_l>
+    <tipo>N</tipo>
+    <observacion/>
+    <cdg_sigla-sic/>
+  </ttRow>
+  <ttRow>
+    <cdg_empresa>P</cdg_empresa>
+    <cdg_parametro>AFLOG</cdg_parametro>
+    <descripcion>AFIP WS archivo de log de las excepciones</descripcion>
+    <valor_n>0</valor_n>
+    <valor_c>..\logs\wsexcepcion.log</valor_c>
+    <valor_d>0.0000</valor_d>
+    <valor_l>true</valor_l>
+    <tipo>C</tipo>
+    <observacion/>
+    <cdg_sigla-sic/>
+  </ttRow>
+  <ttRow>
+    <cdg_empresa>P</cdg_empresa>
+    <cdg_parametro>AFMAXV</cdg_parametro>
+    <descripcion>AFIP WS Valor maximo de factura a consumidor final sin cuit</descripcion>
+    <valor_n>0</valor_n>
+    <valor_c/>
+    <valor_d>1000.0000</valor_d>
+    <valor_l>true</valor_l>
+    <tipo>N</tipo>
+    <observacion/>
+    <cdg_sigla-sic/>
+  </ttRow>
+  <ttRow>
+    <cdg_empresa>P</cdg_empresa>
+    <cdg_parametro>AFPROXY</cdg_parametro>
+    <descripcion>AFIP WS Proxy de conexcion al los WS ej. &quot;usuario:clave@localhost:8000</descripcion>
+    <valor_n>0</valor_n>
+    <valor_c/>
+    <valor_d>0.0000</valor_d>
+    <valor_l>true</valor_l>
+    <tipo>N</tipo>
+    <observacion/>
+    <cdg_sigla-sic/>
+  </ttRow>
+  <ttRow>
+    <cdg_empresa>P</cdg_empresa>
+    <cdg_parametro>AFSIGN</cdg_parametro>
+    <descripcion>AFIP WS Sign</descripcion>
+    <valor_n>0</valor_n>
+    <valor_c>oxzinksU5TvvoNvq9YX4c0EASnCNRKFAlHxPHdh50u6iGnSWP7ikCNk0a0YD9pFgyx+MePa91gk25cfTv/H2/bCBxLElfL6+3hOD7ZjxuoNUnL07YJ8BSTQYi2K4mAFuYQ8uo2zcUlq0Jyc32C7QfdckWstG3k+NwlVKRaSOwZo=</valor_c>
+    <valor_d>0.0000</valor_d>
+    <valor_l>true</valor_l>
+    <tipo>C</tipo>
+    <observacion/>
+    <cdg_sigla-sic/>
+  </ttRow>
+  <ttRow>
+    <cdg_empresa>P</cdg_empresa>
+    <cdg_parametro>AFTOKEN</cdg_parametro>
+    <descripcion>AFIP WS Ultimo Token de Login Procesado y valido</descripcion>
+    <valor_n>0</valor_n>
+    <valor_c>PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9InllcyI/Pgo8c3NvIHZlcnNpb249IjIuMCI+CiAgICA8aWQgdW5pcXVlX2lkPSI0MDQxODU2ODkiIHNyYz0iQ049d3NhYWhvbW8sIE89QUZJUCwgQz1BUiwgU0VSSUFMTlVNQkVSPUNVSVQgMzM2OTM0NTAyMzkiIGdlbl90aW1lPSIxNDMwMDA3NDk5IiBleHBfdGltZT0iMTQzMDA1MDc1OSIgZHN0PSJDTj13c2ZlLCBPPUFGSVAsIEM9QVIiLz4KICAgIDxvcGVyYXRpb24gdmFsdWU9ImdyYW50ZWQiIHR5cGU9ImxvZ2luIj4KICAgICAgICA8bG9naW4gdWlkPSJDPWFyLCBPPWZlcm5hbmRvIHZlcmduaWF1ZCwgU0VSSUFMTlVNQkVSPUNVSVQgMjAxNDIxNzIzMDYsIENOPWZlcm5hbmRvIHZlcmduaWF1ZCIgc2VydmljZT0id3NmZSIgcmVnbWV0aG9kPSIyMiIgZW50aXR5PSIzMzY5MzQ1MDIzOSIgYXV0aG1ldGhvZD0iY21zIj4KICAgICAgICAgICAgPHJlbGF0aW9ucz4KICAgICAgICAgICAgICAgIDxyZWxhdGlvbiByZWx0eXBlPSI0IiBrZXk9IjIwMTQyMTcyMzA2Ii8+CiAgICAgICAgICAgIDwvcmVsYXRpb25zPgogICAgICAgIDwvbG9naW4+CiAgICA8L29wZXJhdGlvbj4KPC9zc28+Cgo=</valor_c>
+    <valor_d>0.0000</valor_d>
+    <valor_l>true</valor_l>
+    <tipo>C</tipo>
+    <observacion/>
+    <cdg_sigla-sic/>
+  </ttRow>
+  <ttRow>
+    <cdg_empresa>P</cdg_empresa>
+    <cdg_parametro>AFTTL</cdg_parametro>
+    <descripcion>AFIP WS duracion en segundos del token.</descripcion>
+    <valor_n>2400</valor_n>
+    <valor_c/>
+    <valor_d>2400.0000</valor_d>
+    <valor_l>true</valor_l>
+    <tipo>C</tipo>
+    <observacion/>
+    <cdg_sigla-sic/>
+  </ttRow>
+  <ttRow>
+    <cdg_empresa>P</cdg_empresa>
+    <cdg_parametro>AFWPAA</cdg_parametro>
+    <descripcion>AFIP WS HOST Autenticación y Autorización:</descripcion>
+    <valor_n>0</valor_n>
+    <valor_c>https://wsaa.afip.gov.ar/ws/services/LoginCms?wsdl</valor_c>
+    <valor_d>0.0000</valor_d>
+    <valor_l>true</valor_l>
+    <tipo>C</tipo>
+    <observacion>https://wsaa.afip.gov.ar/ws/services/LoginCms?wsdl</observacion>
+    <cdg_sigla-sic/>
+  </ttRow>
+  <ttRow>
+    <cdg_empresa>P</cdg_empresa>
+    <cdg_parametro>AFWSEXE</cdg_parametro>
+    <descripcion>AFIP WS archivo de Excepciones a los WS</descripcion>
+    <valor_n>0</valor_n>
+    <valor_c>..\logs\wsexcepcion.log</valor_c>
+    <valor_d>0.0000</valor_d>
+    <valor_l>true</valor_l>
+    <tipo>C</tipo>
+    <observacion/>
+    <cdg_sigla-sic/>
+  </ttRow>
+  <ttRow>
+    <cdg_empresa>P</cdg_empresa>
+    <cdg_parametro>AFWSFE</cdg_parametro>
+    <descripcion>AFIP WS HOST Facturación Electrónica</descripcion>
+    <valor_n>0</valor_n>
+    <valor_c>https://servicios1.afip.gov.ar/wsfev1/service.asmx</valor_c>
+    <valor_d>0.0000</valor_d>
+    <valor_l>true</valor_l>
+    <tipo>C</tipo>
+    <observacion/>
+    <cdg_sigla-sic/>
+  </ttRow>
+</tt>

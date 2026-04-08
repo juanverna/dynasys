@@ -1,0 +1,3 @@
+TRIGGER PROCEDURE FOR FIND OF Ficha.
+
+ run tgfficha.p.

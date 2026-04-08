@@ -1,0 +1,205 @@
+/*=========================================================================================*/
+/*              EMITE UN LISTADO DE AUDITORIA DE TRANSACCIONES PARA UN PERIODO DADO        */
+/*=========================================================================================*/
+
+DEFINE INPUT PARAMETER p-fecha_desde       AS DATE.
+DEFINE INPUT PARAMETER p-fecha_hasta       AS DATE.
+DEFINE INPUT PARAMETER p-user_desde        LIKE Usuario.cdg_usuario.
+DEFINE INPUT PARAMETER p-user_hasta        LIKE Usuario.cdg_usuario.
+DEFINE INPUT PARAMETER p-lista_empresas    AS CHARACTER.
+DEFINE INPUT PARAMETER p-archivo           AS CHARACTER.
+
+/*
+
+
+AGREGAR SISTEMA OPERATIVO DE LA TABLA _connect
+Y nombre del usuario del sistema operativo getusername().
+
+*/
+
+
+/*=========================================================================================*/
+/*                                        VARIABLES                                        */
+/*=========================================================================================*/
+
+/* {WGLISTAR.I} */
+
+DEFINE VARIABLE fecha_lis                 AS CHARACTER FORMAT "X(10)".     
+DEFINE VARIABLE hora_lis                  AS CHARACTER.
+DEFINE VARIABLE v-sistema                 AS CHARACTER COLUMN-LABEL "Sistema!Accedido" INITIAL "DYNASYS".
+DEFINE VARIABLE titulo_emp                AS CHARACTER FORMAT "X(40)".
+DEFINE VARIABLE titulo_fch                AS CHARACTER FORMAT "X(40)".
+DEFINE VARIABLE titulo_leg                AS CHARACTER FORMAT "X(40)".
+DEFINE VARIABLE v-des_fecha               AS CHARACTER FORMAT "X(8)".
+DEFINE VARIABLE v-has_fecha               AS CHARACTER FORMAT "X(8)".
+
+DEFINE VARIABLE que_empresa               LIKE Empresa.nombre.
+DEFINE VARIABLE linea                     AS CHARACTER FORMAT "X(156)".
+
+DEFINE VARIABLE cFechaHoraDesde           AS CHARACTER FORMAT "X(18)" COLUMN-LABEL "Ingreso".
+DEFINE VARIABLE cFechaHoraHasta           AS CHARACTER FORMAT "X(18)" COLUMN-LABEL "Egreso".
+DEFINE VARIABLE cFuncion                  AS CHARACTER FORMAT "X(80)" COLUMN-LABEL "Función".
+DEFINE VARIABLE lRegistros                AS LOGICAL INITIAL FALSE.
+DEFINE BUFFER B-LogUsuario FOR logusuario.     /* Log Siguiente*/
+DEFINE VARIABLE dFechaProxima AS DATE.
+DEFINE VARIABLE cUsuarioSO                AS CHARACTER FORMAT "X(20)" COLUMN-LABEL "Login BD".
+DEFINE VARIABLE cObservaciones            AS CHARACTER FORMAT "X(60)" COLUMN-LABEL "Observaciones".
+
+DEFINE STREAM Exportacion.
+
+
+/*=========================================================================================*/
+/*                                        FRAMES                                           */
+/*=========================================================================================*/
+
+DEFINE FRAME frm-titulo HEADER
+       que_empresa
+       "Informe de Auditoría por Puesto de Trabajo" AT 57
+       "Página:" AT 130 PAGE-NUMBER FORMAT ">>9" AT 139
+       SKIP  
+       fecha_lis       
+       hora_lis AT 130
+       SKIP
+       titulo_emp AT 57  
+       SKIP
+       titulo_fch AT 57  
+       SKIP
+       titulo_leg AT 57  
+       SKIP(1)
+       WITH WIDTH 600 FRAME frm-titulo PAGE-TOP USE-TEXT STREAM-IO.
+
+FORM
+       Empresa.nombre  
+       v-sistema
+       Usuario.cdg_usuario 
+       Usuario.nombre      
+       Logusuario.pc_name
+       cFuncion
+       cFechaHoraDesde 
+       cFechaHoraHasta
+       cUsuarioSO
+       cObservaciones
+       WITH WIDTH 600 DOWN FRAME frm-listado USE-TEXT STREAM-IO .
+
+/*=========================================================================================*/
+/*                           B L O Q U E   P R I N C I P A L                               */
+/*=========================================================================================*/
+
+{findempresa.i}
+que_empresa = Empresa.nombre.
+fecha_lis = STRING(TODAY,"99/99/9999").
+hora_lis  = STRING(TIME,"HH:MM:SS").
+
+titulo_emp = "Empresas:" + p-lista_empresas.
+titulo_fch = "Período:" + STRING(p-fecha_desde,"99/99/9999") + " al " + STRING(p-fecha_hasta,"99/99/9999").
+titulo_leg = "Legajos:" + p-user_desde + " hasta " + p-user_hasta.
+
+OUTPUT STREAM Exportacion TO VALUE(p-archivo) PAGE-SIZE 0.
+OUTPUT TO VALUE(p-archivo + ".lst") PAGED.
+
+/*-----------------------------------*/
+/* Para todos los usuarios filtrados */
+/*-----------------------------------*/
+FOR EACH Usuario 
+   WHERE Usuario.cdg_usuario <= p-user_hasta 
+     AND Usuario.cdg_usuario >= p-user_desde NO-LOCK:
+
+    cUsuarioSO = Usuario.cdg_usuario.
+
+    /*----------------------------------------------------*/
+    /* Para todos los logins realizados por esos usuarios */
+    /*----------------------------------------------------*/
+    FOR EACH logusuario OF Usuario:
+            
+           IF Logusuario.fch_desde > p-fecha_hasta THEN NEXT. 
+           IF Logusuario.fch_desde < p-fecha_desde THEN NEXT.
+           
+           /* Si la Fecha Hasta es desconocida*/
+           IF logusuario.fch_hasta = ? THEN DO:
+               /* Busco el Hasta (lo traigo del proximo registro) */
+               FIND FIRST B-Logusuario 
+                    WHERE ROWID(B-Logusuario) = ROWID(logusuario) 
+                    NO-LOCK NO-ERROR.
+               FIND NEXT B-Logusuario NO-LOCK NO-ERROR.
+               IF AVAILABLE B-Logusuario THEN dFechaProxima = B-logusuario.fch_desde.  /* Hay otro registro  */
+                                         ELSE dFechaProxima = p-fecha_hasta.           /* No hay + registros */
+               cObservaciones = "SESION TERMINADA DE FORMA ANORMAL". 
+           END.
+           ELSE ASSIGN cObservaciones = "" 
+                       dFechaProxima  = logusuario.fch_hasta. /* Fecha fin de la sesión*/  
+
+           FIND FIRST Empresa WHERE  Empresa.cdg_empresa =  Logusuario.cdg_empresa NO-LOCK NO-ERROR.    
+                
+           cFechaHoraDesde = STRING(YEAR(Logusuario.fch_desde), "9999")  +
+                             STRING(MONTH(Logusuario.fch_desde), "99")   + 
+                             STRING(DAY(Logusuario.fch_desde), "99")     + " " +
+                             Logusuario.hms_desde.
+           
+           
+/*            IF Logusuario.fch_hasta = ? THEN cFechaHoraHasta = cFechaHoraDesde. */
+/*            ELSE                                                                */
+               cFechaHoraHasta = STRING(YEAR(Logusuario.fch_hasta), "9999") + 
+                                  STRING(MONTH(Logusuario.fch_hasta), "99")  + 
+                                  STRING(DAY(Logusuario.fch_hasta), "99")    +  " " + 
+                                  Logusuario.hms_hasta.
+
+           cFuncion = "APLICACION".
+
+           { listar_auditoria.i }
+
+           /* Recorro todas las acciones del usuario */
+           FOR EACH logmenu 
+              WHERE Logmenu.cdg_empresa = logusuario.cdg_empresa AND 
+                    Logmenu.nro_usuario = logusuario.nro_usuario AND
+                   (Logmenu.fch_desde   = logusuario.fch_desde   OR Logmenu.fch_desde   = logusuario.fch_desde + 1) 
+               NO-LOCK:
+                               
+               /* Si son acciones del mismo día */
+               IF logmenu.fch_desde = logusuario.fch_desde THEN DO:
+                  IF logmenu.hms_desde < logusuario.hms_desde THEN NEXT. /* De un login anterior  */
+                  IF logmenu.hms_desde > logusuario.hms_hasta THEN NEXT. /* De un login posterior */
+               END.
+
+               IF logmenu.fch_hasta > dFechaProxima             THEN NEXT. 
+               IF logmenu.fch_desde > logusuario.fch_desde + 1  THEN NEXT.
+               
+               VIEW FRAME frm-titulo.
+
+               FIND FIRST treemenu WHERE treeMENU.accion BEGINS Logmenu.accion NO-LOCK NO-ERROR.
+               FIND FIRST Empresa WHERE  Empresa.cdg_empresa =  Logmenu.cdg_empresa NO-LOCK NO-ERROR.    
+
+
+               cFechaHoraDesde = STRING(YEAR(Logmenu.fch_desde), "9999")  +
+                                 STRING(MONTH(Logmenu.fch_desde), "99")   + 
+                                 STRING(DAY(Logmenu.fch_desde), "99")     + " " +
+                                 Logmenu.hms_desde.
+
+/*                IF Logmenu.fch_hasta = ? THEN cFechaHoraHasta = cFechaHoraDesde. */
+/*                ELSE                                                             */
+                    cFechaHoraHasta = STRING(YEAR(Logmenu.fch_hasta), "9999") + 
+                                      STRING(MONTH(Logmenu.fch_hasta), "99")  + 
+                                      STRING(DAY(Logmenu.fch_hasta), "99")    +  " " + 
+                                      Logmenu.hms_hasta.
+
+               IF Logmenu.fch_hasta = ? THEN cObservaciones = "TAREA TERMINADA DE FORMA ANORMAL".
+                                        ELSE cObservaciones = "".
+
+               cFuncion =  treeMenu.cdg_item  + "-" + treeMENU.titulo.
+
+               { listar_auditoria.i }
+
+           END.
+                    
+    END.                
+END.                    
+OUTPUT CLOSE.
+OUTPUT STREAM Exportacion CLOSE.
+
+IF OPSYS = "WIN32"
+    THEN RUN VERESULT.W ( INPUT p-archivo + ".lst", INPUT 2 ).
+                 
+
+
+
+
+

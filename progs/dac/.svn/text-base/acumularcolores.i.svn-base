@@ -1,0 +1,16 @@
+              ASSIGN
+                {acucolor.i "rojo                 "}
+                {acucolor.i "rojo-tarde           "}
+                {acucolor.i "rojo-muytarde        "}
+                {acucolor.i "amarillo             "}
+                {acucolor.i "amarillo-tarde       "}
+                {acucolor.i "amarillo-muytarde    "}
+                {acucolor.i "celeste              "}
+                {acucolor.i "celeste-tarde        "}
+                {acucolor.i "celeste-muytarde     "}
+                {acucolor.i "verdeadu             "}
+                {acucolor.i "verdeadu-tarde       "}
+                {acucolor.i "verdeadu-muytarde    "}
+                {acucolor.i "verdeped             "}
+                {acucolor.i "verdeped-tarde       "}
+                {acucolor.i "verdeped-muytarde    "}.

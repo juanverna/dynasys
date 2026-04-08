@@ -1,0 +1,46 @@
+/*=================================================================================*/
+/*  CALCULA LA RETENCION TOTAL DE INGRESOS BRUTOS PARA UN MONTO Y ACTIVIDAD DADOS  */
+/*=================================================================================*/
+
+DEFINE INPUT  PARAMETER p-cdg_tiporetiva      LIKE Cta_cte_prv.cdg_tiporetiva.
+DEFINE INPUT  PARAMETER p-fecha_vencimiento   LIKE Cta_cte_prv.fecha_vencimiento.
+DEFINE INPUT  PARAMETER p-imp_neto            LIKE Cta_cte_prv.imp_neto.
+
+DEFINE OUTPUT PARAMETER p-retencion           AS DECIMAL INITIAL 0.0.
+
+/*===================================================================================
+DEFINE INPUT  PARAMETER act_documento AS ROWID.
+DEFINE OUTPUT PARAMETER aux_importe   AS DECIMAL.
+
+{VRSHARED.I}
+{VPERSINM.I}
+
+                /*  Busca cta.cte. para conocer el importe neto */
+
+FIND Cta_cte_prv WHERE ROWID(Cta_cte_prv) = act_documento EXCLUSIVE-LOCK.
+FIND Proveedor OF Cta_cte_prv NO-LOCK.
+
+   /* Si el proveedor no esta exhento (o su exhenci¢n est  vencida), calcula retenci¢n */
+ 
+IF Proveedor.ret_iva OR 
+   ( NOT Proveedor.ret_iva AND Cta_cte_prv.fecha_vencimiento > Proveedor.fmax_iva)
+THEN DO:
+
+   FIND FIRST Rango_retiva 
+        WHERE Rango_retiva.cdg_tiporetiva = Cta_cte_prv.cdg_tiporetiva
+          AND Rango_retiva.desde_fecha   <= Cta_cte_prv.fecha_vencimiento
+          AND Rango_retiva.hasta_fecha   >= Cta_cte_prv.fecha_vencimiento
+          AND Rango_retiva.desde_importe <= Cta_cte_prv.imp_iva
+          AND Rango_retiva.hasta_importe >= Cta_cte_prv.imp_iva NO-LOCK.
+
+   aux_importe = ROUND(Cta_cte_prv.imp_iva * Rango_retiva.alicuota / 100, 2).
+   IF aux_importe < Rango_retiva.imp_basico 
+      THEN aux_importe = 0.
+
+END.
+ELSE DO:
+
+   aux_importe = 0.                 
+
+END.
+====================================================================================*/ 

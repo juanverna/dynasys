@@ -1,0 +1,16 @@
+  DEFINE VARIABLE {&ROWID_TABLA} AS ROWID.
+  RUN {&SELECCION} ( INPUT-OUTPUT {&ROWID_TABLA} , INPUT YES ).
+  IF {&ROWID_TABLA} <> ? 
+  THEN DO:
+       FIND {&TABLA} WHERE ROWID({&TABLA}) = {&ROWID_TABLA} NO-LOCK.
+       DISPLAY {&TABLA}.{&CDG_TABLA} @ {&CAMPO-FRAME}
+               WITH FRAME F-Main.
+       &IF {&MOSTRAR_DSC} 
+       &THEN
+       {&V-DSC_TABLA} = {&TABLA}.{&DSC_TABLA}.
+       DISPLAY {&V-DSC_TABLA}
+               WITH FRAME F-Main.
+       &ENDIF
+       APPLY "TAB" TO SELF.
+  END.
+  RETURN NO-APPLY.

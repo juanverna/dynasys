@@ -1,0 +1,20 @@
+FOR EACH cliente:
+    FOR EACH fac_header OF cliente WHERE NOT anulado AND fecha > 09/01/2008 and
+        fac_header.tip_comprob BEGINS "F" BY fac_header.fecha DESC:
+
+        FOR FIRST fac_detalle OF fac_header:
+            FIND articulo OF fac_detalle NO-ERROR.
+            IF NOT AVAILABLE articulo THEN NEXT.
+            FIND tipo_evento OF articulo NO-ERROR.
+            IF NOT AVAILABLE tipo_evento THEN NEXT.
+            FIND canal WHERE canal.nro_tipo_evento = tipo_evento.nro_tipo_evento AND
+                fac_header.nro_cliente = canal.nro_cliente NO-ERROR.
+            IF AVAILABLE canal THEN next.
+            CREATE canal.
+            ASSIGN canal.nro_tipo_evento = tipo_evento.nro_tipo_evento
+                   canal.nro_cliente = cliente.nro_cliente.
+                   canal.cdg_puntovta = fac_header.prf_comprob.
+        END.
+    END.
+END.
+

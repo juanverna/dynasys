@@ -1,0 +1,9 @@
+ -db dsphis-p0 
+ -ld despacho 
+ -S dsphisp0  
+ -H milenium  
+ -N tcp  
+ -d dmy 
+ -inp 8192 
+ -yy 1920 
+ -T c:\desp-wrk

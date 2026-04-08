@@ -1,0 +1,437 @@
+K 25
+svn:wc:ra_dav:version-url
+V 35
+/svn/Paulista/!svn/ver/20/progs/prd
+END
+q-articulo_ruta.w
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/prd/q-articulo_ruta.w
+END
+b-especificaciones.w
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/Paulista/!svn/ver/1/progs/prd/b-especificaciones.w
+END
+seloperacion.p
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/Paulista/!svn/ver/1/progs/prd/seloperacion.p
+END
+v-articulo_ruta.w
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/prd/v-articulo_ruta.w
+END
+listar_ordenes_plan.p
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/Paulista/!svn/ver/1/progs/prd/listar_ordenes_plan.p
+END
+imprimir_planprod.p
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/Paulista/!svn/ver/1/progs/prd/imprimir_planprod.p
+END
+v-listar_estructura.w
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/Paulista/!svn/ver/1/progs/prd/v-listar_estructura.w
+END
+b-especificacion_operacion.w
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/Paulista/!svn/ver/1/progs/prd/b-especificacion_operacion.w
+END
+v-especificacion_centrotrabajo.w
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/Paulista/!svn/ver/1/progs/prd/v-especificacion_centrotrabajo.w
+END
+b-rutaproceso.w
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/Paulista/!svn/ver/1/progs/prd/b-rutaproceso.w
+END
+b-articulo_rutaproceso.w
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/Paulista/!svn/ver/1/progs/prd/b-articulo_rutaproceso.w
+END
+vlb-operacionesfabrica.p
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/Paulista/!svn/ver/1/progs/prd/vlb-operacionesfabrica.p
+END
+v-operacion_centro.w
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/Paulista/!svn/ver/1/progs/prd/v-operacion_centro.w
+END
+pruprruta.p
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/Paulista/!svn/ver/1/progs/prd/pruprruta.p
+END
+b-articulo_especifoperacion.w
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/Paulista/!svn/ver/1/progs/prd/b-articulo_especifoperacion.w
+END
+w-rutas_de_articulos.w
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/Paulista/!svn/ver/1/progs/prd/w-rutas_de_articulos.w
+END
+d-selplanprod.w
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/Paulista/!svn/ver/1/progs/prd/d-selplanprod.w
+END
+c-plan_de_produccion-1.w
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/Paulista/!svn/ver/1/progs/prd/c-plan_de_produccion-1.w
+END
+v-especificacion_operacion.w
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/Paulista/!svn/ver/1/progs/prd/v-especificacion_operacion.w
+END
+v-especificacion.w
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/Paulista/!svn/ver/1/progs/prd/v-especificacion.w
+END
+c-plan_de_produccion.w
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/Paulista/!svn/ver/1/progs/prd/c-plan_de_produccion.w
+END
+v-rutaproceso.w
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/Paulista/!svn/ver/1/progs/prd/v-rutaproceso.w
+END
+c-interface_berkes.w
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/Paulista/!svn/ver/1/progs/prd/c-interface_berkes.w
+END
+v-articulo_especifoperacion_old.w
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/Paulista/!svn/ver/1/progs/prd/v-articulo_especifoperacion_old.w
+END
+emitir_planproduccion.p
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/Paulista/!svn/ver/1/progs/prd/emitir_planproduccion.p
+END
+v-articulo_especifoperacion.w
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/Paulista/!svn/ver/1/progs/prd/v-articulo_especifoperacion.w
+END
+imprimir_rutaproceso-old.p
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/Paulista/!svn/ver/1/progs/prd/imprimir_rutaproceso-old.p
+END
+w-operacionesfabrica.w
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/Paulista/!svn/ver/1/progs/prd/w-operacionesfabrica.w
+END
+v-id-operacionfabrica.w
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/Paulista/!svn/ver/1/progs/prd/v-id-operacionfabrica.w
+END
+w-tree_formulas.wrx
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/Paulista/!svn/ver/1/progs/prd/w-tree_formulas.wrx
+END
+b-formula_articulo.w
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/Paulista/!svn/ver/1/progs/prd/b-formula_articulo.w
+END
+listar_nivel_estructura.p
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/Paulista/!svn/ver/1/progs/prd/listar_nivel_estructura.p
+END
+c-orden_de_fabrica.w
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/Paulista/!svn/ver/1/progs/prd/c-orden_de_fabrica.w
+END
+d-nivel_maximo.w
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/prd/d-nivel_maximo.w
+END
+w-especificacion.w
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/Paulista/!svn/ver/1/progs/prd/w-especificacion.w
+END
+borrar_ordenes_plan.p
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/Paulista/!svn/ver/1/progs/prd/borrar_ordenes_plan.p
+END
+b-especificacion_rutaproceso.w
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/Paulista/!svn/ver/1/progs/prd/b-especificacion_rutaproceso.w
+END
+v-formula_articulo.w
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/Paulista/!svn/ver/1/progs/prd/v-formula_articulo.w
+END
+w-lineasproceso.w
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/prd/w-lineasproceso.w
+END
+w-tree_formulas.w
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/prd/w-tree_formulas.w
+END
+b-centrotrabajo.w
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/prd/b-centrotrabajo.w
+END
+lanzar_planprod.p
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/prd/lanzar_planprod.p
+END
+imprimir_rutaarticulo.p
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/Paulista/!svn/ver/1/progs/prd/imprimir_rutaarticulo.p
+END
+v-rep_ordentrabajo.w
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/Paulista/!svn/ver/1/progs/prd/v-rep_ordentrabajo.w
+END
+acumular_produccion.p
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/Paulista/!svn/ver/1/progs/prd/acumular_produccion.p
+END
+c-parte_de_produccion.w
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/Paulista/!svn/ver/1/progs/prd/c-parte_de_produccion.w
+END
+w-formulas_de_articulos.w
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/Paulista/!svn/ver/1/progs/prd/w-formulas_de_articulos.w
+END
+v-operacionfabrica.w
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/Paulista/!svn/ver/1/progs/prd/v-operacionfabrica.w
+END
+d-selofabrica.w
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/Paulista/!svn/ver/1/progs/prd/d-selofabrica.w
+END
+selespec.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/prd/selespec.p
+END
+v-especificacion_rutaproceso.w
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/Paulista/!svn/ver/1/progs/prd/v-especificacion_rutaproceso.w
+END
+tmptabprod.i
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/1/progs/prd/tmptabprod.i
+END
+v-centrotrabajo.w
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/prd/v-centrotrabajo.w
+END
+b-articulo_operacion.w
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/Paulista/!svn/ver/1/progs/prd/b-articulo_operacion.w
+END
+lanzar_otrabajo.p
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/prd/lanzar_otrabajo.p
+END
+w-centrotrabajo.w
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/prd/w-centrotrabajo.w
+END
+b-lineaproceso.w
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/prd/b-lineaproceso.w
+END
+generar_ofabrica.p
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/Paulista/!svn/ver/1/progs/prd/generar_ofabrica.p
+END
+generar_rutaproceso.p
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/Paulista/!svn/ver/1/progs/prd/generar_rutaproceso.p
+END
+v-rutaproceso_especifoperacion.w
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/Paulista/!svn/ver/1/progs/prd/v-rutaproceso_especifoperacion.w
+END
+tmplisestruc.i
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/Paulista/!svn/ver/1/progs/prd/tmplisestruc.i
+END
+b-formula_rutaarticulo.w
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/Paulista/!svn/ver/1/progs/prd/b-formula_rutaarticulo.w
+END
+v-articulo_operacion.w
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/Paulista/!svn/ver/1/progs/prd/v-articulo_operacion.w
+END
+v-lineaproceso.w
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/prd/v-lineaproceso.w
+END
+selcentrotrabajo.p
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/Paulista/!svn/ver/1/progs/prd/selcentrotrabajo.p
+END
+vlb-articulo_operacion.p
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/Paulista/!svn/ver/1/progs/prd/vlb-articulo_operacion.p
+END
+b-operacionesfabrica.w
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/Paulista/!svn/ver/1/progs/prd/b-operacionesfabrica.w
+END
+b-especificacion_centrotrabajo.w
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/Paulista/!svn/ver/1/progs/prd/b-especificacion_centrotrabajo.w
+END
+v-formula_rutaarticulo.w
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/Paulista/!svn/ver/1/progs/prd/v-formula_rutaarticulo.w
+END
+d-lanzar_planprod.w
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/Paulista/!svn/ver/1/progs/prd/d-lanzar_planprod.w
+END
+listar_estructura.p
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/Paulista/!svn/ver/1/progs/prd/listar_estructura.p
+END
+b-operacion_centro.w
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/Paulista/!svn/ver/1/progs/prd/b-operacion_centro.w
+END

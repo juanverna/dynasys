@@ -1,0 +1,16 @@
+/*=================================================================================*/
+/*                                                                                 */
+/*                      SELECCION DE SITUACIONES                                   */
+/*                                                                                 */
+/*=================================================================================*/
+
+&GLOBAL-DEFINE TABLA           Situacion
+&GLOBAL-DEFINE CODIGO          cdg_situacion
+&GLOBAL-DEFINE NOMBRE          dsc_situacion
+&GLOBAL-DEFINE TITULO-BROWSE   Tipee un nombre o seleccione de la lista
+&GLOBAL-DEFINE TITULO-FRAME    Seleccion de Situaciones
+&GLOBAL-DEFINE FORMATO         "X(40)"
+&GLOBAL-DEFINE FORMATO-CODIGO  "X(4)"
+&GLOBAL-DEFINE OTROS-CAMPOS    Situacion.disponible FORMAT "Disponible/"
+ 
+{SELBROWS.I}

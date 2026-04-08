@@ -1,0 +1,11 @@
+/*====================================================================*/
+/*        CALCULA EL INTERVALO ENTRE DOS TIEMPOS DADOS                */
+/*====================================================================*/
+
+  DEFINE INPUT  PARAMETER t-desde     AS INTEGER.
+  DEFINE INPUT  PARAMETER t-hasta     AS INTEGER.
+  DEFINE OUTPUT PARAMETER t-intervalo AS INTEGER.
+
+  IF t-hasta >= t-desde
+     THEN t-intervalo = t-hasta  - t-desde.
+     ELSE t-intervalo = t-hasta  - t-desde + 86400.

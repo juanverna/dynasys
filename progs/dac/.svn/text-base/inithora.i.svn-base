@@ -1,0 +1,2 @@
+  v-hh-{1} = INTEGER(SUBSTRING(STRING(Ficha.hor_{1},"HH:MM:SS"),1,2)).
+  v-mm-{1} = INTEGER(SUBSTRING(STRING(Ficha.hor_{1},"HH:MM:SS"),4,2)).

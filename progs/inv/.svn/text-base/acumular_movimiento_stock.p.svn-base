@@ -1,0 +1,61 @@
+/*=================================================================================*/
+/*                      ACUMULA MOVIMIENTOS DE STOCK                               */
+/*=================================================================================*/
+
+DEFINE INPUT PARAMETER p-act_cctstk AS ROWID.
+DEFINE INPUT PARAMETER p-operacion  AS CHARACTER.
+
+/*=================================================================================*/
+/*                              BLOQUE PRINCIPAL                                   */
+/*=================================================================================*/
+
+FIND Cct_stock WHERE ROWID(Cct_stock) = p-act_cctstk NO-LOCK.
+
+FIND FIRST Acumulado_stock
+     WHERE Acumulado_stock.cdg_empresa  = Cct_stock.cdg_empresa
+       AND Acumulado_stock.nro_articulo = Cct_stock.nro_articulo
+       AND Acumulado_stock.nro_partida  = Cct_stock.nro_partida
+       AND Acumulado_stock.nro_deposito = Cct_stock.nro_deposito
+       AND Acumulado_stock.ano          = YEAR(Cct_stock.fecha)
+       AND Acumulado_stock.mes          = MONTH(Cct_stock.fecha)
+       EXCLUSIVE-LOCK NO-ERROR.
+
+IF NOT AVAILABLE Acumulado_stock
+THEN DO:
+
+   CREATE Acumulado_stock.
+   ASSIGN Acumulado_stock.cdg_empresa  = Cct_stock.cdg_empresa
+          Acumulado_stock.nro_articulo = Cct_stock.nro_articulo
+          Acumulado_stock.nro_partida  = Cct_stock.nro_partida
+          Acumulado_stock.nro_deposito = Cct_stock.nro_deposito
+          Acumulado_stock.ano          = YEAR(Cct_stock.fecha)
+          Acumulado_stock.mes          = MONTH(Cct_stock.fecha).
+
+END.
+
+IF p-operacion = "A"
+THEN DO:
+   IF Cct_stock.tipo_mov = "I"
+   THEN DO:
+      Acumulado_stock.tot_ingresos_cantid  = Acumulado_stock.tot_ingresos_cantid  + Cct_stock.cantidad.
+      Acumulado_stock.tot_ingresos_granel  = Acumulado_stock.tot_ingresos_granel  + Cct_stock.granel.
+   END.
+   ELSE DO:
+      Acumulado_stock.tot_egresos_cantid  = Acumulado_stock.tot_egresos_cantid  + Cct_stock.cantidad.
+      Acumulado_stock.tot_egresos_granel  = Acumulado_stock.tot_egresos_granel  + Cct_stock.granel.
+   END.
+END.
+ELSE DO:
+   IF Cct_stock.tipo_mov = "I"
+   THEN DO:
+      Acumulado_stock.tot_ingresos_cantid  = Acumulado_stock.tot_ingresos_cantid  - Cct_stock.cantidad.
+      Acumulado_stock.tot_ingresos_granel  = Acumulado_stock.tot_ingresos_granel  - Cct_stock.granel.
+   END.
+   ELSE DO:
+      Acumulado_stock.tot_egresos_cantid  = Acumulado_stock.tot_egresos_cantid  - Cct_stock.cantidad.
+      Acumulado_stock.tot_egresos_granel  = Acumulado_stock.tot_egresos_granel  - Cct_stock.granel.
+   END.
+END.
+
+RETURN.
+

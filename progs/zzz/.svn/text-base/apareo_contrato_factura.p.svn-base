@@ -1,0 +1,32 @@
+    DEF VAR i AS INT.
+    DEF VAR v-imp AS DECIMAL.
+    DEF VAR senal AS LOGICAL.
+FOR EACH fac_header WHERE fac_header.fecha >= 11/3/2006 AND fac_header.fecha <= 11/9/2006:
+    FIND fac_detalle OF fac_header.
+    senal = FALSE.
+    FOR EACH contrato_hd WHERE 
+        contrato_hd.estado = "A" AND
+        contrato_hd.prf_contrato  = fac_header.prf_comprob  AND
+        contrato_hd.nro_cliente =  fac_header.nro_cliente AND
+        contrato_hd.rige_desde <= fac_header.fecha AND
+        contrato_hd.rige_hasta >= fac_header.fecha:
+        FIND contrato_dt OF contrato_hd.
+        IF contrato_dt.nro_articulo <> fac_detalle.nro_articulo THEN NEXT.
+        senal = TRUE.
+        LEAVE.
+    END.
+    IF senal THEN DO:
+        v-imp = IF cant_periodos <> 0 THEN ( contrato_hd.imp_bruto / contrato_hd.cant_periodos) ELSE  contrato_hd.imp_bruto.
+        fac_header.nro_contrato = contrato_hd.nro_contrato.
+        END.
+    ELSE do:
+           i = i + 1.
+           DISPLAY v-imp fac_header.imp_total.
+         END.
+    FIND cta_cte WHERE 
+        cta_cte.cdg_empresa = fac_header.cdg_empresa AND
+        cta_cte.nro_comprob = fac_header.nro_comprob AND
+        cta_cte.prf_comprob = fac_header.prf_comprob AND
+        cta_cte.tip_comprob = fac_header.tip_comprob.
+    cta_cte.nro_contrato = fac_header.nro_contrato.
+END.

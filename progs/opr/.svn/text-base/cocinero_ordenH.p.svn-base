@@ -1,0 +1,9 @@
+OUTPUT TO "clipboard".
+FOR EACH tarea WHERE tarea.estado = "R" AND tarea.cdg_tipotarea = "H":
+FIND cliente OF tarea.
+FIND evento OF tarea NO-ERROR.
+  PUT Cliente.nom_cliente nro_tarea tarea.nro_evento.
+  IF AVAILABLE evento THEN PUT evento.nro_tipo_evento.
+  IF AVAILABLE evento  AND evento.nro_tipo_evento = 3 THEN PUT evento.trae_libro.
+  PUT SKIP.
+          

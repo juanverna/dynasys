@@ -1,0 +1,13 @@
+/*=================================================================================*/
+/*                                                                                 */
+/*                      SELECCION DE BASES DE MÓVILES                              */
+/*                                                                                 */
+/*=================================================================================*/
+
+&GLOBAL-DEFINE TABLA           Base
+&GLOBAL-DEFINE CODIGO          cdg_base
+&GLOBAL-DEFINE NOMBRE          dsc_base
+&GLOBAL-DEFINE TITULO-BROWSE   Tipee un nombre o seleccione de la lista
+&GLOBAL-DEFINE TITULO-FRAME    Seleccion de Bases
+
+{SELBROWS.I}

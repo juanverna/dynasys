@@ -1,0 +1,201 @@
+/*=================================================================================*/
+/*                     IMPRESION DE RENDICIONES DE COBRADORES                      */
+/*=================================================================================*/
+
+DEFINE INPUT PARAMETER rid_rendicion      AS ROWID.
+
+/*=================================================================================*/
+/*                           VARIABLES, FRAMES, Y SUBMENUES                        */
+/*=================================================================================*/
+
+DEFINE VARIABLE j               AS INTEGER.
+DEFINE VARIABLE total_Recibos   AS INTEGER.
+DEFINE VARIABLE total_rendicion AS DECIMAL FORMAT "->>>,>>9.99 $".
+DEFINE VARIABLE cant_recibos    AS INTEGER.
+
+DEFINE VARIABLE que_empresa     LIKE Empresa.nombre FORMAT "X(20)".
+DEFINE VARIABLE fecha_lis       AS DATE.
+DEFINE VARIABLE hora_lis        AS CHARACTER.
+DEFINE VARIABLE titulo_det      AS CHARACTER FORMAT "X(40)".
+DEFINE VARIABLE v-tipo          AS CHARACTER FORMAT "X(20)".
+
+DEFINE VARIABLE que_archivo     AS CHARACTER.
+DEFINE VARIABLE p_printed       AS LOGICAL.
+DEFINE VARIABLE v-importe_cuota           LIKE Cupon.importe_cuota.
+
+DEFINE VARIABLE TextColor       AS CHARACTER INITIAL "BLACK".
+DEFINE VARIABLE bg-color        AS CHARACTER INITIAL "BLACK".
+DEFINE VARIABLE chLinea         AS CHARACTER.
+DEFINE VARIABLE linea0          AS INTEGER.
+DEFINE VARIABLE n-hoja          AS INTEGER.
+
+{defvarcomision.i}
+
+DEFINE STREAM Formulario.
+
+/*=================================================================================*/
+/*                        B L O Q U E   P R I N C I P A L                          */
+/*=================================================================================*/
+
+fecha_lis = TODAY.
+hora_lis = STRING(TIME,"HH:MM:SS").
+
+FIND Rendicion_hd WHERE ROWID(Rendicion_hd) = rid_rendicion EXCLUSIVE-LOCK.
+FIND Cobrador OF Rendicion_hd NO-LOCK.
+FIND Empresa OF Rendicion_hd.
+
+que_empresa = Empresa.nombre.
+titulo_det =  Cobrador.cdg_cobrador + " " + Cobrador.nom_cobrador.
+v-tipo = Rendicion_hd.tipo.
+
+CASE Rendicion_hd.tipo:
+     WHEN "1" THEN v-tipo = "Recibos Cobrados".
+     WHEN "2" THEN v-tipo = "Recibos En Mora".
+     WHEN "3" THEN v-tipo = "Recibos de Baja".
+     WHEN "4" THEN v-tipo = "Recibos Devueltos".
+     WHEN "5" THEN v-tipo = "Recibos Anulados".
+END CASE.
+
+{cerovarcomision.i}
+
+        
+/*=================================================================================*/
+/*                    GENERA ARCHIVO DE IMPRESION                                  */
+/*=================================================================================*/
+
+SESSION:NUMERIC-FORMAT = "AMERICAN".        /* Para el comando AT, para que no ponga "," */
+
+OUTPUT STREAM Formulario TO "./prl/resucob.xpr" CONVERT TARGET "iso8859-1".
+  
+RUN inicia_formulario.
+
+n-hoja = 1.
+PUT STREAM Formulario CONTROL "<AT=0,0><#1>".    
+RUN forma.
+
+PUT STREAM Formulario UNFORMATTED "<AT=149,0><FROM><AT=+0,+210><LINE>". 
+
+n-hoja = 2.
+PUT STREAM Formulario CONTROL "<AT=149,0><#1>".    
+RUN forma.
+
+OUTPUT STREAM Formulario CLOSE.
+
+FILE-INFO:File-NAME = "./prl/resucob.xpr".
+  
+RUN printFile( FILE-INFO:FULL-PATHNAME).
+
+/*=================================================================================*/
+/*                                PROCEDIMIENTOS                                   */
+/*=================================================================================*/
+
+PROCEDURE inicia_formulario:
+
+    PUT STREAM Formulario CONTROL '<PREVIEW=70>' /*=ZoomToWidth>'*/. 
+  /*PUT STREAM Formulario CONTROL '<TOOLBAR=!PRINT>'. */
+    
+    PUT STREAM Formulario CONTROL "<OPORTRAIT><Title=Impresion de comprobantes de caja><UNITS=mm><|2>".
+    PUT STREAM Formulario CONTROL "<FORMAT=A4>".
+
+END PROCEDURE.
+
+
+PROCEDURE forma:
+
+    PUT STREAM Formulario UNFORMATTED "<=#1><BGCOLOR=WHITE><AT=+28,+10><FROM><AT=+110,+190><FILLRECT)>". 
+
+    PUT STREAM Formulario UNFORMATTED "<=#1><BGCOLOR=LTGRAY><AT=+15,+10><FROM><AT=+12,+190><FILLRECT)>". 
+    RUN escribir ( INPUT "18,60", INPUT "RESUMEN DE INGRESO DE Recibos", 14, YES).
+
+    PUT STREAM Formulario UNFORMATTED "<=#1><AT=+82,+10><FROM><AT=+8,+190><RECT>". 
+    RUN escribir ( INPUT "84,75", INPUT "DETALLE DE VALORES RECIBIDOS", 10, YES).
+    
+    RUN escribir ( INPUT "30,20",  INPUT Empresa.nombre, 10, YES).
+    RUN escribir ( INPUT "30,65",  INPUT "Cobrador:<B>" + Cobrador.cdg_cobrador + "</B>", INPUT 10, INPUT NO). 
+    RUN escribir ( INPUT "30,145", INPUT "Numero:<B>" + STRING(Rendicion_hd.nro_rendicion,"999999") + "</B>", INPUT 10, INPUT NO). 
+    RUN escribir ( INPUT "30,180", INPUT STRING(Rendicion_hd.fch_rendicion,"99/99/99"), INPUT 10, INPUT NO). 
+
+    RUN escribir ( INPUT "36,65",  INPUT v-tipo, INPUT 10, INPUT NO). 
+    RUN escribir ( INPUT "36,145", INPUT STRING(TODAY,"99/99/99"), INPUT 8, INPUT NO). 
+    RUN escribir ( INPUT "36,163", INPUT STRING(TIME,"HH:MM:SS"), INPUT 8, INPUT NO). 
+        
+    RUN escribir ( INPUT "42,85",  INPUT "Importes", 10, YES).
+    RUN escribir ( INPUT "42,112", INPUT "Recibos", 10, YES).
+        
+    RUN escribir      ( INPUT "74,20",  INPUT "TOTAL GENERAL", INPUT 10, YES).
+    RUN escribenumero ( INPUT "74,78",  INPUT STRING(total_rendicion,"ZZZ,ZZ9.99"), INPUT 12, INPUT YES). 
+    /*
+    RUN escribenumero ( INPUT "74,112", INPUT STRING(t-cargoRecibos,"ZZZ,ZZ9"), INPUT 12, INPUT YES). 
+    */
+
+    PUT STREAM Formulario UNFORMATTED "<=#1><AT=+90,+105><FROM><AT=+48,+0><LINE>".
+    linea0 = 90.
+    DO j = 1 to 8:
+       chLinea = TRIM(STRING(linea0 + j * 5)).
+       PUT STREAM Formulario UNFORMATTED "<=#1><AT=+" chLinea ",+10><FROM><AT=+0,+190><LINE>". 
+
+    END.
+
+/*        
+    RUN escribenumero ( INPUT "11,175", INPUT STRING(total_recibos,"ZZZ,ZZ9.99"), INPUT 10, INPUT NO). 
+    RUN escribenumero ( INPUT "11,175", INPUT STRING(cant_recibos,"ZZZ,ZZ9"), INPUT 10, INPUT NO). 
+*/
+
+END PROCEDURE.
+
+PROCEDURE escribir:
+
+    DEFINE INPUT PARAMETER posicion AS CHARACTER.
+    DEFINE INPUT PARAMETER texto    AS CHARACTER.
+    DEFINE INPUT PARAMETER puntos   AS CHARACTER.
+    DEFINE INPUT PARAMETER negrita  AS LOGICAL.
+    
+    DEFINE VARIABLE linea           AS CHARACTER.
+
+    DEFINE VARIABLE i-linea         AS INTEGER.
+    DEFINE VARIABLE i-columna       AS INTEGER.
+
+    i-linea   = INTEGER(ENTRY(1,posicion,",")).
+    i-columna = INTEGER(ENTRY(2,posicion,",")).
+
+    linea = '<=#1><FGCOLOR=' + textColor + '><AT=+' + TRIM(STRING(i-linea,">>9")) + ',+' + TRIM(STRING(i-columna,">>9")) + '><FArial><P' + puntos + '>'.
+
+    IF negrita THEN linea = linea + '<B>'.
+    linea = linea + texto.
+    IF negrita THEN linea = linea + '</B>'.
+
+    PUT STREAM Formulario UNFORMATTED linea.
+
+END PROCEDURE.
+
+PROCEDURE escribenumero:
+
+    DEFINE INPUT PARAMETER posicion AS CHARACTER.
+    DEFINE INPUT PARAMETER texto    AS CHARACTER.
+    DEFINE INPUT PARAMETER puntos   AS CHARACTER.
+    DEFINE INPUT PARAMETER negrita  AS LOGICAL.
+    
+    DEFINE VARIABLE linea           AS CHARACTER.
+
+    DEFINE VARIABLE i-linea         AS INTEGER.
+    DEFINE VARIABLE i-columna       AS INTEGER.
+
+    i-linea   = INTEGER(ENTRY(1,posicion,",")).
+    i-columna = INTEGER(ENTRY(2,posicion,",")).
+
+     linea = '<=#1><FGCOLOR=' + textColor + '><AT=+' + TRIM(STRING(i-linea,">>9")) + ',+' + TRIM(STRING(i-columna,">>9")) + '><Fcourier><P' + puntos + '>'.
+ /* linea = '<=#1><FGCOLOR=' + textColor + '><R+' + TRIM(STRING(i-linea,">>9")) + '><C+' + TRIM(STRING(i-columna,">>9")) + '><Fcourier ><P' + puntos + '>'.*/
+
+    IF negrita THEN linea = linea + '<B>'.
+    linea = linea + texto.
+    IF negrita THEN linea = linea + '</B>'.
+
+    PUT STREAM Formulario UNFORMATTED linea.
+
+END PROCEDURE.
+
+PROCEDURE printFile EXTERNAL "xPrint.dll" :
+
+    DEFINE INPUT PARAMETER a AS CHARACTER.
+
+END PROCEDURE.

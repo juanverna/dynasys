@@ -1,0 +1,228 @@
+/*===================================================================================*/
+/*          Emite la estadistica de colores agrupados por algun campo codificado     */
+/*===================================================================================*/
+
+/*
+DEFINE INPUT PARAMETER p-des_{&TABLA}    LIKE {&TABLA}.{&CODIGO-TABLA} LABEL "{&TABLA}".
+DEFINE INPUT PARAMETER p-has_{&TABLA}    LIKE {&TABLA}.{&CODIGO-TABLA} LABEL "{&TABLA}".
+DEFINE INPUT PARAMETER p-des_fecha       AS DATE LABEL "De Fecha".
+DEFINE INPUT PARAMETER p-has_fecha       AS DATE LABEL "A Fecha".
+DEFINE INPUT PARAMETER p-lista_empresas  AS CHARACTER.
+*/
+
+DEFINE VARIABLE des_{&TABLA} LIKE {&TABLA}.{&CODIGO-TABLA} LABEL "Desde {&TABLA}".
+DEFINE VARIABLE has_{&TABLA} LIKE {&TABLA}.{&CODIGO-TABLA} LABEL "Hasta {&TABLA}".
+
+DEFINE VARIABLE linea  AS CHARACTER FORMAT "X(140)".
+
+DEFINE VARIABLE p_col          AS INTEGER.
+DEFINE VARIABLE nt_cols        AS INTEGER.
+DEFINE VARIABLE n_columna      AS INTEGER   COLUMN-LABEL "T.Incids.".
+DEFINE VARIABLE lista_colores  AS CHARACTER.
+
+DEFINE VARIABLE incidentes   AS INTEGER FORMAT ">>>>>9" EXTENT 16. 
+DEFINE VARIABLE t-incidentes AS INTEGER FORMAT ">>>>>9" EXTENT 16. 
+
+DEFINE VARIABLE tot_fichas   AS INTEGER FORMAT ">>>>>9".
+DEFINE VARIABLE tcl_fichas   AS INTEGER FORMAT ">>>>>9".
+DEFINE VARIABLE tre_fichas   AS INTEGER.
+
+DEFINE VARIABLE header_tt1   AS CHARACTER FORMAT "X(140)".
+DEFINE VARIABLE header_tt2   AS CHARACTER FORMAT "X(140)".
+DEFINE VARIABLE header_sry   AS CHARACTER FORMAT "X(140)".
+DEFINE VARIABLE footer_sry   AS CHARACTER FORMAT "X(140)".
+
+{defvarcolores.i}
+
+DEFINE STREAM errores.
+
+DEFINE FRAME frm-titulo HEADER
+   que_empresa 
+   "{&TITULO-LST}" AT 52 
+   "Pagina:" AT 101 PAGE-NUMBER FORMAT ">9" AT 108
+   SKIP
+   "Empresas:"
+   lista_empresas
+   des_fecha AT 52
+   "al"
+   has_fecha
+   fecha_lis AT 101
+   SKIP(2)
+   header_tt1 SKIP
+   header_tt2 SKIP
+   header_sry
+   WITH WIDTH 196 FRAME frm-titulo TOP-ONLY PAGE-TOP STREAM-IO NO-LABEL NO-UNDERLINE.
+
+FORM
+  Ficha.{&CODIGO-FICHA} {&FORMATO-CODIGO}
+  {&TABLA}.{&NOMBRE-TABLA} FORMAT "X(20)"
+  SPACE(2)
+  tcl_fichas
+  SPACE(2)
+  linea
+  WITH WIDTH 196 DOWN CENTERED FRAME frm-listado USE-TEXT STREAM-IO NO-LABEL NO-UNDERLINE.
+
+/*===================================================================================*/
+/*        ARMA LOS TITULOS Y ACTUALIZA PARAMETROS DE PROCESO DESDE PANTALLA          */
+/*===================================================================================*/
+
+{cargaempresas.i}
+
+UPDATE des_fecha FORMAT "99/99/9999" COLON 20 has_fecha FORMAT "99/99/9999" COLON 55 SKIP
+      des_{&TABLA} COLON 20 has_{&TABLA} COLON 55 SKIP
+      lista_empresas COLON 20
+       WITH FRAME aa SIDE-LABELS THREE-D VIEW-AS DIALOG-BOX WIDTH 90
+            TITLE "Ingrese parámetros del listado {&TITULO-LST}".
+
+ASSIGN
+  incidentes   = 0.
+  t-incidentes = 0.
+
+{drsalida.i "65"} /* Direcciona la salida de impresión */
+{drerrlog.i}
+{setvarimpre.i}
+
+RUN arma_titulo.
+
+FOR EACH Ficha USE-INDEX por_fecha
+    WHERE Ficha.fch_alta <= has_fecha 
+      AND Ficha.fch_alta >= des_fecha
+      AND Ficha.{&CODIGO-FICHA} <= has_{&TABLA}
+      AND Ficha.{&CODIGO-FICHA} >= des_{&TABLA}
+      AND LOOKUP(Ficha.cdg_empresa,lista_empresas) <> 0 
+      AND LOOKUP(Ficha.cdg_tipoemr,lista_colores) <> 0 
+      AND Ficha.cdg_destino <> "A" NO-LOCK 
+      BREAK BY Ficha.{&CODIGO-FICHA}
+            BY Ficha.fch_alta 
+            BY Ficha.cdg_tipoemr
+            WITH FRAME f-datos:
+
+    VIEW FRAME frm-titulo.
+
+    n_columna = LOOKUP(Ficha.cdg_tipoemr,lista_colores,",").
+    incidentes [ n_columna ] = incidentes [ n_columna ] + 1.
+
+    tot_fichas = tot_fichas + 1.
+
+    IF LAST-OF(Ficha.{&CODIGO-FICHA})
+    THEN DO:
+
+         RUN arma_impresion.
+
+         FIND {&TABLA} WHERE {&TABLA}.{&CODIGO-TABLA} = Ficha.{&CODIGO-FICHA} NO-LOCK. 
+         DISPLAY Ficha.{&CODIGO-FICHA}
+                {&TABLA}.{&NOMBRE-TABLA}
+                tcl_fichas
+                linea
+                WITH FRAME frm-listado.
+
+         DOWN WITH FRAME frm-listado.       
+
+         RUN acumula_colores.
+        
+    END.
+
+END.            
+
+DISPLAY "------" @ Ficha.{&CODIGO-FICHA}
+        "--------------------" @ {&TABLA}.{&NOMBRE-TABLA}
+        "------" @ tcl_fichas
+        footer_sry @ linea
+        WITH FRAME frm-listado.
+
+DOWN WITH FRAME frm-listado.
+
+DO n_columna = 1 to nt_cols:
+   incidentes [ n_columna ] = t-incidentes [ n_columna ].
+END.
+
+RUN arma_impresion.
+
+DISPLAY "TOTALES" @ {&TABLA}.{&NOMBRE-TABLA}
+        tcl_fichas
+        linea
+        WITH FRAME frm-listado.
+
+DOWN WITH FRAME frm-listado.
+
+DISPLAY "------" @ Ficha.{&CODIGO-FICHA}
+        "--------------------" @ {&TABLA}.{&NOMBRE-TABLA}
+        "------" @ tcl_fichas
+        footer_sry @ linea
+        WITH FRAME frm-listado.
+
+/*
+IF tot_err <> 0
+   THEN DISPLAY "HAY " + STRING(tot_err) + " ERRORES"  @ {&TABLA}.{&NOMBRE-TABLA}
+                WITH FRAME frm-listado.
+*/
+
+OUTPUT CLOSE.
+OUTPUT STREAM errores CLOSE.
+
+   /* Visualiza en pantalla el archivo de salida */
+
+RUN veresult.w ( INPUT  arch_salida ,  /* Archivo */
+                 INPUT 8 ).            /* FONT a utilizar por default */               
+
+
+/*===================================================================================*/
+/*                           P R O C E D I M I E N T O S                             */
+/*===================================================================================*/
+
+
+PROCEDURE ARMA_TITULO:
+
+                    /* se arma el titulo con las fechas */
+
+  header_tt1 = "                             Total   ".
+  header_tt2 = "Codigo Descripcion           Incid.  ".
+  header_sry = "------ --------------------  ------  ".
+  footer_sry = "".
+
+  lista_colores = "".
+  nt_cols = 0.
+  p_col = LENGTH(header_tt2) + 1.
+  n_columna = 1.
+  
+  FOR EACH Tipcolor BREAK BY Tipcolor.cdg_tipoemr:
+
+     OVERLAY(header_tt2,p_col,7) = Tipcolor.color_emr.
+     OVERLAY(footer_sry,n_columna,7) = FILL("-",7).
+     
+     p_col = p_col + 8.
+     n_columna = n_columna + 8.
+
+     lista_colores = lista_colores + Tipcolor.cdg_tipoemr.
+     IF NOT LAST(Tipcolor.cdg_tipoemr)
+        THEN lista_colores = lista_colores + ",".
+
+     nt_cols = nt_cols + 1.
+
+  END.
+
+  header_sry = header_sry + footer_sry.
+
+END PROCEDURE.
+
+PROCEDURE ARMA_IMPRESION:
+ 
+  tcl_fichas = 0.
+  linea = "".
+  DO n_columna = 1 to nt_cols:
+     linea = linea + STRING(incidentes [ n_columna ], ">>>>>>9" ).
+     IF n_columna <> nt_cols THEN linea = linea + " ".
+     tcl_fichas = tcl_fichas + incidentes [ n_columna ].
+  END.
+
+END PROCEDURE.
+
+PROCEDURE ACUMULA_COLORES:
+
+  DO n_columna = 1 to nt_cols:
+    t-incidentes [ n_columna ] = t-incidentes [ n_columna ] + incidentes [ n_columna ].
+  END.
+  
+  incidentes = 0.
+
+END PROCEDURE.

@@ -1,0 +1,10 @@
+  DO TRANSACTION:
+     FIND CURRENT Ficha EXCLUSIVE-LOCK.
+     Ficha.hor_{1} = TIME.
+     v_hor_{1} = STRING(Ficha.hor_{1},"HH:MM:SS").
+     Ficha.hms_{1} = STRING(Ficha.hor_{1},"HH:MM:SS").
+     DISPLAY v_hor_{1} WITH FRAME F-Main.
+     DISABLE {2} WITH FRAME F-Main.
+     ENABLE {3}  WITH FRAME F-Main.
+     FIND CURRENT Ficha NO-LOCK.
+  END.   

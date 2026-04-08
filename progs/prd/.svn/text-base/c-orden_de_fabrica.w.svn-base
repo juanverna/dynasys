@@ -1,0 +1,1888 @@
+&ANALYZE-SUSPEND _VERSION-NUMBER UIB_v9r12 GUI
+&ANALYZE-RESUME
+/* Connected Databases 
+          sic              PROGRESS
+*/
+&Scoped-define WINDOW-NAME C-Win
+
+/* Temp-Table and Buffer definitions                                    */
+DEFINE BUFFER Componente FOR Articulo.
+DEFINE BUFFER Compuesto FOR Articulo.
+DEFINE TEMP-TABLE T-Ofabrica_dt NO-UNDO LIKE Ofabrica_dt.
+DEFINE TEMP-TABLE T-Ofabrica_hd NO-UNDO LIKE Ofabrica_hd.
+
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CUSTOM _DEFINITIONS C-Win 
+/*------------------------------------------------------------------------
+
+  File: 
+
+  Description: 
+
+  Input Parameters:
+      <none>
+
+  Output Parameters:
+      <none>
+
+  Author: 
+
+  Created: 
+
+------------------------------------------------------------------------*/
+/*          This .W file was created with the Progress AppBuilder.      */
+/*----------------------------------------------------------------------*/
+
+/* Create an unnamed pool to store all the widgets created 
+     by this procedure. This is a good default which assures
+     that this procedure's triggers and internal procedures 
+     will execute in this procedure's storage, and that proper
+     cleanup will occur on deletion of the procedure. */
+
+CREATE WIDGET-POOL.
+
+/* ***************************  Definitions  ************************** */
+
+/* Parameters Definitions ---                                           */
+
+&IF DEFINED(UIB_is_Running) NE 0
+&THEN
+DEFINE VARIABLE                rid_ofabrica  AS ROWID.
+DEFINE VARIABLE                modo          AS INTEGER.
+&ELSE
+DEFINE INPUT-OUTPUT PARAMETER  rid_ofabrica  AS ROWID.
+DEFINE INPUT        PARAMETER  modo          AS INTEGER.
+&ENDIF
+
+/* Local Variable Definitions ---                                       */
+
+DEFINE BUFFER T-Consumo FOR T-Ofabrica_dt.
+
+{VRSHARED.I "NEW"}
+
+{nrorelea.i}
+{valoresmodo.i}
+{valoressalida.i}
+
+DEFINE VARIABLE sino-msg                  AS LOGICAL NO-UNDO.
+DEFINE VARIABLE rid_tabla                 AS ROWID.
+DEFINE VARIABLE rid_planprod              AS ROWID.
+
+DEFINE BUFFER B-T-Ofabrica_dt FOR T-Ofabrica_dt.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-PREPROCESSOR-BLOCK 
+
+/* ********************  Preprocessor Definitions  ******************** */
+
+&Scoped-define PROCEDURE-TYPE Window
+&Scoped-define DB-AWARE no
+
+/* Name of first Frame and/or Browse and/or first Query                 */
+&Scoped-define FRAME-NAME DEFAULT-FRAME
+&Scoped-define BROWSE-NAME BRW-COMPONENTES
+
+/* Internal Tables (found by Frame, Query & Browse Queries)             */
+&Scoped-define INTERNAL-TABLES T-Ofabrica_dt Componente Compuesto ~
+T-Ofabrica_hd
+
+/* Definitions for BROWSE BRW-COMPONENTES                               */
+&Scoped-define FIELDS-IN-QUERY-BRW-COMPONENTES T-Ofabrica_dt.nro_linea ~
+Componente.cdg_articulo Componente.descripcion T-Ofabrica_dt.cantidad ~
+T-Ofabrica_dt.cantidad_sol Componente.cdg_umed T-Ofabrica_dt.granel ~
+T-Ofabrica_dt.granel_sol T-Ofabrica_dt.observacion 
+&Scoped-define ENABLED-FIELDS-IN-QUERY-BRW-COMPONENTES 
+&Scoped-define QUERY-STRING-BRW-COMPONENTES FOR EACH T-Ofabrica_dt OF T-Ofabrica_hd ~
+      WHERE T-Ofabrica_dt.tipo_detalle = "C" NO-LOCK, ~
+      EACH Componente OF T-Ofabrica_dt NO-LOCK INDEXED-REPOSITION
+&Scoped-define OPEN-QUERY-BRW-COMPONENTES OPEN QUERY BRW-COMPONENTES FOR EACH T-Ofabrica_dt OF T-Ofabrica_hd ~
+      WHERE T-Ofabrica_dt.tipo_detalle = "C" NO-LOCK, ~
+      EACH Componente OF T-Ofabrica_dt NO-LOCK INDEXED-REPOSITION.
+&Scoped-define TABLES-IN-QUERY-BRW-COMPONENTES T-Ofabrica_dt Componente
+&Scoped-define FIRST-TABLE-IN-QUERY-BRW-COMPONENTES T-Ofabrica_dt
+&Scoped-define SECOND-TABLE-IN-QUERY-BRW-COMPONENTES Componente
+
+
+/* Definitions for BROWSE BRW-COMPUESTOS                                */
+&Scoped-define FIELDS-IN-QUERY-BRW-COMPUESTOS T-Ofabrica_dt.nro_linea ~
+Compuesto.cdg_articulo Compuesto.descripcion T-Ofabrica_dt.cantidad ~
+T-Ofabrica_dt.cantidad_sol Compuesto.cdg_umed T-Ofabrica_dt.granel ~
+T-Ofabrica_dt.granel_sol T-Ofabrica_dt.cdg_estado 
+&Scoped-define ENABLED-FIELDS-IN-QUERY-BRW-COMPUESTOS ~
+T-Ofabrica_dt.cantidad_sol T-Ofabrica_dt.granel_sol 
+&Scoped-define ENABLED-TABLES-IN-QUERY-BRW-COMPUESTOS T-Ofabrica_dt
+&Scoped-define FIRST-ENABLED-TABLE-IN-QUERY-BRW-COMPUESTOS T-Ofabrica_dt
+&Scoped-define QUERY-STRING-BRW-COMPUESTOS FOR EACH T-Ofabrica_dt OF T-Ofabrica_hd ~
+      WHERE T-Ofabrica_dt.tipo_detalle = "P" NO-LOCK, ~
+      EACH Compuesto OF T-Ofabrica_dt NO-LOCK INDEXED-REPOSITION
+&Scoped-define OPEN-QUERY-BRW-COMPUESTOS OPEN QUERY BRW-COMPUESTOS FOR EACH T-Ofabrica_dt OF T-Ofabrica_hd ~
+      WHERE T-Ofabrica_dt.tipo_detalle = "P" NO-LOCK, ~
+      EACH Compuesto OF T-Ofabrica_dt NO-LOCK INDEXED-REPOSITION.
+&Scoped-define TABLES-IN-QUERY-BRW-COMPUESTOS T-Ofabrica_dt Compuesto
+&Scoped-define FIRST-TABLE-IN-QUERY-BRW-COMPUESTOS T-Ofabrica_dt
+&Scoped-define SECOND-TABLE-IN-QUERY-BRW-COMPUESTOS Compuesto
+
+
+/* Definitions for FRAME DEFAULT-FRAME                                  */
+&Scoped-define FIELDS-IN-QUERY-DEFAULT-FRAME T-Ofabrica_hd.tip_comprob ~
+T-Ofabrica_hd.prf_comprob T-Ofabrica_hd.nro_comprob T-Ofabrica_hd.fecha ~
+T-Ofabrica_hd.leyenda 
+&Scoped-define ENABLED-FIELDS-IN-QUERY-DEFAULT-FRAME ~
+T-Ofabrica_hd.tip_comprob T-Ofabrica_hd.prf_comprob ~
+T-Ofabrica_hd.nro_comprob T-Ofabrica_hd.fecha T-Ofabrica_hd.leyenda 
+&Scoped-define ENABLED-TABLES-IN-QUERY-DEFAULT-FRAME T-Ofabrica_hd
+&Scoped-define FIRST-ENABLED-TABLE-IN-QUERY-DEFAULT-FRAME T-Ofabrica_hd
+&Scoped-define OPEN-BROWSERS-IN-QUERY-DEFAULT-FRAME ~
+    ~{&OPEN-QUERY-BRW-COMPONENTES}~
+    ~{&OPEN-QUERY-BRW-COMPUESTOS}
+&Scoped-define QUERY-STRING-DEFAULT-FRAME FOR EACH T-Ofabrica_hd SHARE-LOCK
+&Scoped-define OPEN-QUERY-DEFAULT-FRAME OPEN QUERY DEFAULT-FRAME FOR EACH T-Ofabrica_hd SHARE-LOCK.
+&Scoped-define TABLES-IN-QUERY-DEFAULT-FRAME T-Ofabrica_hd
+&Scoped-define FIRST-TABLE-IN-QUERY-DEFAULT-FRAME T-Ofabrica_hd
+
+
+/* Standard List Definitions                                            */
+&Scoped-Define ENABLED-FIELDS T-Ofabrica_hd.tip_comprob ~
+T-Ofabrica_hd.prf_comprob T-Ofabrica_hd.nro_comprob T-Ofabrica_hd.fecha ~
+T-Ofabrica_hd.leyenda 
+&Scoped-define ENABLED-TABLES T-Ofabrica_hd
+&Scoped-define FIRST-ENABLED-TABLE T-Ofabrica_hd
+&Scoped-Define ENABLED-OBJECTS Btn_salir v-cdg_area v-cdg_empleado ~
+BRW-COMPUESTOS BRW-COMPONENTES RECT-2 RECT-3 
+&Scoped-Define DISPLAYED-FIELDS T-Ofabrica_hd.tip_comprob ~
+T-Ofabrica_hd.prf_comprob T-Ofabrica_hd.nro_comprob T-Ofabrica_hd.fecha ~
+T-Ofabrica_hd.leyenda 
+&Scoped-define DISPLAYED-TABLES T-Ofabrica_hd
+&Scoped-define FIRST-DISPLAYED-TABLE T-Ofabrica_hd
+&Scoped-Define DISPLAYED-OBJECTS v-tip_plan v-prf_plan v-nro_plan ~
+v-cdg_operacionfabrica v-dsc_operacionfabrica v-cdg_centrotrabajo ~
+v-dsc_centrotrabajo v-cdg_area v-dsc_area v-cdg_empleado v-dsc_empleado ~
+v-cdg_producto v-estado v-cdg_insumo v-anulado 
+
+/* Custom List Definitions                                              */
+/* List-1,List-2,List-3,List-4,List-5,List-6                            */
+
+/* _UIB-PREPROCESSOR-BLOCK-END */
+&ANALYZE-RESUME
+
+
+
+/* ***********************  Control Definitions  ********************** */
+
+/* Define the widget handle for the window                              */
+DEFINE VAR C-Win AS WIDGET-HANDLE NO-UNDO.
+
+/* Definitions of the field level widgets                               */
+DEFINE BUTTON btn_anular 
+     LABEL "&Anular" 
+     SIZE 24 BY 1.33.
+
+DEFINE BUTTON btn_cancel 
+     LABEL "&Cancelar" 
+     SIZE 24 BY 1.33.
+
+DEFINE BUTTON btn_copiar 
+     LABEL "&Copiar" 
+     SIZE 24 BY 1.33.
+
+DEFINE BUTTON btn_grabar 
+     LABEL "&Grabar" 
+     SIZE 24 BY 1.33.
+
+DEFINE BUTTON btn_imprim 
+     LABEL "&Reimprimir" 
+     SIZE 24 BY 1.33.
+
+DEFINE BUTTON Btn_salir DEFAULT 
+     LABEL "&Salir" 
+     SIZE 24 BY 1.33
+     BGCOLOR 8 .
+
+DEFINE VARIABLE v-anulado AS CHARACTER FORMAT "X(256)":U 
+     VIEW-AS FILL-IN 
+     SIZE 28 BY 1
+     BGCOLOR 15 FGCOLOR 12  NO-UNDO.
+
+DEFINE VARIABLE v-cdg_area AS CHARACTER FORMAT "X(256)":U 
+     LABEL "Area" 
+     VIEW-AS FILL-IN NATIVE 
+     SIZE 18 BY 1
+     BGCOLOR 15 FGCOLOR 9  NO-UNDO.
+
+DEFINE VARIABLE v-cdg_centrotrabajo AS CHARACTER FORMAT "X(256)":U 
+     LABEL "Centro" 
+     VIEW-AS FILL-IN NATIVE 
+     SIZE 18 BY 1
+     BGCOLOR 15 FGCOLOR 9  NO-UNDO.
+
+DEFINE VARIABLE v-cdg_empleado AS CHARACTER FORMAT "X(256)":U 
+     LABEL "Resp." 
+     VIEW-AS FILL-IN NATIVE 
+     SIZE 18 BY 1
+     BGCOLOR 15 FGCOLOR 9  NO-UNDO.
+
+DEFINE VARIABLE v-cdg_insumo AS CHARACTER FORMAT "X(14)" 
+     LABEL "Insumo" 
+     VIEW-AS FILL-IN NATIVE 
+     SIZE 30 BY 1
+     BGCOLOR 14 FGCOLOR 12 FONT 6.
+
+DEFINE VARIABLE v-cdg_operacionfabrica AS CHARACTER FORMAT "X(256)":U 
+     LABEL "Operación" 
+     VIEW-AS FILL-IN NATIVE 
+     SIZE 18 BY 1
+     BGCOLOR 15 FGCOLOR 9  NO-UNDO.
+
+DEFINE VARIABLE v-cdg_producto AS CHARACTER FORMAT "X(14)" 
+     LABEL "Producto" 
+     VIEW-AS FILL-IN NATIVE 
+     SIZE 30 BY 1
+     BGCOLOR 14 FGCOLOR 12 FONT 6.
+
+DEFINE VARIABLE v-dsc_area AS CHARACTER FORMAT "X(256)":U 
+     VIEW-AS FILL-IN 
+     SIZE 48 BY 1
+     BGCOLOR 7 FGCOLOR 15  NO-UNDO.
+
+DEFINE VARIABLE v-dsc_centrotrabajo AS CHARACTER FORMAT "X(256)":U 
+     VIEW-AS FILL-IN 
+     SIZE 48 BY 1
+     BGCOLOR 7 FGCOLOR 15  NO-UNDO.
+
+DEFINE VARIABLE v-dsc_empleado AS CHARACTER FORMAT "X(256)":U 
+     VIEW-AS FILL-IN 
+     SIZE 48 BY 1
+     BGCOLOR 7 FGCOLOR 15  NO-UNDO.
+
+DEFINE VARIABLE v-dsc_operacionfabrica AS CHARACTER FORMAT "X(256)":U 
+     VIEW-AS FILL-IN 
+     SIZE 48 BY 1
+     BGCOLOR 7 FGCOLOR 15  NO-UNDO.
+
+DEFINE VARIABLE v-estado AS CHARACTER FORMAT "X(256)":U 
+     VIEW-AS FILL-IN 
+     SIZE 28 BY 1
+     BGCOLOR 15 FGCOLOR 12  NO-UNDO.
+
+DEFINE VARIABLE v-nro_plan AS INTEGER FORMAT ">>>>>>>9":U INITIAL ? 
+     VIEW-AS FILL-IN NATIVE 
+     SIZE 14 BY 1
+     BGCOLOR 15 FGCOLOR 9  NO-UNDO.
+
+DEFINE VARIABLE v-prf_plan AS INTEGER FORMAT "9999":U INITIAL 0 
+     VIEW-AS FILL-IN NATIVE 
+     SIZE 9 BY 1
+     BGCOLOR 15 FGCOLOR 9  NO-UNDO.
+
+DEFINE VARIABLE v-tip_plan AS CHARACTER FORMAT "X(2)":U 
+     LABEL "Plan Nro." 
+     VIEW-AS FILL-IN NATIVE 
+     SIZE 9 BY 1
+     BGCOLOR 15 FGCOLOR 9  NO-UNDO.
+
+DEFINE RECTANGLE RECT-2
+     EDGE-PIXELS 2 GRAPHIC-EDGE  NO-FILL 
+     SIZE 126 BY 1.86.
+
+DEFINE RECTANGLE RECT-3
+     EDGE-PIXELS 2 GRAPHIC-EDGE  NO-FILL 
+     SIZE 26 BY 1.86.
+
+/* Query definitions                                                    */
+&ANALYZE-SUSPEND
+DEFINE QUERY BRW-COMPONENTES FOR 
+      T-Ofabrica_dt, 
+      Componente SCROLLING.
+
+DEFINE QUERY BRW-COMPUESTOS FOR 
+      T-Ofabrica_dt, 
+      Compuesto SCROLLING.
+
+DEFINE QUERY DEFAULT-FRAME FOR 
+      T-Ofabrica_hd SCROLLING.
+&ANALYZE-RESUME
+
+/* Browse definitions                                                   */
+DEFINE BROWSE BRW-COMPONENTES
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _DISPLAY-FIELDS BRW-COMPONENTES C-Win _STRUCTURED
+  QUERY BRW-COMPONENTES NO-LOCK DISPLAY
+      T-Ofabrica_dt.nro_linea COLUMN-LABEL "Número!Linea" FORMAT ">>9":U
+      Componente.cdg_articulo FORMAT "X(12)":U WIDTH 15
+      Componente.descripcion FORMAT "X(40)":U
+      T-Ofabrica_dt.cantidad COLUMN-LABEL "Cantidad!A Consumir" FORMAT "->>,>>>,>>9.99":U
+      T-Ofabrica_dt.cantidad_sol FORMAT "->>,>>>,>>9.99":U
+      Componente.cdg_umed FORMAT "X(12)":U WIDTH 6.2
+      T-Ofabrica_dt.granel COLUMN-LABEL "Granel!A Consumir" FORMAT "->>,>>>,>>9.99":U
+      T-Ofabrica_dt.granel_sol FORMAT "->>,>>>,>>9.99":U
+      T-Ofabrica_dt.observacion COLUMN-LABEL "Observaciones!Asociadas" FORMAT "X(300)":U
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+    WITH NO-ROW-MARKERS SEPARATORS SIZE 157 BY 9.52
+         TITLE "Componentes involucrados en la presente O/Fábrica" EXPANDABLE.
+
+DEFINE BROWSE BRW-COMPUESTOS
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _DISPLAY-FIELDS BRW-COMPUESTOS C-Win _STRUCTURED
+  QUERY BRW-COMPUESTOS NO-LOCK DISPLAY
+      T-Ofabrica_dt.nro_linea COLUMN-LABEL "Número!Linea" FORMAT ">>9":U
+      Compuesto.cdg_articulo FORMAT "X(12)":U WIDTH 15
+      Compuesto.descripcion FORMAT "X(40)":U WIDTH 52.2
+      T-Ofabrica_dt.cantidad COLUMN-LABEL "Cantidad!Real" FORMAT "->>,>>>,>>9.99":U
+      T-Ofabrica_dt.cantidad_sol COLUMN-LABEL "Cantidad!Teórica" FORMAT "->>,>>>,>>9.99":U
+            COLUMN-FGCOLOR 9 COLUMN-BGCOLOR 11
+      Compuesto.cdg_umed FORMAT "X(12)":U WIDTH 6
+      T-Ofabrica_dt.granel COLUMN-LABEL "Granel!Real" FORMAT "->>,>>>,>>9.99":U
+      T-Ofabrica_dt.granel_sol COLUMN-LABEL "Granel!Teórico" FORMAT "->>,>>>,>>9.99":U
+            COLUMN-FGCOLOR 9 COLUMN-BGCOLOR 11
+      T-Ofabrica_dt.cdg_estado COLUMN-LABEL "Es-!tado" FORMAT "X(2)":U
+  ENABLE
+      T-Ofabrica_dt.cantidad_sol
+      T-Ofabrica_dt.granel_sol
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+    WITH NO-ASSIGN SEPARATORS SIZE 157 BY 6.67
+         TITLE "Resultante de producción de la Orden de Fábrica" EXPANDABLE.
+
+
+/* ************************  Frame Definitions  *********************** */
+
+DEFINE FRAME DEFAULT-FRAME
+     btn_copiar AT ROW 1.48 COL 29
+     btn_cancel AT ROW 1.48 COL 54
+     btn_anular AT ROW 1.48 COL 79
+     btn_imprim AT ROW 1.48 COL 104
+     Btn_salir AT ROW 1.48 COL 133
+     btn_grabar AT ROW 1.52 COL 4
+     T-Ofabrica_hd.tip_comprob AT ROW 3.62 COL 11 COLON-ALIGNED
+          LABEL "Orden"
+          VIEW-AS FILL-IN NATIVE 
+          SIZE 9 BY 1
+          BGCOLOR 7 FGCOLOR 15 
+     T-Ofabrica_hd.prf_comprob AT ROW 3.62 COL 21 COLON-ALIGNED NO-LABEL
+          VIEW-AS FILL-IN NATIVE 
+          SIZE 8 BY 1
+          BGCOLOR 7 FGCOLOR 15 
+     T-Ofabrica_hd.nro_comprob AT ROW 3.62 COL 30 COLON-ALIGNED NO-LABEL
+          VIEW-AS FILL-IN NATIVE 
+          SIZE 14 BY 1
+          BGCOLOR 7 FGCOLOR 15 
+     T-Ofabrica_hd.fecha AT ROW 3.62 COL 89 COLON-ALIGNED
+          VIEW-AS FILL-IN NATIVE 
+          SIZE 18 BY 1
+          BGCOLOR 15 FGCOLOR 9 
+     v-tip_plan AT ROW 3.62 COL 122 COLON-ALIGNED
+     v-prf_plan AT ROW 3.62 COL 132 COLON-ALIGNED NO-LABEL
+     v-nro_plan AT ROW 3.62 COL 142 COLON-ALIGNED NO-LABEL
+     v-cdg_operacionfabrica AT ROW 4.81 COL 11 COLON-ALIGNED
+     v-dsc_operacionfabrica AT ROW 4.81 COL 30 COLON-ALIGNED NO-LABEL
+     v-cdg_centrotrabajo AT ROW 4.81 COL 89 COLON-ALIGNED
+     v-dsc_centrotrabajo AT ROW 4.81 COL 108 COLON-ALIGNED NO-LABEL
+     v-cdg_area AT ROW 6 COL 11 COLON-ALIGNED
+     v-dsc_area AT ROW 6 COL 30 COLON-ALIGNED NO-LABEL
+     v-cdg_empleado AT ROW 6 COL 89 COLON-ALIGNED
+     v-dsc_empleado AT ROW 6 COL 108 COLON-ALIGNED NO-LABEL
+     v-cdg_producto AT ROW 8.62 COL 3.2
+     T-Ofabrica_hd.leyenda AT ROW 8.62 COL 45 NO-LABEL
+          VIEW-AS EDITOR SCROLLBAR-VERTICAL
+          SIZE 83 BY 2.14
+          BGCOLOR 15 FGCOLOR 9 
+     v-estado AT ROW 8.62 COL 127 COLON-ALIGNED NO-LABEL
+     v-cdg_insumo AT ROW 9.81 COL 5
+     v-anulado AT ROW 9.81 COL 127 COLON-ALIGNED NO-LABEL
+     BRW-COMPUESTOS AT ROW 11 COL 1
+     BRW-COMPONENTES AT ROW 17.91 COL 1
+     RECT-2 AT ROW 1.29 COL 3
+     RECT-3 AT ROW 1.24 COL 132
+     "         Observaciones pertinentes a la presente orden de fabrica" VIEW-AS TEXT
+          SIZE 83 BY 1 AT ROW 7.43 COL 45
+          BGCOLOR 5 FGCOLOR 15 
+     "  Articulos Agregados" VIEW-AS TEXT
+          SIZE 30 BY 1 AT ROW 7.43 COL 13
+          BGCOLOR 5 FGCOLOR 15 
+     "         Estado y Vigencia" VIEW-AS TEXT
+          SIZE 28 BY 1 AT ROW 7.43 COL 129
+          BGCOLOR 5 FGCOLOR 15 
+    WITH 1 DOWN NO-BOX KEEP-TAB-ORDER OVERLAY 
+         SIDE-LABELS NO-UNDERLINE THREE-D 
+         AT COL 1 ROW 1
+         SIZE 158 BY 26.43.
+
+
+/* *********************** Procedure Settings ************************ */
+
+&ANALYZE-SUSPEND _PROCEDURE-SETTINGS
+/* Settings for THIS-PROCEDURE
+   Type: Window
+   Allow: Basic,Browse,DB-Fields,Window,Query
+   Other Settings: COMPILE
+   Temp-Tables and Buffers:
+      TABLE: Componente B "?" ? sic Articulo
+      TABLE: Compuesto B "?" ? sic Articulo
+      TABLE: T-Ofabrica_dt T "?" NO-UNDO sic Ofabrica_dt
+      TABLE: T-Ofabrica_hd T "?" NO-UNDO sic Ofabrica_hd
+   END-TABLES.
+ */
+&ANALYZE-RESUME _END-PROCEDURE-SETTINGS
+
+/* *************************  Create Window  ************************** */
+
+&ANALYZE-SUSPEND _CREATE-WINDOW
+IF SESSION:DISPLAY-TYPE = "GUI":U THEN
+  CREATE WINDOW C-Win ASSIGN
+         HIDDEN             = YES
+         TITLE              = "Ordenes de Fábrica"
+         HEIGHT             = 26.43
+         WIDTH              = 158
+         MAX-HEIGHT         = 27.67
+         MAX-WIDTH          = 160
+         VIRTUAL-HEIGHT     = 27.67
+         VIRTUAL-WIDTH      = 160
+         RESIZE             = yes
+         SCROLL-BARS        = no
+         STATUS-AREA        = no
+         BGCOLOR            = ?
+         FGCOLOR            = ?
+         KEEP-FRAME-Z-ORDER = yes
+         THREE-D            = yes
+         MESSAGE-AREA       = no
+         SENSITIVE          = yes.
+ELSE {&WINDOW-NAME} = CURRENT-WINDOW.
+/* END WINDOW DEFINITION                                                */
+&ANALYZE-RESUME
+
+
+
+/* ***********  Runtime Attributes and AppBuilder Settings  *********** */
+
+&ANALYZE-SUSPEND _RUN-TIME-ATTRIBUTES
+/* SETTINGS FOR WINDOW C-Win
+  VISIBLE,,RUN-PERSISTENT                                               */
+/* SETTINGS FOR FRAME DEFAULT-FRAME
+                                                                        */
+/* BROWSE-TAB BRW-COMPUESTOS v-anulado DEFAULT-FRAME */
+/* BROWSE-TAB BRW-COMPONENTES BRW-COMPUESTOS DEFAULT-FRAME */
+/* SETTINGS FOR BUTTON btn_anular IN FRAME DEFAULT-FRAME
+   NO-ENABLE                                                            */
+/* SETTINGS FOR BUTTON btn_cancel IN FRAME DEFAULT-FRAME
+   NO-ENABLE                                                            */
+/* SETTINGS FOR BUTTON btn_copiar IN FRAME DEFAULT-FRAME
+   NO-ENABLE                                                            */
+/* SETTINGS FOR BUTTON btn_grabar IN FRAME DEFAULT-FRAME
+   NO-ENABLE                                                            */
+/* SETTINGS FOR BUTTON btn_imprim IN FRAME DEFAULT-FRAME
+   NO-ENABLE                                                            */
+/* SETTINGS FOR FILL-IN T-Ofabrica_hd.tip_comprob IN FRAME DEFAULT-FRAME
+   EXP-LABEL                                                            */
+/* SETTINGS FOR FILL-IN v-anulado IN FRAME DEFAULT-FRAME
+   NO-ENABLE                                                            */
+/* SETTINGS FOR FILL-IN v-cdg_centrotrabajo IN FRAME DEFAULT-FRAME
+   NO-ENABLE                                                            */
+/* SETTINGS FOR FILL-IN v-cdg_insumo IN FRAME DEFAULT-FRAME
+   NO-ENABLE ALIGN-L                                                    */
+/* SETTINGS FOR FILL-IN v-cdg_operacionfabrica IN FRAME DEFAULT-FRAME
+   NO-ENABLE                                                            */
+/* SETTINGS FOR FILL-IN v-cdg_producto IN FRAME DEFAULT-FRAME
+   NO-ENABLE ALIGN-L                                                    */
+/* SETTINGS FOR FILL-IN v-dsc_area IN FRAME DEFAULT-FRAME
+   NO-ENABLE                                                            */
+/* SETTINGS FOR FILL-IN v-dsc_centrotrabajo IN FRAME DEFAULT-FRAME
+   NO-ENABLE                                                            */
+/* SETTINGS FOR FILL-IN v-dsc_empleado IN FRAME DEFAULT-FRAME
+   NO-ENABLE                                                            */
+/* SETTINGS FOR FILL-IN v-dsc_operacionfabrica IN FRAME DEFAULT-FRAME
+   NO-ENABLE                                                            */
+/* SETTINGS FOR FILL-IN v-estado IN FRAME DEFAULT-FRAME
+   NO-ENABLE                                                            */
+/* SETTINGS FOR FILL-IN v-nro_plan IN FRAME DEFAULT-FRAME
+   NO-ENABLE                                                            */
+/* SETTINGS FOR FILL-IN v-prf_plan IN FRAME DEFAULT-FRAME
+   NO-ENABLE                                                            */
+/* SETTINGS FOR FILL-IN v-tip_plan IN FRAME DEFAULT-FRAME
+   NO-ENABLE                                                            */
+IF SESSION:DISPLAY-TYPE = "GUI":U AND VALID-HANDLE(C-Win)
+THEN C-Win:HIDDEN = no.
+
+/* _RUN-TIME-ATTRIBUTES-END */
+&ANALYZE-RESUME
+
+
+/* Setting information for Queries and Browse Widgets fields            */
+
+&ANALYZE-SUSPEND _QUERY-BLOCK BROWSE BRW-COMPONENTES
+/* Query rebuild information for BROWSE BRW-COMPONENTES
+     _TblList          = "Temp-Tables.T-Ofabrica_dt OF Temp-Tables.T-Ofabrica_hd,Componente OF Temp-Tables.T-Ofabrica_dt"
+     _Options          = "NO-LOCK INDEXED-REPOSITION"
+     _Where[1]         = "Temp-Tables.T-Ofabrica_dt.tipo_detalle = ""C"""
+     _FldNameList[1]   > Temp-Tables.T-Ofabrica_dt.nro_linea
+"T-Ofabrica_dt.nro_linea" "Número!Linea" ? "integer" ? ? ? ? ? ? no ? no no ? yes no no "U" "" ""
+     _FldNameList[2]   > Temp-Tables.Componente.cdg_articulo
+"Componente.cdg_articulo" ? ? "character" ? ? ? ? ? ? no ? no no "15" yes no no "U" "" ""
+     _FldNameList[3]   = Temp-Tables.Componente.descripcion
+     _FldNameList[4]   > Temp-Tables.T-Ofabrica_dt.cantidad
+"T-Ofabrica_dt.cantidad" "Cantidad!A Consumir" ? "decimal" ? ? ? ? ? ? no ? no no ? yes no no "U" "" ""
+     _FldNameList[5]   = Temp-Tables.T-Ofabrica_dt.cantidad_sol
+     _FldNameList[6]   > Temp-Tables.Componente.cdg_umed
+"Componente.cdg_umed" ? ? "character" ? ? ? ? ? ? no ? no no "6.2" yes no no "U" "" ""
+     _FldNameList[7]   > Temp-Tables.T-Ofabrica_dt.granel
+"T-Ofabrica_dt.granel" "Granel!A Consumir" ? "decimal" ? ? ? ? ? ? no ? no no ? yes no no "U" "" ""
+     _FldNameList[8]   = Temp-Tables.T-Ofabrica_dt.granel_sol
+     _FldNameList[9]   > Temp-Tables.T-Ofabrica_dt.observacion
+"T-Ofabrica_dt.observacion" "Observaciones!Asociadas" ? "character" ? ? ? ? ? ? no ? no no ? yes no no "U" "" ""
+     _Query            is OPENED
+*/  /* BROWSE BRW-COMPONENTES */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _QUERY-BLOCK BROWSE BRW-COMPUESTOS
+/* Query rebuild information for BROWSE BRW-COMPUESTOS
+     _TblList          = "Temp-Tables.T-Ofabrica_dt OF Temp-Tables.T-Ofabrica_hd,Compuesto OF Temp-Tables.T-Ofabrica_dt"
+     _Options          = "NO-LOCK INDEXED-REPOSITION"
+     _Where[1]         = "Temp-Tables.T-Ofabrica_dt.tipo_detalle = ""P"""
+     _FldNameList[1]   > Temp-Tables.T-Ofabrica_dt.nro_linea
+"T-Ofabrica_dt.nro_linea" "Número!Linea" ? "integer" ? ? ? ? ? ? no ? no no ? yes no no "U" "" ""
+     _FldNameList[2]   > Temp-Tables.Compuesto.cdg_articulo
+"Compuesto.cdg_articulo" ? ? "character" ? ? ? ? ? ? no ? no no "15" yes no no "U" "" ""
+     _FldNameList[3]   > Temp-Tables.Compuesto.descripcion
+"Compuesto.descripcion" ? ? "character" ? ? ? ? ? ? no ? no no "52.2" yes no no "U" "" ""
+     _FldNameList[4]   > Temp-Tables.T-Ofabrica_dt.cantidad
+"T-Ofabrica_dt.cantidad" "Cantidad!Real" ? "decimal" ? ? ? ? ? ? no ? no no ? yes no no "U" "" ""
+     _FldNameList[5]   > Temp-Tables.T-Ofabrica_dt.cantidad_sol
+"T-Ofabrica_dt.cantidad_sol" "Cantidad!Teórica" ? "decimal" 11 9 ? ? ? ? yes ? no no ? yes no no "U" "" ""
+     _FldNameList[6]   > Temp-Tables.Compuesto.cdg_umed
+"Compuesto.cdg_umed" ? ? "character" ? ? ? ? ? ? no ? no no "6" yes no no "U" "" ""
+     _FldNameList[7]   > Temp-Tables.T-Ofabrica_dt.granel
+"T-Ofabrica_dt.granel" "Granel!Real" ? "decimal" ? ? ? ? ? ? no ? no no ? yes no no "U" "" ""
+     _FldNameList[8]   > Temp-Tables.T-Ofabrica_dt.granel_sol
+"T-Ofabrica_dt.granel_sol" "Granel!Teórico" ? "decimal" 11 9 ? ? ? ? yes ? no no ? yes no no "U" "" ""
+     _FldNameList[9]   > Temp-Tables.T-Ofabrica_dt.cdg_estado
+"T-Ofabrica_dt.cdg_estado" "Es-!tado" ? "character" ? ? ? ? ? ? no ? no no ? yes no no "U" "" ""
+     _Query            is OPENED
+*/  /* BROWSE BRW-COMPUESTOS */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _QUERY-BLOCK FRAME DEFAULT-FRAME
+/* Query rebuild information for FRAME DEFAULT-FRAME
+     _TblList          = "Temp-Tables.T-Ofabrica_hd"
+     _Query            is OPENED
+*/  /* FRAME DEFAULT-FRAME */
+&ANALYZE-RESUME
+
+ 
+
+
+
+/* ************************  Control Triggers  ************************ */
+
+&Scoped-define SELF-NAME C-Win
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL C-Win C-Win
+ON END-ERROR OF C-Win /* Ordenes de Fábrica */
+OR ENDKEY OF {&WINDOW-NAME} ANYWHERE DO:
+  /* This case occurs when the user presses the "Esc" key.
+     In a persistently run window, just ignore this.  If we did not, the
+     application would exit. */
+  IF THIS-PROCEDURE:PERSISTENT THEN RETURN NO-APPLY.
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL C-Win C-Win
+ON WINDOW-CLOSE OF C-Win /* Ordenes de Fábrica */
+DO:
+  /* This event will close the window and terminate the procedure.  */
+  /* APPLY "CLOSE":U TO THIS-PROCEDURE. */
+  APPLY "CHOOSE":U TO Btn_salir IN FRAME {&FRAME-NAME}.
+  RETURN NO-APPLY.
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define BROWSE-NAME BRW-COMPUESTOS
+&Scoped-define SELF-NAME BRW-COMPUESTOS
+&Scoped-define SELF-NAME T-Ofabrica_dt.cantidad_sol
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL T-Ofabrica_dt.cantidad_sol BRW-COMPUESTOS _BROWSE-COLUMN C-Win
+ON LEAVE OF T-Ofabrica_dt.cantidad_sol IN BROWSE BRW-COMPUESTOS /* Cantidad!Teórica */
+DO:
+  /*
+  IF BRW-COLORES:CURRENT-ROW-MODIFIED
+  THEN DO:
+  */
+
+    DEFINE VARIABLE x-cantidad     LIKE Ofabrica_dt.cantidad_sol.
+    DEFINE VARIABLE x-granel       LIKE Ofabrica_dt.granel_sol.
+    
+    x-cantidad = DECIMAL(T-Ofabrica_dt.cantidad_sol:SCREEN-VALUE IN BROWSE BRW-COMPUESTOS).
+
+    T-Ofabrica_dt.cantidad = x-cantidad.
+    T-Ofabrica_dt.cantidad_sol = T-Ofabrica_dt.cantidad.
+    DISPLAY T-Ofabrica_dt.cantidad
+            WITH BROWSE BRW-COMPUESTOS.
+
+    RUN calcular_componentes ( INPUT T-Ofabrica_dt.nro_articulo, INPUT T-Ofabrica_dt.cantidad ).
+
+    RUN abre_query_compuestos.
+    RUN abre_query_componentes.
+
+/*
+    MESSAGE "sol:screen-value " T-Ofabrica_dt.cantidad_sol:SCREEN-VALUE IN BROWSE BRW-COMPUESTOS SKIP
+            "sol:valor        " T-Ofabrica_dt.cantidad_sol SKIP
+            "can:screen-value " T-Ofabrica_dt.cantidad:SCREEN-VALUE IN BROWSE BRW-COMPUESTOS SKIP
+            "can:valor        " T-Ofabrica_dt.cantidad SKIP
+            VIEW-AS ALERT-BOX MESSAGE TITLE "salimos con estos valores".
+  
+  END.        
+  */  
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME btn_anular
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL btn_anular C-Win
+ON CHOOSE OF btn_anular IN FRAME DEFAULT-FRAME /* Anular */
+DO:
+
+    DEFINE VARIABLE pudo_anular AS INTEGER.
+    sino-msg = NO.
+    MESSAGE "Desea ANULAR este comprobante" 
+            VIEW-AS ALERT-BOX QUESTION BUTTONS YES-NO TITLE "Confirmación" UPDATE sino-msg.
+    IF sino-msg
+    THEN DO:
+         RUN anular_comprobante_cliente.p (INPUT ROWID(Fac_header), OUTPUT pudo_anular).
+         IF pudo_anular = 0
+         THEN DO:
+              DO TRANSACTION:
+                RUN borrar_tablas_temporales.
+              END.
+              MESSAGE "El comprobante ha sido anulado" 
+                      VIEW-AS ALERT-BOX MESSAGE TITLE "Aviso".
+              
+         END.
+         ASSIGN codigo_salir = CD_GRABAR.
+         APPLY "U1":U TO THIS-PROCEDURE.
+    END.
+  
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME btn_cancel
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL btn_cancel C-Win
+ON CHOOSE OF btn_cancel IN FRAME DEFAULT-FRAME /* Cancelar */
+DO: /*
+    sino-msg = NO.
+    MESSAGE "Desea cancelar la operación en curso?" 
+            VIEW-AS ALERT-BOX QUESTION BUTTONS YES-NO TITLE "Confirmación" UPDATE sino-msg.
+    IF sino-msg
+    THEN DO:
+
+        FOR EACH T-Color:
+            DELETE T-Color.
+        END.
+
+        FOR EACH T-Ped_detalle:
+            DELETE T-Ped_detalle.
+        END.
+
+        FOR EACH T-Ofabrica_hd:
+            DELETE T-Ofabrica_hd.
+        END.
+
+        FOR EACH T-Ped_detalle-bon:
+            DELETE T-Ped_detalle-bon.
+        END.
+
+        FOR EACH T-Ofabrica_hd-bon:
+            DELETE T-Ofabrica_hd-bon.
+        END.
+
+        FOR EACH T-Sub_header_vta:
+            DELETE T-Sub_header_vta.
+        END.
+
+        FOR EACH T-Sub_detalle_vta:
+            DELETE T-Sub_detalle_vta.
+        END.
+
+        ASSIGN codigo_salir = CD_CANCELAR.
+        APPLY "U1" TO THIS-PROCEDURE.
+
+    END.
+      */
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME btn_copiar
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL btn_copiar C-Win
+ON CHOOSE OF btn_copiar IN FRAME DEFAULT-FRAME /* Copiar */
+DO:
+/*
+  RUN d-seleccionar_pedido.w (INPUT-OUTPUT rid_pedido).
+  IF rid_pedido <> ?
+  THEN DO:
+     FIND Ofabrica_hd WHERE ROWID(Ofabrica_hd) = rid_pedido NO-LOCK.
+     DISPLAY Ofabrica_hd.nro_comprob @ T-Ofabrica_hd.nro_comprob
+             WITH FRAME {&FRAME-NAME}.
+     RUN traer_documento.
+  END.  
+*/  
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME btn_grabar
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL btn_grabar C-Win
+ON CHOOSE OF btn_grabar IN FRAME DEFAULT-FRAME /* Grabar */
+DO:
+  /*
+  ASSIGN FRAME {&FRAME-NAME}
+         T-Ofabrica_hd.cambio
+         T-Ofabrica_hd.fecha
+         T-Ofabrica_hd.transportista
+         T-Ofabrica_hd.nro_ocm .
+         
+  RUN validar_datos ( OUTPUT hay_error ).
+  IF NOT hay_error
+  THEN DO:
+
+       RUN grabar_datos.
+
+       ASSIGN codigo_salir = CD_GRABAR.
+       APPLY "U1" TO THIS-PROCEDURE.
+  
+  END.
+  */
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME btn_imprim
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL btn_imprim C-Win
+ON CHOOSE OF btn_imprim IN FRAME DEFAULT-FRAME /* Reimprimir */
+DO:
+    sino-msg = NO.
+    MESSAGE "Desea REIMPRIMIR este comprobante?" 
+            VIEW-AS ALERT-BOX QUESTION BUTTONS YES-NO TITLE "Confirmación" UPDATE sino-msg.
+    IF sino-msg
+    THEN DO:
+         RUN imprimir_planprod.p (ROWID(Planprod_hd)).
+    END.
+  
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME Btn_salir
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL Btn_salir C-Win
+ON CHOOSE OF Btn_salir IN FRAME DEFAULT-FRAME /* Salir */
+DO:
+
+    sino-msg = NO.
+    MESSAGE "Desea abandonar esta función?" 
+            VIEW-AS ALERT-BOX QUESTION BUTTONS YES-NO TITLE "Confirmación" UPDATE sino-msg.
+    IF sino-msg
+    THEN DO:
+        &IF DEFINED (adm-panel) <> 0 &THEN
+            RUN dispatch IN THIS-PROCEDURE ('exit').
+        &ELSE
+/*          APPLY "CLOSE":U TO THIS-PROCEDURE.*/
+            ASSIGN codigo_salir = CD_SALIR.
+            APPLY "U1":U TO THIS-PROCEDURE.
+
+        &ENDIF
+
+    END.
+  
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME T-Ofabrica_hd.nro_comprob
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL T-Ofabrica_hd.nro_comprob C-Win
+ON MOUSE-SELECT-DBLCLICK OF T-Ofabrica_hd.nro_comprob IN FRAME DEFAULT-FRAME /* nro_comprob */
+OR MOUSE-MENU-DOWN,"." OF T-Ofabrica_hd.nro_comprob IN FRAME {&FRAME-NAME}
+DO:
+  DEFINE VARIABLE lista_estados AS CHARACTER.
+  DEFINE VARIABLE titulo_window AS CHARACTER.
+
+  CASE modo:
+     WHEN MD_ALTA          
+     THEN DO:
+          titulo_window = "".     /* Esta opcion la contemplamos por unicidad pero no debería producirse nunca */
+          lista_estados = "".
+     END.
+     WHEN MD_MULTIPLE      
+     THEN DO:
+          titulo_window = "Selección de Ordenes de Fábrica".
+          lista_estados = "*".
+     END.
+     WHEN MD_DEFINIDA             /* Esta opcion la contemplamos por unicidad pero no debería producirse nunca */
+     THEN DO:
+          titulo_window = "".
+          lista_estados = "".
+     END.
+     WHEN MD_RELACION             /* Esta opcion la contemplamos por unicidad pero no debería producirse nunca */
+     THEN DO:
+          titulo_window = "".
+          lista_estados = "".
+     END.
+     WHEN MD_READONLY      
+     THEN DO:
+          titulo_window = "Selección Ordenes de Fábrica".
+          lista_estados = "*".
+     END.
+     WHEN MD_CAMBIO        
+     THEN DO:
+          titulo_window = "".
+          lista_estados = "".
+     END.
+     WHEN MD_ANULACION        
+     THEN DO:
+          titulo_window = "Selección de Ordenes de Fábrica".
+          lista_estados = "P,E".
+     END.
+     WHEN MD_EMISION        
+     THEN DO:
+          titulo_window = "Selección de Ordenes de Fábrica".
+          lista_estados = "".
+     END.
+  END CASE.     
+
+  RUN d-selofabrica.w (INPUT titulo_window, INPUT lista_estados, INPUT "OF", INPUT-OUTPUT rid_ofabrica).
+  IF rid_ofabrica <> ?
+  THEN DO:
+     FIND Ofabrica_hd WHERE ROWID(Ofabrica_hd) = rid_ofabrica NO-LOCK.
+     DISPLAY Ofabrica_hd.tip_comprob @ T-Ofabrica_hd.tip_comprob 
+             Ofabrica_hd.prf_comprob @ T-Ofabrica_hd.prf_comprob
+             Ofabrica_hd.nro_comprob @ T-Ofabrica_hd.nro_comprob
+             WITH FRAME {&FRAME-NAME}.
+     IF modo = MD_ANULACION AND Ofabrica_hd.anulado
+     THEN DO:
+          RUN PONMENSJ.P (INPUT "DOCS002").
+          RETURN NO-APPLY.
+     END.
+     ELSE DO:
+          RUN traer_documento.
+     END.
+  END.  
+  RETURN NO-APPLY.  
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL T-Ofabrica_hd.nro_comprob C-Win
+ON RETURN OF T-Ofabrica_hd.nro_comprob IN FRAME DEFAULT-FRAME /* nro_comprob */
+DO:
+
+   IF LOOKUP(INPUT FRAME {&FRAME-NAME} T-Ofabrica_hd.tip_comprob,"OF") = 0 
+   THEN DO:
+      RUN PONMENSJ.P (INPUT "DOCS010").
+      RETURN NO-APPLY.
+   END.
+
+   FIND Ofabrica_hd 
+        WHERE Ofabrica_hd.cdg_empresa = Empresa.cdg_empresa
+          AND Ofabrica_hd.tip_comprob = INPUT T-Ofabrica_hd.tip_comprob 
+          AND Ofabrica_hd.prf_comprob = INPUT T-Ofabrica_hd.prf_comprob
+          AND Ofabrica_hd.nro_comprob = INPUT T-Ofabrica_hd.nro_comprob
+              NO-ERROR.
+
+   IF NOT AVAILABLE Ofabrica_hd 
+   THEN DO:
+        IF LOCKED Ofabrica_hd
+           THEN RUN PONMENSJ.P (INPUT "DOCS000").
+           ELSE RUN PONMENSJ.P (INPUT "DOCS001").
+        RETURN NO-APPLY.
+   END.
+   ELSE DO:
+        rid_Ofabrica = ROWID(Ofabrica_hd).
+        RUN traer_documento.
+   END.
+  
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME v-cdg_centrotrabajo
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL v-cdg_centrotrabajo C-Win
+ON MOUSE-SELECT-DBLCLICK OF v-cdg_centrotrabajo IN FRAME DEFAULT-FRAME /* Centro */
+OR "." OF v-cdg_centrotrabajo IN FRAME {&FRAME-NAME}
+OR MOUSE-MENU-DOWN OF v-cdg_centrotrabajo IN FRAME {&FRAME-NAME}
+DO:
+   {helptabla.i "centrotrabajo" "cdg_centrotrabajo" "selcentrotrabajo.p"}
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL v-cdg_centrotrabajo C-Win
+ON RETURN OF v-cdg_centrotrabajo IN FRAME DEFAULT-FRAME /* Centro */
+DO:
+  {traducetabla.i "centrotrabajo" "cdg_centrotrabajo" "cdg_centrotrabajo"}   
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME v-cdg_insumo
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL v-cdg_insumo C-Win
+ON ENTRY OF v-cdg_insumo IN FRAME DEFAULT-FRAME /* Insumo */
+DO:
+    v-cdg_insumo = "".
+    DISPLAY v-cdg_insumo
+            WITH FRAME {&FRAME-NAME}.
+  
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL v-cdg_insumo C-Win
+ON LEFT-MOUSE-DBLCLICK OF v-cdg_insumo IN FRAME DEFAULT-FRAME /* Insumo */
+OR "+" OF v-cdg_insumo IN FRAME {&FRAME-NAME}
+DO:
+  
+  DEFINE VARIABLE rid_articulo AS ROWID.
+  RUN selartic.p ( INPUT-OUTPUT rid_articulo, INPUT YES).
+  IF rid_articulo <> ?
+  THEN DO:
+       FIND Articulo WHERE ROWID(Articulo) = rid_articulo NO-LOCK.
+       DISPLAY Articulo.cdg_articulo @ v-cdg_insumo
+               WITH FRAME {&FRAME-NAME}.
+       APPLY "RETURN" TO SELF.
+       RETURN NO-APPLY.
+  END.             
+  
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL v-cdg_insumo C-Win
+ON MOUSE-MENU-DOWN OF v-cdg_insumo IN FRAME DEFAULT-FRAME /* Insumo */
+DO:
+  APPLY "LEFT-MOUSE-DBLCLICK" TO v-cdg_insumo IN FRAME {&FRAME-NAME}.
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL v-cdg_insumo C-Win
+ON RETURN OF v-cdg_insumo IN FRAME DEFAULT-FRAME /* Insumo */
+DO:
+
+  FIND Articulo WHERE Articulo.cdg_articulo = INPUT FRAME {&FRAME-NAME} v-cdg_insumo NO-LOCK NO-ERROR.
+  IF NOT AVAILABLE Articulo 
+  THEN DO:
+       RUN PONMENSJ.P ( 'CLIE020' ).
+       RETURN NO-APPLY.
+  END.
+  ELSE DO:
+       FIND FIRST T-Ofabrica_dt WHERE T-Ofabrica_dt.nro_articulo = Articulo.nro_articulo NO-ERROR.
+       IF AVAILABLE T-Ofabrica_dt
+       THEN DO:
+           RUN PONMENSJ.P ( 'CLIE020' ).
+           RETURN NO-APPLY.
+       END.
+       ELSE DO:
+           RUN crear_detalle_componente.
+       END.
+
+  END.
+
+  v-cdg_insumo = "".
+  DISPLAY v-cdg_insumo
+          WITH FRAME {&FRAME-NAME}.
+  
+  APPLY "ENTRY" TO BRW-COMPUESTOS.
+  
+  RETURN NO-APPLY.
+
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME v-cdg_operacionfabrica
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL v-cdg_operacionfabrica C-Win
+ON MOUSE-SELECT-DBLCLICK OF v-cdg_operacionfabrica IN FRAME DEFAULT-FRAME /* Operación */
+OR "." OF v-cdg_operacionfabrica IN FRAME {&FRAME-NAME}
+OR MOUSE-MENU-DOWN OF v-cdg_operacionfabrica IN FRAME {&FRAME-NAME}
+DO:
+   {helptabla.i "operacionfabrica" "cdg_operacion" "seloperacion.p"}
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL v-cdg_operacionfabrica C-Win
+ON RETURN OF v-cdg_operacionfabrica IN FRAME DEFAULT-FRAME /* Operación */
+DO:
+   &SCOPED-DEFINE PONER-TABLA RUN poner_operacion.
+    {traducetabla.i "Operacionfabrica" "cdg_operacion" "dsc_operacion"}   
+   &UNDEFINE PONER-TABLA
+
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME v-cdg_producto
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL v-cdg_producto C-Win
+ON ENTRY OF v-cdg_producto IN FRAME DEFAULT-FRAME /* Producto */
+DO:
+    v-cdg_producto = "".
+    DISPLAY v-cdg_producto
+            WITH FRAME {&FRAME-NAME}.
+  
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL v-cdg_producto C-Win
+ON LEFT-MOUSE-DBLCLICK OF v-cdg_producto IN FRAME DEFAULT-FRAME /* Producto */
+OR "+" OF v-cdg_producto IN FRAME {&FRAME-NAME}
+DO:
+  
+  DEFINE VARIABLE rid_articulo AS ROWID.
+  RUN selartic.p ( INPUT-OUTPUT rid_articulo, INPUT YES).
+  IF rid_articulo <> ?
+  THEN DO:
+       FIND Articulo WHERE ROWID(Articulo) = rid_articulo NO-LOCK.
+       DISPLAY Articulo.cdg_articulo @ v-cdg_producto
+               WITH FRAME {&FRAME-NAME}.
+       APPLY "RETURN" TO SELF.
+       RETURN NO-APPLY.
+  END.             
+  
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL v-cdg_producto C-Win
+ON MOUSE-MENU-DOWN OF v-cdg_producto IN FRAME DEFAULT-FRAME /* Producto */
+DO:
+  APPLY "LEFT-MOUSE-DBLCLICK" TO v-cdg_producto IN FRAME {&FRAME-NAME}.
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL v-cdg_producto C-Win
+ON RETURN OF v-cdg_producto IN FRAME DEFAULT-FRAME /* Producto */
+DO:
+
+  FIND Articulo WHERE Articulo.cdg_articulo = INPUT FRAME {&FRAME-NAME} v-cdg_producto NO-LOCK NO-ERROR.
+  IF NOT AVAILABLE Articulo 
+  THEN DO:
+       RUN PONMENSJ.P ( 'CLIE020' ).
+       RETURN NO-APPLY.
+  END.
+  ELSE DO:
+       FIND FIRST T-Ofabrica_dt WHERE T-Ofabrica_dt.nro_articulo = Articulo.nro_articulo NO-ERROR.
+       IF AVAILABLE T-Ofabrica_dt
+       THEN DO:
+           RUN PONMENSJ.P ( 'CLIE020' ).
+           RETURN NO-APPLY.
+       END.
+       ELSE DO:
+           RUN crear_detalle_producto.
+       END.
+
+  END.
+
+  v-cdg_producto = "".
+  DISPLAY v-cdg_producto
+          WITH FRAME {&FRAME-NAME}.
+  
+  APPLY "ENTRY" TO BRW-COMPUESTOS.
+  
+  RETURN NO-APPLY.
+
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME v-nro_plan
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL v-nro_plan C-Win
+ON RETURN OF v-nro_plan IN FRAME DEFAULT-FRAME
+DO:
+
+   /*
+   IF LOOKUP(INPUT FRAME {&FRAME-NAME} v-tip_plan,"PP") = 0 
+   THEN DO:
+      RUN PONMENSJ.P (INPUT "DOCS010").
+      RETURN NO-APPLY.
+   END.
+   */
+
+   FIND Planprod_hd 
+        WHERE Planprod_hd.cdg_empresa = Empresa.cdg_empresa
+          AND Planprod_hd.tip_comprob = INPUT v-tip_plan 
+          AND Planprod_hd.prf_comprob = INPUT v-prf_plan
+          AND Planprod_hd.nro_comprob = INPUT v-nro_plan
+              NO-ERROR.
+
+   IF NOT AVAILABLE Planprod_hd 
+   THEN DO:
+        IF LOCKED Planprod_hd
+           THEN RUN PONMENSJ.P (INPUT "DOCS000").
+           ELSE RUN PONMENSJ.P (INPUT "DOCS001").
+        RETURN NO-APPLY.
+   END.
+   ELSE DO:
+        rid_planprod = ROWID(Planprod_hd).
+        RUN traer_planprod.
+   END.
+  
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define BROWSE-NAME BRW-COMPONENTES
+&UNDEFINE SELF-NAME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CUSTOM _MAIN-BLOCK C-Win 
+
+
+/* ***************************  Main Block  *************************** */
+
+/* Set CURRENT-WINDOW: this will parent dialog-boxes and frames.        */
+ASSIGN CURRENT-WINDOW                = {&WINDOW-NAME} 
+       THIS-PROCEDURE:CURRENT-WINDOW = {&WINDOW-NAME}.
+
+/* The CLOSE event can be used from inside or outside the procedure to  */
+/* terminate it.                                                        */
+ON CLOSE OF THIS-PROCEDURE 
+   RUN disable_UI.
+
+{findempresa.i}
+
+/* Best default for GUI applications is...                              */
+PAUSE 0 BEFORE-HIDE.
+
+/* Now enable the interface and wait for the exit condition.            */
+/* (NOTE: handle ERROR and END-KEY so cleanup code will always fire.    */
+MAIN-BLOCK:
+REPEAT ON ERROR   UNDO MAIN-BLOCK, LEAVE MAIN-BLOCK
+       ON END-KEY UNDO MAIN-BLOCK, LEAVE MAIN-BLOCK:
+  RUN enable_UI.
+  RUN iniciar_documento.
+  RUN frame_sensitiva ( INPUT NO ).  
+  CLEAR FRAME {&FRAME-NAME} ALL.
+  RUN crear_registro.
+  IF modo = MD_DEFINIDA
+     THEN RUN traer_documento.
+     ELSE RUN frame_sensitiva ( INPUT YES ).
+  /*
+  DISPLAY v-ultimo_pedido
+          v-ultimo_estado
+          WITH FRAME {&FRAME-NAME}.   
+  */        
+  IF modo = MD_ALTA THEN APPLY "ENTRY" TO v-cdg_operacionfabrica.
+  
+  WAIT-FOR U1 OF THIS-PROCEDURE.
+  CASE codigo_salir:
+       WHEN CD_SALIR THEN UNDO,LEAVE.
+       WHEN CD_CANCELAR THEN UNDO,RETRY.
+       WHEN CD_GRABAR THEN NEXT.
+  END CASE.
+   
+END.
+APPLY "CLOSE" TO THIS-PROCEDURE. /* hay que ver si realmente hace falta */
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+/* **********************  Internal Procedures  *********************** */
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE abre_query_componentes C-Win 
+PROCEDURE abre_query_componentes :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+
+  OPEN QUERY BRW-COMPONENTES
+      FOR EACH T-Ofabrica_dt WHERE T-Ofabrica_dt.tipo_detalle = "C",
+          FIRST Componente OF T-Ofabrica_dt.
+
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE abre_query_compuestos C-Win 
+PROCEDURE abre_query_compuestos :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+
+  OPEN QUERY BRW-COMPUESTOS
+      FOR EACH T-Ofabrica_dt WHERE T-Ofabrica_dt.tipo_detalle = "P",
+          FIRST Compuesto OF T-Ofabrica_dt.
+      
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE calcular_componentes C-Win 
+PROCEDURE calcular_componentes :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+ 
+ DEFINE INPUT PARAMETER p-nro_articulo LIKE Articulo.nro_articulo.
+ DEFINE INPUT PARAMETER p-cantidad     LIKE Ofabrica_dt.cantidad.
+ 
+ DEFINE VARIABLE x-coeficiente AS DECIMAL DECIMALS 6.
+
+ FIND FIRST Articulo_operacion OF Operacionfabrica 
+     WHERE Articulo_operacion.nro_articulo = p-nro_articulo
+       AND Articulo_operacion.rol = "P"
+           NO-LOCK.
+                               
+ x-coeficiente = p-cantidad / Articulo_operacion.cantidad.
+
+ /*-- Borra los registros de consumos agregados anteriormente --*/ 
+     
+ FOR EACH Articulo_operacion OF Operacionfabrica NO-LOCK:
+
+     FIND FIRST T-Ofabrica_dt 
+         WHERE T-Ofabrica_dt.nro_articulo = Articulo_operacion.nro_articulo
+           AND T-Ofabrica_dt.tipo_detalle = IF Articulo_operacion.rol = "P" THEN "P" ELSE "C".
+
+     ASSIGN T-Ofabrica_dt.cantidad = Articulo_operacion.cantidad * x-coeficiente
+            T-Ofabrica_dt.granel   = Articulo_operacion.granel   * x-coeficiente
+            T-Ofabrica_dt.cantidad_sol = T-Ofabrica_dt.cantidad 
+            T-Ofabrica_dt.granel_sol   = T-Ofabrica_dt.granel.
+ END.
+ 
+/*
+  OPEN QUERY BRW-COMPONENTES 
+     FOR EACH T-Ofabrica_dt WHERE T-Ofabrica_dt.tipo_detalle = "C",
+      EACH Componente OF T-Ofabrica_dt. 
+*/
+ /*-- Renumera las líneas de producto para que queden arriba --*/ 
+
+/*-- Ahora, agrega los registros de consumos en base a las formulas --*/ 
+/*
+ FOR EACH B-T-Ofabrica_dt WHERE B-T-Ofabrica_dt.tipo_detalle = "P", 
+     FIRST Compuesto OF B-T-Ofabrica_dt,EACH Formula_articulo
+                                      WHERE Formula_articulo.nro_art_compuesto = Compuesto.nro_articulo:
+
+     CREATE T-Consumo.
+     ASSIGN T-Ofabrica_hd.ultima_linea = T-Ofabrica_hd.ultima_linea + 1
+            T-Consumo.nro_linea        = T-Ofabrica_hd.ultima_linea
+            T-Consumo.tipo_detalle     = "C"
+            T-Consumo.nro_articulo     = Formula_articulo.nro_art_componente
+            T-Consumo.cantidad_sol     = B-T-Ofabrica_dt.cantidad_sol / Formula_articulo.cantidad_compuesto * Formula_articulo.cantidad_componente
+            T-Consumo.granel_sol       = B-T-Ofabrica_dt.granel_sol / Formula_articulo.granel_compuesto * Formula_articulo.granel_componente.
+            
+ END.
+*/
+ /*RUN abre_query_componentes.*/
+
+ MESSAGE "sale calculo componentes"
+     VIEW-AS ALERT-BOX INFO BUTTONS OK.
+
+
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE calculos C-Win 
+PROCEDURE calculos :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+ 
+ /*-- Borra los registros de consumos agregados anteriormente --*/ 
+     
+ FOR EACH B-T-Ofabrica_dt WHERE B-T-Ofabrica_dt.tipo_detalle = "C":
+     DELETE B-T-Ofabrica_dt.
+ END.
+/*
+  OPEN QUERY BRW-COMPONENTES 
+     FOR EACH T-Ofabrica_dt WHERE T-Ofabrica_dt.tipo_detalle = "C",
+      EACH Componente OF T-Ofabrica_dt. 
+*/
+ /*-- Renumera las líneas de producto para que queden arriba --*/ 
+
+ FOR EACH B-T-Ofabrica_dt WHERE B-T-Ofabrica_dt.nro_linea < 10000:
+     B-T-Ofabrica_dt.nro_linea = B-T-Ofabrica_dt.nro_linea + 10000.
+ END.
+
+ T-Ofabrica_hd.ultima_linea = 0.
+ FOR EACH B-T-Ofabrica_dt WHERE B-T-Ofabrica_dt.nro_linea > 10000:
+     T-Ofabrica_hd.ultima_linea = T-Ofabrica_hd.ultima_linea + 1.
+     B-T-Ofabrica_dt.nro_linea = T-Ofabrica_hd.ultima_linea.
+ END.
+
+/*-- Ahora, agrega los registros de consumos en base a las formulas --*/ 
+
+ FOR EACH B-T-Ofabrica_dt WHERE B-T-Ofabrica_dt.tipo_detalle = "P", 
+     FIRST Compuesto OF B-T-Ofabrica_dt,EACH Formula_articulo
+                                      WHERE Formula_articulo.nro_art_compuesto = Compuesto.nro_articulo:
+
+     CREATE T-Consumo.
+     ASSIGN T-Ofabrica_hd.ultima_linea = T-Ofabrica_hd.ultima_linea + 1
+            T-Consumo.nro_linea        = T-Ofabrica_hd.ultima_linea
+            T-Consumo.tipo_detalle     = "C"
+            T-Consumo.nro_articulo     = Formula_articulo.nro_art_componente
+            T-Consumo.cantidad_sol     = B-T-Ofabrica_dt.cantidad_sol / Formula_articulo.cantidad_compuesto * Formula_articulo.cantidad_componente
+            T-Consumo.granel_sol       = B-T-Ofabrica_dt.granel_sol / Formula_articulo.granel_compuesto * Formula_articulo.granel_componente.
+            
+ END.
+
+ RUN abre_query_componentes.
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE crear_detalle_componente C-Win 
+PROCEDURE crear_detalle_componente :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+
+  CREATE T-Ofabrica_dt.
+  ASSIGN T-Ofabrica_hd.ultima_linea = T-Ofabrica_hd.ultima_linea + 1
+         T-Ofabrica_dt.nro_linea    = T-Ofabrica_hd.ultima_linea 
+         T-Ofabrica_dt.nro_articulo = Articulo.nro_articulo
+         T-Ofabrica_dt.tipo_detalle = "C". 
+
+  RUN abre_query_componentes.
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE crear_detalle_producto C-Win 
+PROCEDURE crear_detalle_producto :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+
+  CREATE T-Ofabrica_dt.
+  ASSIGN T-Ofabrica_hd.ultima_linea = T-Ofabrica_hd.ultima_linea + 1
+         T-Ofabrica_dt.nro_linea    = T-Ofabrica_hd.ultima_linea 
+         T-Ofabrica_dt.nro_articulo = Articulo.nro_articulo
+         T-Ofabrica_dt.tipo_detalle = "P". 
+
+  RUN abre_query_compuestos.
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE crear_registro C-Win 
+PROCEDURE crear_registro :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+
+  DO TRANSACTION:
+    
+      CREATE T-Ofabrica_hd.
+      ASSIGN T-Ofabrica_hd.nro_usuario    = Usuario.nro_usuario 
+             T-Ofabrica_hd.cdg_empresa    = Empresa.cdg_empresa
+             T-Ofabrica_hd.fecha          = TODAY 
+             T-Ofabrica_hd.tip_comprob    = "OF" 
+             T-Ofabrica_hd.nro_ofabrica   = 0  
+             T-Ofabrica_hd.estado         = "E" 
+             T-Ofabrica_hd.cdg_estado     = "AA"              
+             T-Ofabrica_hd.nro_comprob    = T-Ofabrica_hd.nro_ofabrica
+             T-Ofabrica_hd.prf_comprob    = 0 /* v-pto_venta */
+             T-Ofabrica_hd.origen         = "M".
+      /*
+             v-cdg_moneda                = Moneda.cdg_moneda
+             v-dsc_moneda                = Moneda.descripcion
+             v-cdg_imputacion            = Imputacion.cdg_imputacion
+             v-dsc_imputacion            = Imputacion.dsc_imputacion 
+             v-cdg_deposito              = Deposito.cdg_deposito
+             v-dsc_deposito              = Deposito.nombre. 
+      */      
+
+  END.
+
+  DISPLAY
+         T-Ofabrica_hd.tip_comprob
+         T-Ofabrica_hd.fecha   
+         WITH FRAME {&FRAME-NAME}.
+
+  codigo_salir = ?.
+
+  IF    modo = MD_MULTIPLE
+     OR modo = MD_ANULACION
+     OR modo = MD_EMISION
+  THEN DO:
+       DO WITH FRAME {&FRAME-NAME}:
+          
+          T-Ofabrica_hd.tip_comprob:FGCOLOR = 9.
+          T-Ofabrica_hd.tip_comprob:BGCOLOR = 15.
+
+          T-Ofabrica_hd.prf_comprob:FGCOLOR = 9.
+          T-Ofabrica_hd.prf_comprob:BGCOLOR = 15.
+          
+          T-Ofabrica_hd.nro_comprob:FGCOLOR = 9.
+          T-Ofabrica_hd.nro_comprob:BGCOLOR = 15.
+       END.
+  END.
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE disable_UI C-Win  _DEFAULT-DISABLE
+PROCEDURE disable_UI :
+/*------------------------------------------------------------------------------
+  Purpose:     DISABLE the User Interface
+  Parameters:  <none>
+  Notes:       Here we clean-up the user-interface by deleting
+               dynamic widgets we have created and/or hide 
+               frames.  This procedure is usually called when
+               we are ready to "clean-up" after running.
+------------------------------------------------------------------------------*/
+  /* Delete the WINDOW we created */
+  IF SESSION:DISPLAY-TYPE = "GUI":U AND VALID-HANDLE(C-Win)
+  THEN DELETE WIDGET C-Win.
+  IF THIS-PROCEDURE:PERSISTENT THEN DELETE PROCEDURE THIS-PROCEDURE.
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE enable_UI C-Win  _DEFAULT-ENABLE
+PROCEDURE enable_UI :
+/*------------------------------------------------------------------------------
+  Purpose:     ENABLE the User Interface
+  Parameters:  <none>
+  Notes:       Here we display/view/enable the widgets in the
+               user-interface.  In addition, OPEN all queries
+               associated with each FRAME and BROWSE.
+               These statements here are based on the "Other 
+               Settings" section of the widget Property Sheets.
+------------------------------------------------------------------------------*/
+
+  {&OPEN-QUERY-DEFAULT-FRAME}
+  GET FIRST DEFAULT-FRAME.
+  DISPLAY v-tip_plan v-prf_plan v-nro_plan v-cdg_operacionfabrica 
+          v-dsc_operacionfabrica v-cdg_centrotrabajo v-dsc_centrotrabajo 
+          v-cdg_area v-dsc_area v-cdg_empleado v-dsc_empleado v-cdg_producto 
+          v-estado v-cdg_insumo v-anulado 
+      WITH FRAME DEFAULT-FRAME IN WINDOW C-Win.
+  IF AVAILABLE T-Ofabrica_hd THEN 
+    DISPLAY T-Ofabrica_hd.tip_comprob T-Ofabrica_hd.prf_comprob 
+          T-Ofabrica_hd.nro_comprob T-Ofabrica_hd.fecha T-Ofabrica_hd.leyenda 
+      WITH FRAME DEFAULT-FRAME IN WINDOW C-Win.
+  ENABLE Btn_salir T-Ofabrica_hd.tip_comprob T-Ofabrica_hd.prf_comprob 
+         T-Ofabrica_hd.nro_comprob T-Ofabrica_hd.fecha v-cdg_area 
+         v-cdg_empleado T-Ofabrica_hd.leyenda BRW-COMPUESTOS BRW-COMPONENTES 
+         RECT-2 RECT-3 
+      WITH FRAME DEFAULT-FRAME IN WINDOW C-Win.
+  {&OPEN-BROWSERS-IN-QUERY-DEFAULT-FRAME}
+  VIEW C-Win.
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE frame_sensitiva C-Win 
+PROCEDURE frame_sensitiva :
+/*------------------------------------------------------------------------------
+  Purpose: habilita o deshabilita los campos de la frame para el estado inicial
+           de la misma que se da cuando comienza el ciclo de transaccion. El es-
+           tado definitivo de los campos lo ajusta la rutina habilitar_campos ( INPUT YES ).   
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+
+  DEFINE INPUT PARAMETER habilitado AS LOGICAL.
+
+  DO WITH FRAME {&FRAME-NAME}:
+
+     IF NOT habilitado
+     THEN DO:
+          ASSIGN
+                btn_grabar:SENSITIVE                      = NO
+                btn_copiar:SENSITIVE                      = NO
+                
+                btn_cancel:SENSITIVE                      = NO
+
+                btn_anular:SENSITIVE                      = NO
+                btn_imprim:SENSITIVE                      = NO
+
+                T-Ofabrica_hd.tip_comprob:SENSITIVE       = NO
+                T-Ofabrica_hd.prf_comprob:SENSITIVE       = NO
+                T-Ofabrica_hd.nro_comprob:SENSITIVE       = NO
+                T-Ofabrica_hd.fecha:SENSITIVE             = NO
+                v-cdg_operacionfabrica:SENSITIVE          = NO
+                v-cdg_centrotrabajo:SENSITIVE             = NO
+                v-cdg_area:SENSITIVE                      = NO
+                v-cdg_empleado:SENSITIVE                  = NO.
+
+     END.
+     ELSE DO:
+
+            RUN frame_sensitiva ( NO ).
+
+            CASE modo:
+       
+                WHEN MD_ALTA          
+                THEN DO:
+                     ASSIGN
+                        btn_grabar:SENSITIVE                      = YES
+                        btn_copiar:SENSITIVE                      = YES
+                        btn_cancel:SENSITIVE                      = YES
+                        btn_imprim:SENSITIVE                      = YES
+                        v-cdg_operacionfabrica:SENSITIVE          = YES
+                        v-cdg_centrotrabajo:SENSITIVE             = YES
+                        v-cdg_area:SENSITIVE                      = YES
+                        v-cdg_empleado:SENSITIVE                  = YES.
+
+                END.
+                WHEN MD_MULTIPLE      
+                THEN DO:
+                     ASSIGN
+                        T-Ofabrica_hd.tip_comprob:SENSITIVE        = YES
+                        T-Ofabrica_hd.prf_comprob:SENSITIVE        = YES
+                        T-Ofabrica_hd.nro_comprob:SENSITIVE        = YES.
+
+                END.
+                WHEN MD_DEFINIDA      
+                THEN DO:
+         
+                END.
+                WHEN MD_RELACION      
+                THEN DO:
+         
+                END.
+                WHEN MD_READONLY      
+                THEN DO:
+         
+                END.
+                WHEN MD_CAMBIO        
+                THEN DO:
+
+                END.
+                WHEN MD_ANULACION        
+                THEN DO:
+                     ASSIGN
+                        T-Ofabrica_hd.tip_comprob:SENSITIVE        = YES
+                        T-Ofabrica_hd.prf_comprob:SENSITIVE        = YES
+                        T-Ofabrica_hd.nro_comprob:SENSITIVE        = YES.
+                END.
+                WHEN MD_EMISION        
+                THEN DO:
+                     ASSIGN
+                        T-Ofabrica_hd.tip_comprob:SENSITIVE        = YES
+                        T-Ofabrica_hd.prf_comprob:SENSITIVE        = YES
+                        T-Ofabrica_hd.nro_comprob:SENSITIVE        = YES.
+                END.
+       
+           END CASE.     
+     END.
+  END.
+  
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE habilitar_campos C-Win 
+PROCEDURE habilitar_campos :
+/*------------------------------------------------------------------------------
+  Purpose: habilita o deshabilita los campos de la frame para el estado final
+           de la misma que se da cuando se ejecuta el ciclo de transaccion. El es-
+           tado inicial de los campos lo ajusta la rutina frame_sensitiva.   
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+
+  DEFINE INPUT PARAMETER habilitado AS LOGICAL.
+
+  DO WITH FRAME {&FRAME-NAME}:
+
+    ASSIGN
+          btn_grabar:SENSITIVE                      = NO
+          btn_copiar:SENSITIVE                      = NO
+          btn_cancel:SENSITIVE                      = NO
+          btn_anular:SENSITIVE                      = NO
+
+          btn_imprim:SENSITIVE                      = NO
+          T-Ofabrica_hd.tip_comprob:SENSITIVE       = NO
+          T-Ofabrica_hd.prf_comprob:SENSITIVE       = NO
+          T-Ofabrica_hd.nro_comprob:SENSITIVE       = NO
+          T-Ofabrica_hd.fecha:SENSITIVE             = NO
+          T-Ofabrica_hd.leyenda:SENSITIVE           = NO
+          v-cdg_producto:SENSITIVE                  = NO
+          v-cdg_insumo:SENSITIVE                    = NO
+          v-cdg_area:SENSITIVE                      = NO
+          v-cdg_empleado:SENSITIVE                  = NO
+          v-cdg_operacionfabrica:SENSITIVE          = NO
+          v-cdg_centrotrabajo:SENSITIVE             = NO
+          BRW-COMPUESTOS:READ-ONLY                  = YES
+          BRW-COMPONENTES:READ-ONLY                 = YES.
+
+     CASE modo:
+
+       WHEN MD_ALTA          
+       THEN DO:
+            ASSIGN
+                btn_cancel:SENSITIVE                       = YES
+                btn_imprim:SENSITIVE                       = YES
+                T-Ofabrica_hd.tip_comprob:SENSITIVE        = NO
+                T-Ofabrica_hd.prf_comprob:SENSITIVE        = NO
+                T-Ofabrica_hd.nro_comprob:SENSITIVE        = NO
+                BRW-COMPUESTOS:READ-ONLY                   = NO
+                BRW-COMPONENTES:READ-ONLY                  = NO.
+
+       END.
+       WHEN MD_MULTIPLE      
+       THEN DO:
+            ASSIGN
+                btn_cancel:SENSITIVE                      = YES
+
+                btn_imprim:SENSITIVE                      = YES
+                T-Ofabrica_hd.tip_comprob:SENSITIVE        = NO
+                T-Ofabrica_hd.prf_comprob:SENSITIVE        = NO
+                T-Ofabrica_hd.nro_comprob:SENSITIVE        = NO.
+       END.
+       WHEN MD_DEFINIDA      
+       THEN DO:
+            ASSIGN
+
+                btn_imprim:SENSITIVE                      = YES.
+       END.
+       WHEN MD_RELACION      
+       THEN DO:
+            ASSIGN
+                btn_imprim:SENSITIVE                      = YES.
+       END.
+       WHEN MD_READONLY      
+       THEN DO:
+            ASSIGN
+                btn_imprim:SENSITIVE                      = YES.
+       END.
+       WHEN MD_CAMBIO        
+       THEN DO:
+            ASSIGN
+
+                btn_imprim:SENSITIVE                      = YES.
+       END.
+       WHEN MD_ANULACION        
+       THEN DO:
+            ASSIGN
+                btn_anular:SENSITIVE                      = YES
+                btn_imprim:SENSITIVE                      = YES.
+       END.
+       WHEN MD_EMISION        
+       THEN DO:
+            ASSIGN
+                btn_grabar:SENSITIVE                      = YES
+                btn_imprim:SENSITIVE                      = YES.
+
+       END.
+
+    END CASE.     
+
+  END.
+  
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE iniciar_documento C-Win 
+PROCEDURE iniciar_documento :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+
+  RUN titulo_window ("Ordenes de Fábrica").
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE poner_operacion C-Win 
+PROCEDURE poner_operacion :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+
+  FOR EACH Articulo_operacion OF Operacionfabrica:
+
+      CREATE T-Ofabrica_dt.
+      ASSIGN T-Ofabrica_hd.ultima_linea = T-Ofabrica_hd.ultima_linea + 1
+             T-Ofabrica_dt.nro_linea    = T-Ofabrica_hd.ultima_linea 
+             T-Ofabrica_dt.nro_articulo = Articulo_operacion.nro_articulo
+             T-Ofabrica_dt.cantidad_sol = Articulo_operacion.cantidad 
+             T-Ofabrica_dt.cantidad     = Articulo_operacion.cantidad
+             T-Ofabrica_dt.granel       = Articulo_operacion.granel
+             T-Ofabrica_dt.granel_sol   = Articulo_operacion.granel.
+      IF Articulo_operacion.rol = "P" 
+          THEN T-Ofabrica_dt.tipo_detalle = "P". 
+          ELSE T-Ofabrica_dt.tipo_detalle = "C". 
+
+  END.
+
+  RUN abre_query_compuestos.
+  RUN abre_query_componentes.
+
+  v-cdg_operacionfabrica:SENSITIVE IN FRAME {&FRAME-NAME} = NO.
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE titulo_window C-Win 
+PROCEDURE titulo_window :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+
+ DEFINE INPUT PARAMETER txtitulo AS CHARACTER.
+
+ DEFINE VARIABLE v-txtitulo AS CHARACTER.
+
+ CASE modo:
+    
+     WHEN MD_ALTA      THEN v-txtitulo = " Ingreso de " + txtitulo.
+     WHEN MD_MULTIPLE  THEN v-txtitulo = " Consulta Múltiple de " + txtitulo.
+     WHEN MD_DEFINIDA  THEN v-txtitulo = " Consulta Individual de " + txtitulo.
+     WHEN MD_RELACION  THEN v-txtitulo = " Consulta Relacionada de " + txtitulo.
+     WHEN MD_READONLY  THEN v-txtitulo = " Consulta Sólo Lectura de " + txtitulo.
+     WHEN MD_CAMBIO    THEN v-txtitulo = " Modificación y Reemisión de " + txtitulo.
+     WHEN MD_ANULACION THEN v-txtitulo = " Anulación de " + txtitulo.
+     WHEN MD_EMISION   THEN v-txtitulo = " Emisión de " + txtitulo + "Pendientes".
+
+ END CASE.     
+
+ {&WINDOW-NAME}:TITLE = "DYNASYS/PRD " + NRO_RELEASE + " - " + Usuario.cdg_empresa + " - " + v-txtitulo + " User:" + USERID("sic").
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE traer_documento C-Win 
+PROCEDURE traer_documento :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+
+   FIND Ofabrica_hd WHERE ROWID(Ofabrica_hd) = rid_ofabrica NO-LOCK.
+   BUFFER-COPY Ofabrica_hd TO T-Ofabrica_hd.
+
+   FOR EACH Ofabrica_dt OF Ofabrica_hd:
+       CREATE T-Ofabrica_dt.
+       BUFFER-COPY Ofabrica_dt TO T-Ofabrica_dt.
+   END.    
+   
+   v-anulado = IF Ofabrica_hd.anulado THEN "ANULADA" ELSE "".
+
+   RUN traer_tablas.
+   DISPLAY
+        T-Ofabrica_hd.fecha 
+        T-Ofabrica_hd.leyenda
+        v-cdg_area v-cdg_empleado 
+        v-dsc_area v-dsc_empleado
+        WITH FRAME {&FRAME-NAME}.
+
+   RUN abre_query_compuestos.
+   RUN abre_query_componentes.
+       
+   RUN habilitar_campos ( INPUT YES ).
+   
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE traer_tablas C-Win 
+PROCEDURE traer_tablas :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+

@@ -1,0 +1,231 @@
+USING Progress.Lang.*.
+
+CLASS Socket : 
+    
+    DEF PUBLIC PROPERTY MessageType    AS CHAR NO-UNDO GET. SET. 
+    DEF PUBLIC PROPERTY MessageFrom    AS CHAR NO-UNDO GET. SET. 
+    DEF PUBLIC PROPERTY MessageTo      AS CHAR NO-UNDO GET. SET. 
+    DEF PUBLIC PROPERTY MessageBody    AS CHAR NO-UNDO GET. SET. 
+    DEF PUBLIC PROPERTY MessageSubject AS CHAR NO-UNDO GET. SET. 
+    DEF PUBLIC PROPERTY Terminator     AS CHAR NO-UNDO GET. SET. 
+    DEF PUBLIC PROPERTY SocketName     AS CHAR NO-UNDO GET. SET. 
+
+    DEF PUBLIC PROPERTY SocketHandler  AS HANDLE NO-UNDO GET. SET .
+
+    DEF PUBLIC PROPERTY MessageHandler AS HANDLE NO-UNDO GET. SET.
+
+    DEF PROTECTED VAR SocketHandle   AS HANDLE NO-UNDO.
+        
+    DEF PUBLIC PROPERTY UseXML AS LOGICAL NO-UNDO 
+        GET .
+        SET (p_xml AS LOGICAL):
+         IF p_xml THEN ASSIGN Terminator = "</TTMessage>~n".
+         
+         ASSIGN UseXML = p_xml.
+        END GET.
+    
+    DEF TEMP-TABLE TTMessage NO-UNDO
+        FIELD MessageType    AS CHAR
+        FIELD MessageFrom    AS CHAR
+        FIELD MessageTo      AS CHAR
+        FIELD MessageSubject AS CHAR
+        FIELD MessageBody    AS CHAR .
+        
+    CONSTRUCTOR PUBLIC SOCKET ():
+     ASSIGN Terminator = "~n". 
+	END CONSTRUCTOR.
+
+	DESTRUCTOR PUBLIC SOCKET ( ):
+	    EMPTY TEMP-TABLE TTMessage.
+	    SocketHandle:DISABLE-CONNECTIONS() NO-ERROR.
+	    SocketHandle:DISCONNECT() NO-ERROR.
+	    DELETE OBJECT SocketHandle NO-ERROR.
+	    IF VALID-HANDLE(SocketHandler) THEN APPLY "CLOSE" TO SocketHandler.
+	END DESTRUCTOR.
+		
+/*  =========================================================================
+    ParseMessage
+    this method tries to parse the inbound data into the appropriate properties
+    ==========================================================================*/ 
+
+    METHOD PUBLIC LOGICAL ParseMessage(p_Message AS CHAR):
+     DEF VAR lv_i AS INT NO-UNDO.
+     
+     DEF VAR lv_LongChar AS LONGCHAR NO-UNDO.
+     
+     DEF BUFFER TTMessage FOR TEMP-TABLE TTMessage.
+     
+     IF UseXML THEN
+     DO:
+      ASSIGN lv_LongChar    = p_Message
+             MessageType    = ""
+             MessageTo      = ""
+             MessageFrom    = ""
+             MessageSubject = ""
+             MessageBody    = "".
+
+      TEMP-TABLE TTMessage:READ-XML("LONGCHAR",lv_LongChar,"EMPTY",?,?) NO-ERROR.      
+
+      IF ERROR-STATUS:NUM-MESSAGES GT 0 THEN RETURN NO.
+
+      FIND FIRST TTMessage NO-LOCK NO-ERROR.
+
+      ASSIGN MessageType    = TTMessage.MessageType
+             MessageTo      = TTMessage.MessageTo
+             MessageFrom    = TTMessage.MessageFrom
+             MessageSubject = TTMessage.MessageSubject
+             MessageBody    = TTMessage.MessageBody.
+
+      RETURN YES.             
+     END.
+     
+     ELSE ASSIGN MessageBody = STRING(p_Message).
+     
+     RETURN YES.
+    END METHOD.
+    
+/*  =========================================================================
+    PrepareMessage
+    this method tries to prepare the outbound data into the appropriate properties
+    ==========================================================================*/ 
+
+    METHOD PUBLIC CHAR PrepareMessage():
+     DEF VAR lv_i AS INT NO-UNDO.
+     
+     DEF VAR lv_Data AS LONGCHAR NO-UNDO.
+     
+     DEF BUFFER TTMessage FOR TEMP-TABLE TTMessage.
+     
+     IF UseXML THEN
+     DO:
+      EMPTY TEMP-TABLE TTMessage.
+      CREATE TTmessage.
+      ASSIGN TTMessage.MessageTo      = MessageTo
+             TTMessage.MessageType    = MessageType
+             TTMessage.MessageFrom    = IF MessageFrom EQ "" THEN SocketName ELSE MessageFrom
+             TTMessage.MessageSubject = MessageSubject
+             TTMessage.MessageBody    = MessageBody.
+           
+      TEMP-TABLE TTMessage:WRITE-XML("LONGCHAR":U,lv_Data,YES).          
+     END.
+     
+     ELSE ASSIGN lv_Data = SUBSTITUTE("&1&2",MessageBody,Terminator).
+
+     RETURN STRING(lv_Data).
+    END METHOD.
+    
+/*  =========================================================================
+    ReadMessage
+    ==========================================================================*/ 
+
+    METHOD PUBLIC LOGICAL ReadMessage(p_Message AS CHAR):
+      
+     IF NOT ParseMessage(p_Message) THEN RETURN NO.
+
+     RUN "MessageIn" IN MessageHandler (SocketHandle,MessageType,MessageFrom,MessageTo,MessageSubject,MessageBody) NO-ERROR. 
+     RETURN YES.
+    END METHOD.
+
+/*  =========================================================================
+    SendMessage
+    Send the data in the Properties (MessageTo etc)
+    ==========================================================================*/ 
+
+    METHOD PUBLIC LOGICAL SendMessage(p_Type AS CHAR,p_From AS CHAR,p_to AS CHAR,p_Subject AS CHAR, p_Message AS CHAR):
+     ASSIGN MessageType    = p_Type
+            MessageFrom    = p_From
+            MessageTo      = p_To
+            MessageSubject = p_Subject
+            MessageBody    = p_Message.
+     RETURN SendMessage().
+    END METHOD.
+
+
+/*  =========================================================================
+    SendMessage
+    Send the data in the Properties (MessageTo etc)
+    ==========================================================================*/ 
+
+    METHOD PUBLIC LOGICAL SendMessage(p_From AS CHAR,p_to AS CHAR,p_Subject AS CHAR, p_Message AS CHAR):
+     ASSIGN MessageFrom    = p_From
+            MessageTo      = p_To
+            MessageSubject = p_Subject
+            MessageBody    = p_Message.
+     RETURN SendMessage().
+    END METHOD.
+
+
+/*  =========================================================================
+    SendMessage
+    Send the data in the Properties (MessageTo etc)
+    ==========================================================================*/ 
+
+    METHOD PUBLIC LOGICAL SendMessage(p_to AS CHAR,p_Subject AS CHAR, p_Message AS CHAR):
+     ASSIGN MessageTo      = p_To
+            MessageSubject = p_Subject
+            MessageBody    = p_Message.
+     RETURN SendMessage().
+    END METHOD.
+
+/*  =========================================================================
+    SendMessage
+    Send the data in the Properties (MessageTo etc)
+    ==========================================================================*/ 
+
+    METHOD PUBLIC LOGICAL SendMessage(p_to AS CHAR,p_Message AS CHAR):
+     ASSIGN MessageTo   = p_To
+            MessageBody = p_Message.
+     RETURN SendMessage().
+    END METHOD.
+
+/*  =========================================================================
+    SendMessage
+    Send the data in the Properties (MessageTo etc)
+    ==========================================================================*/ 
+
+    METHOD PUBLIC LOGICAL SendMessage(p_Message AS CHAR):
+     ASSIGN MessageBody = p_Message.
+     RETURN SendMessage().
+    END METHOD.
+    
+/*  =========================================================================
+    SendMessage
+    ==========================================================================*/ 
+
+    METHOD PUBLIC LOGICAL SendMessage():
+     RETURN SendMessage(SocketHandle).
+    END METHOD. 
+    
+/*  =========================================================================
+    SendMessage
+    ==========================================================================*/ 
+
+    METHOD PUBLIC LOGICAL SendMessage(p_Socket AS HANDLE):
+     DEF VAR lv_Data AS CHAR NO-UNDO.
+ 
+     DEF VAR lv_iSize AS INT NO-UNDO.
+ 
+     DEF VAR memWriteData AS MEMPTR NO-UNDO.
+     
+     IF NOT p_Socket:CONNECTED() THEN RETURN NO.
+
+     ASSIGN p_Socket:SENSITIVE = NO.
+     
+     ASSIGN lv_Data  = PrepareMessage()
+            lv_iSize = LENGTH(lv_Data).
+     
+     SET-SIZE(memWriteData) = 0. /* Initialise to zero just in case */  
+     SET-SIZE(memWriteData) = lv_iSize + 1. /* now set the proper size (+1 to include zero-byte terminator */
+  
+     PUT-STRING(memWriteData,1) = lv_Data. /* write string to memory */
+
+     p_Socket:WRITE(memWriteData,1,lv_iSize) . /* now write to socket. We are assuming at this point that it all got written .... a bad thing */
+
+     SET-SIZE(memWriteData) = 0. /* clear memory */
+
+     ASSIGN p_Socket:SENSITIVE = YES.
+     
+     RETURN YES.
+    END METHOD.
+        
+END CLASS.

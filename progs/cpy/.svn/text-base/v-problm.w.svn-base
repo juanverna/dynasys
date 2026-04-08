@@ -1,0 +1,521 @@
+&ANALYZE-SUSPEND _VERSION-NUMBER UIB_v8r12 GUI
+&ANALYZE-RESUME
+/* Connected Databases 
+          sic            PROGRESS
+*/
+&Scoped-define WINDOW-NAME CURRENT-WINDOW
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CUSTOM _DEFINITIONS V-table-Win 
+/*------------------------------------------------------------------------
+
+  File:
+
+  Description: from VIEWER.W - Template for SmartViewer Objects
+
+  Input Parameters:
+      <none>
+
+  Output Parameters:
+      <none>
+
+------------------------------------------------------------------------*/
+/*          This .W file was created with the Progress UIB.             */
+/*----------------------------------------------------------------------*/
+
+/* Create an unnamed pool to store all the widgets created 
+     by this procedure. This is a good default which assures
+     that this procedure's triggers and internal procedures 
+     will execute in this procedure's storage, and that proper
+     cleanup will occur on deletion of the procedure. */
+
+CREATE WIDGET-POOL.
+
+/* ***************************  Definitions  ************************** */
+
+/* Parameters Definitions ---                                           */
+
+/* Local Variable Definitions ---                                       */
+
+DEFINE BUFFER B-Problema FOR Problema.
+
+DEFINE VARIABLE rid_tema AS ROWID.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-PREPROCESSOR-BLOCK 
+
+/* ********************  Preprocessor Definitions  ******************** */
+
+&Scoped-define PROCEDURE-TYPE SmartViewer
+
+&Scoped-define ADM-SUPPORTED-LINKS Record-Source,Record-Target,TableIO-Target
+
+/* Name of first Frame and/or Browse and/or first Query                 */
+&Scoped-define FRAME-NAME F-Main
+
+/* External Tables                                                      */
+&Scoped-define EXTERNAL-TABLES Tema Problema
+&Scoped-define FIRST-EXTERNAL-TABLE Tema
+
+
+/* Need to scope the external tables to this procedure                  */
+DEFINE QUERY external_tables FOR Tema, Problema.
+/* Standard List Definitions                                            */
+&Scoped-Define ENABLED-FIELDS Problema.titulo Problema.version-reporte ~
+Problema.reportado_por Problema.fecha_reportado Problema.horas_estimadas ~
+Problema.version-arreglo Problema.cdg_recurso Problema.fecha_resuelto ~
+Problema.horas_reales Problema.tipo Problema.reportado_ref Problema.estado ~
+Problema.fecha_prevista Problema.descripcion Problema.accion 
+&Scoped-define FIELD-PAIRS~
+ ~{&FP1}titulo ~{&FP2}titulo ~{&FP3}~
+ ~{&FP1}version-reporte ~{&FP2}version-reporte ~{&FP3}~
+ ~{&FP1}reportado_por ~{&FP2}reportado_por ~{&FP3}~
+ ~{&FP1}fecha_reportado ~{&FP2}fecha_reportado ~{&FP3}~
+ ~{&FP1}horas_estimadas ~{&FP2}horas_estimadas ~{&FP3}~
+ ~{&FP1}version-arreglo ~{&FP2}version-arreglo ~{&FP3}~
+ ~{&FP1}cdg_recurso ~{&FP2}cdg_recurso ~{&FP3}~
+ ~{&FP1}fecha_resuelto ~{&FP2}fecha_resuelto ~{&FP3}~
+ ~{&FP1}horas_reales ~{&FP2}horas_reales ~{&FP3}~
+ ~{&FP1}reportado_ref ~{&FP2}reportado_ref ~{&FP3}~
+ ~{&FP1}fecha_prevista ~{&FP2}fecha_prevista ~{&FP3}
+&Scoped-define ENABLED-TABLES Problema
+&Scoped-define FIRST-ENABLED-TABLE Problema
+&Scoped-Define ENABLED-OBJECTS RECT-6 
+&Scoped-Define DISPLAYED-FIELDS Problema.titulo Problema.version-reporte ~
+Problema.reportado_por Problema.fecha_reportado Problema.horas_estimadas ~
+Problema.version-arreglo Problema.cdg_recurso Problema.fecha_resuelto ~
+Problema.horas_reales Problema.tipo Problema.reportado_ref Problema.estado ~
+Problema.fecha_prevista Problema.descripcion Problema.accion 
+
+/* Custom List Definitions                                              */
+/* ADM-CREATE-FIELDS,ADM-ASSIGN-FIELDS,List-3,List-4,List-5,List-6      */
+
+/* _UIB-PREPROCESSOR-BLOCK-END */
+&ANALYZE-RESUME
+
+
+
+/* ***********************  Control Definitions  ********************** */
+
+
+/* Definitions of the field level widgets                               */
+DEFINE RECTANGLE RECT-6
+     EDGE-PIXELS 2 GRAPHIC-EDGE  NO-FILL 
+     SIZE 87 BY 9.15.
+
+
+/* ************************  Frame Definitions  *********************** */
+
+DEFINE FRAME F-Main
+     Problema.titulo AT ROW 1.27 COL 13 COLON-ALIGNED
+          VIEW-AS FILL-IN NATIVE 
+          SIZE 72 BY .77
+          BGCOLOR 15 FGCOLOR 9 
+     Problema.version-reporte AT ROW 2.35 COL 13 COLON-ALIGNED
+          VIEW-AS FILL-IN NATIVE 
+          SIZE 8 BY .77
+          BGCOLOR 15 FGCOLOR 9 
+     Problema.reportado_por AT ROW 2.35 COL 33 COLON-ALIGNED
+          LABEL "Reportó"
+          VIEW-AS FILL-IN NATIVE 
+          SIZE 10 BY .77
+          BGCOLOR 15 FGCOLOR 9 
+     Problema.fecha_reportado AT ROW 2.35 COL 56 COLON-ALIGNED
+          LABEL "F. Reporte"
+          VIEW-AS FILL-IN NATIVE 
+          SIZE 9 BY .77
+          BGCOLOR 15 FGCOLOR 9 
+     Problema.horas_estimadas AT ROW 2.35 COL 76 COLON-ALIGNED
+          LABEL "H.Estim."
+          VIEW-AS FILL-IN NATIVE 
+          SIZE 9 BY .77
+          BGCOLOR 15 FGCOLOR 9 
+     Problema.version-arreglo AT ROW 3.42 COL 13 COLON-ALIGNED
+          LABEL "En Release"
+          VIEW-AS FILL-IN NATIVE 
+          SIZE 8 BY .77
+          BGCOLOR 15 FGCOLOR 9 
+     Problema.cdg_recurso AT ROW 3.42 COL 33 COLON-ALIGNED
+          LABEL "Recurso"
+          VIEW-AS FILL-IN NATIVE 
+          SIZE 10 BY .81
+          BGCOLOR 15 FGCOLOR 9 
+     Problema.fecha_resuelto AT ROW 3.42 COL 56 COLON-ALIGNED
+          LABEL "F.Resuelto"
+          VIEW-AS FILL-IN NATIVE 
+          SIZE 9 BY .77
+          BGCOLOR 15 FGCOLOR 9 
+     Problema.horas_reales AT ROW 3.42 COL 76 COLON-ALIGNED
+          LABEL "H.Reales"
+          VIEW-AS FILL-IN NATIVE 
+          SIZE 9 BY .77
+          BGCOLOR 15 FGCOLOR 9 
+     Problema.tipo AT ROW 4.5 COL 4 NO-LABEL
+          VIEW-AS RADIO-SET HORIZONTAL
+          RADIO-BUTTONS 
+                    "Arreglo", "A":U,
+"Cambio", "C":U,
+"Desarrollo", "D":U,
+"Implementación", "I":U
+          SIZE 50 BY 1.08
+     Problema.reportado_ref AT ROW 4.5 COL 76 COLON-ALIGNED
+          LABEL "Referencia"
+          VIEW-AS FILL-IN NATIVE 
+          SIZE 9 BY .77
+          BGCOLOR 15 FGCOLOR 9 
+     Problema.estado AT ROW 5.31 COL 4 NO-LABEL
+          VIEW-AS RADIO-SET HORIZONTAL
+          RADIO-BUTTONS 
+                    "Abierto", "",
+"Resuelto", "R":U,
+"Descartado", "D":U,
+"Presupuestar", "P":U
+          SIZE 50 BY 1.08
+     Problema.fecha_prevista AT ROW 5.58 COL 76 COLON-ALIGNED
+          VIEW-AS FILL-IN NATIVE 
+          SIZE 9 BY .77
+          BGCOLOR 15 FGCOLOR 9 
+     Problema.descripcion AT ROW 7.73 COL 4 NO-LABEL
+          VIEW-AS EDITOR
+          SIZE 41 BY 2.15
+          BGCOLOR 15 FGCOLOR 7 
+     Problema.accion AT ROW 7.73 COL 46 NO-LABEL
+          VIEW-AS EDITOR
+          SIZE 41 BY 2.15
+          BGCOLOR 15 FGCOLOR 7 
+     "                                Acción Tomada" VIEW-AS TEXT
+          SIZE 41 BY .81 AT ROW 6.65 COL 46
+          BGCOLOR 7 FGCOLOR 15 FONT 4
+     "                            Descripción" VIEW-AS TEXT
+          SIZE 41 BY .81 AT ROW 6.65 COL 4
+          BGCOLOR 7 FGCOLOR 15 FONT 4
+     RECT-6 AT ROW 1 COL 1
+    WITH 1 DOWN NO-BOX KEEP-TAB-ORDER OVERLAY 
+         SIDE-LABELS NO-UNDERLINE THREE-D 
+         AT COL 1 ROW 1 SCROLLABLE 
+         FONT 4.
+
+
+/* *********************** Procedure Settings ************************ */
+
+&ANALYZE-SUSPEND _PROCEDURE-SETTINGS
+/* Settings for THIS-PROCEDURE
+   Type: SmartViewer
+   External Tables: sic.Tema,sic.Problema
+   Allow: Basic,DB-Fields
+   Frames: 1
+   Add Fields to: EXTERNAL-TABLES
+   Other Settings: PERSISTENT-ONLY COMPILE
+ */
+
+/* This procedure should always be RUN PERSISTENT.  Report the error,  */
+/* then cleanup and return.                                            */
+IF NOT THIS-PROCEDURE:PERSISTENT THEN DO:
+  MESSAGE "{&FILE-NAME} should only be RUN PERSISTENT."
+          VIEW-AS ALERT-BOX ERROR BUTTONS OK.
+  RETURN.
+END.
+
+&ANALYZE-RESUME _END-PROCEDURE-SETTINGS
+
+/* *************************  Create Window  ************************** */
+
+&ANALYZE-SUSPEND _CREATE-WINDOW
+/* DESIGN Window definition (used by the UIB) 
+  CREATE WINDOW V-table-Win ASSIGN
+         HEIGHT             = 13.54
+         WIDTH              = 90.
+/* END WINDOW DEFINITION */
+                                                                        */
+&ANALYZE-RESUME
+
+
+/* ***************  Runtime Attributes and UIB Settings  ************** */
+
+&ANALYZE-SUSPEND _RUN-TIME-ATTRIBUTES
+/* SETTINGS FOR WINDOW V-table-Win
+  VISIBLE,,RUN-PERSISTENT                                               */
+/* SETTINGS FOR FRAME F-Main
+   NOT-VISIBLE Size-to-Fit                                              */
+ASSIGN 
+       FRAME F-Main:SCROLLABLE       = FALSE
+       FRAME F-Main:HIDDEN           = TRUE.
+
+/* SETTINGS FOR FILL-IN Problema.cdg_recurso IN FRAME F-Main
+   EXP-LABEL                                                            */
+/* SETTINGS FOR FILL-IN Problema.fecha_reportado IN FRAME F-Main
+   EXP-LABEL                                                            */
+/* SETTINGS FOR FILL-IN Problema.fecha_resuelto IN FRAME F-Main
+   EXP-LABEL                                                            */
+/* SETTINGS FOR FILL-IN Problema.horas_estimadas IN FRAME F-Main
+   EXP-LABEL                                                            */
+/* SETTINGS FOR FILL-IN Problema.horas_reales IN FRAME F-Main
+   EXP-LABEL                                                            */
+/* SETTINGS FOR FILL-IN Problema.reportado_por IN FRAME F-Main
+   EXP-LABEL                                                            */
+/* SETTINGS FOR FILL-IN Problema.reportado_ref IN FRAME F-Main
+   EXP-LABEL                                                            */
+/* SETTINGS FOR FILL-IN Problema.version-arreglo IN FRAME F-Main
+   EXP-LABEL                                                            */
+/* _RUN-TIME-ATTRIBUTES-END */
+&ANALYZE-RESUME
+
+
+/* Setting information for Queries and Browse Widgets fields            */
+
+&ANALYZE-SUSPEND _QUERY-BLOCK FRAME F-Main
+/* Query rebuild information for FRAME F-Main
+     _Options          = "NO-LOCK"
+     _Query            is NOT OPENED
+*/  /* FRAME F-Main */
+&ANALYZE-RESUME
+
+ 
+
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CUSTOM _INCLUDED-LIB V-table-Win 
+/* ************************* Included-Libraries *********************** */
+
+{src/adm/method/viewer.i}
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CUSTOM _MAIN-BLOCK V-table-Win 
+
+
+/* ***************************  Main Block  *************************** */
+
+  &IF DEFINED(UIB_IS_RUNNING) <> 0 &THEN          
+    RUN dispatch IN THIS-PROCEDURE ('initialize':U).        
+  &ENDIF         
+  
+  /************************ INTERNAL PROCEDURES ********************/
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+/* **********************  Internal Procedures  *********************** */
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE adm-row-available V-table-Win _ADM-ROW-AVAILABLE
+PROCEDURE adm-row-available :
+/*------------------------------------------------------------------------------
+  Purpose:     Dispatched to this procedure when the Record-
+               Source has a new row available.  This procedure
+               tries to get the new row (or foriegn keys) from
+               the Record-Source and process it.
+  Parameters:  <none>
+------------------------------------------------------------------------------*/
+
+  /* Define variables needed by this internal procedure.             */
+  {src/adm/template/row-head.i}
+
+  /* Create a list of all the tables that we need to get.            */
+  {src/adm/template/row-list.i "Tema"}
+  {src/adm/template/row-list.i "Problema"}
+
+  /* Get the record ROWID's from the RECORD-SOURCE.                  */
+  {src/adm/template/row-get.i}
+
+  /* FIND each record specified by the RECORD-SOURCE.                */
+  {src/adm/template/row-find.i "Tema"}
+  {src/adm/template/row-find.i "Problema"}
+
+  /* Process the newly available records (i.e. display fields,
+     open queries, and/or pass records on to any RECORD-TARGETS).    */
+  {src/adm/template/row-end.i}
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE dar-tema V-table-Win 
+PROCEDURE dar-tema :
+/*------------------------------------------------------------------------------
+  Purpose:     Pasar el ROWID del tema actual para el alta de problemas
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+
+DEFINE INPUT PARAMETER que_tema AS ROWID.
+
+ rid_tema = que_tema.
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE disable_UI V-table-Win _DEFAULT-DISABLE
+PROCEDURE disable_UI :
+/*------------------------------------------------------------------------------
+  Purpose:     DISABLE the User Interface
+  Parameters:  <none>
+  Notes:       Here we clean-up the user-interface by deleting
+               dynamic widgets we have created and/or hide 
+               frames.  This procedure is usually called when
+               we are ready to "clean-up" after running.
+------------------------------------------------------------------------------*/
+  /* Hide all frames. */
+  HIDE FRAME F-Main.
+  IF THIS-PROCEDURE:PERSISTENT THEN DELETE PROCEDURE THIS-PROCEDURE.
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE local-assign-statement V-table-Win 
+PROCEDURE local-assign-statement :
+/*------------------------------------------------------------------------------
+  Purpose:     Override standard ADM method
+  Notes:       
+------------------------------------------------------------------------------*/
+
+  /* Code placed here will execute PRIOR to standard behavior. */
+
+   IF NOT CAN-FIND(Recurso WHERE Recurso.cdg_recurso = INPUT FRAME {&FRAME-NAME} Problema.cdg_recurso )
+   THEN DO:
+        MESSAGE "Se ha indicado un recurso inexistente"
+                VIEW-AS ALERT-BOX ERROR.
+        RETURN ERROR.        
+   END.
+
+
+  /* Dispatch standard ADM method.                             */
+  RUN dispatch IN THIS-PROCEDURE ( INPUT 'assign-statement':U ) .
+
+  /* Code placed here will execute AFTER standard behavior.    */
+
+  IF NEW Problema
+  THEN DO:
+       DO TRANSACTION:
+
+          FIND CURRENT Tema EXCLUSIVE-LOCK.
+          ASSIGN Problema.cdg_tema = Tema.cdg_tema.
+          
+          FIND LAST B-Problema OF Tema NO-ERROR.
+          Problema.nro_problema = IF AVAILABLE B-Problema 
+                                     THEN B-Problema.nro_problema + 1
+                                     ELSE 1.
+          
+          IF DATE(Problema.fecha_reportado:SCREEN-VALUE IN FRAME {&FRAME-NAME}) = DATE("")
+             THEN Problema.fecha_reportado = TODAY.
+             
+          IF Problema.fecha_prevista = ? THEN Problema.fecha_prevista = Problema.fecha_reportado .
+          
+          FIND CURRENT Tema NO-LOCK.
+       END.    
+  END.      
+            
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE local-disable-fields V-table-Win 
+PROCEDURE local-disable-fields :
+/*------------------------------------------------------------------------------
+  Purpose:     Override standard ADM method
+  Notes:       
+------------------------------------------------------------------------------*/
+
+  /* Code placed here will execute PRIOR to standard behavior. */
+
+  /* Dispatch standard ADM method.                             */
+  RUN dispatch IN THIS-PROCEDURE ( INPUT 'disable-fields':U ) .
+
+  /* Code placed here will execute AFTER standard behavior.    */
+
+  Problema.accion:SENSITIVE IN FRAME {&FRAME-NAME} = NO. 
+  Problema.descripcion:SENSITIVE IN FRAME {&FRAME-NAME} = NO.
+
+  Problema.accion:FGCOLOR IN FRAME {&FRAME-NAME} = 8. 
+  Problema.descripcion:FGCOLOR IN FRAME {&FRAME-NAME} = 8.
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE local-enable-fields V-table-Win 
+PROCEDURE local-enable-fields :
+/*------------------------------------------------------------------------------
+  Purpose:     Override standard ADM method
+  Notes:       
+------------------------------------------------------------------------------*/
+
+  /* Code placed here will execute PRIOR to standard behavior. */
+
+  /* Dispatch standard ADM method.                             */
+  RUN dispatch IN THIS-PROCEDURE ( INPUT 'enable-fields':U ) .
+
+  /* Code placed here will execute AFTER standard behavior.    */
+
+  Problema.accion:SENSITIVE IN FRAME {&FRAME-NAME} = YES. 
+  Problema.descripcion:SENSITIVE IN FRAME {&FRAME-NAME} = YES.
+
+  Problema.accion:FGCOLOR IN FRAME {&FRAME-NAME} = 9. 
+  Problema.descripcion:FGCOLOR IN FRAME {&FRAME-NAME} = 9.
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE send-records V-table-Win _ADM-SEND-RECORDS
+PROCEDURE send-records :
+/*------------------------------------------------------------------------------
+  Purpose:     Send record ROWID's for all tables used by
+               this file.
+  Parameters:  see template/snd-head.i
+------------------------------------------------------------------------------*/
+
+  /* Define variables needed by this internal procedure.               */
+  {src/adm/template/snd-head.i}
+
+  /* For each requested table, put it's ROWID in the output list.      */
+  {src/adm/template/snd-list.i "Tema"}
+  {src/adm/template/snd-list.i "Problema"}
+
+  /* Deal with any unexpected table requests before closing.           */
+  {src/adm/template/snd-end.i}
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE state-changed V-table-Win 
+PROCEDURE state-changed :
+/* -----------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+-------------------------------------------------------------*/
+  DEFINE INPUT PARAMETER p-issuer-hdl AS HANDLE    NO-UNDO.
+  DEFINE INPUT PARAMETER p-state      AS CHARACTER NO-UNDO.
+
+  CASE p-state:
+      /* Object instance CASEs can go here to replace standard behavior
+         or add new cases. */
+      {src/adm/template/vstates.i}
+  END CASE.
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+

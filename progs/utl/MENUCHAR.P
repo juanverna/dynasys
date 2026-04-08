@@ -1,0 +1,43 @@
+/*========================================================================================*/
+/*                        MENU DE INTERFACE CHARACTER                                     */
+/*========================================================================================*/
+
+DEFINE VAR tabla AS CHARACTER EXTENT 10 INITIAL
+       [ " TURNOS",
+         "    Generacion anticipada de turnos (B)", 
+         "    Eliminacion de Turnos Vencidos (B)", 
+         " FARMACIA",
+         "    Transferencia Entre Depositos (B)",
+         "    Reposicion Por Piso (B)",
+         "    Arranque de Jarviws (D)", 
+         " FACTURACION",
+         "    Cierre Mensual de Medicamentos (O)" ] 
+         FORMAT "X(50)".
+
+DEFINE VARIABLE lista AS CHARACTER VIEW-AS SELECTION-LIST INNER-CHARS 50 INNER-LINES 15.
+DEFINE VARIABLE x     AS CHARACTER VIEW-AS EDITOR SIZE 60 BY 5.
+DEFINE VARIABLE j     AS INTEGER.
+DEFINE VARIABLE k     AS INTEGER.
+
+DEFINE VARIABLE ok    AS LOGICAL.
+
+FORM
+ lista FGCOLOR 0 BGCOLOR 15 NO-LABEL
+ WITH FRAME a NO-LABEL THREE-D TITLE " Menu General de Procesos"
+ VIEW-AS DIALOG-BOX.
+
+ON RETURN OF lista IN FRAME a
+DO:
+   k = lista:LOOKUP(lista:SCREEN-VALUE).
+   MESSAGE "Eligio la opcion " STRING(k) VIEW-AS ALERT-BOX.
+END.
+
+x = PROPATH.               
+DO j = 1 TO 9:
+   ok = lista:ADD-LAST(tabla[j]).
+END.
+
+DISPLAY lista WITH FRAME a.
+ENABLE lista WITH FRAME a. 
+WAIT-FOR F2 OF FRAME a.
+HIDE FRAME a NO-PAUSE. 

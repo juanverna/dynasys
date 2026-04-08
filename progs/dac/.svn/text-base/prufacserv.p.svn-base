@@ -1,0 +1,1 @@
+RUN lsliqserviciosprov.p ( INPUT 1, INPUT 9999, INPUT 01/01/00, INPUT 01/31/04, INPUT "a,p" ).

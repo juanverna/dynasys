@@ -1,0 +1,8 @@
+  DEFINE VARIABLE rid_ficha AS ROWID.
+  DEFINE VARIABLE puso_ok   AS LOGICAL.
+
+  RUN C-BUSFICHA.W ( INPUT "",   
+                     INPUT "",   
+                     INPUT-OUTPUT rid_ficha,
+                     OUTPUT puso_ok).   
+  

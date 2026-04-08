@@ -1,0 +1,3 @@
+  Ficha.hor_{1} = INPUT v-hh-{1} * 3600 + INPUT v-mm-{1} * 60.
+  IF INPUT v-ss-{1} <> ? THEN Ficha.hor_{1} = Ficha.hor_{1} + INPUT v-ss-{1}.
+  Ficha.hms_{1} = STRING(Ficha.hor_{1},"HH:MM:SS").

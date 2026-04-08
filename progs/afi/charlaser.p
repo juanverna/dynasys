@@ -1,0 +1,110 @@
+/*=========================================================================================*/
+/*                                   IMPRESION DE CUPONES                                  */
+/*=========================================================================================*/
+
+DEFINE VARIABLE c-tex AS CHARACTER INITIAL
+ "(12U(s0p16.67h8.5v0s0b0T".
+DEFINE VARIABLE res1  AS CHARACTER INITIAL
+ "&l1X&l0U&l0Z&u300D&l0O&l26A&l1L&a0C&k1.2H&a0000L&k1.2H&a0803M&l.48C&l0000E&l.48C&l1169F&l3C&s1C&k0G(10U(s0P(s16.67H(s8.5V(s0S(s0B(s0T)8U)s0P)s10H)s12V)s0S)s0B)s3T&d@&l1H".
+DEFINE VARIABLE res2  AS CHARACTER INITIAL
+ "E&l1X&l0U&l0Z&u300D&l0O&l26A&l1L&a0C&k1.2H&a0000L&k1.2H&a0803M&l.48C&l0000E&l.48C&l1169F&l3C&s1C&k0G(10U(s0P(s16.67H(s8.5V(s0S(s0B(s0T)8U)s0P)s10H)s12V)s0S)s0B)s3T&d@&l1H".
+DEFINE VARIABLE c-bar AS CHARACTER.
+
+DEFINE VARIABLE xrec   AS CHARACTER INITIAL "fk000100025632" FORMAT "X(14)".
+DEFINE VARIABLE xrecb  AS CHARACTER INITIAL "*fk000100025632*" FORMAT "X(16)".
+DEFINE VARIABLE cnume  AS CHARACTER INITIAL "000100025632" FORMAT "X(8)".
+DEFINE VARIABLE czona  AS CHARACTER INITIAL "0131" FORMAT "X(4)".
+DEFINE VARIABLE ccobr  AS CHARACTER INITIAL "002" FORMAT "X(3)".
+DEFINE VARIABLE cnomb  AS CHARACTER INITIAL "ALCARAZ MARIA AMELIA" FORMAT "X(23)".
+DEFINE VARIABLE cdomi  AS CHARACTER INITIAL "DE LUCA 87 T/P" FORMAT "X(23)".
+DEFINE VARIABLE cloca  AS CHARACTER INITIAL "MORON" FORMAT "X(10)".
+DEFINE VARIABLE ctele  AS CHARACTER INITIAL "4665-3278" FORMAT "X(15)".
+DEFINE VARIABLE cmes   AS CHARACTER INITIAL "09/1991" FORMAT "X(7)".
+DEFINE VARIABLE qper   AS CHARACTER INITIAL "08/2000" FORMAT "X(7)".
+DEFINE VARIABLE hoy    AS CHARACTER INITIAL "24/07/2000" FORMAT "X(10)".
+DEFINE VARIABLE zimpo  AS CHARACTER INITIAL "   13.30" FORMAT "X(8)".
+DEFINE VARIABLE nsocio AS CHARACTER INITIAL "R000123G" FORMAT "X(8)".
+DEFINE VARIABLE cplan  AS CHARACTER INITIAL "8D04" FORMAT "X(4)".
+
+DEFINE VARIABLE nueva  AS CHARACTER INITIAL "HP LaserJet 4 Plus" FORMAT "X(30)".
+DEFINE VARIABLE vieja  AS CHARACTER INITIAL "HP Karina" FORMAT "X(30)".
+
+DEFINE VARIABLE j      AS INTEGER.
+DEFINE VARIABLE k      AS INTEGER.
+DEFINE VARIABLE impre  AS INTEGER INITIAL 2.
+
+DEFINE STREAM Cupones.
+
+/*=========================================================================================*/
+/*                           B L O Q U E   P R I N C I P A L                               */
+/*=========================================================================================*/
+
+CASE SESSION:PRINTER-NAME:
+     WHEN nueva THEN c-bar = "(9Y(s1p8.1h12v0s0b28681T".
+     WHEN vieja THEN c-bar = "(0Y(s0p8.1h12v0s0b0T".
+     OTHERWISE MESSAGE "No reconozco la impresora" 
+                       VIEW-AS ALERT-BOX ERROR TITLE "ERROR DE INSTALACION".
+END CASE.
+
+OUTPUT STREAM Cupones TO PRINTER PAGE-SIZE 0.
+
+PUT STREAM Cupones CONTROL res1.
+PUT STREAM Cupones CONTROL res2.
+/*
+DO J = 32 TO 255:
+   PUT STREAM Cupones STRING(j,"999") " " CHR(j) "     ".
+   IF ( j - 31 ) MOD 8 = 0 
+   THEN DO:
+        PUT STREAM Cupones " " SKIP.
+        PUT STREAM Cupones " " SKIP.
+        PUT STREAM Cupones " " SKIP.
+   END.     
+END.   
+*/
+PUT STREAM Cupones " " SKIP.
+PUT STREAM Cupones " " SKIP.
+PUT STREAM Cupones " " SKIP.
+PUT STREAM Cupones " " SKIP.
+PUT STREAM Cupones " " SKIP.
+PUT STREAM Cupones " " SKIP.
+
+PUT STREAM Cupones "á" "    " CHR(160) SKIP.
+PUT STREAM Cupones " " SKIP.
+PUT STREAM Cupones " " SKIP.
+
+PUT STREAM Cupones "é" "    " CHR(130) SKIP.
+PUT STREAM Cupones " " SKIP.
+PUT STREAM Cupones " " SKIP.
+
+PUT STREAM Cupones "í" "    " CHR(161) SKIP.
+PUT STREAM Cupones " " SKIP.
+PUT STREAM Cupones " " SKIP.
+
+PUT STREAM Cupones "ó" "    " CHR(162) SKIP.
+PUT STREAM Cupones " " SKIP.
+PUT STREAM Cupones " " SKIP.
+
+PUT STREAM Cupones "ú" "    " CHR(163) SKIP.
+PUT STREAM Cupones " " SKIP.
+PUT STREAM Cupones " " SKIP.
+
+PUT STREAM Cupones "ñ" "    " CHR(164) SKIP.
+PUT STREAM Cupones " " SKIP.
+PUT STREAM Cupones " " SKIP.
+
+PUT STREAM Cupones "Ñ" "    " CHR(165) SKIP.
+PUT STREAM Cupones " " SKIP.
+PUT STREAM Cupones " " SKIP.
+PUT STREAM Cupones CHR(12) SKIP.
+
+/*
+for each zona_geografica 
+     where cdg_zonag = "114" 
+        or cdg_zonag = "185" 
+        or cdg_zonag = "44" 
+        or cdg_zonag = "14" 
+        or cdg_zonag = "35" :
+  display stream cupones zona_geografica.cdg_zonag zona_geografica.nombre.
+end.  
+*/
+OUTPUT STREAM Cupones CLOSE.

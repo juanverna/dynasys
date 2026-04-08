@@ -1,0 +1,50 @@
+FUNCTION minutos RETURNS INTEGER
+  ( hh AS CHAR  ) :
+/*------------------------------------------------------------------------------
+  Purpose: es una hora en formato HH:MM 
+    Notes:  devuelve los minutos desde las 00:00
+------------------------------------------------------------------------------*/
+
+  RETURN int(SUBSTR(hh,1,2)) * 60 + int(substr(hh,3,2)).   /* Function return value. */
+
+END FUNCTION.
+STOP.
+/*    FOR EACH evento:
+        DELETE evento.
+    END.
+    CURRENT-VALUE(proximo_evento) = 0.
+*/
+        FOR EACH rem_header WHERE rem_header.fasignado <> ?:
+            FIND FIRST rem_detalle OF rem_header.
+            FIND articulo OF rem_detalle.
+            
+    CREATE evento.
+        ASSIGN  Evento.Recursos = rem_header.recursos
+                Evento.nro_tipo_evento = articulo.nro_tipo_evento
+                Evento.nro_identificacion = rem_header.nro_remito
+                Evento.nro_evento = NEXT-VALUE(proximo_evento) 
+                Evento.nro_evento_padre = Evento.nro_evento        
+                Evento.FMin = rem_header.fasignado
+                Evento.FMax = rem_header.fasignado
+                Evento.FCreado = rem_header.fecha
+                Evento.FAsignado = rem_header.fasignado
+                Evento.Evaluar = FALSE
+                evento.hora_desde = rem_header.hora_desde
+                evento.hora_hasta = rem_header.hora_hasta
+                evento.nro_cliente = rem_header.nro_cliente
+                evento.origen = if rem_header.prf_comprob = 1 then "REMITCLI" else "REMITCLM"
+                Evento.Anulado = FALSE.
+                
+                rem_detalle.nro_evento = Evento.nro_evento.
+                Evento.Duracion = minutos(rem_header.hora_hasta) - minutos(rem_header.hora_desde).
+
+
+/*       DO k = 1 TO NUM-ENTRIES(rem_header.recursos):         
+        CREATE recurso_agenda.
+        ASSIGN recurso_agenda.cdg_recurso = ENTRY(k,rem_header.recursos)
+               recurso_agenda.fecha = Evento.FAsignado
+               recurso_agenda.nro_evento = Evento.nro_evento.
+       END.
+
+*/
+        END.

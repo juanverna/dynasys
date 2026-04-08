@@ -1,0 +1,1175 @@
+&ANALYZE-SUSPEND _VERSION-NUMBER UIB_v8r12 GUI ADM1
+&ANALYZE-RESUME
+/* Connected Databases 
+          sic              PROGRESS
+*/
+&Scoped-define WINDOW-NAME CURRENT-WINDOW
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CUSTOM _DEFINITIONS V-table-Win 
+/*********************************************************************
+* Copyright (C) 2000 by Progress Software Corporation ("PSC"),       *
+* 14 Oak Park, Bedford, MA 01730, and other contributors as listed   *
+* below.  All Rights Reserved.                                       *
+*                                                                    *
+* The Initial Developer of the Original Code is PSC.  The Original   *
+* Code is Progress IDE code released to open source December 1, 2000.*
+*                                                                    *
+* The contents of this file are subject to the Possenet Public       *
+* License Version 1.0 (the "License"); you may not use this file     *
+* except in compliance with the License.  A copy of the License is   *
+* available as of the date of this notice at                         *
+* http://www.possenet.org/license.html                               *
+*                                                                    *
+* Software distributed under the License is distributed on an "AS IS"*
+* basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. You*
+* should refer to the License for the specific language governing    *
+* rights and limitations under the License.                          *
+*                                                                    *
+* Contributors:                                                      *
+*                                                                    *
+*********************************************************************/
+/*------------------------------------------------------------------------
+
+  File:
+
+  Description: from VIEWER.W - Template for SmartViewer Objects
+
+  Input Parameters:
+      <none>
+
+  Output Parameters:
+      <none>
+
+------------------------------------------------------------------------*/
+/*          This .W file was created with the Progress UIB.             */
+/*----------------------------------------------------------------------*/
+
+/* Create an unnamed pool to store all the widgets created 
+     by this procedure. This is a good default which assures
+     that this procedure's triggers and internal procedures 
+     will execute in this procedure's storage, and that proper
+     cleanup will occur on deletion of the procedure. */
+
+CREATE WIDGET-POOL.
+
+/* ***************************  Definitions  ************************** */
+
+/* Parameters Definitions ---                                           */
+
+/* Local Variable Definitions ---                                       */
+
+  
+DEFINE VARIABLE pleyenda LIKE tarea.leyenda  NO-UNDO.
+{findempresa.i}
+{tiempo.i}
+{advtexto.i}
+{extrae.i}
+DEF VAR h_vecinos AS WIDGET-HANDLE NO-UNDO.
+DEFINE TEMP-TABLE aimp
+    FIELD c_nro_tipo_evento LIKE tipo_evento.nro_tipo_evento COLUMN-LABEL "Tipo!Evento"
+    FIELD nro_evento AS INT LABEL "EVENTO"
+    FIELD recurso LIKE evento.recurso 
+    FIELD turno LIKE evento.turno
+    FIELD aviso_evento AS INT LABEL "AVISO EVENTO"
+    FIELD aviso_fasignado AS DATE LABEL "REPARTIR"
+    FIELD aviso_recurso AS CHAR LABEL "RECURSO"
+    FIELD tipoespecial AS CHAR LABEL "ESPECIAL".
+
+{crystal_dyna.p}
+{impresoras.i}
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-PREPROCESSOR-BLOCK 
+
+/* ********************  Preprocessor Definitions  ******************** */
+
+&Scoped-define PROCEDURE-TYPE SmartViewer
+&Scoped-define DB-AWARE no
+
+&Scoped-define ADM-SUPPORTED-LINKS Record-Source,Record-Target,TableIO-Target
+
+/* Name of designated FRAME-NAME and/or first browse and/or first query */
+&Scoped-define FRAME-NAME F-Main
+&Scoped-define BROWSE-NAME BROWSE-7
+
+/* External Tables                                                      */
+&Scoped-define EXTERNAL-TABLES Tarea
+&Scoped-define FIRST-EXTERNAL-TABLE Tarea
+
+
+/* Need to scope the external tables to this procedure                  */
+DEFINE QUERY external_tables FOR Tarea.
+/* Definitions for FRAME F-Main                                         */
+
+/* Standard List Definitions                                            */
+&Scoped-Define ENABLED-FIELDS Tarea.fecha_prevista Tarea.nro_identificacion 
+&Scoped-define ENABLED-TABLES Tarea
+&Scoped-define FIRST-ENABLED-TABLE Tarea
+&Scoped-Define ENABLED-OBJECTS BROWSE-7 banal 
+&Scoped-Define DISPLAYED-FIELDS Tarea.fecha_prevista Tarea.Origen ~
+Tarea.nro_identificacion 
+&Scoped-define DISPLAYED-TABLES Tarea
+&Scoped-define FIRST-DISPLAYED-TABLE Tarea
+&Scoped-Define DISPLAYED-OBJECTS v-certif v-proto frecursos v-texto 
+
+/* Custom List Definitions                                              */
+/* ADM-CREATE-FIELDS,ADM-ASSIGN-FIELDS,List-3,List-4,List-5,List-6      */
+
+/* _UIB-PREPROCESSOR-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _XFTR "Foreign Keys" V-table-Win _INLINE
+/* Actions: ? adm/support/keyedit.w ? ? ? */
+/* STRUCTURED-DATA
+<KEY-OBJECT>
+THIS-PROCEDURE
+</KEY-OBJECT>
+<FOREIGN-KEYS>
+</FOREIGN-KEYS> 
+<EXECUTING-CODE>
+**************************
+* Set attributes related to FOREIGN KEYS
+*/
+RUN set-attribute-list (
+    'Keys-Accepted = "",
+     Keys-Supplied = ""':U).
+/**************************
+</EXECUTING-CODE> */   
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+/* ************************  Function Prototypes ********************** */
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _FUNCTION-FORWARD cerrar V-table-Win 
+FUNCTION cerrar RETURNS LOGICAL
+  ( hh AS WIDGET-HANDLE )  FORWARD.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _FUNCTION-FORWARD ver_prf V-table-Win 
+FUNCTION ver_prf RETURNS CHARACTER
+  ( /* parameter-definitions */ )  FORWARD.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+/* ***********************  Control Definitions  ********************** */
+
+
+/* Menu Definitions                                                     */
+DEFINE MENU POPUP-MENU-banal 
+       MENU-ITEM m_CertificadoAnalisisRecibo LABEL "Certificado+Analisis+Recibo"
+              TOGGLE-BOX
+       MENU-ITEM m_CertificadoAnalisis LABEL "Certificado+Analisis"
+              TOGGLE-BOX.
+
+
+/* Definitions of handles for OCX Containers                            */
+DEFINE VARIABLE CtrlFrame AS WIDGET-HANDLE NO-UNDO.
+DEFINE VARIABLE chCtrlFrame AS COMPONENT-HANDLE NO-UNDO.
+
+/* Definitions of the field level widgets                               */
+DEFINE BUTTON b-agrega 
+     IMAGE-UP FILE "img/add.gif":U
+     LABEL "Agrega" 
+     SIZE 5 BY 4.52.
+
+DEFINE BUTTON banal 
+     IMAGE-UP FILE "iconos24/application.jpg":U
+     IMAGE-INSENSITIVE FILE "iconos24i/application.jpg":U
+     LABEL "Imp. Certificado" 
+     SIZE 9 BY 2.48 TOOLTIP "Analisis de laboratorio".
+
+DEFINE BUTTON BLeyenda 
+     LABEL "Leyenda" 
+     SIZE 11 BY 1.14 TOOLTIP "Es publica se trasladara al Evento".
+
+DEFINE BUTTON BRECURSOS 
+     LABEL "Sel" 
+     SIZE 4 BY 1.14.
+
+DEFINE BUTTON Bresuelto 
+     LABEL "Resuelto" 
+     SIZE 15 BY 1.14.
+
+DEFINE BUTTON Bvecino 
+     LABEL "Vecinos" 
+     SIZE 11 BY 1.14.
+
+DEFINE VARIABLE v-texto AS CHARACTER 
+     VIEW-AS EDITOR SCROLLBAR-VERTICAL
+     SIZE 59 BY 4.52
+     BGCOLOR 15 FGCOLOR 9 .
+
+DEFINE VARIABLE frecursos AS CHARACTER FORMAT "X(8)" 
+     LABEL "Recur" 
+     VIEW-AS FILL-IN 
+     SIZE 16 BY 1 TOOLTIP "Recursos asignados para realizar el evento".
+
+DEFINE VARIABLE v-certif AS CHARACTER FORMAT "X(256)":U 
+     LABEL "Certif" 
+     VIEW-AS FILL-IN 
+     SIZE 14 BY 1 NO-UNDO.
+
+DEFINE VARIABLE v-proto AS CHARACTER FORMAT "X(256)":U 
+     LABEL "Proto" 
+     VIEW-AS FILL-IN 
+     SIZE 14 BY 1 NO-UNDO.
+
+
+/* Browse definitions                                                   */
+DEFINE BROWSE BROWSE-7
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _DISPLAY-FIELDS BROWSE-7 V-table-Win _STRUCTURED
+  
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+    WITH NO-ROW-MARKERS SEPARATORS SIZE 82 BY 7.86 ROW-HEIGHT-CHARS .68.
+
+
+/* ************************  Frame Definitions  *********************** */
+
+DEFINE FRAME F-Main
+     Tarea.fecha_prevista AT ROW 1.24 COL 105 COLON-ALIGNED WIDGET-ID 22
+          LABEL "Fecha"
+          VIEW-AS FILL-IN 
+          SIZE 16 BY 1 TOOLTIP "Fecha Previsto"
+     Tarea.Origen AT ROW 1.48 COL 13 COLON-ALIGNED WIDGET-ID 132
+          VIEW-AS FILL-IN 
+          SIZE 20 BY 1
+     Tarea.nro_identificacion AT ROW 1.48 COL 35 COLON-ALIGNED NO-LABEL WIDGET-ID 134
+          VIEW-AS FILL-IN 
+          SIZE 14 BY 1
+     v-certif AT ROW 1.48 COL 58 COLON-ALIGNED WIDGET-ID 136
+     v-proto AT ROW 1.48 COL 79 COLON-ALIGNED WIDGET-ID 138
+     Bresuelto AT ROW 1.71 COL 133 WIDGET-ID 64
+     frecursos AT ROW 2.52 COL 105 COLON-ALIGNED WIDGET-ID 66
+     BRECURSOS AT ROW 2.52 COL 124.2 WIDGET-ID 36
+     BROWSE-7 AT ROW 3.14 COL 3 WIDGET-ID 200
+     BLeyenda AT ROW 3.86 COL 107 WIDGET-ID 94
+     banal AT ROW 3.86 COL 119 WIDGET-ID 118
+     Bvecino AT ROW 5.05 COL 107 WIDGET-ID 124
+     v-texto AT ROW 6.48 COL 86 NO-LABEL WIDGET-ID 50
+     b-agrega AT ROW 6.48 COL 146 WIDGET-ID 52
+    WITH 1 DOWN NO-BOX KEEP-TAB-ORDER OVERLAY 
+         SIDE-LABELS NO-UNDERLINE THREE-D 
+         AT COL 1 ROW 1 SCROLLABLE  WIDGET-ID 100.
+
+
+/* *********************** Procedure Settings ************************ */
+
+&ANALYZE-SUSPEND _PROCEDURE-SETTINGS
+/* Settings for THIS-PROCEDURE
+   Type: SmartViewer
+   External Tables: sic.Tarea
+   Allow: Basic,DB-Fields
+   Frames: 1
+   Add Fields to: EXTERNAL-TABLES
+   Other Settings: PERSISTENT-ONLY COMPILE
+ */
+
+/* This procedure should always be RUN PERSISTENT.  Report the error,  */
+/* then cleanup and return.                                            */
+IF NOT THIS-PROCEDURE:PERSISTENT THEN DO:
+  MESSAGE "{&FILE-NAME} should only be RUN PERSISTENT.":U
+          VIEW-AS ALERT-BOX ERROR BUTTONS OK.
+  RETURN.
+END.
+
+&ANALYZE-RESUME _END-PROCEDURE-SETTINGS
+
+/* *************************  Create Window  ************************** */
+
+&ANALYZE-SUSPEND _CREATE-WINDOW
+/* DESIGN Window definition (used by the UIB) 
+  CREATE WINDOW V-table-Win ASSIGN
+         HEIGHT             = 10.19
+         WIDTH              = 150.8.
+/* END WINDOW DEFINITION */
+                                                                        */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CUSTOM _INCLUDED-LIB V-table-Win 
+/* ************************* Included-Libraries *********************** */
+
+{src/adm/method/viewer.i}
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+
+
+/* ***********  Runtime Attributes and AppBuilder Settings  *********** */
+
+&ANALYZE-SUSPEND _RUN-TIME-ATTRIBUTES
+/* SETTINGS FOR WINDOW V-table-Win
+  VISIBLE,,RUN-PERSISTENT                                               */
+/* SETTINGS FOR FRAME F-Main
+   NOT-VISIBLE FRAME-NAME Size-to-Fit                                   */
+/* BROWSE-TAB BROWSE-7 BRECURSOS F-Main */
+ASSIGN 
+       FRAME F-Main:SCROLLABLE       = FALSE
+       FRAME F-Main:HIDDEN           = TRUE.
+
+/* SETTINGS FOR BUTTON b-agrega IN FRAME F-Main
+   NO-ENABLE                                                            */
+ASSIGN 
+       banal:POPUP-MENU IN FRAME F-Main       = MENU POPUP-MENU-banal:HANDLE.
+
+/* SETTINGS FOR BUTTON BLeyenda IN FRAME F-Main
+   NO-ENABLE                                                            */
+/* SETTINGS FOR BUTTON BRECURSOS IN FRAME F-Main
+   NO-ENABLE                                                            */
+/* SETTINGS FOR BUTTON Bresuelto IN FRAME F-Main
+   NO-ENABLE                                                            */
+/* SETTINGS FOR BUTTON Bvecino IN FRAME F-Main
+   NO-ENABLE                                                            */
+/* SETTINGS FOR FILL-IN Tarea.fecha_prevista IN FRAME F-Main
+   EXP-LABEL                                                            */
+/* SETTINGS FOR FILL-IN frecursos IN FRAME F-Main
+   NO-ENABLE                                                            */
+/* SETTINGS FOR FILL-IN Tarea.nro_identificacion IN FRAME F-Main
+   EXP-LABEL                                                            */
+/* SETTINGS FOR FILL-IN Tarea.Origen IN FRAME F-Main
+   NO-ENABLE                                                            */
+ASSIGN 
+       Tarea.Origen:READ-ONLY IN FRAME F-Main        = TRUE.
+
+/* SETTINGS FOR FILL-IN v-certif IN FRAME F-Main
+   NO-ENABLE                                                            */
+ASSIGN 
+       v-certif:READ-ONLY IN FRAME F-Main        = TRUE.
+
+/* SETTINGS FOR FILL-IN v-proto IN FRAME F-Main
+   NO-ENABLE                                                            */
+ASSIGN 
+       v-proto:READ-ONLY IN FRAME F-Main        = TRUE.
+
+/* SETTINGS FOR EDITOR v-texto IN FRAME F-Main
+   NO-ENABLE                                                            */
+ASSIGN 
+       v-texto:RETURN-INSERTED IN FRAME F-Main  = TRUE
+       v-texto:READ-ONLY IN FRAME F-Main        = TRUE.
+
+/* _RUN-TIME-ATTRIBUTES-END */
+&ANALYZE-RESUME
+
+
+/* Setting information for Queries and Browse Widgets fields            */
+
+&ANALYZE-SUSPEND _QUERY-BLOCK BROWSE BROWSE-7
+/* Query rebuild information for BROWSE BROWSE-7
+     _Query            is NOT OPENED
+*/  /* BROWSE BROWSE-7 */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _QUERY-BLOCK FRAME F-Main
+/* Query rebuild information for FRAME F-Main
+     _Options          = "NO-LOCK"
+     _Query            is NOT OPENED
+*/  /* FRAME F-Main */
+&ANALYZE-RESUME
+
+ 
+
+
+/* **********************  Create OCX Containers  ********************** */
+
+&ANALYZE-SUSPEND _CREATE-DYNAMIC
+
+&IF "{&OPSYS}" = "WIN32":U AND "{&WINDOW-SYSTEM}" NE "TTY":U &THEN
+
+CREATE CONTROL-FRAME CtrlFrame ASSIGN
+       FRAME           = FRAME F-Main:HANDLE
+       ROW             = 3.86
+       COLUMN          = 130
+       HEIGHT          = 2.38
+       WIDTH           = 21
+       WIDGET-ID       = 128
+       HIDDEN          = no
+       SENSITIVE       = yes.
+
+PROCEDURE adm-create-controls:
+      CtrlFrame:NAME = "CtrlFrame":U .
+/* CtrlFrame OCXINFO:CREATE-CONTROL from: {D7053240-CE69-11CD-A777-00DD01143C57} type: CommandButton */
+      CtrlFrame:MOVE-AFTER(banal:HANDLE IN FRAME F-Main).
+
+END PROCEDURE.
+
+&ENDIF
+
+&ANALYZE-RESUME /* End of _CREATE-DYNAMIC */
+
+
+/* ************************  Control Triggers  ************************ */
+
+&Scoped-define SELF-NAME b-agrega
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL b-agrega V-table-Win
+ON CHOOSE OF b-agrega IN FRAME F-Main /* Agrega */
+DO:
+  v-texto = "".
+  v-texto:READ-ONLY = FALSE.
+  b-agrega:SENSITIVE = FALSE.
+  DISPLAY v-texto WITH FRAME {&FRAME-NAME}.
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME banal
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL banal V-table-Win
+ON CHOOSE OF banal IN FRAME F-Main /* Imp. Certificado */
+DO:
+    FIND evento WHERE evento.nro_evento = int(extrae("EVENTOLT",tarea.datos-template)) NO-ERROR.
+    IF NOT AVAILABLE evento THEN DO:
+        MESSAGE "ERROR INTERNO Evento no disponible:" extrae("EVENTOLT",tarea.datos-template)  VIEW-AS ALERT-BOX ERROR.
+        RETURN NO-APPLY.
+    END.
+
+    IF NOT evento.frealizado<>? THEN DO:
+        MESSAGE "El evento no esta realizado, falta la OT" VIEW-AS ALERT-BOX INFORMATION.
+            RETURN NO-APPLY.
+    END.
+    IF evento.anulado THEN DO:
+        MESSAGE "El evento esta anulado" VIEW-AS ALERT-BOX INFORMATION.
+        RETURN NO-APPLY.
+    END.
+    FIND evento_protocolo OF evento NO-ERROR.
+    IF AVAILABLE evento_protocolo THEN DO:
+        IF index("I",evento_protocolo.estado) = 0  THEN DO:
+            MESSAGE "El protocolo no tiene es estado adecuado para imprimirse" VIEW-AS ALERT-BOX INFORMATION.
+            RETURN NO-APPLY.
+        END.
+    END.
+
+    EMPTY TEMP-TABLE aimp.
+    CREATE aimp.
+    ASSIGN aimp.c_nro_tipo_evento = evento.nro_tipo_evento
+           aimp.nro_evento = evento.nro_evento.
+    RUN analisisdef.p ( INPUT TABLE aimp , MENU-ITEM m_CertificadoAnalisisRecibo:CHECKED IN MENU POPUP-MENU-Banal).
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME BLeyenda
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL BLeyenda V-table-Win
+ON CHOOSE OF BLeyenda IN FRAME F-Main /* Leyenda */
+DO:
+   DEFINE VARIABLE puso_ok AS LOGICAL.
+   IF pleyenda="" THEN
+            pleyenda = tarea.leyenda.
+   RUN c-edttexto.w ( INPUT-OUTPUT pleyenda,
+                      INPUT "Leyenda",
+                      INPUT 0, /* en RW siempre */
+                      OUTPUT puso_ok).
+   RETURN NO-APPLY.
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME BRECURSOS
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL BRECURSOS V-table-Win
+ON CHOOSE OF BRECURSOS IN FRAME F-Main /* Sel */
+DO:
+  DEF VAR lista AS CHAR.
+  lista = frecursos:SCREEN-VALUE.
+  FIND tipo_evento WHERE tipo_evento.cdg_tipo_evento = "EL".
+  RUN d-recursos.w (INPUT-OUTPUT lista, string(tipo_evento.nro_tipo_evento) ).
+  frecursos:SCREEN-VALUE = lista.
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME Bresuelto
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL Bresuelto V-table-Win
+ON CHOOSE OF Bresuelto IN FRAME F-Main /* Resuelto */
+DO:
+  RUN d-tarearesol.w (INPUT tarea.nro_tarea).
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define BROWSE-NAME BROWSE-7
+&Scoped-define SELF-NAME BROWSE-7
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL BROWSE-7 V-table-Win
+ON VALUE-CHANGED OF BROWSE-7 IN FRAME F-Main
+DO:
+    IF AVAILABLE tttexto THEN v-texto = tttexto.ttexto.
+    DISPLAY v-texto WITH FRAME {&FRAME-NAME}. 
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME Bvecino
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL Bvecino V-table-Win
+ON CHOOSE OF Bvecino IN FRAME F-Main /* Vecinos */
+DO:
+DEFINE VAR pnro_cliente LIKE cliente.nro_cliente.
+DEFINE VAR hproc AS HANDLE NO-UNDO.
+DEFINE VAR hcproc AS CHAR NO-UNDO.
+DEFINE VAR pcdg_tipotarea LIKE tarea.cdg_tipotarea.
+DEFINE VAR ii AS INT NO-UNDO.
+DEFINE VAR geolat AS DECIMAL NO-UNDO.
+DEFINE VAR geolong AS DECIMAL NO-UNDO.
+FIND tipo_evento WHERE tipo_evento.cdg_tipo_evento = "EL".
+RUN get-link-handle IN adm-broker-hdl
+      ( INPUT THIS-PROCEDURE,
+        INPUT "record-Source",
+        OUTPUT hcproc ).
+    /* Code placed here will execute PRIOR to standard behavior. */
+hproc = WIDGET-HANDLE(hcproc).
+
+IF NOT VALID-HANDLE(hproc) THEN DO:
+    MESSAGE "No se puede obtener el handle para el record-source" VIEW-AS ALERT-BOX ERROR.
+    RETURN NO-APPLY.
+END.
+
+RUN damegeo IN hproc (OUTPUT geolat, OUTPUT geolong).
+RUN dametipo IN hproc(OUTPUT pcdg_tipotarea).
+IF geolat = 0 OR geolong = 0 THEN DO:
+    MESSAGE "Referencia no geocodidicada correctamente" VIEW-AS ALERT-BOX ERROR.
+    RETURN NO-APPLY.
+END.
+
+cerrar(h_vecinos).
+
+RUN w-vecinosEV.w PERSISTENT  SET h_vecinos ( tipo_evento.nro_tipo_evento ,
+                       tarea.fecha_prevista:INPUT-VALUE,
+                       tarea.fecha_prevista:INPUT-VALUE,
+                       3000,
+                       ?,
+                       geolat,
+                       geolong,
+                       IF AVAILABLE cliente THEN Cliente.nom_cliente + '<BR>Tarea:' + string(tarea.nro_tarea) + '<BR>Dir:' + cliente.direccion ELSE 'Tarea:' + string(tarea.nro_tarea) + "<BR>Cliente buscado",
+                       IF AVAILABLE cliente THEN cliente.cdg_cliente ELSE ?,
+                       tarea.direccion,
+                       THIS-PROCEDURE ,
+                       tarea.horas_estimadas ).
+
+RUN dispatch IN h_vecinos ( INPUT 'initialize':U ) .
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME CtrlFrame
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL CtrlFrame V-table-Win OCX.Click
+PROCEDURE CtrlFrame.CommandButton.Click .
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  None required for OCX.
+  Notes:       
+------------------------------------------------------------------------------*/
+
+RUN d-zoom-evento.w ( int(extrae("EVENTOLT",tarea.datos-template )),"Evento Limpieza" ).
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME Tarea.fecha_prevista
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL Tarea.fecha_prevista V-table-Win
+ON MOUSE-MENU-DOWN OF Tarea.fecha_prevista IN FRAME F-Main /* Fecha */
+DO:
+    {selfecha.i}
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME m_CertificadoAnalisis
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL m_CertificadoAnalisis V-table-Win
+ON CHOOSE OF MENU-ITEM m_CertificadoAnalisis /* Certificado+Analisis */
+DO:
+  MENU-ITEM m_CertificadoAnalisisRecibo:CHECKED IN MENU  POPUP-MENU-Banal = 
+          NOT MENU-ITEM m_CertificadoAnalisis:CHECKED IN MENU  POPUP-MENU-Banal.
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME m_CertificadoAnalisisRecibo
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL m_CertificadoAnalisisRecibo V-table-Win
+ON CHOOSE OF MENU-ITEM m_CertificadoAnalisisRecibo /* Certificado+Analisis+Recibo */
+DO:
+  MENU-ITEM m_CertificadoAnalisis:CHECKED IN MENU  POPUP-MENU-Banal = 
+          NOT MENU-ITEM m_CertificadoAnalisisRecibo:CHECKED IN MENU  POPUP-MENU-Banal.
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&UNDEFINE SELF-NAME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CUSTOM _MAIN-BLOCK V-table-Win 
+
+
+/* ***************************  Main Block  *************************** */
+
+  &IF DEFINED(UIB_IS_RUNNING) <> 0 &THEN          
+    RUN dispatch IN THIS-PROCEDURE ('initialize':U).        
+  &ENDIF         
+  
+  /************************ INTERNAL PROCEDURES ********************/
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+/* **********************  Internal Procedures  *********************** */
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE adm-row-available V-table-Win  _ADM-ROW-AVAILABLE
+PROCEDURE adm-row-available :
+/*------------------------------------------------------------------------------
+  Purpose:     Dispatched to this procedure when the Record-
+               Source has a new row available.  This procedure
+               tries to get the new row (or foriegn keys) from
+               the Record-Source and process it.
+  Parameters:  <none>
+------------------------------------------------------------------------------*/
+
+  /* Define variables needed by this internal procedure.             */
+  {src/adm/template/row-head.i}
+
+  /* Create a list of all the tables that we need to get.            */
+  {src/adm/template/row-list.i "Tarea"}
+
+  /* Get the record ROWID's from the RECORD-SOURCE.                  */
+  {src/adm/template/row-get.i}
+
+  /* FIND each record specified by the RECORD-SOURCE.                */
+  {src/adm/template/row-find.i "Tarea"}
+
+  /* Process the newly available records (i.e. display fields,
+     open queries, and/or pass records on to any RECORD-TARGETS).    */
+  {src/adm/template/row-end.i}
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE borraind V-table-Win 
+PROCEDURE borraind :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+DEFINE INPUT PARAMETER h AS WIDGET-HANDLE NO-UNDO.
+    h:LIST-ITEM-PAIRS="NADA,0".
+    h:SCREEN-VALUE = "0".
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE cambia_cliente V-table-Win 
+PROCEDURE cambia_cliente :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+DEFINE INPUT PARAM p AS ROWID.
+    FIND cliente WHERE ROWID(cliente) = p.
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE control_load V-table-Win  _CONTROL-LOAD
+PROCEDURE control_load :
+/*------------------------------------------------------------------------------
+  Purpose:     Load the OCXs    
+  Parameters:  <none>
+  Notes:       Here we load, initialize and make visible the 
+               OCXs in the interface.                        
+------------------------------------------------------------------------------*/
+
+&IF "{&OPSYS}" = "WIN32":U AND "{&WINDOW-SYSTEM}" NE "TTY":U &THEN
+DEFINE VARIABLE UIB_S    AS LOGICAL    NO-UNDO.
+DEFINE VARIABLE OCXFile  AS CHARACTER  NO-UNDO.
+
+OCXFile = SEARCH( "v-temp_tareaH.wrx":U ).
+IF OCXFile = ? THEN
+  OCXFile = SEARCH(SUBSTRING(THIS-PROCEDURE:FILE-NAME, 1,
+                     R-INDEX(THIS-PROCEDURE:FILE-NAME, ".":U), "CHARACTER":U) + "wrx":U).
+
+IF OCXFile <> ? THEN
+DO:
+  ASSIGN
+    chCtrlFrame = CtrlFrame:COM-HANDLE
+    UIB_S = chCtrlFrame:LoadControls( OCXFile, "CtrlFrame":U)
+  .
+  RUN DISPATCH IN THIS-PROCEDURE("initialize-controls":U) NO-ERROR.
+END.
+ELSE MESSAGE "v-temp_tareaH.wrx":U SKIP(1)
+             "The binary control file could not be found. The controls cannot be loaded."
+             VIEW-AS ALERT-BOX TITLE "Controls Not Loaded".
+
+&ENDIF
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE disable_UI V-table-Win  _DEFAULT-DISABLE
+PROCEDURE disable_UI :
+/*------------------------------------------------------------------------------
+  Purpose:     DISABLE the User Interface
+  Parameters:  <none>
+  Notes:       Here we clean-up the user-interface by deleting
+               dynamic widgets we have created and/or hide 
+               frames.  This procedure is usually called when
+               we are ready to "clean-up" after running.
+------------------------------------------------------------------------------*/
+  /* Hide all frames. */
+  HIDE FRAME F-Main.
+  IF THIS-PROCEDURE:PERSISTENT THEN DELETE PROCEDURE THIS-PROCEDURE.
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE local-add-record V-table-Win 
+PROCEDURE local-add-record :
+/*------------------------------------------------------------------------------
+  Purpose:     Override standard ADM method
+  Notes:       
+------------------------------------------------------------------------------*/
+  RUN loadAdvTexto ("",BROWSE BROWSE-7:HANDLE,OUTPUT TABLE tttexto,OUTPUT v-texto).
+  DISPLAY v-texto WITH FRAME {&FRAME-NAME}.
+  /* Code placed here will execute PRIOR to standard behavior. */
+
+  /* Dispatch standard ADM method.                             */
+  RUN dispatch IN THIS-PROCEDURE ( INPUT 'add-record':U ) .
+
+  /* Code placed here will execute AFTER standard behavior.    */
+  tarea.fecha_prevista:SCREEN-VALUE = STRING(TODAY).
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE local-assign-statement V-table-Win 
+PROCEDURE local-assign-statement :
+/*------------------------------------------------------------------------------
+  Purpose:     Override standard ADM method
+  Notes:       
+------------------------------------------------------------------------------*/
+DEFINE VAR k AS INT NO-UNDO.
+DEFINE VARIABLE hWidget AS HANDLE     NO-UNDO.
+DEFINE VARIABLE hField  AS HANDLE     NO-UNDO.
+DEFINE VAR phframe AS HANDLE NO-UNDO.
+DEFINE VAR sal AS CHAR NO-UNDO.
+DEFINE VAR vartemplate AS CHAR NO-UNDO.
+DEFINE VAR resu AS CHAR NO-UNDO.
+DEFINE VAR recno AS LOGICAL NO-UNDO.
+
+RUN dispatch IN THIS-PROCEDURE ( INPUT 'assign-statement':U ) .
+FIND tipo_evento WHERE tipo_evento.cdg_tipo_evento = "EL".
+tarea.nro_tipo_evento = tipo_evento.nro_tipo_evento.
+tarea.horas_estimadas = 15.
+ASSIGN FRAME {&FRAME-NAME} frecursos.
+recno = TRUE.
+DO k = 1 TO num-entries(frecursos):
+  FIND recurso WHERE recurso.cdg_recurso = ENTRY(k,frecursos) NO-LOCK NO-ERROR.
+  IF NOT AVAILABLE recurso THEN do:
+      recno = false.
+      LEAVE.
+  END.
+  FIND FIRST recurso_habilidad OF Recurso 
+       WHERE can-do(string(tarea.nro_tipo_evento),string( recurso_habilidad.nro_tipo_evento)) NO-LOCK NO-ERROR.
+  IF NOT AVAILABLE recurso_habilidad THEN do:
+      recno = false.
+      LEAVE.
+  END.
+END.
+IF NOT recno THEN DO:
+    MESSAGE "Ninguno de los recursos, tiene la habilidad necesaria para efectuar la tarea" 
+    VIEW-AS ALERT-BOX ERROR.
+    RETURN ERROR.
+END.
+
+phframe = FRAME {&FRAME-NAME}:HANDLE.
+hWidget = phFrame:CURRENT-ITERATION:FIRST-CHILD.
+sal = extrae("EVENTOLT",tarea.datos-template).
+IF sal = ? THEN sal = "".
+ELSE sal = "EVENTOLT|" + sal.
+vartemplate = "frecursos|texto_adic".
+  DO WHILE VALID-HANDLE(hWidget):
+    k = lookup(hWidget:NAME ,vartemplate, "|").
+    IF  k > 0 AND CAN-QUERY( hWidget, 'SCREEN-VALUE' ) THEN
+    DO:
+        IF hWidget:TYPE = 'COMBO-BOX'  THEN 
+            resu = hWidget:NAME + "|" + hWidget:SCREEN-VALUE.
+        ELSE IF CAN-QUERY( hWidget, 'INPUT-VALUE':U ) THEN
+            resu = hWidget:NAME + "|" + hWidget:SCREEN-VALUE.
+        ELSE IF CAN-QUERY( hWidget, 'CHECKED':U ) THEN
+            resu = hWidget:NAME + "|" +  IF hWidget:CHECKED THEN "yes" ELSE "no".
+        ELSE resu = hWidget:NAME + "|" + hWidget:SCREEN-VALUE.
+        IF resu <> ? THEN
+            sal = sal + "|" + resu.
+    END.
+    hWidget = hWidget:NEXT-SIBLING.
+  END.
+  /*Tarea.datos-template = substring(sal,2).*/
+  tarea.descripcion = saveAdvTexto(v-texto:INPUT-VALUE,TABLE tttexto).
+  tarea.leyenda = pleyenda.
+  IF DATE(tarea.visualizar) < tarea.fecha_prevista THEN
+    tarea.visualizar = tarea.fecha_prevista.
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE local-disable-fields V-table-Win 
+PROCEDURE local-disable-fields :
+/*------------------------------------------------------------------------------
+  Purpose:     Override standard ADM method
+  Notes:       
+------------------------------------------------------------------------------*/
+DEFINE VAR k AS INT NO-UNDO.
+DEFINE VARIABLE hWidget AS HANDLE     NO-UNDO.
+DEFINE VARIABLE hField  AS HANDLE     NO-UNDO.
+DEFINE VAR phframe AS HANDLE NO-UNDO.
+
+  RUN dispatch IN THIS-PROCEDURE ( INPUT 'disable-fields':U ) .
+
+phframe = FRAME {&FRAME-NAME}:HANDLE.
+hWidget = phFrame:CURRENT-ITERATION:FIRST-CHILD.
+
+  DO WHILE VALID-HANDLE(hWidget):
+    IF  CAN-QUERY( hWidget, 'SCREEN-VALUE' ) THEN
+        hWidget:SENSITIVE = FALSE.
+    hWidget = hWidget:NEXT-SIBLING.
+  END.
+  v-texto:READ-ONLY = TRUE.
+  b-agrega:SENSITIVE = FALSE.
+  brecursos:SENSITIVE = FALSE.
+  bleyenda:SENSITIVE = FALSE.
+  bvecino:SENSITIVE = FALSE.
+  banal:SENSITIVE = FALSE.
+  chctrlFrame:CommandButton:ENABLED = FALSE.
+  
+ 
+  END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE local-display-fields V-table-Win 
+PROCEDURE local-display-fields :
+/*------------------------------------------------------------------------------
+  Purpose:     Override standard ADM method
+  Notes:       
+------------------------------------------------------------------------------*/
+DEFINE VAR k AS INT NO-UNDO.
+DEFINE VARIABLE hWidget AS HANDLE     NO-UNDO.
+DEFINE VARIABLE hField  AS HANDLE     NO-UNDO.
+DEFINE VAR phframe AS HANDLE NO-UNDO.
+DEFINE VAR auxi AS INT NO-UNDO.
+
+IF AVAILABLE tarea THEN DO:
+    bresuelto:SENSITIVE IN FRAME {&FRAME-NAME}= tarea.fecha_resuelto <> ?. 
+END.
+
+RUN dispatch IN THIS-PROCEDURE ( INPUT 'display-fields':U ) .
+
+phframe = FRAME {&FRAME-NAME}:HANDLE.
+hWidget = phFrame:CURRENT-ITERATION:FIRST-CHILD.
+IF AVAILABLE tarea THEN 
+DO: 
+    DO WHILE VALID-HANDLE(hWidget):
+        k = lookup(hWidget:NAME ,Tarea.datos-template, "|").
+        IF  k > 0 AND CAN-QUERY( hWidget, 'SCREEN-VALUE' ) THEN
+            DO:
+                IF hWidget:TYPE = 'COMBO-BOX'  THEN
+                  hWidget:SCREEN-VALUE = ENTRY( k + 1 , tarea.datos-template , "|" ).
+                ELSE IF CAN-QUERY( hWidget, 'INPUT-VALUE':U ) THEN
+                  hWidget:SCREEN-VALUE = ENTRY( k + 1  , tarea.datos-template  , "|" ).
+                ELSE IF CAN-QUERY( hWidget, 'CHECKED':U ) THEN
+                  hWidget:CHECKED = LOGICAL(ENTRY( k + 1 , tarea.datos-template , "|" ) ).
+                ELSE IF CAN-QUERY( hWidget, 'SCREEN-VALUE' ) THEN
+                  hWidget:SCREEN-VALUE = ENTRY( k + 1 , tarea.datos-template , "|" ).
+            END.
+        hWidget = hWidget:NEXT-SIBLING.
+  END.
+  RUN loadAdvTexto (tarea.descripcion,BROWSE BROWSE-7:HANDLE,OUTPUT TABLE tttexto,OUTPUT v-texto).
+  DISPLAY v-texto WITH FRAME {&FRAME-NAME}.
+  
+  bresuelto:SENSITIVE = tarea.fecha_resuelto <> ?.
+  pleyenda = tarea.leyenda. 
+
+END.
+  ELSE DO:
+      RUN loadAdvTexto ("",BROWSE BROWSE-7:HANDLE,OUTPUT TABLE tttexto,OUTPUT v-texto).
+      DISPLAY v-texto WITH FRAME {&FRAME-NAME}.
+  END.
+ 
+ FIND evento WHERE evento.nro_evento = int(extrae("EVENTOLT",tarea.datos-template)) NO-LOCK NO-ERROR.
+ FIND evento_protocolo OF evento NO-ERROR.
+ IF NOT available(evento_protocolo) THEN DO:
+     banal:SENSITIVE = available(evento_protocolo).
+ END.
+ELSE DO:
+     banal:SENSITIVE = NOT evento_protocolo.estado = "N".
+ END.
+ IF AVAILABLE evento THEN DO:
+     chctrlFrame:CommandButton:Caption = "Evento:" + string(evento.nro_evento) + CHR(10) + "Realz:" + STRING(evento.frealizado).
+     chctrlFrame:CommandButton:ENABLED = TRUE.
+ END.
+ELSE DO:
+     chctrlFrame:CommandButton:Caption = "Evento:" + chr(10) + "NO DISP".
+     chctrlFrame:CommandButton:ENABLED = FALSE.
+ END.
+ 
+ auxi = INTEGER(extrae("EVENTOLT",tarea.dato)) NO-ERROR.
+ IF auxi <> ? THEN DO:
+   FIND evento_protocolo WHERE evento_protocolo.nro_evento = auxi NO-LOCK NO-ERROR.
+   IF AVAILABLE evento_protocolo THEN do:
+        v-proto:SCREEN-VALUE = string(evento_protocolo.nro_protocolo,">>>>>>>>9").
+        v-certif:SCREEN-VALUE = string(evento_protocolo.nro_certificado,">>>>>>>>9").
+   END.
+ END.
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE local-enable-fields V-table-Win 
+PROCEDURE local-enable-fields :
+/*------------------------------------------------------------------------------
+  Purpose:     Override standard ADM method
+  Notes:       
+------------------------------------------------------------------------------*/
+DEFINE VAR k AS INT NO-UNDO.
+DEFINE VARIABLE hWidget AS HANDLE     NO-UNDO.
+DEFINE VARIABLE hField  AS HANDLE     NO-UNDO.
+DEFINE VAR phframe AS HANDLE NO-UNDO.
+
+RUN dispatch IN THIS-PROCEDURE ( INPUT 'enable-fields':U ) .
+
+phframe = FRAME {&FRAME-NAME}:HANDLE.
+hWidget = phFrame:CURRENT-ITERATION:FIRST-CHILD.
+
+DO WHILE VALID-HANDLE(hWidget):
+    IF  CAN-QUERY( hWidget, 'SCREEN-VALUE' ) THEN
+        hWidget:SENSITIVE = TRUE.
+    hWidget = hWidget:NEXT-SIBLING.
+END.
+b-agrega:SENSITIVE = TRUE.
+brecursos:SENSITIVE = TRUE.
+bleyenda:SENSITIVE = TRUE.
+bvecino:SENSITIVE = TRUE.
+chctrlFrame:CommandButton:ENABLED = TRUE.
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE local-initialize V-table-Win 
+PROCEDURE local-initialize :
+/*------------------------------------------------------------------------------
+  Purpose:     Override standard ADM method
+  Notes:       
+------------------------------------------------------------------------------*/
+
+
+
+FIND tipo_evento WHERE tipo_evento.cdg_tipo_evento = "EL" NO-LOCK NO-ERROR.
+
+  RUN dispatch IN THIS-PROCEDURE ( INPUT 'initialize':U ) .
+
+  /* Code placed here will execute AFTER standard behavior.    */
+MENU-ITEM m_CertificadoAnalisisRecibo:CHECKED IN MENU  POPUP-MENU-Banal =False.
+  MENU-ITEM m_CertificadoAnalisis:CHECKED IN MENU  POPUP-MENU-Banal = 
+          NOT MENU-ITEM m_CertificadoAnalisisRecibo:CHECKED IN MENU  POPUP-MENU-Banal.
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE send-records V-table-Win  _ADM-SEND-RECORDS
+PROCEDURE send-records :
+/*------------------------------------------------------------------------------
+  Purpose:     Send record ROWID's for all tables used by
+               this file.
+  Parameters:  see template/snd-head.i
+------------------------------------------------------------------------------*/
+
+  /* Define variables needed by this internal procedure.               */
+  {src/adm/template/snd-head.i}
+
+  /* For each requested table, put it's ROWID in the output list.      */
+  {src/adm/template/snd-list.i "Tarea"}
+
+  /* Deal with any unexpected table requests before closing.           */
+  {src/adm/template/snd-end.i}
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE ssss V-table-Win 
+PROCEDURE ssss :
+DO:
+    DEFINE VAR p-des_fecha AS DATE.
+    DEFINE VAR p-has_fecha AS DATE.
+    DEFINE VAR ERROR_rango AS LOGICAL.
+    DEFINE BUFFER btarea FOR tarea.
+    
+    FIND evento WHERE evento.nro_evento = int(extrae("EVENTOLT",tarea.datos-template)) NO-ERROR.
+    IF NOT AVAILABLE evento THEN DO:
+        MESSAGE "ERROR INTERNO Evento no disponible:" extrae("EVENTOLT",tarea.datos-template)  VIEW-AS ALERT-BOX ERROR.
+        RETURN NO-APPLY.
+    END.
+
+    IF NOT evento.frealizado<>? THEN DO:
+    MESSAGE "El evento no esta realizado, falta la OT" VIEW-AS ALERT-BOX INFORMATION.
+        RETURN NO-APPLY.
+    END.
+    IF evento.anulado THEN DO:
+        MESSAGE "El evento esta anulado" VIEW-AS ALERT-BOX INFORMATION.
+        RETURN NO-APPLY.
+    END.
+    FIND evento_protocolo OF evento NO-ERROR.
+    IF AVAILABLE evento_protocolo THEN DO:
+        IF index("PI",evento_protocolo.estado) = 0  THEN DO:
+            MESSAGE "El protocolo no tiene es estado adecuado para imprimirse" VIEW-AS ALERT-BOX INFORMATION.
+            RETURN NO-APPLY.
+        END.
+    END.
+    
+    EMPTY TEMP-TABLE aimp.
+    CREATE aimp.
+    ASSIGN aimp.c_nro_tipo_evento = evento.nro_tipo_evento
+           aimp.nro_evento = evento.nro_evento
+           aimp.recurso = evento.recurso
+           aimp.turno = evento.turno.
+    find restriccion no-lock where restriccion.cdg_restriccion = "LIBROT".
+    find cliente_restriccion where cliente_restriccion.nro_restriccion = restriccion.nro_restriccion and
+                                   cliente_restriccion.nro_cliente = evento.nro_cliente no-lock no-error.
+    if available cliente_restriccion then do:
+       if cliente_restriccion.valor = "N" then aimp.tipoespecial = "EC".
+    end.
+    else do:
+	    FIND btarea WHERE btarea.cdg_tipotarea = "J" AND btarea.estado = "R" AND
+        	             btarea.nro_evento = evento.nro_evento NO-LOCK NO-ERROR.
+	    IF AVAILABLE btarea THEN DO:
+        	 IF NOT logical(extrae("tienelibro",btarea.datos-template)) THEN aimp.tipoespecial = "EC".
+	    END.       
+    end.
+    RUN analisisdef.p ( INPUT TABLE aimp,FALSE ).
+END.
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE state-changed V-table-Win 
+PROCEDURE state-changed :
+/* -----------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+-------------------------------------------------------------*/
+  DEFINE INPUT PARAMETER p-issuer-hdl AS HANDLE    NO-UNDO.
+  DEFINE INPUT PARAMETER p-state      AS CHARACTER NO-UNDO.
+
+  CASE p-state:
+      /* Object instance CASEs can go here to replace standard behavior
+         or add new cases. */
+      {src/adm/template/vstates.i}
+  END CASE.
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+/* ************************  Function Implementations ***************** */
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _FUNCTION cerrar V-table-Win 
+FUNCTION cerrar RETURNS LOGICAL
+  ( hh AS WIDGET-HANDLE ) :
+/*------------------------------------------------------------------------------
+  Purpose:  
+    Notes:  
+------------------------------------------------------------------------------*/
+IF VALID-HANDLE(hh) THEN   do:
+    RUN dispatch IN hh ( INPUT 'destroy':U ) . 
+    RETURN TRUE.
+END.
+ELSE RETURN FALSE.   /* Function return value. */
+
+END FUNCTION.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _FUNCTION ver_prf V-table-Win 
+FUNCTION ver_prf RETURNS CHARACTER
+  ( /* parameter-definitions */ ) :
+/*------------------------------------------------------------------------------
+  Purpose:  
+    Notes:  
+------------------------------------------------------------------------------*/
+DEFINE VAR listaprf AS CHAR NO-UNDO.
+listaprf = "".
+/*FOR EACH canal WHERE sic.canal.nro_tipo_evento = tarea.nro_tipo_evento AND
+         canal.nro_cliente = tarea.nro_cliente:
+      IF LOOKUP( string(canal.cdg_puntovta) , listaprf ) = 0 THEN
+     listaprf = listaprf + "," + string(canal.cdg_puntovta).
+END.
+FOR EACH canal WHERE sic.canal.nro_tipo_evento = tarea.nro_tipo_evento AND
+         canal.nro_cliente = tarea.nro_admin:
+      IF LOOKUP( string(canal.cdg_puntovta) , listaprf ) = 0 THEN
+     listaprf = listaprf + "," + string(canal.cdg_puntovta).
+END. */
+/*
+IF listaprf="" THEN DO: /*todos los prf posibles*/
+  FOR EACH Punto-venta WHERE Punto-venta.Habilitado:
+      listaprf = listaprf + "," + string(Punto-venta.cdg_puntovta).
+  END.
+END.
+*/
+FOR EACH punto-venta WHERE Punto-venta.Habilitado AND Punto-venta.cdg_empresa = Empresa.cdg_empresa:
+   listaprf = listaprf + "," + string(Punto-venta.cdg_puntovta).
+END.
+  RETURN substring(listaprf,2).   /* Function return value. */
+
+END FUNCTION.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+

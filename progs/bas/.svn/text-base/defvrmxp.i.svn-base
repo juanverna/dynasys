@@ -1,0 +1,9 @@
+&IF DEFINED(MXP-PRESENTE) <> 0
+&THEN
+  DEFINE VARIABLE rid_gl-account AS ROWID.
+  DEFINE VARIABLE mxp_error      AS LOGICAL.
+
+  DEFINE BUTTON BTN_MXP
+         LABEL "&Otros Datos":L 
+        SIZE 15 BY 0.9 FONT 4.
+&ENDIF

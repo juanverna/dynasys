@@ -1,0 +1,49 @@
+/* ============================================= */
+/* IMPRIME UNA ETIQUETA PARA ROTULAR CADA BOBINA */
+/* ============================================= */
+
+/*C:\Program Files\Common Files\Crystal Decisions\2.5\bin\craxdrt.dll*/
+{crystal_dyna.p}
+
+DEFINE VAR xfile AS CHAR NO-UNDO.
+
+DEFINE VARIABLE chParamDefs   AS COM-HANDLE NO-UNDO.
+DEFINE VARIABLE chParamDef   AS COM-HANDLE NO-UNDO.
+DEFINE VARIABLE cFullPath     AS CHARACTER NO-UNDO. 
+
+/*xfile = xtemp("").*/
+
+xfile = ".\rpt\buje.xml".
+RUN fullpath ( INPUT xfile, INPUT "", OUTPUT cFullPath ).
+
+
+CREATE "CrystalRuntime.Application" chApplication.
+
+/*chApplication:LogOnServer("pdsodbc.dll", "odbc dsn", "", "user name", "password, cannot be blank").*/
+xfile = "C:\sic-temp\estadisticas.xml".
+RUN fullpath ( INPUT xfile, INPUT "", OUTPUT cFullPath ).
+
+chReport = chApplication:OpenReport("rpt/clasificacion.rpt").
+
+chReport:Database:Tables:item(1):setTableLocation(cFullPath, '', '').
+/*
+/* The FALSE parameter below will keep the print dialog from displaying. */
+/* See Crystal Reports ActiveX documentation for other options.          */
+
+chParamDefs = chReport:ParameterFields.
+chParamDef = chParamDefs:Item(1).
+chParamDef:SetCurrentValue(TODAY - 40).
+chParamDef = chParamDefs:Item(2).
+chParamDef:SetCurrentValue(TODAY).
+*/
+chReport:EnableParameterPrompting = FALSE.
+
+/* The FALSE parameter below will keep the print dialog from displaying. */
+/* See Crystal Reports ActiveX documentation for other options.          */
+
+chReport:PrintOut(FALSE).
+
+RELEASE OBJECT chReport.                    
+RELEASE OBJECT chApplication.
+/*RUN borra_temp.p( INPUT xfile, OUTPUT ERROR_nro ).*/
+

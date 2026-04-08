@@ -1,0 +1,2 @@
+find ficha 34.
+run prficdsp.p ( input rowid(ficha) ).

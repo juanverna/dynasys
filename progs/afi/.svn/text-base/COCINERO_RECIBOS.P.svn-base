@@ -1,0 +1,15 @@
+DEFINE VAR k AS INT NO-UNDO.
+FOR EACH paulista.fac_header WHERE paulista.fac_header.fecha > 05/01/2010 AND  paulista.fac_header.fecha > 05/31/2010 AND
+paulista.fac_header.estado_2_impresion = " " AND NOT paulista.fac_header.anulado AND paulista.fac_header.tip_comprob BEGINS "F" :
+/*FIND sic.fac_header WHERE sic.fac_header.nro_factura = paulista.fac_header.nro_factura.
+sic.fac_header.estado_2_impresion = paulista.fac_header.estado_2_impresion.*/
+k = k + 1.
+END.
+DISPLAY k.
+
+/*
+FOR EACH paulista.fac_header WHERE paulista.fac_header.fecha > 05/01/2010 AND  paulista.fac_header.fecha > 05/31/2010 AND
+paulista.fac_header.estado_2_impresion <> "I" AND paulista.fac_header.estado_2_impresion <> "OT" AND NOT paulista.fac_header.anulado:
+FIND sic.fac_header WHERE sic.fac_header.nro_factura = paulista.fac_header.nro_factura.
+sic.fac_header.estado_2_impresion = paulista.fac_header.estado_2_impresion.
+*/

@@ -1,0 +1,14 @@
+OUTPUT TO c:\avisos.txt.
+FIND restriccion no-lock WHERE restriccion.cdg_restriccion = "AVISOF".
+FOR EACH evento WHERE periodo = 200904 AND NOT anulado:
+FIND contrato_restriccion WHERE contrato_restriccion.nro_contrato = evento.nro_identificacion AND 
+    contrato_restriccion.sub_evento = evento.sub_evento AND
+    contrato_restriccion.nro_restriccion = restriccion.nro_restriccion NO-ERROR.
+IF NOT AVAILABLE contrato_restriccion THEN NEXT.
+    IF entry(3,contrato_restriccion.valor,"|") = "L" THEN 
+    EXPORT evento.nro_identificacion evento.sub_evento evento.fasignado.
+END.
+FOR EACH evento WHERE fasignado = 04/01/2009:
+    EXPORT evento.nro_identificacion evento.sub_evento evento.fasignado.
+END.
+

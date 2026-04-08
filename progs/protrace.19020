@@ -1,0 +1,82 @@
+=====================================================
+PROGRESS stack trace as of Wed Jan 31 13:14:27 2018
+=====================================================
+Startup parameters:
+-pf C:\Progress102\OpenEdge\startup.pf,-cpinternal ISO8859-1,-cpstream ISO8859-1,-cpcoll Spanish9,-cpcase Basic,-d dmy,-numsep 46,-numdec 44,(end .pf),-p largar.p,-db c:\bases\dynasys102,-ld sic,-T c:\temp,-basekey INI,-ininame c:\dynasys10\procs\dynasys10.ini,-s 200,-inp 8192,-nb 150,-l 4000,-bibufs 25,-q,-rr
+
+Exception code: E0000003 
+Fault address:  7512C54F 01:0000B54F C:\Windows\syswow64\KERNELBASE.dll
+
+Registers:
+EAX:0018E994
+EBX:00000002
+ECX:005D4468
+EDX:00000000
+ESI:02084A1C
+EDI:00000002
+CS:EIP:0023:7512C54F
+SS:ESP:002B:0018E994  EBP:0018E9E4
+DS:002B  ES:002B  FS:0053  GS:002B
+Flags:00000246
+
+Call Stack:
+Address   Frame
+7512C54F  00000000  RaiseException+58
+10491764  00000000  dbut_utIsDir+1264
+
+
+** ABL Stack Trace **
+
+--> USER-INTERFACE-TRIGGER v-temp_tareaD.w (.\cpy\v-temp_tareaD.r) at line 4940
+    w-tareas-red.w (.\cpy\w-tareas-red.r) at line 1585
+    USER-INTERFACE-TRIGGER w-dynasys.w (.\bas\w-dynasys.r) at line 5977
+    w-dynasys.w (.\bas\w-dynasys.r) at line 6508
+    rundynasys-noquit.p (.\bas\rundynasys-noquit.r) at line 104
+
+** Persistent procedures/Classes **
+
+Handle  File Name
+001630  .\cpy\v-temp_tareaD.r
+001283  .\cpy\v-temp_tareaD.r
+001266  .\bas\p-soloedita.r
+001261  .\cpy\v-tarea-red11.r
+001256  .\cpy\v-tarea-red2.r
+001255  .\PAU\q-cliente.r
+001247  .\bas\p-soloedita.r
+001242  .\cpy\v-tarea-redsolotel.r
+001231  .\cpy\b-tareas-red.r
+001227  C:\Progress102\OpenEdge\gui\adm\objects\folder.r
+001224  C:\Progress102\OpenEdge\gui\adm\objects\broker.r
+001039  .\bas\pure4gltv.r
+001021  .\bas\sfavoritos.r
+001013  C:\Progress102\OpenEdge\gui\adm2\containr.r
+001011  C:\Progress102\OpenEdge\gui\adm2\visual.r
+001006  C:\Progress102\OpenEdge\gui\adm2\smart.r
+001002  .\bas\Winfunc.r
+001001  .\bas\Windows.r
+
+//=====================================================
+PROGRESS stack trace as of Wed Jan 31 13:14:27 2018
+//=====================================================
+Exception code: E0000003 
+Fault address:  7512C54F 01:0000B54F C:\Windows\syswow64\KERNELBASE.dll
+
+Registers:
+EAX:0018E994
+EBX:00000002
+ECX:005D4468
+EDX:00000000
+ESI:02084A1C
+EDI:00000002
+CS:EIP:0023:7512C54F
+SS:ESP:002B:0018EA00  EBP:0018E9E4
+DS:002B  ES:002B  FS:0053  GS:002B
+Flags:00000246
+
+Call Stack:
+Address   Frame
+7512C54F  0018EA08  RaiseException+58
+10021E94  0018EA3C  0001:00020E94 C:\Progress102\OpenEdge\bin\prow32.dll
+10023831  0018EAEC  0001:00022831 C:\Progress102\OpenEdge\bin\prow32.dll
+71AD2C78  0018EBB0  _set_flsgetvalue+D
+

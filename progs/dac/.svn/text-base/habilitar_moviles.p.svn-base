@@ -1,0 +1,15 @@
+DEFINE VARIABLE colores AS CHARACTER.
+
+FOR EACH Tipcolor BREAK BY Tipcolor.cdg_tipoemr:
+    
+    colores = colores + Tipcolor.cdg_tipoemr.
+    IF NOT LAST(Tipcolor.cdg_tipoemr)
+       THEN colores = colores + ",".
+
+END.       
+
+   MESSAGE colores VIEW-AS ALERT-BOX MESSAGE TITLE "Colores".
+
+FOR EACH Movil:
+    Movil.colores_habilitados = colores.
+END.    

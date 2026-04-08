@@ -1,0 +1,37 @@
+/***********************************************************************************************/
+/*                               CONSUMOS DE DISTINTAS EMPRESAS                                */
+/***********************************************************************************************/
+
+
+DEF VAR empre AS CHAR INIT "0004,0120,0533,0562,0840,2537,2548,2631,2967,2968".
+
+DEF VAR desde  AS DATE LABEL "Desde".
+DEF VAR hasta  AS DATE LABEL "Hasta".
+
+DEF VAR cdesde AS CHAR.
+DEF VAR chasta AS CHAR.
+
+DEF VAR params AS CHAR.
+DEF VAR filtro AS CHAR.
+
+UPDATE desde hasta SKIP WITH SIDE-LABELS VIEW-AS DIALOG-BOX THREE-D TITLE "Indique fechas".
+    
+RUN rbfecha.p (INPUT desde, OUTPUT cdesde).
+RUN rbfecha.p (INPUT hasta, OUTPUT chasta).
+
+params = "desde = " + STRING(desde,"99/99/99") + "~n" +
+         "hasta = " + STRING(desde,"99/99/99") + "~n" +
+         "empre = " + empre + "~n".
+         
+filtro = "Ficha.fch_alta >= " + cdesde + " AND Ficha.fch_alta <= " + chasta +
+         " AND Ficha.cdg_destino <> 'A' AND LOOKUP(Ficha.cdg_cliente,empre) > 0" + 
+         " AND LOOKUP(Ficha.cdg_tipoemr,'1,2,3,4,E') > 0".
+         
+
+
+RUN exreport.p (INPUT  "reports.prl",
+                INPUT "Control",
+                INPUT  filtro,
+                INPUT  "D",
+                INPUT  "",
+                INPUT  params).   

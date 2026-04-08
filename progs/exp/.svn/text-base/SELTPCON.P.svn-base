@@ -1,0 +1,9 @@
+&GLOBAL-DEFINE TABLA           Tipo_contenedor
+&GLOBAL-DEFINE CODIGO          cdg_tipocont   
+&GLOBAL-DEFINE NOMBRE          descripcion
+&GLOBAL-DEFINE TITULO-BROWSE   Seleccione el Tipo de Contendor
+&GLOBAL-DEFINE TITULO-FRAME    Seleccion de Tipos de Contenedor
+&GLOBAL-DEFINE PROCESO         ACBRWTCN
+&GLOBAL-DEFINE ULT_REGISTRO    ult_tipocont
+
+{SELBROWS.I}

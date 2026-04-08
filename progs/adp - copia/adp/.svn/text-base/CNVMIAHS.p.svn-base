@@ -1,0 +1,4 @@
+  DEFINE OUTPUT PARAMETER horas   AS DECIMAL.
+  DEFINE INPUT  PARAMETER minutos AS INTEGER.
+  
+  horas = TRUNCATE(minutos / 60, 0 ) +  DECIMAL(minutos MOD 60) / 100.

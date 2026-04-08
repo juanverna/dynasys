@@ -1,0 +1,15 @@
+DEFINE FRAME frm-titulo HEADER
+  que_empresa 
+  "{&TITULO-LST}" AT 47 
+  "Pagina:" AT 122 PAGE-NUMBER FORMAT ">9" AT 129
+  SKIP
+  "Filtro:" 
+  tit_filtro
+  des_fecha AT 47
+  "al"
+  has_fecha
+  fecha_lis AT 122
+  SKIP
+  hora_lis AT 122
+  SKIP(1)
+  WITH WIDTH 160 FRAME frm-titulo TOP-ONLY PAGE-TOP STREAM-IO.

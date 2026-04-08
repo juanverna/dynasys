@@ -1,0 +1,6 @@
+      "TIEMPOS PROMEDIO"  @ {&TABLA}.{&NOMBRE-TABLA}
+      {disprome.i "rojo             "}
+      {disprome.i "amarillo         "}
+      {disprome.i "celeste          "}
+      {disprome.i "verdeadu         "}
+      {disprome.i "verdeped         "}

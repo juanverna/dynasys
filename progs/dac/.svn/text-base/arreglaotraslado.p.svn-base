@@ -1,0 +1,12 @@
+/*========================================================*/
+/*       CORRIGE EL NUMERO DE LA ORDEN DE TRASLADO        */
+/*========================================================*/
+
+DEFINE VARIABLE que_ficha LIKE Ficha.num_ficha.
+
+REPEAT:
+    UPDATE que_ficha.
+    FIND Ficha 
+         WHERE Ficha.num_ficha = que_ficha EXCLUSIVE-LOCK.
+    UPDATE Ficha.nro_otraslado Ficha.cdg_empresa.
+END.    

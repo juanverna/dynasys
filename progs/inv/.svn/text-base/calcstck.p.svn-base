@@ -1,0 +1,156 @@
+/*=================================================================================*/
+/*                           VARIABLES, FRAMES, Y SUBMENUES                        */
+/*=================================================================================*/
+
+DEFINE INPUT  PARAMETER rid_articulo   AS ROWID.
+DEFINE INPUT  PARAMETER que_fecha      AS DATE.
+DEFINE INPUT  PARAMETER ficha          AS INTEGER.
+DEFINE OUTPUT PARAMETER sal_cantidad   LIKE Cct_stock.cantidad.
+DEFINE OUTPUT PARAMETER sal_granel     LIKE Cct_stock.granel.
+
+{VRSHARED.I }
+
+DEFINE VARIABLE tod            AS   INTEGER INITIAL 0.
+DEFINE VARIABLE dep            AS   INTEGER INITIAL 1.
+DEFINE VARIABLE par            AS   INTEGER INITIAL 2.
+DEFINE VARIABLE ing_cantidad   LIKE Cct_stock.cantidad LABEL "In.".
+DEFINE VARIABLE egr_cantidad   LIKE Cct_stock.cantidad LABEL "Eg.".
+DEFINE VARIABLE ing_granel     LIKE Cct_stock.granel LABEL "In.".
+DEFINE VARIABLE egr_granel     LIKE Cct_stock.granel LABEL "Eg.".
+DEFINE VARIABLE list_i_un      LIKE Cct_stock.cantidad.
+DEFINE VARIABLE list_e_un      LIKE Cct_stock.cantidad.
+DEFINE VARIABLE tot_i_un       LIKE Cct_stock.cantidad.
+DEFINE VARIABLE tot_e_un       LIKE Cct_stock.cantidad.
+
+DEFINE VARIABLE list_i_gr      LIKE Cct_stock.granel.
+DEFINE VARIABLE list_e_gr      LIKE Cct_stock.granel.
+DEFINE VARIABLE tot_i_gr       LIKE Cct_stock.granel.
+DEFINE VARIABLE tot_e_gr       LIKE Cct_stock.granel.
+
+DEFINE BUFFER B-Partida FOR Partida.
+DEFINE QUERY qry_movimiento   FOR Cct_stock, B-Partida.
+DEFINE QUERY qry_acumulado    FOR Acumulado_stock.
+
+/*=================================================================================*/
+/*                      B L O Q U E   P R I N C I P A L                            */
+/*=================================================================================*/
+
+{findempresa.i}
+
+FIND Articulo WHERE ROWID(Articulo) = rid_articulo.
+IF ficha = dep THEN FIND Deposito WHERE ROWID(Deposito) = act_deposito NO-LOCK.
+IF ficha = par THEN FIND Partida WHERE ROWID(Partida) = act_partida NO-LOCK.
+
+tot_i_un = 0.
+tot_e_un = 0.
+tot_i_gr = 0.
+tot_e_gr = 0.
+
+RUN ABRE_QUERY.
+
+GET FIRST qry_acumulado NO-LOCK.
+DO WHILE AVAILABLE Acumulado_stock:
+
+   tot_i_gr = tot_i_gr + Acumulado_stock.tot_ingresos_granel.
+   tot_i_un = tot_i_un + Acumulado_stock.tot_ingresos_cantid.
+   tot_e_gr = tot_e_gr + Acumulado_stock.tot_egresos_granel.
+   tot_e_un = tot_e_un + Acumulado_stock.tot_egresos_cantid.
+   GET NEXT qry_acumulado.    
+
+END.     
+
+
+GET FIRST qry_movimiento NO-LOCK.
+DO WHILE AVAILABLE Cct_stock:
+
+   IF Cct_stock.tipo_mov = "I"
+   THEN DO:
+      tot_i_gr = tot_i_gr + Cct_stock.granel.
+      tot_i_un = tot_i_un + Cct_stock.cantidad.
+   END.
+   ELSE DO:
+      tot_e_gr = tot_e_gr + Cct_stock.granel.
+      tot_e_un = tot_e_un + Cct_stock.cantidad.
+   END.
+   
+   GET NEXT qry_movimiento.    
+
+END.     
+
+sal_cantidad = tot_i_un - tot_e_un.
+sal_granel = tot_i_gr - tot_e_gr.
+
+/*=================================================================================*/
+/*                                  PROCEDIMIENTOS                                 */
+/*=================================================================================*/
+
+PROCEDURE ABRE_QUERY:
+
+    CASE ficha:
+
+       WHEN tod 
+       THEN DO:
+  
+            OPEN QUERY qry_acumulado
+              FOR EACH Acumulado_stock OF Articulo
+                 WHERE Acumulado_stock.cdg_empresa = Empresa.cdg_empresa
+                   AND DATE(Acumulado_stock.mes,1,Acumulado_stock.ano) < 
+                       DATE(MONTH(que_fecha),1,YEAR(que_fecha)).
+  
+            OPEN QUERY qry_movimiento       
+              FOR EACH Cct_stock OF Articulo 
+                 WHERE Cct_stock.cdg_empresa = Empresa.cdg_empresa
+                   AND Cct_stock.fecha >= DATE(MONTH(que_fecha),1,YEAR(que_fecha)) 
+                   AND Cct_stock.fecha <= que_fecha,
+                  EACH B-Partida OF Cct_stock
+                    BY Cct_stock.fecha BY B-Partida.cdg_partida . 
+
+       END.
+
+       WHEN dep 
+       THEN DO:
+
+            OPEN QUERY qry_acumulado
+              FOR EACH Acumulado_stock OF Articulo
+                 WHERE Acumulado_stock.cdg_empresa = Empresa.cdg_empresa
+                   AND DATE(Acumulado_stock.mes,1,Acumulado_stock.ano) < 
+                       DATE(MONTH(que_fecha),1,YEAR(que_fecha))
+                   AND Acumulado_stock.nro_deposito = Deposito.nro_deposito.
+
+            OPEN QUERY qry_movimiento       
+              FOR EACH Cct_stock OF Articulo 
+                 WHERE Cct_stock.cdg_empresa = Empresa.cdg_empresa
+                   AND Cct_stock.fecha >= DATE(MONTH(que_fecha),1,YEAR(que_fecha)) 
+                   AND Cct_stock.fecha <= que_fecha
+                   AND Cct_stock.nro_deposito = Deposito.nro_deposito,
+                  EACH B-Partida OF Cct_stock
+                    BY Cct_stock.fecha BY B-Partida.cdg_partida . 
+
+       END.
+
+       WHEN par 
+       THEN DO:
+   
+            OPEN QUERY qry_acumulado
+              FOR EACH Acumulado_stock OF Articulo
+                 WHERE Acumulado_stock.cdg_empresa = Empresa.cdg_empresa
+                   AND DATE(Acumulado_stock.mes,1,Acumulado_stock.ano) < 
+                       DATE(MONTH(que_fecha),1,YEAR(que_fecha))
+                   AND Acumulado_stock.nro_partida = Partida.nro_partida.
+
+            OPEN QUERY qry_movimiento       
+              FOR EACH Cct_stock OF Articulo 
+                 WHERE Cct_stock.cdg_empresa = Empresa.cdg_empresa
+                   AND Cct_stock.fecha >= DATE(MONTH(que_fecha),1,YEAR(que_fecha)) 
+                   AND Cct_stock.fecha <= que_fecha
+                   AND Cct_stock.nro_partida = Partida.nro_partida,
+                  EACH B-Partida OF Cct_stock
+                    BY Cct_stock.fecha. 
+
+      END.
+
+  END CASE.
+
+END PROCEDURE.
+
+{CODIMPRE.I}

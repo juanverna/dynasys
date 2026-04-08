@@ -1,0 +1,21 @@
+DEFINE BUFFER bcontrato_hd FOR contrato_hd.
+FOR EACH contrato_hd WHERE contrato_hd.fecha_baja = ? AND
+        contrato_hd.cant_periodos <> 0 AND NOT contrato_hd.anulado AND
+        contrato_hd.rige_desde > 01/01/2008 AND 
+        contrato_hd.nro_tipo_evento = 3 :
+RELEASE bcontrato_hd.
+FOR FIRST bcontrato_hd WHERE contrato_hd.nro_cliente = contrato_hd.nro_cliente and
+        bcontrato_hd.fecha_baja = ? AND
+        bcontrato_hd.cant_periodos <> 0 AND NOT bcontrato_hd.anulado AND
+        bcontrato_hd.rige_desde > contrato_hd.rige_desde AND
+        bcontrato_hd.nro_tipo_evento = 3 AND ROWID(Bcontrato_hd) <> ROWID(contrato_hd):
+LEAVE.
+END.
+IF AVAILABLE bcontrato_hd THEN NEXT.
+FIND FIRST evento WHERE evento.nro_identificacion = contrato_hd.nro_contrato AND NOT evento.anulado.
+IF evento.fasignado <> ? THEN NEXT.
+FIND tarea WHERE tarea.nro_identificacion = contrato_hd.nro_contrato AND tarea.estado = "A" NO-LOCK NO-ERROR.
+IF AVAILABLE tarea THEN NEXT.
+FIND cliente OF contrato_hd.
+DISPLAY cliente.direccion contrato_hd.nro_contrato evento.frealizado contrato_hd.rige_desde contrato_hd.rige_hasta.
+END.

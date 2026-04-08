@@ -1,0 +1,19 @@
+FOR EACH Ficha WHERE Ficha.cdg_base = "AP" EXCLUSIVE-LOCK:
+    Ficha.cdg_base = "P".
+END.    
+
+     MESSAGE "Termino AP" VIEW-AS ALERT-BOX MESSAGE.
+
+FOR EACH Ficha WHERE Ficha.cdg_base = "P2" EXCLUSIVE-LOCK:
+    Ficha.cdg_base = "BP".
+END.    
+
+     MESSAGE "Termino P2" VIEW-AS ALERT-BOX MESSAGE.
+
+
+FOR EACH Ficha WHERE Ficha.cdg_base = "P1" EXCLUSIVE-LOCK:
+    Ficha.cdg_base = "AP".
+END.    
+
+
+     MESSAGE "Termino P1" VIEW-AS ALERT-BOX MESSAGE.

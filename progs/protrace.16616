@@ -1,0 +1,80 @@
+=====================================================
+PROGRESS stack trace as of Tue Sep 08 18:20:20 2020
+=====================================================
+Startup parameters:
+-pf C:\Progress102\OpenEdge\startup.pf,-cpinternal ISO8859-1,-cpstream ISO8859-1,-cpcoll Spanish9,-cpcase Basic,-d dmy,-numsep 46,-numdec 44,(end .pf),-p xxmf.p,-db c:\bases\dynasys102,-ld sic,-T c:\temp,-basekey INI,-ininame c:\dynasys10\procs\dynasys10.ini,-s 200,-inp 8192,-nb 150,-debugalert
+
+Exception code: C0000005 ACCESS_VIOLATION
+Fault address:  10219B2F 01:00218B2F C:\Progress102\OpenEdge\bin\prow32.dll
+
+Registers:
+EAX:0018D57C
+EBX:05418C54
+ECX:0018D57C
+EDX:025B3588
+ESI:05418C24
+EDI:00000000
+CS:EIP:0023:10219B2F
+SS:ESP:002B:0018D544  EBP:05418C54
+DS:002B  ES:002B  FS:0053  GS:002B
+Flags:00210206
+
+Call Stack:
+Address   Frame
+10219B2F  00000000  pam_get_item+14B4F
+1021A2AC  00000000  pam_get_item+152CC
+
+
+** ABL Stack Trace **
+
+--> cierrarendicion c:\temp\p81668_w-alta_recibos2.ab (c:\temp\p81668_w-alta_recibos2.ab) at line 7057
+    USER-INTERFACE-TRIGGER c:\temp\p81668_w-alta_recibos2.ab (c:\temp\p81668_w-alta_recibos2.ab) at line 6344
+    adecomm/_runcode.p (adecomm/_runcode.r) at line 684
+    adeshar/_gen4gl.p (adeshar/_gen4gl.r) at line 5335
+    call_run adeuib/_uibmain.p (adeuib/_uibmain.r) at line 5396
+    choose_run adeuib/_uibmain.p (adeuib/_uibmain.r) at line 8314
+    adeuib/_uibmain.p (adeuib/_uibmain.r) at line 17274
+    _ab.p (C:\Progress102\OpenEdge\gui\_ab.r) at line 394
+    _RunTool adedesk/_desktop.p (adedesk/_desktop.r) at line 1635
+    USER-INTERFACE-TRIGGER adedesk/_desktop.p (adedesk/_desktop.r) at line 2146
+    adedesk/_desktop.p (adedesk/_desktop.r) at line 2834
+    _desk.p (C:\Progress102\OpenEdge\gui\_desk.r) at line 430
+
+** Persistent procedures/Classes **
+
+Handle  File Name
+005558  C:\Progress102\OpenEdge\gui\adm2\containr.r
+005556  C:\Progress102\OpenEdge\gui\adm2\visual.r
+005553  C:\Progress102\OpenEdge\gui\adm2\appserver.r
+005548  C:\Progress102\OpenEdge\gui\adm2\smart.r
+005543  c:\temp\p81668_w-alta_recibos2.ab
+005515  adeuib/_semain.r
+001830  adecomm/as-utils.r
+001781  adecomm/_palette.r
+001780  protools/_protool.r
+001144  adecomm/_winmenu.r
+001143  adeshar/_mlmgr.r
+001020  adeuib/_abfuncs.r
+
+//=====================================================
+PROGRESS stack trace as of Tue Sep 08 18:20:21 2020
+//=====================================================
+Exception code: C0000005 ACCESS_VIOLATION
+Fault address:  10219B2F 01:00218B2F C:\Progress102\OpenEdge\bin\prow32.dll
+
+Registers:
+EAX:0018D57C
+EBX:05418C54
+ECX:0018D57C
+EDX:025B3588
+ESI:05418C24
+EDI:00000000
+CS:EIP:0023:10219B2F
+SS:ESP:002B:0018D588  EBP:05418C54
+DS:002B  ES:002B  FS:0053  GS:002B
+Flags:00210206
+
+Call Stack:
+Address   Frame
+10219B2F  0018D594  pam_get_item+14B4F
+

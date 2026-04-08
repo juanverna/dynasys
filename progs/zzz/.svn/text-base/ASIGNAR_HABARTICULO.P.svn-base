@@ -1,0 +1,20 @@
+DEFINE VARIABLE v-ventas AS LOGICAL.
+DEFINE VARIABLE v-stock AS LOGICAL.
+DEFINE VARIABLE v-produccion AS LOGICAL.
+DEFINE VARIABLE v-compras AS LOGICAL.
+STOP.
+for each familia_articulo:
+    DISPLAY cdg_familia dsc_familia.
+UPDATE 
+ v-ventas
+ v-stock
+ v-produccion
+ v-compras.
+for each articulo of familia_articulo:
+ display cdg_articulo descripcion WITH USE-TEXT.
+
+ ASSIGN
+ Articulo.ventas_sino = v-ventas
+ Articulo.stock_sino  = v-stock
+ Articulo.produccion_sino = v-produccion
+ Articulo.compras_sino = v-compras.

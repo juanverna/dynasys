@@ -1,0 +1,1086 @@
+<?xml version="1.0"?>
+<dset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="" xmlns:prodata="urn:schemas-progress-com:xml-prodata:0001">
+    <xsd:element name="dset" prodata:proDataSet="true">
+      <xsd:complexType>
+        <xsd:sequence>
+          <xsd:element name="T-Empresa" minOccurs="0" maxOccurs="unbounded">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="cdg_empresa" type="xsd:string" nillable="true"/>
+                <xsd:element name="nombre" type="xsd:string" nillable="true"/>
+                <xsd:element name="direccion" type="xsd:string" nillable="true"/>
+                <xsd:element name="telefono" type="xsd:string" nillable="true"/>
+                <xsd:element name="localidad" type="xsd:string" nillable="true"/>
+                <xsd:element name="sistema" type="xsd:string" nillable="true"/>
+                <xsd:element name="fecha_limite" type="xsd:date" nillable="true"/>
+                <xsd:element name="clave" type="xsd:int" nillable="true"/>
+                <xsd:element name="actividad" type="xsd:string" nillable="true"/>
+                <xsd:element name="cuit" type="xsd:string" nillable="true"/>
+                <xsd:element name="codigo_postal" type="xsd:string" nillable="true"/>
+                <xsd:element name="provincia" type="xsd:string" nillable="true"/>
+                <xsd:element name="ing_brutos" type="xsd:string" nillable="true"/>
+                <xsd:element name="inicio_actividades" type="xsd:date" nillable="true"/>
+                <xsd:element name="condicion_impositiva_texto" type="xsd:string" nillable="true"/>
+                <xsd:element name="logo_gr" type="xsd:base64Binary" nillable="true" prodata:dataType="prodata:blob"/>
+                <xsd:element name="logo_ch" type="xsd:base64Binary" nillable="true" prodata:dataType="prodata:blob"/>
+                <xsd:element name="pto_direccion1" type="xsd:string" nillable="true"/>
+                <xsd:element name="pto_direccion2" type="xsd:string" nillable="true"/>
+                <xsd:element name="pto_telefono1" type="xsd:string" nillable="true"/>
+                <xsd:element name="pto_telefono2" type="xsd:string" nillable="true"/>
+                <xsd:element name="pto_cdg_postal" type="xsd:string" nillable="true"/>
+                <xsd:element name="pto_localidad" type="xsd:string" nillable="true"/>
+                <xsd:element name="pto_provincia" type="xsd:string" nillable="true"/>
+              </xsd:sequence>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="T-Fac_header" minOccurs="0" maxOccurs="unbounded">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="nro_factura" type="xsd:int" nillable="true"/>
+                <xsd:element name="cdg_empresa" type="xsd:string" nillable="true"/>
+                <xsd:element name="tip_comprob" type="xsd:string" nillable="true"/>
+                <xsd:element name="prf_comprob" type="xsd:int" nillable="true"/>
+                <xsd:element name="nro_comprob" type="xsd:int" nillable="true"/>
+                <xsd:element name="nro_cliente" type="xsd:int" nillable="true"/>
+                <xsd:element name="fecha" type="xsd:date" nillable="true"/>
+                <xsd:element name="ultima_linea" type="xsd:int" nillable="true"/>
+                <xsd:element name="nro_usuario" type="xsd:int" nillable="true"/>
+                <xsd:element name="nro_vendedor" type="xsd:int" nillable="true"/>
+                <xsd:element name="cdg_condiva" type="xsd:int" nillable="true"/>
+                <xsd:element name="nro_cndventa" type="xsd:int" nillable="true"/>
+                <xsd:element name="imp_neto" type="xsd:decimal" nillable="true"/>
+                <xsd:element name="imp_iva" type="xsd:decimal" nillable="true"/>
+                <xsd:element name="imp_total" type="xsd:decimal" nillable="true"/>
+                <xsd:element name="imp_bruto" type="xsd:decimal" nillable="true"/>
+                <xsd:element name="estado" type="xsd:string" nillable="true"/>
+                <xsd:element name="origen" type="xsd:string" nillable="true"/>
+                <xsd:element name="nro_ocm" type="xsd:string" nillable="true"/>
+                <xsd:element name="cta_cte" type="xsd:boolean" nillable="true"/>
+                <xsd:element name="nro_deposito" type="xsd:int" nillable="true"/>
+                <xsd:element name="nro_remito" type="xsd:int" nillable="true"/>
+                <xsd:element name="nro_moneda" type="xsd:int" nillable="true"/>
+                <xsd:element name="cambio" type="xsd:decimal" nillable="true"/>
+                <xsd:element name="nro_transaccion" type="xsd:int" nillable="true"/>
+                <xsd:element name="cdg_imputacion" type="xsd:int" nillable="true"/>
+                <xsd:element name="leyenda" type="xsd:string" nillable="true"/>
+                <xsd:element name="anulado" type="xsd:boolean" nillable="true"/>
+                <xsd:element name="cdg_lista" type="xsd:int" nillable="true"/>
+                <xsd:element name="afecta_stock" type="xsd:boolean" nillable="true" default="true"/>
+                <xsd:element name="proc_estad" type="xsd:boolean" nillable="true"/>
+                <xsd:element name="cambio_dolar" type="xsd:decimal" nillable="true"/>
+                <xsd:element name="fecha_ocm" type="xsd:date" nillable="true"/>
+                <xsd:element name="nro_domicilio" type="xsd:int" nillable="true"/>
+                <xsd:element name="nombre" type="xsd:string" nillable="true"/>
+                <xsd:element name="cuit" type="xsd:string" nillable="true"/>
+                <xsd:element name="direccion" type="xsd:string" nillable="true"/>
+                <xsd:element name="localidad" type="xsd:string" nillable="true"/>
+                <xsd:element name="cdg_postal" type="xsd:string" nillable="true"/>
+                <xsd:element name="cdg_provincia" type="xsd:string" nillable="true"/>
+                <xsd:element name="cdg_zonag" type="xsd:string" nillable="true"/>
+                <xsd:element name="nro_entidad" type="xsd:int" nillable="true"/>
+                <xsd:element name="nro_obra" type="xsd:int" nillable="true"/>
+                <xsd:element name="monto_letras" type="xsd:string" nillable="true"/>
+                <xsd:element name="num_sucursal" type="xsd:string" nillable="true"/>
+                <xsd:element name="prc_canje" type="xsd:decimal" nillable="true"/>
+                <xsd:element name="leyenda_cc" type="xsd:string" nillable="true"/>
+                <xsd:element name="mes" type="xsd:int" nillable="true"/>
+                <xsd:element name="ano" type="xsd:int" nillable="true"/>
+                <xsd:element name="impreso" type="xsd:string" nillable="true"/>
+                <xsd:element name="imp_descuentos" type="xsd:decimal" nillable="true"/>
+                <xsd:element name="fecha_iva" type="xsd:date" nillable="true"/>
+                <xsd:element name="modo_abasto" type="xsd:string" nillable="true"/>
+                <xsd:element name="ibrutos_sino" type="xsd:boolean" nillable="true" default="true"/>
+                <xsd:element name="fecha_precios" type="xsd:date" nillable="true"/>
+                <xsd:element name="cdg_comprobante" type="xsd:string" nillable="true"/>
+                <xsd:element name="cant_hojas" type="xsd:int" nillable="true"/>
+                <xsd:element name="nombre_leg" type="xsd:string" nillable="true"/>
+                <xsd:element name="direccion_leg" type="xsd:string" nillable="true"/>
+                <xsd:element name="localidad_leg" type="xsd:string" nillable="true"/>
+                <xsd:element name="cdg_postal_leg" type="xsd:string" nillable="true"/>
+                <xsd:element name="cdg_provincia_leg" type="xsd:string" nillable="true"/>
+                <xsd:element name="rige_hasta" type="xsd:date" nillable="true"/>
+                <xsd:element name="cai" type="xsd:string" nillable="true"/>
+                <xsd:element name="nombre_domicilio" type="xsd:string" nillable="true"/>
+                <xsd:element name="aplica_minimos" type="xsd:boolean" nillable="true" default="true"/>
+                <xsd:element name="pc_name" type="xsd:string" nillable="true"/>
+                <xsd:element name="hora" type="xsd:string" nillable="true"/>
+                <xsd:element name="fecha_grab" type="xsd:date" nillable="true"/>
+                <xsd:element name="hora_grab" type="xsd:int" nillable="true"/>
+                <xsd:element name="nro_contrato" type="xsd:int" nillable="true"/>
+                <xsd:element name="observacion" type="xsd:string" nillable="true"/>
+                <xsd:element name="modo_remito" type="xsd:string" nillable="true"/>
+                <xsd:element name="nro_administrador" type="xsd:int" nillable="true"/>
+                <xsd:element name="clausula_dolar" type="xsd:boolean" nillable="true"/>
+                <xsd:element name="imp_no_neto" type="xsd:decimal" nillable="true"/>
+                <xsd:element name="cdg_administrador" type="xsd:string" nillable="true"/>
+                <xsd:element name="nom_Administrador" type="xsd:string" nillable="true"/>
+                <xsd:element name="direccion_administrador" type="xsd:string" nillable="true"/>
+                <xsd:element name="localidad_administrador" type="xsd:string" nillable="true"/>
+                <xsd:element name="texto_condicion_venta" type="xsd:string" nillable="true"/>
+                <xsd:element name="texto_iva" type="xsd:string" nillable="true"/>
+                <xsd:element name="codigo_cliente" type="xsd:string" nillable="true"/>
+                <xsd:element name="mostrar_admin" type="xsd:boolean" nillable="true" default="true"/>
+                <xsd:element name="id_lote" type="xsd:string" nillable="true"/>
+                <xsd:element name="estado_2_impresion" type="xsd:string" nillable="true"/>
+                <xsd:element name="id_lote_cupon" type="xsd:string" nillable="true"/>
+                <xsd:element name="cdg_librocontable" type="xsd:string" nillable="true"/>
+                <xsd:element name="nro_evento_correo" type="xsd:int" nillable="true"/>
+                <xsd:element name="fecha_2_impresion" type="xsd:date" nillable="true"/>
+                <xsd:element name="nro_usuario_2_impresion" type="xsd:string" nillable="true"/>
+                <xsd:element name="dsc_moneda" type="xsd:string" nillable="true"/>
+                <xsd:element name="dsc_provincia" type="xsd:string" nillable="true"/>
+                <xsd:element name="dsc_provincia_leg" type="xsd:string" nillable="true"/>
+                <xsd:element name="dsc_condicionimpos" type="xsd:string" nillable="true"/>
+                <xsd:element name="dsc_comprobante" type="xsd:string" nillable="true"/>
+                <xsd:element name="dsc_condicionventa" type="xsd:string" nillable="true"/>
+                <xsd:element name="CodigoBarra" type="xsd:string" nillable="true"/>
+                <xsd:element name="lecturahumana" type="xsd:string" nillable="true"/>
+                <xsd:element name="leyendolar" type="xsd:string" nillable="true"/>
+                <xsd:element name="cdg_vendedor" type="xsd:string" nillable="true"/>
+                <xsd:element name="dsc_vendedor" type="xsd:string" nillable="true"/>
+                <xsd:element name="cdg_cobrador" type="xsd:string" nillable="true"/>
+                <xsd:element name="dsc_cobrador" type="xsd:string" nillable="true"/>
+                <xsd:element name="lista_remitos" type="xsd:string" nillable="true"/>
+                <xsd:element name="cdg_afip" type="xsd:string" nillable="true"/>
+              </xsd:sequence>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="T-Fac_detalle" minOccurs="0" maxOccurs="unbounded">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="nro_factura" type="xsd:int" nillable="true"/>
+                <xsd:element name="nro_linea" type="xsd:int" nillable="true"/>
+                <xsd:element name="precio" type="xsd:decimal" nillable="true"/>
+                <xsd:element name="nro_articulo" type="xsd:int" nillable="true"/>
+                <xsd:element name="nro_partida" type="xsd:int" nillable="true"/>
+                <xsd:element name="granel" type="xsd:decimal" nillable="true"/>
+                <xsd:element name="a_granel" type="xsd:boolean" nillable="true"/>
+                <xsd:element name="detallada" type="xsd:string" nillable="true"/>
+                <xsd:element name="ver_unidades" type="xsd:boolean" nillable="true"/>
+                <xsd:element name="ver_codigo" type="xsd:boolean" nillable="true"/>
+                <xsd:element name="subtotal_neto" type="xsd:decimal" nillable="true"/>
+                <xsd:element name="subtotal_bruto" type="xsd:decimal" nillable="true"/>
+                <xsd:element name="cantidad" type="xsd:decimal" nillable="true"/>
+                <xsd:element name="nro_obra" type="xsd:int" nillable="true"/>
+                <xsd:element name="nro_entidad" type="xsd:int" nillable="true"/>
+                <xsd:element name="precio_cf" type="xsd:decimal" nillable="true"/>
+                <xsd:element name="subtotal_neto_cf" type="xsd:decimal" nillable="true"/>
+                <xsd:element name="subtotal_bruto_cf" type="xsd:decimal" nillable="true"/>
+                <xsd:element name="costo" type="xsd:decimal" nillable="true"/>
+                <xsd:element name="pcom_ventas" type="xsd:string" nillable="true"/>
+                <xsd:element name="pcom_cobranzas" type="xsd:string" nillable="true"/>
+                <xsd:element name="subtotal_gral_cf" type="xsd:decimal" nillable="true"/>
+                <xsd:element name="subtotal_general" type="xsd:decimal" nillable="true"/>
+                <xsd:element name="liquido_sino" type="xsd:boolean" nillable="true"/>
+                <xsd:element name="relacion_granel" type="xsd:decimal" nillable="true" default="1.0"/>
+                <xsd:element name="lista_imputaciones" type="xsd:string" nillable="true"/>
+                <xsd:element name="num_bultos" type="xsd:int" nillable="true"/>
+                <xsd:element name="nro_otrabajo" type="xsd:int" nillable="true"/>
+              </xsd:sequence>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="T-Registrable-factura" minOccurs="0" maxOccurs="unbounded">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="nro_registrable" type="xsd:int" nillable="true"/>
+                <xsd:element name="nro_factura" type="xsd:int" nillable="true"/>
+                <xsd:element name="nro_linea" type="xsd:int" nillable="true"/>
+                <xsd:element name="nro_bulto" type="xsd:int" nillable="true"/>
+              </xsd:sequence>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="T-Fac_header-bon" minOccurs="0" maxOccurs="unbounded">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="nro_factura" type="xsd:int" nillable="true"/>
+                <xsd:element name="cdg_bonificacion" type="xsd:int" nillable="true"/>
+                <xsd:element name="porcentaje" type="xsd:decimal" nillable="true"/>
+                <xsd:element name="importe" type="xsd:decimal" nillable="true"/>
+                <xsd:element name="importe_cf" type="xsd:decimal" nillable="true"/>
+              </xsd:sequence>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="T-Fac_detalle-bon" minOccurs="0" maxOccurs="unbounded">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="nro_factura" type="xsd:int" nillable="true"/>
+                <xsd:element name="nro_linea" type="xsd:int" nillable="true"/>
+                <xsd:element name="cdg_bonificacion" type="xsd:int" nillable="true"/>
+                <xsd:element name="porcentaje" type="xsd:decimal" nillable="true"/>
+                <xsd:element name="importe" type="xsd:decimal" nillable="true"/>
+                <xsd:element name="importe_cf" type="xsd:decimal" nillable="true"/>
+              </xsd:sequence>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="T-Fac_header_impuesto" minOccurs="0" maxOccurs="unbounded">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="nro_factura" type="xsd:int" nillable="true"/>
+                <xsd:element name="cdg_impuesto" type="xsd:int" nillable="true"/>
+                <xsd:element name="importe" type="xsd:decimal" nillable="true"/>
+                <xsd:element name="tasa" type="xsd:decimal" nillable="true"/>
+                <xsd:element name="monto_imponible" type="xsd:decimal" nillable="true"/>
+              </xsd:sequence>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="T-Fac_detalle_impuesto" minOccurs="0" maxOccurs="unbounded">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="nro_factura" type="xsd:int" nillable="true"/>
+                <xsd:element name="nro_linea" type="xsd:int" nillable="true"/>
+                <xsd:element name="cdg_impuesto" type="xsd:int" nillable="true"/>
+                <xsd:element name="importe" type="xsd:decimal" nillable="true"/>
+                <xsd:element name="tasa" type="xsd:decimal" nillable="true"/>
+                <xsd:element name="monto_imponible" type="xsd:decimal" nillable="true"/>
+              </xsd:sequence>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="T-Articulo" minOccurs="0" maxOccurs="unbounded">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="nro_articulo" type="xsd:int" nillable="true"/>
+                <xsd:element name="cdg_articulo" type="xsd:string" nillable="true"/>
+                <xsd:element name="descripcion" type="xsd:string" nillable="true"/>
+                <xsd:element name="detallada" type="xsd:string" nillable="true"/>
+                <xsd:element name="costo" type="xsd:decimal" nillable="true"/>
+                <xsd:element name="descuento" type="xsd:decimal" nillable="true"/>
+                <xsd:element name="a_granel" type="xsd:boolean" nillable="true"/>
+                <xsd:element name="stock_sino" type="xsd:boolean" nillable="true" default="true"/>
+                <xsd:element name="ult_partida" type="xsd:int" nillable="true"/>
+                <xsd:element name="hay_partida" type="xsd:boolean" nillable="true"/>
+                <xsd:element name="hay_marca" type="xsd:boolean" nillable="true" default="true"/>
+                <xsd:element name="ley_merma" type="xsd:int" nillable="true"/>
+                <xsd:element name="perdida_merma" type="xsd:decimal" nillable="true"/>
+                <xsd:element name="periodo_merma" type="xsd:decimal" nillable="true"/>
+                <xsd:element name="prcmax_merma" type="xsd:decimal" nillable="true"/>
+                <xsd:element name="ubicacion" type="xsd:string" nillable="true"/>
+                <xsd:element name="cdg_subclase" type="xsd:string" nillable="true"/>
+                <xsd:element name="stk_minimo_cantid" type="xsd:int" nillable="true"/>
+                <xsd:element name="stk_maximo_cantid" type="xsd:int" nillable="true"/>
+                <xsd:element name="stk_minimo_granel" type="xsd:decimal" nillable="true"/>
+                <xsd:element name="stk_maximo_granel" type="xsd:decimal" nillable="true"/>
+                <xsd:element name="extendida" type="xsd:boolean" nillable="true"/>
+                <xsd:element name="cdg_umed" type="xsd:string" nillable="true"/>
+                <xsd:element name="nro_familia" type="xsd:int" nillable="true"/>
+                <xsd:element name="cdg_tipoart" type="xsd:string" nillable="true"/>
+                <xsd:element name="ult_fcomercial" type="xsd:int" nillable="true"/>
+                <xsd:element name="fch_costo" type="xsd:date" nillable="true"/>
+                <xsd:element name="metodo_costeo" type="xsd:string" nillable="true" default="PP"/>
+                <xsd:element name="unidades_compradas" type="xsd:decimal" nillable="true"/>
+                <xsd:element name="granel_comprado" type="xsd:decimal" nillable="true"/>
+                <xsd:element name="total_comprado" type="xsd:decimal" nillable="true"/>
+                <xsd:element name="modo_volumen" type="xsd:string" nillable="true"/>
+                <xsd:element name="kgxun_bruto" type="xsd:decimal" nillable="true"/>
+                <xsd:element name="kgxun_neto" type="xsd:decimal" nillable="true"/>
+                <xsd:element name="unidxpres" type="xsd:int" nillable="true"/>
+                <xsd:element name="cdg_ucompra" type="xsd:string" nillable="true"/>
+                <xsd:element name="retornable" type="xsd:string" nillable="true"/>
+                <xsd:element name="volxunidad" type="xsd:decimal" nillable="true"/>
+                <xsd:element name="prc_tolerancia" type="xsd:decimal" nillable="true"/>
+                <xsd:element name="dec_precio" type="xsd:int" nillable="true"/>
+                <xsd:element name="costo_extracontable" type="xsd:decimal" nillable="true"/>
+                <xsd:element name="unidades_sino" type="xsd:boolean" nillable="true"/>
+                <xsd:element name="ventas_sino" type="xsd:boolean" nillable="true"/>
+                <xsd:element name="compras_sino" type="xsd:boolean" nillable="true"/>
+                <xsd:element name="inventario_sino" type="xsd:boolean" nillable="true"/>
+                <xsd:element name="produccion_sino" type="xsd:boolean" nillable="true"/>
+                <xsd:element name="lista_empresas" type="xsd:string" nillable="true"/>
+                <xsd:element name="sumaneto" type="xsd:int" nillable="true"/>
+                <xsd:element name="es_registrable" type="xsd:boolean" nillable="true"/>
+                <xsd:element name="cyorden_sino" type="xsd:boolean" nillable="true"/>
+                <xsd:element name="nro_familimpos" type="xsd:int" nillable="true"/>
+                <xsd:element name="cdg_ugranel" type="xsd:string" nillable="true"/>
+                <xsd:element name="cdg_envases" type="xsd:string" nillable="true"/>
+                <xsd:element name="cdg_marcacom" type="xsd:string" nillable="true"/>
+                <xsd:element name="fecha_baja" type="xsd:date" nillable="true"/>
+                <xsd:element name="cdg_estado" type="xsd:string" nillable="true"/>
+                <xsd:element name="codigo_barra" type="xsd:string" nillable="true"/>
+                <xsd:element name="codigo_ean" type="xsd:string" nillable="true"/>
+                <xsd:element name="codigo_anterior" type="xsd:string" nillable="true"/>
+                <xsd:element name="importado" type="xsd:boolean" nillable="true"/>
+                <xsd:element name="minimo_reposicion" type="xsd:int" nillable="true"/>
+                <xsd:element name="maximo_reposicion" type="xsd:int" nillable="true"/>
+                <xsd:element name="descripcion_ing" type="xsd:string" nillable="true"/>
+                <xsd:element name="cdg_busa" type="xsd:string" nillable="true"/>
+                <xsd:element name="cdg_bean" type="xsd:string" nillable="true"/>
+                <xsd:element name="alicuota" type="xsd:decimal" nillable="true"/>
+                <xsd:element name="cdg_bcaja" type="xsd:string" nillable="true"/>
+                <xsd:element name="cdg_bitf14" type="xsd:string" nillable="true"/>
+                <xsd:element name="alto_caja" type="xsd:decimal" nillable="true"/>
+                <xsd:element name="ancho_caja" type="xsd:decimal" nillable="true"/>
+                <xsd:element name="prof_caja" type="xsd:decimal" nillable="true"/>
+                <xsd:element name="capacidad" type="xsd:int" nillable="true"/>
+                <xsd:element name="es_kit" type="xsd:boolean" nillable="true"/>
+                <xsd:element name="cdg_grupoabasto" type="xsd:string" nillable="true"/>
+                <xsd:element name="lista_sectores" type="xsd:string" nillable="true"/>
+                <xsd:element name="modo_etiquetas" type="xsd:string" nillable="true" default="J"/>
+                <xsd:element name="fecha_alta" type="xsd:date" nillable="true"/>
+                <xsd:element name="nro_usuario" type="xsd:int" nillable="true"/>
+                <xsd:element name="pc_name" type="xsd:string" nillable="true"/>
+                <xsd:element name="fecha_grab" type="xsd:date" nillable="true"/>
+                <xsd:element name="hora_grab" type="xsd:int" nillable="true"/>
+                <xsd:element name="granel_pesado" type="xsd:boolean" nillable="true"/>
+                <xsd:element name="relacion_granel" type="xsd:decimal" nillable="true" default="1.0"/>
+                <xsd:element name="nro_suprarticulo" type="xsd:int" nillable="true"/>
+                <xsd:element name="cdg_linea" type="xsd:int" nillable="true"/>
+                <xsd:element name="cdg_famganancias" type="xsd:string" nillable="true"/>
+                <xsd:element name="lista_atributos" type="xsd:string" nillable="true"/>
+                <xsd:element name="cdg_famretiva" type="xsd:string" nillable="true"/>
+                <xsd:element name="cdg_famretibr" type="xsd:string" nillable="true"/>
+                <xsd:element name="cdg_famretsuss" type="xsd:string" nillable="true"/>
+                <xsd:element name="es_bduso" type="xsd:boolean" nillable="true"/>
+                <xsd:element name="nro_tipo_evento" type="xsd:int" nillable="true"/>
+                <xsd:element name="nro_procedimiento" type="xsd:int" nillable="true"/>
+                <xsd:element name="documental" type="xsd:string" nillable="true"/>
+              </xsd:sequence>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="T-Condicion_impos" minOccurs="0" maxOccurs="unbounded">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="cdg_condiva" type="xsd:int" nillable="true"/>
+                <xsd:element name="descripcion" type="xsd:string" nillable="true"/>
+                <xsd:element name="texto_iva" type="xsd:string" nillable="true"/>
+                <xsd:element name="tipo_factura" type="xsd:string" nillable="true"/>
+                <xsd:element name="codigo_migracion" type="xsd:string" nillable="true"/>
+                <xsd:element name="nivel_redondeo" type="xsd:decimal" nillable="true"/>
+                <xsd:element name="validar_cuit" type="xsd:boolean" nillable="true"/>
+                <xsd:element name="compras_o_ventas" type="xsd:string" nillable="true" default="V"/>
+              </xsd:sequence>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="T-Condicion_venta" minOccurs="0" maxOccurs="unbounded">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="nro_cndventa" type="xsd:int" nillable="true"/>
+                <xsd:element name="cdg_cndventa" type="xsd:string" nillable="true"/>
+                <xsd:element name="descripcion" type="xsd:string" nillable="true"/>
+                <xsd:element name="dias" type="xsd:int" nillable="true"/>
+                <xsd:element name="descuento" type="xsd:decimal" nillable="true"/>
+                <xsd:element name="texto" type="xsd:string" nillable="true"/>
+                <xsd:element name="ult_nroven" type="xsd:int" nillable="true"/>
+                <xsd:element name="diferencia_iva" type="xsd:boolean" nillable="true"/>
+                <xsd:element name="nro_veniva" type="xsd:int" nillable="true"/>
+                <xsd:element name="de_baja" type="xsd:boolean" nillable="true"/>
+              </xsd:sequence>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="T-Provincia" minOccurs="0" maxOccurs="unbounded">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="cdg_provincia" type="xsd:string" nillable="true"/>
+                <xsd:element name="nombre" type="xsd:string" nillable="true"/>
+                <xsd:element name="sigla_prov" type="xsd:string" nillable="true"/>
+                <xsd:element name="codigo_afip" type="xsd:string" nillable="true"/>
+                <xsd:element name="sircar_sino" type="xsd:boolean" nillable="true"/>
+              </xsd:sequence>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="T-Cliente" minOccurs="0" maxOccurs="unbounded">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="nro_cliente" type="xsd:int" nillable="true"/>
+                <xsd:element name="cdg_cliente" type="xsd:string" nillable="true"/>
+                <xsd:element name="nom_cliente" type="xsd:string" nillable="true"/>
+                <xsd:element name="rq_fotocopia" type="xsd:boolean" nillable="true"/>
+                <xsd:element name="cuit" type="xsd:string" nillable="true"/>
+                <xsd:element name="rq_voucher" type="xsd:boolean" nillable="true"/>
+                <xsd:element name="direccion" type="xsd:string" nillable="true"/>
+                <xsd:element name="rq_listado" type="xsd:boolean" nillable="true"/>
+                <xsd:element name="telefonos" type="xsd:string" nillable="true"/>
+                <xsd:element name="rq_diskette" type="xsd:boolean" nillable="true"/>
+                <xsd:element name="localidad" type="xsd:string" nillable="true"/>
+                <xsd:element name="fax" type="xsd:string" nillable="true"/>
+                <xsd:element name="cdg_postal" type="xsd:string" nillable="true"/>
+                <xsd:element name="texto" type="xsd:string" nillable="true"/>
+                <xsd:element name="fecha_baja" type="xsd:date" nillable="true"/>
+                <xsd:element name="hora_baja" type="xsd:string" nillable="true"/>
+                <xsd:element name="ult_domicilio" type="xsd:int" nillable="true"/>
+                <xsd:element name="fecha_alta" type="xsd:date" nillable="true"/>
+                <xsd:element name="hora_alta" type="xsd:int" nillable="true"/>
+                <xsd:element name="cdg_condiva" type="xsd:int" nillable="true"/>
+                <xsd:element name="nro_vendedor" type="xsd:int" nillable="true"/>
+                <xsd:element name="descuento" type="xsd:decimal" nillable="true"/>
+                <xsd:element name="cdg_provincia" type="xsd:string" nillable="true"/>
+                <xsd:element name="dfl_cndventa" type="xsd:string" nillable="true"/>
+                <xsd:element name="transporte" type="xsd:string" nillable="true"/>
+                <xsd:element name="credito_maximo" type="xsd:decimal" nillable="true"/>
+                <xsd:element name="dfl_lista" type="xsd:int" nillable="true"/>
+                <xsd:element name="nro_entidad" type="xsd:int" nillable="true"/>
+                <xsd:element name="prioridad" type="xsd:int" nillable="true"/>
+                <xsd:element name="lista_mail" type="xsd:string" nillable="true"/>
+                <xsd:element name="observacion" type="xsd:string" nillable="true"/>
+                <xsd:element name="cdg_grupoemp" type="xsd:string" nillable="true"/>
+                <xsd:element name="cdg_estado" type="xsd:string" nillable="true"/>
+                <xsd:element name="num_sucursal" type="xsd:string" nillable="true"/>
+                <xsd:element name="ref_proveedor" type="xsd:string" nillable="true"/>
+                <xsd:element name="cdg_famclie" type="xsd:string" nillable="true"/>
+                <xsd:element name="Titular_oxc_sino" type="xsd:boolean" nillable="true"/>
+                <xsd:element name="nro_proveedor" type="xsd:int" nillable="true"/>
+                <xsd:element name="prc_canje" type="xsd:decimal" nillable="true"/>
+                <xsd:element name="cdg_tipoclie" type="xsd:string" nillable="true"/>
+                <xsd:element name="lista_empresas" type="xsd:string" nillable="true"/>
+                <xsd:element name="nro_cobrador" type="xsd:int" nillable="true"/>
+                <xsd:element name="fecha_grab" type="xsd:date" nillable="true"/>
+                <xsd:element name="hora_grab" type="xsd:int" nillable="true"/>
+                <xsd:element name="fch_sincro" type="xsd:date" nillable="true"/>
+                <xsd:element name="hor_sincro" type="xsd:int" nillable="true"/>
+                <xsd:element name="paga_abasto" type="xsd:string" nillable="true"/>
+                <xsd:element name="permite_nominar" type="xsd:boolean" nillable="true"/>
+                <xsd:element name="tiene_ctacte" type="xsd:boolean" nillable="true" default="true"/>
+                <xsd:element name="ing_brutos" type="xsd:string" nillable="true"/>
+                <xsd:element name="agrupa_remitos" type="xsd:boolean" nillable="true"/>
+                <xsd:element name="cdg_condibr" type="xsd:int" nillable="true"/>
+                <xsd:element name="convenio_sino" type="xsd:boolean" nillable="true"/>
+                <xsd:element name="nro_usuario" type="xsd:int" nillable="true"/>
+                <xsd:element name="pc_name" type="xsd:string" nillable="true"/>
+                <xsd:element name="cdg_pais" type="xsd:int" nillable="true"/>
+                <xsd:element name="lista_sectores" type="xsd:string" nillable="true"/>
+                <xsd:element name="condensado_sino" type="xsd:boolean" nillable="true"/>
+                <xsd:element name="prc_credito" type="xsd:decimal" nillable="true"/>
+                <xsd:element name="dias_cc" type="xsd:int" nillable="true"/>
+                <xsd:element name="nom_fantasia" type="xsd:string" nillable="true"/>
+                <xsd:element name="max_chrechazados" type="xsd:int" nillable="true"/>
+                <xsd:element name="control_credito" type="xsd:boolean" nillable="true"/>
+                <xsd:element name="nro_administrador" type="xsd:int" nillable="true"/>
+                <xsd:element name="mostrar_admin" type="xsd:boolean" nillable="true" default="true"/>
+                <xsd:element name="modo_difcambios" type="xsd:string" nillable="true" default="A"/>
+                <xsd:element name="HAT" type="xsd:decimal" nillable="true"/>
+                <xsd:element name="prc_mincambio" type="xsd:decimal" nillable="true"/>
+                <xsd:element name="clausula_dolar" type="xsd:boolean" nillable="true"/>
+                <xsd:element name="prc_difcambio" type="xsd:decimal" nillable="true"/>
+                <xsd:element name="contacto_pago" type="xsd:string" nillable="true"/>
+                <xsd:element name="dias_de_pago" type="xsd:string" nillable="true"/>
+                <xsd:element name="horario_de_pago" type="xsd:string" nillable="true"/>
+                <xsd:element name="horario_de_atencion" type="xsd:string" nillable="true"/>
+                <xsd:element name="dfl_cdg_puntovta" type="xsd:int" nillable="true"/>
+                <xsd:element name="geodir" type="xsd:string" nillable="true"/>
+                <xsd:element name="geoalt" type="xsd:string" nillable="true"/>
+                <xsd:element name="geoalt2" type="xsd:string" nillable="true"/>
+                <xsd:element name="geopos" type="xsd:string" nillable="true"/>
+                <xsd:element name="geolat" type="xsd:decimal" nillable="true"/>
+                <xsd:element name="geolong" type="xsd:decimal" nillable="true"/>
+                <xsd:element name="geoX" type="xsd:decimal" nillable="true"/>
+                <xsd:element name="geoY" type="xsd:decimal" nillable="true"/>
+                <xsd:element name="migra" type="xsd:string" nillable="true"/>
+                <xsd:element name="factu_admin" type="xsd:boolean" nillable="true"/>
+              </xsd:sequence>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="T-Vendedor" minOccurs="0" maxOccurs="unbounded">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="cdg_vendedor" type="xsd:string" nillable="true"/>
+                <xsd:element name="nombre" type="xsd:string" nillable="true"/>
+                <xsd:element name="nro_vendedor" type="xsd:int" nillable="true"/>
+                <xsd:element name="entidades_validas" type="xsd:string" nillable="true" default="*"/>
+                <xsd:element name="prc_ventas" type="xsd:decimal" nillable="true"/>
+                <xsd:element name="prc_cobranzas" type="xsd:decimal" nillable="true"/>
+                <xsd:element name="cdg_subclasevnd" type="xsd:string" nillable="true"/>
+                <xsd:element name="imp_minimo" type="xsd:decimal" nillable="true"/>
+                <xsd:element name="nro_proveedor" type="xsd:int" nillable="true"/>
+                <xsd:element name="nro_legajo" type="xsd:int" nillable="true"/>
+                <xsd:element name="fecha_baja" type="xsd:date" nillable="true"/>
+                <xsd:element name="fecha_ingreso" type="xsd:date" nillable="true"/>
+                <xsd:element name="nro_cuil" type="xsd:string" nillable="true"/>
+                <xsd:element name="zona_asignada" type="xsd:string" nillable="true"/>
+                <xsd:element name="tipo_productos" type="xsd:string" nillable="true"/>
+                <xsd:element name="calle" type="xsd:string" nillable="true"/>
+                <xsd:element name="numero" type="xsd:int" nillable="true"/>
+                <xsd:element name="piso" type="xsd:string" nillable="true"/>
+                <xsd:element name="depto" type="xsd:string" nillable="true"/>
+                <xsd:element name="cdg_postal" type="xsd:string" nillable="true"/>
+                <xsd:element name="localidad" type="xsd:string" nillable="true"/>
+                <xsd:element name="cdg_provincia" type="xsd:string" nillable="true"/>
+                <xsd:element name="telefono" type="xsd:string" nillable="true"/>
+                <xsd:element name="tipo_doc" type="xsd:string" nillable="true"/>
+                <xsd:element name="numero_doc" type="xsd:int" nillable="true"/>
+                <xsd:element name="fecha_nac" type="xsd:date" nillable="true"/>
+                <xsd:element name="lugar_nac" type="xsd:string" nillable="true"/>
+                <xsd:element name="nacionalid" type="xsd:string" nillable="true"/>
+                <xsd:element name="nro_empleado" type="xsd:int" nillable="true"/>
+              </xsd:sequence>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="T-Domicilio" minOccurs="0" maxOccurs="unbounded">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="nro_domicilio" type="xsd:int" nillable="true"/>
+                <xsd:element name="nombre" type="xsd:string" nillable="true"/>
+                <xsd:element name="direccion" type="xsd:string" nillable="true"/>
+                <xsd:element name="telefono" type="xsd:string" nillable="true"/>
+                <xsd:element name="localidad" type="xsd:string" nillable="true"/>
+                <xsd:element name="cdg_postal" type="xsd:string" nillable="true"/>
+                <xsd:element name="cdg_provincia" type="xsd:string" nillable="true"/>
+                <xsd:element name="cdg_subclasezng" type="xsd:string" nillable="true"/>
+                <xsd:element name="nro_cliente" type="xsd:int" nillable="true"/>
+                <xsd:element name="envio" type="xsd:boolean" nillable="true" default="true"/>
+                <xsd:element name="factura" type="xsd:boolean" nillable="true" default="true"/>
+                <xsd:element name="dias_entrega" type="xsd:string" nillable="true"/>
+                <xsd:element name="email" type="xsd:string" nillable="true"/>
+                <xsd:element name="cdg_pais" type="xsd:int" nillable="true"/>
+                <xsd:element name="cdg_recorrido" type="xsd:string" nillable="true"/>
+                <xsd:element name="orden_recorrido" type="xsd:int" nillable="true"/>
+                <xsd:element name="cdg_zonag" type="xsd:string" nillable="true"/>
+                <xsd:element name="cdg_municipio" type="xsd:string" nillable="true"/>
+                <xsd:element name="es_fiscal" type="xsd:boolean" nillable="true"/>
+                <xsd:element name="retira" type="xsd:boolean" nillable="true"/>
+                <xsd:element name="observacion" type="xsd:string" nillable="true"/>
+              </xsd:sequence>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="T-Cobrador" minOccurs="0" maxOccurs="unbounded">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="nro_cobrador" type="xsd:int" nillable="true"/>
+                <xsd:element name="cdg_cobrador" type="xsd:string" nillable="true"/>
+                <xsd:element name="nom_cobrador" type="xsd:string" nillable="true"/>
+                <xsd:element name="prc_comision" type="xsd:decimal" nillable="true"/>
+              </xsd:sequence>
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:unique name="cdg_empresa" prodata:primaryIndex="true">
+        <xsd:selector xpath=".//T-Empresa"/>
+        <xsd:field xpath="cdg_empresa"/>
+      </xsd:unique>
+      <xsd:unique name="para_imprimir">
+        <xsd:selector xpath=".//T-Fac_header"/>
+        <xsd:field xpath="cdg_empresa"/>
+        <xsd:field xpath="tip_comprob"/>
+        <xsd:field xpath="prf_comprob"/>
+        <xsd:field xpath="impreso"/>
+        <xsd:field xpath="nro_comprob"/>
+      </xsd:unique>
+      <xsd:unique name="por_cliente">
+        <xsd:selector xpath=".//T-Fac_header"/>
+        <xsd:field xpath="nro_cliente"/>
+        <xsd:field xpath="cdg_empresa"/>
+        <xsd:field xpath="tip_comprob"/>
+        <xsd:field xpath="prf_comprob"/>
+        <xsd:field xpath="nro_comprob"/>
+      </xsd:unique>
+      <xsd:unique name="por_documento">
+        <xsd:selector xpath=".//T-Fac_header"/>
+        <xsd:field xpath="cdg_empresa"/>
+        <xsd:field xpath="tip_comprob"/>
+        <xsd:field xpath="prf_comprob"/>
+        <xsd:field xpath="nro_comprob"/>
+      </xsd:unique>
+      <xsd:unique name="por_numero" prodata:primaryIndex="true">
+        <xsd:selector xpath=".//T-Fac_header"/>
+        <xsd:field xpath="nro_factura"/>
+      </xsd:unique>
+      <xsd:unique name="T-Fac_detalle_por_documento" prodata:primaryIndex="true">
+        <xsd:selector xpath=".//T-Fac_detalle"/>
+        <xsd:field xpath="nro_factura"/>
+        <xsd:field xpath="nro_linea"/>
+      </xsd:unique>
+      <xsd:unique name="por_factura" prodata:primaryIndex="true">
+        <xsd:selector xpath=".//T-Fac_header-bon"/>
+        <xsd:field xpath="nro_factura"/>
+        <xsd:field xpath="cdg_bonificacion"/>
+      </xsd:unique>
+      <xsd:unique name="cdg_articulo">
+        <xsd:selector xpath=".//T-Articulo"/>
+        <xsd:field xpath="cdg_articulo"/>
+      </xsd:unique>
+      <xsd:unique name="nro_articulo" prodata:primaryIndex="true">
+        <xsd:selector xpath=".//T-Articulo"/>
+        <xsd:field xpath="nro_articulo"/>
+      </xsd:unique>
+      <xsd:unique name="por_clase">
+        <xsd:selector xpath=".//T-Articulo"/>
+        <xsd:field xpath="cdg_subclase"/>
+        <xsd:field xpath="nro_articulo"/>
+      </xsd:unique>
+      <xsd:unique name="cdg_condiva" prodata:primaryIndex="true">
+        <xsd:selector xpath=".//T-Condicion_impos"/>
+        <xsd:field xpath="cdg_condiva"/>
+      </xsd:unique>
+      <xsd:unique name="cdg_cndventa">
+        <xsd:selector xpath=".//T-Condicion_venta"/>
+        <xsd:field xpath="cdg_cndventa"/>
+      </xsd:unique>
+      <xsd:unique name="nro_cndventa" prodata:primaryIndex="true">
+        <xsd:selector xpath=".//T-Condicion_venta"/>
+        <xsd:field xpath="nro_cndventa"/>
+      </xsd:unique>
+      <xsd:unique name="cdg_provincia" prodata:primaryIndex="true">
+        <xsd:selector xpath=".//T-Provincia"/>
+        <xsd:field xpath="cdg_provincia"/>
+      </xsd:unique>
+      <xsd:unique name="por_sigla">
+        <xsd:selector xpath=".//T-Provincia"/>
+        <xsd:field xpath="sigla_prov"/>
+      </xsd:unique>
+      <xsd:unique name="cdg_cliente" prodata:primaryIndex="true">
+        <xsd:selector xpath=".//T-Cliente"/>
+        <xsd:field xpath="cdg_cliente"/>
+      </xsd:unique>
+      <xsd:unique name="nro_cliente">
+        <xsd:selector xpath=".//T-Cliente"/>
+        <xsd:field xpath="nro_cliente"/>
+      </xsd:unique>
+      <xsd:unique name="cdg_vendedor">
+        <xsd:selector xpath=".//T-Vendedor"/>
+        <xsd:field xpath="cdg_vendedor"/>
+      </xsd:unique>
+      <xsd:unique name="nro_vendedor" prodata:primaryIndex="true">
+        <xsd:selector xpath=".//T-Vendedor"/>
+        <xsd:field xpath="nro_vendedor"/>
+      </xsd:unique>
+      <xsd:unique name="por_cli_dom" prodata:primaryIndex="true">
+        <xsd:selector xpath=".//T-Domicilio"/>
+        <xsd:field xpath="nro_cliente"/>
+        <xsd:field xpath="nro_domicilio"/>
+      </xsd:unique>
+      <xsd:unique name="cdg_cobrador">
+        <xsd:selector xpath=".//T-Cobrador"/>
+        <xsd:field xpath="cdg_cobrador"/>
+      </xsd:unique>
+      <xsd:unique name="nro_cobrador" prodata:primaryIndex="true">
+        <xsd:selector xpath=".//T-Cobrador"/>
+        <xsd:field xpath="nro_cobrador"/>
+      </xsd:unique>
+    </xsd:element>
+  </xsd:schema>
+  <T-Empresa>
+    <cdg_empresa>P</cdg_empresa>
+    <nombre>Fumigadora Paulista S.R.L.</nombre>
+    <direccion>Las Heras 2259</direccion>
+    <telefono>48043131</telefono>
+    <localidad>Capital Fedral</localidad>
+    <sistema>ABA:0099,ADP:0099,AFI:0099,BAS:0099,BDU:0099,COM:0099,CPS:0099,CPY:0099,CXC:0999,CXP:0099,DSP:0099,EXP:0099,FAC:0009,GLA:0099,IMP:0099,INV:0099,PRD:0099,RGV:0099,SEG:0099,TES:0099,UTL:0099</sistema>
+    <fecha_limite>2099-01-01</fecha_limite>
+    <clave>157983</clave>
+    <actividad>Servicios</actividad>
+    <cuit>30645601110</cuit>
+    <codigo_postal>1127</codigo_postal>
+    <provincia>CAPITAL FEDERAL</provincia>
+    <ing_brutos/>
+    <inicio_actividades xsi:nil="true"/>
+    <condicion_impositiva_texto/>
+    <logo_gr xsi:nil="true"/>
+    <logo_ch xsi:nil="true"/>
+    <pto_direccion1/>
+    <pto_direccion2/>
+    <pto_telefono1/>
+    <pto_telefono2/>
+    <pto_cdg_postal/>
+    <pto_localidad/>
+    <pto_provincia/>
+  </T-Empresa>
+  <T-Fac_header>
+    <nro_factura>605633</nro_factura>
+    <cdg_empresa>P</cdg_empresa>
+    <tip_comprob>FB</tip_comprob>
+    <prf_comprob>3</prf_comprob>
+    <nro_comprob>1</nro_comprob>
+    <nro_cliente>605</nro_cliente>
+    <fecha>2015-06-03</fecha>
+    <ultima_linea>1</ultima_linea>
+    <nro_usuario>115</nro_usuario>
+    <nro_vendedor>1</nro_vendedor>
+    <cdg_condiva>2</cdg_condiva>
+    <nro_cndventa>1</nro_cndventa>
+    <imp_neto>8.26</imp_neto>
+    <imp_iva>1.74</imp_iva>
+    <imp_total>10.00</imp_total>
+    <imp_bruto>8.26</imp_bruto>
+    <estado>E</estado>
+    <origen>M</origen>
+    <nro_ocm/>
+    <cta_cte>true</cta_cte>
+    <nro_deposito>1</nro_deposito>
+    <nro_remito>0</nro_remito>
+    <nro_moneda>1</nro_moneda>
+    <cambio>1.0000</cambio>
+    <nro_transaccion>0</nro_transaccion>
+    <cdg_imputacion>51</cdg_imputacion>
+    <leyenda/>
+    <anulado>false</anulado>
+    <cdg_lista>1</cdg_lista>
+    <afecta_stock>true</afecta_stock>
+    <proc_estad>false</proc_estad>
+    <cambio_dolar>0.0000</cambio_dolar>
+    <fecha_ocm xsi:nil="true"/>
+    <nro_domicilio>1</nro_domicilio>
+    <nombre>COINSUR</nombre>
+    <cuit/>
+    <direccion>RODRIGUEZ PEÑA 486 P.8</direccion>
+    <localidad>CABA</localidad>
+    <cdg_postal>1020</cdg_postal>
+    <cdg_provincia>01</cdg_provincia>
+    <cdg_zonag/>
+    <nro_entidad>0</nro_entidad>
+    <nro_obra>1</nro_obra>
+    <monto_letras>  DIEZ.-</monto_letras>
+    <num_sucursal/>
+    <prc_canje>0.00</prc_canje>
+    <leyenda_cc/>
+    <mes>6</mes>
+    <ano>2015</ano>
+    <impreso/>
+    <imp_descuentos>0.00</imp_descuentos>
+    <fecha_iva>2015-06-03</fecha_iva>
+    <modo_abasto/>
+    <ibrutos_sino>true</ibrutos_sino>
+    <fecha_precios>2015-06-03</fecha_precios>
+    <cdg_comprobante>FACTUCLI</cdg_comprobante>
+    <cant_hojas>0</cant_hojas>
+    <nombre_leg>COINSUR</nombre_leg>
+    <direccion_leg>RODRIGUEZ PEÑA 486 P.8</direccion_leg>
+    <localidad_leg>CABA</localidad_leg>
+    <cdg_postal_leg>1020</cdg_postal_leg>
+    <cdg_provincia_leg>01</cdg_provincia_leg>
+    <rige_hasta xsi:nil="true"/>
+    <cai>65230604318074</cai>
+    <nombre_domicilio/>
+    <aplica_minimos>true</aplica_minimos>
+    <pc_name>VENUS</pc_name>
+    <hora/>
+    <fecha_grab>2015-06-03</fecha_grab>
+    <hora_grab>70540</hora_grab>
+    <nro_contrato>0</nro_contrato>
+    <observacion/>
+    <modo_remito/>
+    <nro_administrador>605</nro_administrador>
+    <clausula_dolar>false</clausula_dolar>
+    <imp_no_neto>0.00</imp_no_neto>
+    <cdg_administrador>A0003</cdg_administrador>
+    <nom_Administrador>COINSUR</nom_Administrador>
+    <direccion_administrador>RODRIGUEZ PEÑA 486 P.8</direccion_administrador>
+    <localidad_administrador>CABA</localidad_administrador>
+    <texto_condicion_venta>30 días fecha de factura</texto_condicion_venta>
+    <texto_iva>Consumidor Final</texto_iva>
+    <codigo_cliente>A0003</codigo_cliente>
+    <mostrar_admin>true</mostrar_admin>
+    <id_lote/>
+    <estado_2_impresion/>
+    <id_lote_cupon/>
+    <cdg_librocontable/>
+    <nro_evento_correo>0</nro_evento_correo>
+    <fecha_2_impresion xsi:nil="true"/>
+    <nro_usuario_2_impresion/>
+    <dsc_moneda>PESOS</dsc_moneda>
+    <dsc_provincia>CAPITAL FEDERAL               </dsc_provincia>
+    <dsc_provincia_leg>CAPITAL FEDERAL               </dsc_provincia_leg>
+    <dsc_condicionimpos>Consumidor Final</dsc_condicionimpos>
+    <dsc_comprobante>FACTURA</dsc_comprobante>
+    <dsc_condicionventa>30 días fecha de factura</dsc_condicionventa>
+    <CodigoBarra>()</CodigoBarra>
+    <lecturahumana xsi:nil="true"/>
+    <leyendolar/>
+    <cdg_vendedor>001</cdg_vendedor>
+    <dsc_vendedor>Vendedor por Defecto</dsc_vendedor>
+    <cdg_cobrador/>
+    <dsc_cobrador/>
+    <lista_remitos/>
+    <cdg_afip>06</cdg_afip>
+  </T-Fac_header>
+  <T-Fac_detalle>
+    <nro_factura>605633</nro_factura>
+    <nro_linea>1</nro_linea>
+    <precio>8.2645</precio>
+    <nro_articulo>7</nro_articulo>
+    <nro_partida>0</nro_partida>
+    <granel>0.00</granel>
+    <a_granel>false</a_granel>
+    <detallada>Control murciélagos - Prueba RECE</detallada>
+    <ver_unidades>false</ver_unidades>
+    <ver_codigo>false</ver_codigo>
+    <subtotal_neto>8.26</subtotal_neto>
+    <subtotal_bruto>8.26</subtotal_bruto>
+    <cantidad>1.00</cantidad>
+    <nro_obra>1</nro_obra>
+    <nro_entidad>0</nro_entidad>
+    <precio_cf>10.0000</precio_cf>
+    <subtotal_neto_cf>10.00</subtotal_neto_cf>
+    <subtotal_bruto_cf>10.00</subtotal_bruto_cf>
+    <costo>0.0000</costo>
+    <pcom_ventas/>
+    <pcom_cobranzas/>
+    <subtotal_gral_cf>10.00</subtotal_gral_cf>
+    <subtotal_general>8.26</subtotal_general>
+    <liquido_sino>false</liquido_sino>
+    <relacion_granel>1.00000000</relacion_granel>
+    <lista_imputaciones/>
+    <num_bultos>0</num_bultos>
+    <nro_otrabajo>0</nro_otrabajo>
+  </T-Fac_detalle>
+  <T-Articulo>
+    <nro_articulo>7</nro_articulo>
+    <cdg_articulo>07</cdg_articulo>
+    <descripcion>Control murciélagos</descripcion>
+    <detallada>Control murciélagos</detallada>
+    <costo>0.0000</costo>
+    <descuento>0.00</descuento>
+    <a_granel>false</a_granel>
+    <stock_sino>true</stock_sino>
+    <ult_partida>1</ult_partida>
+    <hay_partida>false</hay_partida>
+    <hay_marca>true</hay_marca>
+    <ley_merma>0</ley_merma>
+    <perdida_merma>0.00</perdida_merma>
+    <periodo_merma>0.00</periodo_merma>
+    <prcmax_merma>0.00</prcmax_merma>
+    <ubicacion/>
+    <cdg_subclase>.v.FU.MUR</cdg_subclase>
+    <stk_minimo_cantid>0</stk_minimo_cantid>
+    <stk_maximo_cantid>0</stk_maximo_cantid>
+    <stk_minimo_granel>0.00</stk_minimo_granel>
+    <stk_maximo_granel>0.00</stk_maximo_granel>
+    <extendida>true</extendida>
+    <cdg_umed>1</cdg_umed>
+    <nro_familia>4</nro_familia>
+    <cdg_tipoart>M</cdg_tipoart>
+    <ult_fcomercial>0</ult_fcomercial>
+    <fch_costo xsi:nil="true"/>
+    <metodo_costeo>PP</metodo_costeo>
+    <unidades_compradas>0.00</unidades_compradas>
+    <granel_comprado>0.00</granel_comprado>
+    <total_comprado>0.00</total_comprado>
+    <modo_volumen>D</modo_volumen>
+    <kgxun_bruto>0.000</kgxun_bruto>
+    <kgxun_neto>0.000</kgxun_neto>
+    <unidxpres>0</unidxpres>
+    <cdg_ucompra>1</cdg_ucompra>
+    <retornable/>
+    <volxunidad>0.0000</volxunidad>
+    <prc_tolerancia>0.00</prc_tolerancia>
+    <dec_precio>0</dec_precio>
+    <costo_extracontable>0.0000</costo_extracontable>
+    <unidades_sino>false</unidades_sino>
+    <ventas_sino>true</ventas_sino>
+    <compras_sino>false</compras_sino>
+    <inventario_sino>false</inventario_sino>
+    <produccion_sino>false</produccion_sino>
+    <lista_empresas>P</lista_empresas>
+    <sumaneto>1</sumaneto>
+    <es_registrable>false</es_registrable>
+    <cyorden_sino>false</cyorden_sino>
+    <nro_familimpos>1</nro_familimpos>
+    <cdg_ugranel>1</cdg_ugranel>
+    <cdg_envases>000</cdg_envases>
+    <cdg_marcacom>NA</cdg_marcacom>
+    <fecha_baja xsi:nil="true"/>
+    <cdg_estado/>
+    <codigo_barra/>
+    <codigo_ean/>
+    <codigo_anterior/>
+    <importado>false</importado>
+    <minimo_reposicion>0</minimo_reposicion>
+    <maximo_reposicion>0</maximo_reposicion>
+    <descripcion_ing/>
+    <cdg_busa/>
+    <cdg_bean/>
+    <alicuota>0.00</alicuota>
+    <cdg_bcaja/>
+    <cdg_bitf14/>
+    <alto_caja>0.00</alto_caja>
+    <ancho_caja>0.00</ancho_caja>
+    <prof_caja>0.00</prof_caja>
+    <capacidad>0</capacidad>
+    <es_kit>false</es_kit>
+    <cdg_grupoabasto>0</cdg_grupoabasto>
+    <lista_sectores>P,|,</lista_sectores>
+    <modo_etiquetas>J</modo_etiquetas>
+    <fecha_alta>2006-05-05</fecha_alta>
+    <nro_usuario>0</nro_usuario>
+    <pc_name/>
+    <fecha_grab>2006-05-05</fecha_grab>
+    <hora_grab>0</hora_grab>
+    <granel_pesado>false</granel_pesado>
+    <relacion_granel>1.00000000</relacion_granel>
+    <nro_suprarticulo>0</nro_suprarticulo>
+    <cdg_linea>0</cdg_linea>
+    <cdg_famganancias>000</cdg_famganancias>
+    <lista_atributos>*</lista_atributos>
+    <cdg_famretiva>000</cdg_famretiva>
+    <cdg_famretibr>000</cdg_famretibr>
+    <cdg_famretsuss>000</cdg_famretsuss>
+    <es_bduso>false</es_bduso>
+    <nro_tipo_evento>1</nro_tipo_evento>
+    <nro_procedimiento>0</nro_procedimiento>
+    <documental/>
+  </T-Articulo>
+  <T-Condicion_impos>
+    <cdg_condiva>2</cdg_condiva>
+    <descripcion>Final</descripcion>
+    <texto_iva>Consumidor Final</texto_iva>
+    <tipo_factura>B</tipo_factura>
+    <codigo_migracion>C</codigo_migracion>
+    <nivel_redondeo>1.00</nivel_redondeo>
+    <validar_cuit>false</validar_cuit>
+    <compras_o_ventas>V</compras_o_ventas>
+  </T-Condicion_impos>
+  <T-Condicion_venta>
+    <nro_cndventa>1</nro_cndventa>
+    <cdg_cndventa>30</cdg_cndventa>
+    <descripcion>30 días fecha de factura</descripcion>
+    <dias>0</dias>
+    <descuento>0.00</descuento>
+    <texto/>
+    <ult_nroven>0</ult_nroven>
+    <diferencia_iva>false</diferencia_iva>
+    <nro_veniva>0</nro_veniva>
+    <de_baja>false</de_baja>
+  </T-Condicion_venta>
+  <T-Provincia>
+    <cdg_provincia>01</cdg_provincia>
+    <nombre>CAPITAL FEDERAL               </nombre>
+    <sigla_prov>CAB       </sigla_prov>
+    <codigo_afip>00</codigo_afip>
+    <sircar_sino>false</sircar_sino>
+  </T-Provincia>
+  <T-Cliente>
+    <nro_cliente>605</nro_cliente>
+    <cdg_cliente>A0003</cdg_cliente>
+    <nom_cliente>COINSUR</nom_cliente>
+    <rq_fotocopia>false</rq_fotocopia>
+    <cuit/>
+    <rq_voucher>false</rq_voucher>
+    <direccion>RODRIGUEZ PEÑA 486 P.8</direccion>
+    <rq_listado>false</rq_listado>
+    <telefonos>49 0352</telefonos>
+    <rq_diskette>false</rq_diskette>
+    <localidad>CABA</localidad>
+    <fax/>
+    <cdg_postal>1020</cdg_postal>
+    <texto/>
+    <fecha_baja xsi:nil="true"/>
+    <hora_baja/>
+    <ult_domicilio>1</ult_domicilio>
+    <fecha_alta>2006-11-06</fecha_alta>
+    <hora_alta>0</hora_alta>
+    <cdg_condiva>2</cdg_condiva>
+    <nro_vendedor>1</nro_vendedor>
+    <descuento>0.00</descuento>
+    <cdg_provincia>01</cdg_provincia>
+    <dfl_cndventa>30</dfl_cndventa>
+    <transporte/>
+    <credito_maximo>0.00</credito_maximo>
+    <dfl_lista>1</dfl_lista>
+    <nro_entidad>0</nro_entidad>
+    <prioridad>0</prioridad>
+    <lista_mail>ADM</lista_mail>
+    <observacion/>
+    <cdg_grupoemp>1</cdg_grupoemp>
+    <cdg_estado>A</cdg_estado>
+    <num_sucursal>C</num_sucursal>
+    <ref_proveedor/>
+    <cdg_famclie>1</cdg_famclie>
+    <Titular_oxc_sino>false</Titular_oxc_sino>
+    <nro_proveedor>0</nro_proveedor>
+    <prc_canje>0.00</prc_canje>
+    <cdg_tipoclie>1</cdg_tipoclie>
+    <lista_empresas>P</lista_empresas>
+    <nro_cobrador>1</nro_cobrador>
+    <fecha_grab>2006-11-06</fecha_grab>
+    <hora_grab>44831</hora_grab>
+    <fch_sincro xsi:nil="true"/>
+    <hor_sincro>0</hor_sincro>
+    <paga_abasto/>
+    <permite_nominar>true</permite_nominar>
+    <tiene_ctacte>true</tiene_ctacte>
+    <ing_brutos/>
+    <agrupa_remitos>false</agrupa_remitos>
+    <cdg_condibr>0</cdg_condibr>
+    <convenio_sino>false</convenio_sino>
+    <nro_usuario>0</nro_usuario>
+    <pc_name/>
+    <cdg_pais>1</cdg_pais>
+    <lista_sectores>P</lista_sectores>
+    <condensado_sino>false</condensado_sino>
+    <prc_credito>0.00</prc_credito>
+    <dias_cc>0</dias_cc>
+    <nom_fantasia>COINSUR</nom_fantasia>
+    <max_chrechazados>3</max_chrechazados>
+    <control_credito>false</control_credito>
+    <nro_administrador>605</nro_administrador>
+    <mostrar_admin>true</mostrar_admin>
+    <modo_difcambios>A</modo_difcambios>
+    <HAT>0.00</HAT>
+    <prc_mincambio>0.00</prc_mincambio>
+    <clausula_dolar>false</clausula_dolar>
+    <prc_difcambio>0.00</prc_difcambio>
+    <contacto_pago/>
+    <dias_de_pago>0</dias_de_pago>
+    <horario_de_pago/>
+    <horario_de_atencion>1100:1300;1500:1800</horario_de_atencion>
+    <dfl_cdg_puntovta>0</dfl_cdg_puntovta>
+    <geodir/>
+    <geoalt/>
+    <geoalt2/>
+    <geopos/>
+    <geolat>-34.6033</geolat>
+    <geolong>-58.3908</geolong>
+    <geoX>372474.21</geoX>
+    <geoY>6170068.88</geoY>
+    <migra>HORARIO[] DIAS[0] TEL[49 0352] ATEN[11/13 15/18]</migra>
+    <factu_admin>false</factu_admin>
+  </T-Cliente>
+  <T-Vendedor>
+    <cdg_vendedor>001</cdg_vendedor>
+    <nombre>Vendedor por Defecto</nombre>
+    <nro_vendedor>1</nro_vendedor>
+    <entidades_validas>*</entidades_validas>
+    <prc_ventas>4.96</prc_ventas>
+    <prc_cobranzas>4.00</prc_cobranzas>
+    <cdg_subclasevnd/>
+    <imp_minimo>0.00</imp_minimo>
+    <nro_proveedor>0</nro_proveedor>
+    <nro_legajo>0</nro_legajo>
+    <fecha_baja xsi:nil="true"/>
+    <fecha_ingreso xsi:nil="true"/>
+    <nro_cuil/>
+    <zona_asignada>001</zona_asignada>
+    <tipo_productos/>
+    <calle/>
+    <numero>0</numero>
+    <piso/>
+    <depto/>
+    <cdg_postal/>
+    <localidad/>
+    <cdg_provincia/>
+    <telefono/>
+    <tipo_doc/>
+    <numero_doc>0</numero_doc>
+    <fecha_nac xsi:nil="true"/>
+    <lugar_nac/>
+    <nacionalid/>
+    <nro_empleado>186</nro_empleado>
+  </T-Vendedor>
+  <T-Domicilio>
+    <nro_domicilio>1</nro_domicilio>
+    <nombre>Oficina</nombre>
+    <direccion>RODRIGUEZ PEÑA 486 p.8</direccion>
+    <telefono>49 0352</telefono>
+    <localidad>Capital Federal</localidad>
+    <cdg_postal>1020</cdg_postal>
+    <cdg_provincia>01</cdg_provincia>
+    <cdg_subclasezng>001</cdg_subclasezng>
+    <nro_cliente>605</nro_cliente>
+    <envio>true</envio>
+    <factura>true</factura>
+    <dias_entrega>0-&gt;11/13 15/18</dias_entrega>
+    <email/>
+    <cdg_pais>1</cdg_pais>
+    <cdg_recorrido/>
+    <orden_recorrido>0</orden_recorrido>
+    <cdg_zonag>001</cdg_zonag>
+    <cdg_municipio/>
+    <es_fiscal>true</es_fiscal>
+    <retira>false</retira>
+    <observacion/>
+  </T-Domicilio>
+  <T-Cobrador>
+    <nro_cobrador>1</nro_cobrador>
+    <cdg_cobrador>001</cdg_cobrador>
+    <nom_cobrador>Cristina OLD</nom_cobrador>
+    <prc_comision>0.000</prc_comision>
+  </T-Cobrador>
+</dset>

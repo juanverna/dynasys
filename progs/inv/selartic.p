@@ -1,0 +1,15 @@
+/*===========================================================================================*/
+/*                                    HELP DE ARTICULO                                       */
+/*===========================================================================================*/
+
+DEFINE INPUT-OUTPUT PARAMETER act_registro AS ROWID.
+DEFINE INPUT PARAMETER habpara AS CHAR.
+DEFINE INPUT  PARAMETER ALT-MOD      AS LOGICAL.
+
+
+RUN d-buscar_articulos.w ( INPUT  "",
+                           INPUT  "",
+                           INPUT habpara, 
+                           input-OUTPUT act_registro,
+                           OUTPUT ALT-MOD).   
+                   

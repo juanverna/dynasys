@@ -1,0 +1,231 @@
+/*=================================================================================*/
+/*               GENERA LA INTERFACE DE SUCURSALES PARA DESPACHO                   */
+/*=================================================================================*/
+
+DEFINE INPUT PARAMETER p-pto_venta  AS CHARACTER.
+DEFINE INPUT PARAMETER p-des_fecha  AS DATE. 
+DEFINE INPUT PARAMETER p-has_fecha  AS DATE. 
+DEFINE INPUT PARAMETER p-archivo    AS CHARACTER. 
+
+DEFINE TEMP-TABLE T-Fac_header      LIKE Fac_header.
+DEFINE TEMP-TABLE T-Fac_detalle     LIKE Fac_detalle.
+DEFINE TEMP-TABLE T-Fac_header-bon  LIKE Fac_header-bon.
+DEFINE TEMP-TABLE T-Fac_detalle-bon LIKE Fac_detalle-bon.
+DEFINE TEMP-TABLE T-Remito-factura  LIKE Remito-factura.
+
+{VRSHARED.I }
+  
+DEFINE STREAM Errores.
+
+DEFINE NEW SHARED VARIABLE emitir_remito  AS LOGICAL LABEL "Emitir remito".
+DEFINE NEW SHARED VARIABLE emitir_factura AS LOGICAL LABEL "Emitir" INITIAL YES.
+
+DEFINE VARIABLE archivo             AS CHARACTER.
+DEFINE VARIABLE direc_tmp           AS CHARACTER INITIAL ".\".
+DEFINE VARIABLE ant_remyfact        AS INTEGER.
+DEFINE VARIABLE ncopias_fa          AS INTEGER.
+DEFINE VARIABLE ncopias_fb          AS INTEGER.
+DEFINE VARIABLE ncopias_fc          AS INTEGER.
+
+/*=================================================================================*/
+/*           AVERIGUA LOS NUMEROS INTERNOS DE LOS REMITOS A IMPORTAR               */
+/*=================================================================================*/
+
+     /*------------------------------------------------------------*/ 
+     /* Se asegura de que esten desenganchados los remitos de las  */ 
+     /* facturas y pone en cero la cantidad de copias de remitos   */
+     /*------------------------------------------------------------*/ 
+
+DO TRANSACTION:
+
+    FIND Parametro "REMIFACT" EXCLUSIVE-LOCK.
+    ant_remyfact = Parametro.valor_n.
+    Parametro.valor_n = 0.
+    RELEASE Parametro.
+
+    FIND Parametro "NCOPIAFA" EXCLUSIVE-LOCK.
+    ncopias_fa = Parametro.valor_n.
+    Parametro.valor_n = 0.
+    RELEASE Parametro.
+
+    FIND Parametro "NCOPIAFB" EXCLUSIVE-LOCK.
+    ncopias_fb = Parametro.valor_n.
+    Parametro.valor_n = 0.
+    RELEASE Parametro.
+
+    FIND Parametro "NCOPIAFC" EXCLUSIVE-LOCK.
+    ncopias_fc = Parametro.valor_n.
+    Parametro.valor_n = 0.
+    RELEASE Parametro.
+
+END.
+
+     /*---------------------------------------------*/ 
+     /* Importa la interface en tablas temporarias  */ 
+     /*---------------------------------------------*/ 
+
+FIND Parametro "DIRECTMP" NO-LOCK NO-ERROR.
+IF AVAILABLE Parametro THEN direc_tmp = Parametro.valor_c.
+
+archivo = direc_tmp + "\" + p-archivo + 
+          STRING(YEAR(p-has_fecha),"9999") + 
+          STRING(MONTH(p-has_fecha),"99") + 
+          STRING(DAY(p-has_fecha),"99") + "FACXXX.TXT".
+          
+INPUT FROM VALUE(REPLACE(archivo,"XXX","FAH")). 
+REPEAT:
+    CREATE T-Fac_header.
+    IMPORT DELIMITER "|" T-Fac_header.
+END.
+INPUT CLOSE.
+
+INPUT FROM VALUE(REPLACE(archivo,"XXX","FAD")). 
+REPEAT:
+    CREATE T-Fac_detalle.
+    IMPORT DELIMITER "|" T-Fac_detalle.
+END.
+INPUT CLOSE.
+
+INPUT FROM VALUE(REPLACE(archivo,"XXX","BOH")). 
+REPEAT:
+    CREATE T-Fac_header-bon.
+    IMPORT DELIMITER "|" T-Fac_header-bon.
+END.
+INPUT CLOSE.
+
+INPUT FROM VALUE(REPLACE(archivo,"XXX","BOD")). 
+REPEAT:
+    CREATE T-Fac_detalle-bon.
+    IMPORT DELIMITER "|" T-Fac_detalle-bon.
+END.
+INPUT CLOSE.
+
+INPUT FROM VALUE(REPLACE(archivo,"XXX","RYF")). 
+REPEAT:
+    CREATE T-Remito-factura.
+    IMPORT DELIMITER "|" T-Remito-factura.
+END.
+INPUT CLOSE.
+
+     /*-----------------------------------------------------------------*/ 
+     /* Baja los datos a las tablas permanentes y emite los documentos  */ 
+     /*-----------------------------------------------------------------*/ 
+
+OUTPUT STREAM Errores TO VALUE(REPLACE(archivo,".TXT",".LOG")). 
+
+FOR EACH T-Fac_header:
+
+    FIND Fac_header WHERE Fac_header.tip_comprob  = T-Fac_header.tip_comprob
+                      AND Fac_header.prf_comprob  = T-Fac_header.prf_comprob
+                      AND Fac_header.nro_comprob  = T-Fac_header.nro_comprob NO-ERROR.
+
+    IF AVAILABLE Fac_header
+    THEN DO:
+         EXPORT STREAM Errores 
+                "Ya Existe"
+                T-Fac_header.tip_comprob
+                T-Fac_header.prf_comprob
+                T-Fac_header.nro_comprob.
+
+    END.
+    ELSE DO:
+        RUN BAJAR_T-Fac_header.
+        RUN BAJAR_T-Fac_detalle.
+        RUN BAJAR_T-Fac_header-bon.
+        RUN BAJAR_T-Fac_detalle-bon.
+        RUN BAJAR_T-Remito-factura.
+        act_Fac_head = ROWID(Fac_header).
+        RUN EMIFACTU.P.
+    END.
+    
+END.    
+
+     /*-----------------------------------------------------------------*/ 
+     /* Restaura la relacion entre remitos y facturas y la cantidad de  */ 
+     /* copias impresas de cada remito                                  */
+     /*-----------------------------------------------------------------*/ 
+
+DO TRANSACTION:
+
+    FIND Parametro "REMIFACT" EXCLUSIVE-LOCK.
+    Parametro.valor_n = ant_remyfact.
+    RELEASE Parametro.
+
+    FIND Parametro "NCOPIAFA" EXCLUSIVE-LOCK.
+    Parametro.valor_n = ncopias_fa.
+    RELEASE Parametro.
+
+    FIND Parametro "NCOPIAFB" EXCLUSIVE-LOCK.
+    Parametro.valor_n = ncopias_fb.
+    RELEASE Parametro.
+
+    FIND Parametro "NCOPIAFC" EXCLUSIVE-LOCK.
+    Parametro.valor_n = ncopias_fc.
+    RELEASE Parametro.
+
+END.
+
+/*=================================================================================*/
+/*           AVERIGUA LOS NUMEROS INTERNOS DE LOS REMITOS A IMPORTAR               */
+/*=================================================================================*/
+
+PROCEDURE BAJAR_T-Fac_header:
+
+    /*
+
+              Tabla de Ctl DESACTIVADA.
+
+    CREATE Ctl-despacho.
+    ASSIGN Ctl-despacho.nro_factura     = NEXT-VALUE(proxima_transaccion)
+           Ctl-despacho.nro_factura-suc = T-Fac_header.nro_factura.
+     
+    CREATE Fac_header.
+    BUFFER-COPY T-Fac_header TO Fac_header ASSIGN Fac_header.nro_factura = Ctl-despacho.nro_factura.
+    
+    */
+
+    CREATE Fac_header.
+    BUFFER-COPY T-Fac_header TO Fac_header.
+
+END PROCEDURE.
+
+PROCEDURE BAJAR_T-Fac_detalle:
+
+    FOR EACH T-Fac_detalle OF T-Fac_header:
+        CREATE Fac_detalle.
+/*      BUFFER-COPY T-Fac_detalle TO Fac_detalle ASSIGN Fac_detalle.nro_factura = Ctl-despacho.nro_factura. */
+        BUFFER-COPY T-Fac_detalle TO Fac_detalle.
+    END.
+
+END PROCEDURE.
+
+PROCEDURE BAJAR_T-Fac_header-bon:
+
+    FOR EACH T-Fac_header-bon OF T-Fac_header:
+        CREATE Fac_header-bon.
+/*      BUFFER-COPY T-Fac_header-bon TO Fac_header-bon ASSIGN Fac_header-bon.nro_factura = Ctl-despacho.nro_factura.*/
+        BUFFER-COPY T-Fac_header-bon TO Fac_header-bon.
+    END.
+
+END PROCEDURE.
+
+PROCEDURE BAJAR_T-Fac_detalle-bon:
+
+    FOR EACH T-Fac_detalle-bon OF T-Fac_header:
+        CREATE Fac_detalle-bon.
+/*      BUFFER-COPY T-Fac_detalle-bon TO Fac_detalle-bon ASSIGN Fac_detalle-bon.nro_factura = Ctl-despacho.nro_factura.*/
+        BUFFER-COPY T-Fac_detalle-bon TO Fac_detalle-bon.
+    END.
+
+END PROCEDURE.
+
+PROCEDURE BAJAR_T-Remito-factura:
+
+    FOR EACH T-Remito-factura OF T-Fac_header:
+        CREATE Remito-factura.
+/*      BUFFER-COPY T-Remito-factura TO Remito-factura ASSIGN Remito-factura.nro_factura = Ctl-despacho.nro_factura.*/
+        BUFFER-COPY T-Remito-factura TO Remito-factura.
+    END.
+
+END PROCEDURE.
+

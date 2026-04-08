@@ -1,0 +1,74 @@
+DEF INPUT PARAMETER ClientSocket AS CLASS ClientSocket NO-UNDO. /* Socket Name */
+
+DEF VAR g_MessageData AS CHAR NO-UNDO. /* data received from socket */
+DEF VAR g_Terminator  AS CHAR NO-UNDO. /* local copy of variable */
+
+DEF VAR g_TerminatorLength AS INT NO-UNDO.
+
+ASSIGN g_Terminator       = IF ClientSocket:Terminator NE "" THEN ClientSocket:Terminator ELSE "~n"
+       g_TerminatorLength = LENGTH(g_Terminator).
+       
+ASSIGN ClientSocket:SocketHandler = THIS-PROCEDURE.       
+
+ON CLOSE OF THIS-PROCEDURE
+DO:
+ DELETE PROCEDURE THIS-PROCEDURE.
+END.
+
+/*  ==========================================================================
+    InboundData
+    This is processed every time there is some data on the socket to be read,
+    or the client has been disconnected.
+    
+    g_MessageData is built up by repeated calls to the inbounddata procedure. 
+    at the end of the procedure, any complete message(s) is published (a complete
+    message has the Terminator string, and that message removed from g_messagedata
+    ==========================================================================*/ 
+
+PROCEDURE InboundData:
+ DEF VAR lv_bytesAvailable AS INT NO-UNDO. /* count of bytes to read */
+ DEF VAR lv_MessageIndex   AS INT NO-UNDO.
+ 
+ DEF VAR lv_Data AS CHAR NO-UNDO.
+ 
+ DEF VAR memReadData  AS MEMPTR NO-UNDO. /* memptr for reading from Socket */
+
+ ASSIGN SELF:SENSITIVE    = NO /* this is needed to stop the read trigger from firing whilst processing
+                                  in theory this should not be needed, but after suggestions from Greg Higgins
+                                  and experimentation it seems to be the "chicken soup" solution for sockets that
+                                  READKEY PAUSE 0 is for other areas */
+        lv_bytesAvailable = SELF:GET-BYTES-AVAILABLE().
+
+ IF lv_bytesAvailable EQ 0 THEN /* socket has disconnected. deal with it */
+ DO:
+  IF g_messageData NE "" THEN ClientSocket:ReadMessage(g_messageData). /* publish last data chunk even if it does not have a terminator */
+  ClientSocket:ClientDisconnected(). /* send the disconnected message to any interested party */
+  DELETE PROCEDURE THIS-PROCEDURE.
+  ASSIGN SELF:SENSITIVE = YES.
+  RETURN.
+ END. /* IF lv_bytesAvailable EQ 0  */
+ 
+ SET-SIZE(memReadData) = 0. /* Initialise to zero just in case */
+ SET-SIZE(memReadData) = lv_bytesAvailable. /* now set the proper size */
+
+ SELF:READ(memReadData,1,lv_bytesAvailable,READ-EXACT-NUM). /* read the bytes-available characters */
+
+ ASSIGN lv_Data         = GET-STRING(memReadData,1,lv_bytesAvailable) /* get available data */
+        g_MessageData   = g_MessageData + lv_Data /* build up the inbound data string */
+        lv_MessageIndex = INDEX(g_messageData,g_Terminator).  /* check for a complete message */
+ 
+ SET-SIZE(memReadData) = 0. /* clear memory */
+
+ DO WHILE lv_MessageIndex GT 0: /* find all complete messages and send the message to any interested party */
+
+  ASSIGN lv_data                                                          = SUBSTR(g_MessageData,1,lv_MessageIndex + g_terminatorLength - 1)
+         SUBSTR(g_MessageData,1,lv_MessageIndex + g_terminatorLength - 1) = ""
+         lv_MessageIndex                                                  = INDEX(g_messageData,g_Terminator). 
+
+   ClientSocket:ReadMessage(lv_Data). /* publish last complete message */
+ END.
+
+ SELF:SENSITIVE = YES.
+ 
+END PROCEDURE.
+

@@ -1,0 +1,21 @@
+DEFINE VAR pt AS CHAR FORMAT "X(50)" NO-UNDO.
+DEFINE VAR pi AS INT.
+DEFINE VAR pu AS INT.
+DEF VAR i AS INT.
+FOR EACH cliente WHERE index(migra,"TEL[") <> 0:
+pi=INDEX(migra,"TEL[") + 4.
+pu=INDEX(migra,"]",pi).
+pt= SUBSTRING( migra , INDEX( migra , "TEL[" ) + 4 , pu - pi ).
+pt="002!"+ pt + "|002!|001!|003!".
+CREATE persona.
+ASSIGN Persona.nombre=" OFICINA"
+persona.numeros_telefono=pt
+persona.nro_persona = NEXT-VALUE(proxima_persona).
+CREATE cliente-contacto.
+ASSIGN Cliente-contacto.nro_domicilio = 1
+       Cliente-contacto.nro_cliente = cliente.nro_cliente
+       Cliente-contacto.nro_persona =Persona.nro_persona
+       Cliente-contacto.cdg_cargo = "OF"
+       cliente-contacto.des_fecha = 01/01/1980
+       Cliente-contacto.has_fecha = 01/01/3000.    
+END.

@@ -1,0 +1,9 @@
+&GLOBAL-DEFINE TABLA           Aduana
+&GLOBAL-DEFINE CODIGO          cdg_aduana
+&GLOBAL-DEFINE NOMBRE          nombre
+&GLOBAL-DEFINE TITULO-BROWSE   Seleccione la Aduana o ingrese nombre
+&GLOBAL-DEFINE TITULO-FRAME    Seleccion de Aduanas
+&GLOBAL-DEFINE PROCESO         ACBRWADU
+&GLOBAL-DEFINE ULT_REGISTRO    ult_aduana
+
+{SELBROWS.I}

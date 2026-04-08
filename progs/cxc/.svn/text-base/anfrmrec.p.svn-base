@@ -1,0 +1,145 @@
+/*=================================================================================*/
+/*                           VARIABLES, FRAMES, Y SUBMENUES                        */
+/*=================================================================================*/
+
+{VPERSINM.I}
+/**/
+{VRSHARED.I}
+/**/
+
+DEFINE VARIABLE que_empresa     LIKE Empresa.nombre.
+DEFINE VARIABLE que_parametro   LIKE Parametro.cdg_parametro.
+DEFINE VARIABLE credebfc        LIKE Parametro.valor_l INITIAL NO.
+DEFINE VARIABLE tipos_validos   AS CHARACTER LABEL "Tipos de formulario"  INITIAL "RA,RB".
+DEFINE VARIABLE tip_forma       AS CHARACTER LABEL "Tipo de formulario".
+DEFINE VARIABLE mensaje         AS CHARACTER FORMAT "X(40)".
+DEFINE VARIABLE des_forma       AS INTEGER LABEL "Desde formulario".
+DEFINE VARIABLE cantidad_formas AS INTEGER LABEL "Cantidad de formularios" INITIAL 1.
+DEFINE VARIABLE j               AS INTEGER.
+
+DEFINE BUTTON btn_proceso
+     LABEL "&Procesar":L 
+     SIZE 10 BY 1 FONT 10.
+     
+DEFINE BUTTON btn_salir
+     LABEL "&Salir":L 
+     SIZE 10 BY 1 FONT 10.
+     
+FORM 
+     mensaje NO-LABEL
+     WITH FRAME frm-espere OVERLAY
+          TITLE FGCOLOR 14 BGCOLOR 4 "Aguarde un momento por favor" 
+          CENTERED ROW 7 FGCOLOR 14 BGCOLOR 4.
+
+FORM 
+   SKIP(1)
+   pto_venta        COLON 35 FGCOLOR fe_c BGCOLOR be_c
+   tip_forma        COLON 35 FGCOLOR fe_c BGCOLOR be_c
+   des_forma        COLON 35 FGCOLOR fe_c BGCOLOR be_c
+   cantidad_formas  COLON 35 FGCOLOR fe_c BGCOLOR be_c
+   SKIP(1)     
+   SPACE(5) BTN_PROCESO  SPACE(40) BTN_SALIR SPACE(5) SKIP(1)
+   WITH FRAME frm-rango SIDE-LABELS CENTERED ROW 3 FGCOLOR f-fg_c BGCOLOR f-bg_c OVERLAY
+        TITLE "Anulacion de formularios de facturas" FONT 8.
+
+/*=================================================================================*/
+/*                      T R I G G E R S    D E    U S U A R I O                    */
+/*=================================================================================*/
+
+ON RETURN OF tip_forma IN FRAME frm-rango
+DO:
+
+  ASSIGN tip_forma.
+  tip_forma = CAPS(tip_forma).
+  DISPLAY tip_forma WITH FRAME frm-rango.
+          
+  IF LOOKUP(tip_forma,tipos_validos) = 0
+  THEN DO:
+     RUN PONMENSJ.P (INPUT "ANUL000").
+     RETURN NO-APPLY.
+  END.
+  ELSE DO:
+     CASE tip_forma:
+          WHEN "RA" THEN que_parametro = "PRCA".
+          WHEN "RB" THEN que_parametro = "PRCB".
+     END CASE.
+     que_parametro = que_parametro + STRING(pto_venta,"9999").
+     FIND Parametro WHERE cdg_parametro = que_parametro EXCLUSIVE-LOCK NO-WAIT NO-ERROR.
+     IF LOCKED Parametro
+     THEN DO:
+        RUN PONMENSJ.P (INPUT "ANUL001").
+        RETURN NO-APPLY.
+     END.
+     ELSE DO:  
+        des_forma  = Parametro.valor_n.
+        DISPLAY des_forma WITH FRAME frm-rango.
+     END.   
+  END.
+END.          
+
+
+ON CHOOSE OF btn_proceso
+DO:
+
+  ASSIGN tip_forma des_forma cantidad_formas.
+  mensaje = "Procesando ...".        
+  DISPLAY mensaje WITH FRAME frm-espere.
+  
+  DO j = 1 TO cantidad_formas:
+
+     CREATE Rec_header.
+     ASSIGN Rec_header.fecha       = TODAY 
+            Rec_header.tip_comprob = tip_forma
+            Rec_header.prf_comprob = pto_venta
+            Rec_header.nro_comprob = des_forma + j - 1
+            Rec_header.origen      = "A"
+            Rec_header.anulado     = YES.
+
+  END.            
+ 
+  Parametro.valor_n = Parametro.valor_n + cantidad_formas.
+  RELEASE Parametro.
+  PAUSE 0.
+  HIDE FRAME frm-espere.
+  DISPLAY pto_venta tip_forma des_forma cantidad_formas
+          WITH FRAME frm-rango.
+
+  DISABLE BTN_PROCESO WITH FRAME frm-rango.
+
+END.  
+
+ON LEAVE OF pto_venta IN FRAME frm-rango
+DO:
+   ASSIGN pto_venta.
+END.   
+
+/*=================================================================================*/
+/*                          B L O Q U E   P R I N C I P A L                        */
+/*=================================================================================*/
+
+nom_funcion = "Anulacion de Formularios".
+nom_menu = "RECIBOS C.C.".
+
+FIND Empresa WHERE ROWID(Empresa) = act_empresa NO-LOCK.
+titulo_w = Empresa.nombre + "   " + nom_menu + " -- " + nom_funcion.
+que_empresa = Empresa.nombre.
+
+RUN PONER_SESION.
+
+DISPLAY 
+       pto_venta tip_forma des_forma cantidad_formas
+       WITH FRAME frm-rango.   
+    
+ENABLE ALL EXCEPT des_forma WITH FRAME frm-rango.       
+
+WAIT-FOR CHOOSE OF btn_salir.
+HIDE FRAME frm-rango NO-PAUSE.
+
+PROCEDURE PONER_SESION.
+
+  CURRENT-WINDOW:TITLE   = titulo_w.
+  STATUS INPUT "Ingrese datos o presione Esc para salir del programa.".
+
+END PROCEDURE.
+
+ 

@@ -1,0 +1,5 @@
+DEFINE INPUT PARAMETER p-cdg_stepisodio LIKE St_episodio.cdg_stepisodio.
+DEFINE INPUT PARAMETER p-des_fecha      AS DATE.
+DEFINE INPUT PARAMETER p-has_fecha      AS DATE.
+
+MESSAGE "Esta opcion no está disponible aún" VIEW-AS ALERT-BOX MESSAGE TITLE "Módulo en desarrollo".

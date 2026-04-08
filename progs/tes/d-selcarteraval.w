@@ -1,0 +1,1487 @@
+&ANALYZE-SUSPEND _VERSION-NUMBER UIB_v8r12 GUI
+&ANALYZE-RESUME
+/* Connected Databases 
+          sic              PROGRESS
+*/
+&Scoped-define WINDOW-NAME CURRENT-WINDOW
+&Scoped-define FRAME-NAME Dialog-Frame
+
+
+/* Temp-Table and Buffer definitions                                    */
+DEFINE TEMP-TABLE T-Cartera NO-UNDO LIKE Valor.
+DEFINE TEMP-TABLE T-Seleccionados NO-UNDO LIKE Valor.
+
+
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CUSTOM _DEFINITIONS Dialog-Frame 
+/*------------------------------------------------------------------------
+
+  File: 
+
+  Description: 
+
+  Input Parameters:
+      <none>
+
+  Output Parameters:
+      <none>
+
+  Author: 
+
+  Created: 
+------------------------------------------------------------------------*/
+/*          This .W file was created with the Progress UIB.             */
+/*----------------------------------------------------------------------*/
+
+/* ***************************  Definitions  ************************** */
+
+/* Parameters Definitions ---                                           */
+
+/* Local Variable Definitions ---                                       */
+
+&IF DEFINED(UIB_is_Running)
+&THEN
+DEFINE VARIABLE p-cdg_caja LIKE Caja.cdg_caja INITIAL 1.
+&ELSE
+DEFINE INPUT PARAMETER p-cdg_caja LIKE Caja.cdg_caja.
+DEFINE INPUT-OUTPUT PARAMETER TABLE FOR T-Seleccionados.
+&ENDIF
+
+/*{vrshared.i "new"}*/
+{nrorelea.i}
+
+DEFINE VARIABLE fecha_inicial AS DATE.
+DEFINE VARIABLE fecha_elegida AS DATE.
+DEFINE VARIABLE nuevo_select  LIKE Valor.selectado.
+
+DEFINE TEMP-TABLE T-Seleccion NO-UNDO
+    FIELD num_seleccion AS INTEGER 
+    FIELD importe_resultado LIKE Valor.importe
+    FIELD cant_cheques AS INTEGER
+    INDEX por_importe importe_resultado.
+
+DEFINE TEMP-TABLE T-Lista_cheques NO-UNDO
+    FIELD num_seleccion AS INTEGER 
+    FIELD nro_valor     AS INTEGER
+    INDEX por_seleccion num_seleccion nro_valor.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-PREPROCESSOR-BLOCK 
+
+/* ********************  Preprocessor Definitions  ******************** */
+
+&Scoped-define PROCEDURE-TYPE DIALOG-BOX
+&Scoped-define DB-AWARE no
+
+/* Name of designated FRAME-NAME and/or first browse and/or first query */
+&Scoped-define FRAME-NAME Dialog-Frame
+&Scoped-define BROWSE-NAME BRW-DISPONIBLES
+
+/* Internal Tables (found by Frame, Query & Browse Queries)             */
+&Scoped-define INTERNAL-TABLES T-Cartera Banco Cliente T-Seleccionados
+
+/* Definitions for BROWSE BRW-DISPONIBLES                               */
+&Scoped-define FIELDS-IN-QUERY-BRW-DISPONIBLES Banco.cdg_banco ~
+Banco.abrevia T-Cartera.numero_cheque T-Cartera.fecha_emision ~
+T-Cartera.importe Cliente.cdg_cliente Cliente.nom_cliente 
+&Scoped-define ENABLED-FIELDS-IN-QUERY-BRW-DISPONIBLES 
+&Scoped-define QUERY-STRING-BRW-DISPONIBLES FOR EACH T-Cartera ~
+      WHERE T-Cartera.importe <= v-has_importe ~
+ AND T-Cartera.importe >= v-des_importe ~
+ AND T-Cartera.fecha_emision <= v-has_fecha ~
+ AND T-Cartera.fecha_emision >= v-des_fecha ~
+ AND LOOKUP(STRING(T-Cartera.cdg_rubro),v-lista_codigos) <> 0 NO-LOCK, ~
+      EACH Banco OF T-Cartera OUTER-JOIN NO-LOCK, ~
+      EACH Cliente OF T-Cartera NO-LOCK
+&Scoped-define OPEN-QUERY-BRW-DISPONIBLES OPEN QUERY BRW-DISPONIBLES FOR EACH T-Cartera ~
+      WHERE T-Cartera.importe <= v-has_importe ~
+ AND T-Cartera.importe >= v-des_importe ~
+ AND T-Cartera.fecha_emision <= v-has_fecha ~
+ AND T-Cartera.fecha_emision >= v-des_fecha ~
+ AND LOOKUP(STRING(T-Cartera.cdg_rubro),v-lista_codigos) <> 0 NO-LOCK, ~
+      EACH Banco OF T-Cartera OUTER-JOIN NO-LOCK, ~
+      EACH Cliente OF T-Cartera NO-LOCK.
+&Scoped-define TABLES-IN-QUERY-BRW-DISPONIBLES T-Cartera Banco Cliente
+&Scoped-define FIRST-TABLE-IN-QUERY-BRW-DISPONIBLES T-Cartera
+&Scoped-define SECOND-TABLE-IN-QUERY-BRW-DISPONIBLES Banco
+&Scoped-define THIRD-TABLE-IN-QUERY-BRW-DISPONIBLES Cliente
+
+
+/* Definitions for BROWSE BRW-SELECCIONADOS                             */
+&Scoped-define FIELDS-IN-QUERY-BRW-SELECCIONADOS T-Seleccionados.cdg_banco ~
+T-Seleccionados.cdg_sucurbanco T-Seleccionados.numero_cheque ~
+T-Seleccionados.importe T-Seleccionados.fecha_deposito 
+&Scoped-define ENABLED-FIELDS-IN-QUERY-BRW-SELECCIONADOS 
+&Scoped-define QUERY-STRING-BRW-SELECCIONADOS FOR EACH T-Seleccionados NO-LOCK INDEXED-REPOSITION
+&Scoped-define OPEN-QUERY-BRW-SELECCIONADOS OPEN QUERY BRW-SELECCIONADOS FOR EACH T-Seleccionados NO-LOCK INDEXED-REPOSITION.
+&Scoped-define TABLES-IN-QUERY-BRW-SELECCIONADOS T-Seleccionados
+&Scoped-define FIRST-TABLE-IN-QUERY-BRW-SELECCIONADOS T-Seleccionados
+
+
+/* Definitions for DIALOG-BOX Dialog-Frame                              */
+&Scoped-define OPEN-BROWSERS-IN-QUERY-Dialog-Frame ~
+    ~{&OPEN-QUERY-BRW-DISPONIBLES}~
+    ~{&OPEN-QUERY-BRW-SELECCIONADOS}
+
+/* Standard List Definitions                                            */
+&Scoped-Define ENABLED-OBJECTS RECT-1 RECT-2 RECT-3 RECT-5 RECT-6 RECT-7 ~
+RECT-8 v-numero_cheque v-des_fecha v-has_fecha v-lista_codigos v-cdg_banco ~
+v-importe_objetivo btn_buscar v-des_importe v-has_importe btn_buscar-2 ~
+v-importe_tolerancia Btn_OK btn_marcar_todos btn_vercheque btn_listar ~
+btn_desmarcar_todos Btn_Cancel btn_vercheque-2 btn_desafectar ~
+BRW-DISPONIBLES BRW-SELECCIONADOS 
+&Scoped-Define DISPLAYED-OBJECTS v-cdg_caja v-dsc_caja v-cantcheques ~
+v-totimporte v-numero_cheque v-des_fecha v-has_fecha v-lista_codigos ~
+v-cdg_banco v-importe_objetivo v-des_importe v-has_importe ~
+v-importe_tolerancia 
+
+/* Custom List Definitions                                              */
+/* List-1,List-2,List-3,List-4,List-5,List-6                            */
+
+/* _UIB-PREPROCESSOR-BLOCK-END */
+&ANALYZE-RESUME
+
+
+
+/* ***********************  Control Definitions  ********************** */
+
+/* Define a dialog box                                                  */
+
+/* Definitions of the field level widgets                               */
+DEFINE BUTTON btn_buscar 
+     LABEL "Nueva" 
+     SIZE 15 BY .95.
+
+DEFINE BUTTON btn_buscar-2 
+     LABEL "Agregar" 
+     SIZE 15 BY .95.
+
+DEFINE BUTTON Btn_Cancel AUTO-END-KEY 
+     LABEL "&Cancelar y Salir" 
+     SIZE 18 BY 1.67
+     BGCOLOR 8 .
+
+DEFINE BUTTON btn_desafectar 
+     LABEL "&Desafectar" 
+     SIZE 18 BY 1.67.
+
+DEFINE BUTTON btn_desmarcar_todos 
+     LABEL "Desmarcar &Todos" 
+     SIZE 18 BY 1.67.
+
+DEFINE BUTTON btn_listar 
+     LABEL "&Listado" 
+     SIZE 18 BY 1.67.
+
+DEFINE BUTTON btn_marcar_todos 
+     LABEL "Marcar &Todos" 
+     SIZE 18 BY 1.67.
+
+DEFINE BUTTON Btn_OK AUTO-GO 
+     LABEL "&Elegir y Salir" 
+     SIZE 18 BY 1.67
+     BGCOLOR 8 .
+
+DEFINE BUTTON btn_vercheque 
+     LABEL "&Ver Cartera" 
+     SIZE 18 BY 1.67.
+
+DEFINE BUTTON btn_vercheque-2 
+     LABEL "&Ver Selección" 
+     SIZE 18 BY 1.67.
+
+DEFINE VARIABLE v-cantcheques AS INTEGER FORMAT ">>>>9":U INITIAL 0 
+     LABEL "Cheques Seleccionados" 
+     VIEW-AS FILL-IN 
+     SIZE 9 BY 1
+     BGCOLOR 15 FGCOLOR 9  NO-UNDO.
+
+DEFINE VARIABLE v-cdg_banco AS INTEGER FORMAT ">>>>>>>9":U INITIAL 0 
+     LABEL "Banco" 
+     VIEW-AS FILL-IN 
+     SIZE 7 BY 1
+     BGCOLOR 15 FGCOLOR 9  NO-UNDO.
+
+DEFINE VARIABLE v-cdg_caja AS INTEGER FORMAT "->,>>>,>>9":U INITIAL 0 
+     LABEL "Caja" 
+     VIEW-AS FILL-IN NATIVE 
+     SIZE 10 BY 1
+     BGCOLOR 15 FGCOLOR 9  NO-UNDO.
+
+DEFINE VARIABLE v-des_fecha AS DATE FORMAT "99/99/9999":U 
+     LABEL "Desde" 
+     VIEW-AS FILL-IN 
+     SIZE 22 BY 1
+     BGCOLOR 15 FGCOLOR 9  NO-UNDO.
+
+DEFINE VARIABLE v-des_importe AS DECIMAL FORMAT "->>>,>>>,>>9.99":U INITIAL 0 
+     LABEL "Desde" 
+     VIEW-AS FILL-IN 
+     SIZE 22 BY 1
+     BGCOLOR 15 FGCOLOR 9  NO-UNDO.
+
+DEFINE VARIABLE v-dsc_caja AS CHARACTER FORMAT "X(256)":U 
+     VIEW-AS FILL-IN NATIVE 
+     SIZE 65 BY 1
+     BGCOLOR 7 FGCOLOR 15  NO-UNDO.
+
+DEFINE VARIABLE v-has_fecha AS DATE FORMAT "99/99/9999":U 
+     LABEL "Hasta" 
+     VIEW-AS FILL-IN 
+     SIZE 22 BY 1
+     BGCOLOR 15 FGCOLOR 9  NO-UNDO.
+
+DEFINE VARIABLE v-has_importe AS DECIMAL FORMAT "->>>,>>>,>>9.99":U INITIAL 0 
+     LABEL "Hasta" 
+     VIEW-AS FILL-IN 
+     SIZE 22 BY 1
+     BGCOLOR 15 FGCOLOR 9  NO-UNDO.
+
+DEFINE VARIABLE v-importe_objetivo AS DECIMAL FORMAT "->>>,>>>,>>9.99":U INITIAL 0 
+     LABEL "Objetivo" 
+     VIEW-AS FILL-IN 
+     SIZE 20 BY 1
+     BGCOLOR 15 FGCOLOR 9  NO-UNDO.
+
+DEFINE VARIABLE v-importe_tolerancia AS DECIMAL FORMAT "->>>,>>>,>>9.99":U INITIAL 0 
+     LABEL "Tolerancia" 
+     VIEW-AS FILL-IN 
+     SIZE 20 BY 1
+     BGCOLOR 15 FGCOLOR 9  NO-UNDO.
+
+DEFINE VARIABLE v-numero_cheque AS INTEGER FORMAT ">>>>>>>9":U INITIAL 0 
+     LABEL "Nro. Cheque" 
+     VIEW-AS FILL-IN 
+     SIZE 14 BY 1
+     BGCOLOR 15 FGCOLOR 9  NO-UNDO.
+
+DEFINE VARIABLE v-ocupado AS CHARACTER FORMAT "X(256)":U 
+     VIEW-AS FILL-IN 
+     SIZE 7 BY 1
+     BGCOLOR 12 FGCOLOR 12 FONT 6 NO-UNDO.
+
+DEFINE VARIABLE v-totimporte AS DECIMAL FORMAT "->>,>>>,>>9.99":U INITIAL 0 
+     LABEL "Importe Total" 
+     VIEW-AS FILL-IN 
+     SIZE 20 BY 1
+     BGCOLOR 15 FGCOLOR 9  NO-UNDO.
+
+DEFINE RECTANGLE RECT-1
+     EDGE-PIXELS 2 GRAPHIC-EDGE  NO-FILL   
+     SIZE 64 BY 2.91.
+
+DEFINE RECTANGLE RECT-2
+     EDGE-PIXELS 2 GRAPHIC-EDGE  NO-FILL   
+     SIZE 163 BY 1.43.
+
+DEFINE RECTANGLE RECT-3
+     EDGE-PIXELS 2 GRAPHIC-EDGE  NO-FILL   
+     SIZE 163 BY 2.14.
+
+DEFINE RECTANGLE RECT-5
+     EDGE-PIXELS 2 GRAPHIC-EDGE  NO-FILL   
+     SIZE 64 BY 3.38.
+
+DEFINE RECTANGLE RECT-6
+     EDGE-PIXELS 2 GRAPHIC-EDGE  NO-FILL   
+     SIZE 59 BY 2.62.
+
+DEFINE RECTANGLE RECT-7
+     EDGE-PIXELS 2 GRAPHIC-EDGE  NO-FILL   
+     SIZE 59 BY 3.81.
+
+DEFINE RECTANGLE RECT-8
+     EDGE-PIXELS 2 GRAPHIC-EDGE  NO-FILL   
+     SIZE 38 BY 6.43.
+
+DEFINE VARIABLE v-lista_codigos AS CHARACTER 
+     VIEW-AS SELECTION-LIST MULTIPLE SORT SCROLLBAR-VERTICAL 
+     LIST-ITEM-PAIRS "Uno","1" 
+     SIZE 36 BY 4.76
+     BGCOLOR 15 FGCOLOR 9  NO-UNDO.
+
+/* Query definitions                                                    */
+&ANALYZE-SUSPEND
+DEFINE QUERY BRW-DISPONIBLES FOR 
+      T-Cartera, 
+      Banco, 
+      Cliente SCROLLING.
+
+DEFINE QUERY BRW-SELECCIONADOS FOR 
+      T-Seleccionados SCROLLING.
+&ANALYZE-RESUME
+
+/* Browse definitions                                                   */
+DEFINE BROWSE BRW-DISPONIBLES
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _DISPLAY-FIELDS BRW-DISPONIBLES Dialog-Frame _STRUCTURED
+  QUERY BRW-DISPONIBLES NO-LOCK DISPLAY
+      Banco.cdg_banco FORMAT "999":U
+      Banco.abrevia COLUMN-LABEL "Sigla!Banco" FORMAT "X(8)":U
+      T-Cartera.numero_cheque FORMAT ">>>>>>>9":U
+      T-Cartera.fecha_emision FORMAT "99/99/99":U
+      T-Cartera.importe FORMAT "->>>,>>>,>>9.99":U WIDTH 17
+      Cliente.cdg_cliente FORMAT "X(8)":U
+      Cliente.nom_cliente FORMAT "X(40)":U WIDTH 35.4
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+    WITH SEPARATORS SIZE 103 BY 14.52
+         BGCOLOR 15 FGCOLOR 9 
+         TITLE BGCOLOR 15 FGCOLOR 9 "Valores Disponibles en Cartera" FIT-LAST-COLUMN.
+
+DEFINE BROWSE BRW-SELECCIONADOS
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _DISPLAY-FIELDS BRW-SELECCIONADOS Dialog-Frame _STRUCTURED
+  QUERY BRW-SELECCIONADOS NO-LOCK DISPLAY
+      T-Seleccionados.cdg_banco FORMAT "999":U
+      T-Seleccionados.cdg_sucurbanco FORMAT "999":U
+      T-Seleccionados.numero_cheque FORMAT ">>>>>>>9":U
+      T-Seleccionados.importe FORMAT "->>>,>>>,>>9.99":U WIDTH 16
+      T-Seleccionados.fecha_deposito FORMAT "99/99/99":U WIDTH 11.2
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+    WITH NO-ROW-MARKERS SEPARATORS SIZE 59 BY 14.52
+         BGCOLOR 15 FGCOLOR 9 
+         TITLE BGCOLOR 15 FGCOLOR 9 "Valores seleccionados".
+
+
+/* ************************  Frame Definitions  *********************** */
+
+DEFINE FRAME Dialog-Frame
+     v-cdg_caja AT ROW 1.48 COL 10 COLON-ALIGNED
+     v-dsc_caja AT ROW 1.48 COL 21 COLON-ALIGNED NO-LABEL
+     v-cantcheques AT ROW 1.48 COL 112 COLON-ALIGNED
+     v-totimporte AT ROW 1.48 COL 144 COLON-ALIGNED
+     v-numero_cheque AT ROW 4.24 COL 149.6 COLON-ALIGNED
+     v-des_fecha AT ROW 4.33 COL 11 COLON-ALIGNED
+     v-has_fecha AT ROW 4.33 COL 42 COLON-ALIGNED
+     v-lista_codigos AT ROW 4.33 COL 70 NO-LABEL WIDGET-ID 6
+     v-cdg_banco AT ROW 4.33 COL 116 COLON-ALIGNED
+     v-ocupado AT ROW 5.76 COL 148 COLON-ALIGNED NO-LABEL
+     v-importe_objetivo AT ROW 6.91 COL 144 COLON-ALIGNED
+     btn_buscar AT ROW 6.95 COL 110
+     v-des_importe AT ROW 7.67 COL 11 COLON-ALIGNED
+     v-has_importe AT ROW 7.67 COL 42 COLON-ALIGNED
+     btn_buscar-2 AT ROW 8.14 COL 110 WIDGET-ID 16
+     v-importe_tolerancia AT ROW 8.14 COL 143.6 COLON-ALIGNED
+     Btn_OK AT ROW 9.81 COL 5
+     btn_marcar_todos AT ROW 9.81 COL 24 WIDGET-ID 4
+     btn_vercheque AT ROW 9.81 COL 43
+     btn_listar AT ROW 9.81 COL 62
+     btn_desmarcar_todos AT ROW 9.81 COL 81
+     Btn_Cancel AT ROW 9.81 COL 100
+     btn_vercheque-2 AT ROW 9.81 COL 119 WIDGET-ID 12
+     btn_desafectar AT ROW 9.81 COL 138 WIDGET-ID 14
+     BRW-DISPONIBLES AT ROW 11.95 COL 4
+     BRW-SELECCIONADOS AT ROW 11.95 COL 108 WIDGET-ID 100
+     "   Rango de importe de los valores a considerar:" VIEW-AS TEXT
+          SIZE 62 BY 1 AT ROW 6.24 COL 5
+          BGCOLOR 5 FGCOLOR 15 
+     "   Seleccionar valores que combinen con:" VIEW-AS TEXT
+          SIZE 57 BY 1 AT ROW 5.76 COL 109
+          BGCOLOR 5 FGCOLOR 15 
+     "   Rango de fechas de emisión de los valores a considerar:" VIEW-AS TEXT
+          SIZE 62 BY 1 AT ROW 3.14 COL 5
+          BGCOLOR 5 FGCOLOR 15 
+     "   Rubros a considerar:" VIEW-AS TEXT
+          SIZE 36 BY 1 AT ROW 3.14 COL 70 WIDGET-ID 10
+          BGCOLOR 5 FGCOLOR 15 
+     "   Seleccionar valor con numero y banco:" VIEW-AS TEXT
+          SIZE 57 BY 1 AT ROW 3.14 COL 109
+          BGCOLOR 5 FGCOLOR 15 
+     RECT-1 AT ROW 2.86 COL 4
+     RECT-2 AT ROW 1.24 COL 4
+     RECT-3 AT ROW 9.57 COL 4
+     RECT-5 AT ROW 6 COL 4
+     RECT-6 AT ROW 2.91 COL 108
+     RECT-7 AT ROW 5.52 COL 108
+     RECT-8 AT ROW 2.91 COL 69 WIDGET-ID 8
+     SPACE(60.39) SKIP(17.51)
+    WITH VIEW-AS DIALOG-BOX KEEP-TAB-ORDER 
+         SIDE-LABELS NO-UNDERLINE THREE-D  SCROLLABLE 
+         TITLE "Seleccion de Valores en Cartera"
+         DEFAULT-BUTTON Btn_OK CANCEL-BUTTON Btn_Cancel.
+
+
+/* *********************** Procedure Settings ************************ */
+
+&ANALYZE-SUSPEND _PROCEDURE-SETTINGS
+/* Settings for THIS-PROCEDURE
+   Type: DIALOG-BOX
+   Allow: Basic,Browse,DB-Fields,Query
+   Other Settings: COMPILE
+   Temp-Tables and Buffers:
+      TABLE: T-Cartera T "?" NO-UNDO sic Valor
+      TABLE: T-Seleccionados T "?" NO-UNDO sic Valor
+   END-TABLES.
+ */
+&ANALYZE-RESUME _END-PROCEDURE-SETTINGS
+
+
+
+/* ***********  Runtime Attributes and AppBuilder Settings  *********** */
+
+&ANALYZE-SUSPEND _RUN-TIME-ATTRIBUTES
+/* SETTINGS FOR DIALOG-BOX Dialog-Frame
+   FRAME-NAME                                                           */
+/* BROWSE-TAB BRW-DISPONIBLES btn_desafectar Dialog-Frame */
+/* BROWSE-TAB BRW-SELECCIONADOS BRW-DISPONIBLES Dialog-Frame */
+ASSIGN 
+       FRAME Dialog-Frame:SCROLLABLE       = FALSE
+       FRAME Dialog-Frame:HIDDEN           = TRUE.
+
+/* SETTINGS FOR FILL-IN v-cantcheques IN FRAME Dialog-Frame
+   NO-ENABLE                                                            */
+/* SETTINGS FOR FILL-IN v-cdg_caja IN FRAME Dialog-Frame
+   NO-ENABLE                                                            */
+/* SETTINGS FOR FILL-IN v-dsc_caja IN FRAME Dialog-Frame
+   NO-ENABLE                                                            */
+/* SETTINGS FOR FILL-IN v-ocupado IN FRAME Dialog-Frame
+   NO-DISPLAY NO-ENABLE                                                 */
+ASSIGN 
+       v-ocupado:HIDDEN IN FRAME Dialog-Frame           = TRUE.
+
+/* SETTINGS FOR FILL-IN v-totimporte IN FRAME Dialog-Frame
+   NO-ENABLE                                                            */
+/* _RUN-TIME-ATTRIBUTES-END */
+&ANALYZE-RESUME
+
+
+/* Setting information for Queries and Browse Widgets fields            */
+
+&ANALYZE-SUSPEND _QUERY-BLOCK BROWSE BRW-DISPONIBLES
+/* Query rebuild information for BROWSE BRW-DISPONIBLES
+     _TblList          = "Temp-Tables.T-Cartera,sic.Banco OF Temp-Tables.T-Cartera,sic.Cliente OF Temp-Tables.T-Cartera"
+     _Options          = "NO-LOCK"
+     _TblOptList       = ", OUTER,,"
+     _Where[1]         = "Temp-Tables.T-Cartera.importe <= v-has_importe
+ AND Temp-Tables.T-Cartera.importe >= v-des_importe
+ AND Temp-Tables.T-Cartera.fecha_emision <= v-has_fecha
+ AND Temp-Tables.T-Cartera.fecha_emision >= v-des_fecha
+ AND LOOKUP(STRING(T-Cartera.cdg_rubro),v-lista_codigos) <> 0"
+     _FldNameList[1]   = sic.Banco.cdg_banco
+     _FldNameList[2]   > sic.Banco.abrevia
+"Banco.abrevia" "Sigla!Banco" "X(8)" "character" ? ? ? ? ? ? no ? no no ? yes no no "U" "" "" "" "" "" "" 0 no 0 no no
+     _FldNameList[3]   = Temp-Tables.T-Cartera.numero_cheque
+     _FldNameList[4]   = Temp-Tables.T-Cartera.fecha_emision
+     _FldNameList[5]   > Temp-Tables.T-Cartera.importe
+"T-Cartera.importe" ? ? "decimal" ? ? ? ? ? ? no ? no no "17" yes no no "U" "" "" "" "" "" "" 0 no 0 no no
+     _FldNameList[6]   = sic.Cliente.cdg_cliente
+     _FldNameList[7]   > sic.Cliente.nom_cliente
+"Cliente.nom_cliente" ? ? "character" ? ? ? ? ? ? no ? no no "35.4" yes no no "U" "" "" "" "" "" "" 0 no 0 no no
+     _Query            is OPENED
+*/  /* BROWSE BRW-DISPONIBLES */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _QUERY-BLOCK BROWSE BRW-SELECCIONADOS
+/* Query rebuild information for BROWSE BRW-SELECCIONADOS
+     _TblList          = "Temp-Tables.T-Seleccionados"
+     _Options          = "NO-LOCK INDEXED-REPOSITION"
+     _FldNameList[1]   = Temp-Tables.T-Seleccionados.cdg_banco
+     _FldNameList[2]   = Temp-Tables.T-Seleccionados.cdg_sucurbanco
+     _FldNameList[3]   = Temp-Tables.T-Seleccionados.numero_cheque
+     _FldNameList[4]   > Temp-Tables.T-Seleccionados.importe
+"T-Seleccionados.importe" ? ? "decimal" ? ? ? ? ? ? no ? no no "16" yes no no "U" "" "" "" "" "" "" 0 no 0 no no
+     _FldNameList[5]   > Temp-Tables.T-Seleccionados.fecha_deposito
+"T-Seleccionados.fecha_deposito" ? ? "date" ? ? ? ? ? ? no ? no no "11.2" yes no no "U" "" "" "" "" "" "" 0 no 0 no no
+     _Query            is OPENED
+*/  /* BROWSE BRW-SELECCIONADOS */
+&ANALYZE-RESUME
+
+ 
+
+
+
+/* ************************  Control Triggers  ************************ */
+
+&Scoped-define SELF-NAME Dialog-Frame
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL Dialog-Frame Dialog-Frame
+ON WINDOW-CLOSE OF FRAME Dialog-Frame /* Seleccion de Valores en Cartera */
+DO:
+  APPLY "END-ERROR":U TO SELF.
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define BROWSE-NAME BRW-DISPONIBLES
+&Scoped-define SELF-NAME BRW-DISPONIBLES
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL BRW-DISPONIBLES Dialog-Frame
+ON MOUSE-SELECT-DBLCLICK OF BRW-DISPONIBLES IN FRAME Dialog-Frame /* Valores Disponibles en Cartera */
+OR "RETURN" OF {&BROWSE-NAME} IN FRAME {&FRAME-NAME}
+DO:
+
+  IF AVAILABLE T-Cartera
+      THEN RUN elegir_valor.
+      ELSE MESSAGE "No hay valores disponibles"
+              VIEW-AS ALERT-BOX ERROR.
+
+
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define BROWSE-NAME BRW-SELECCIONADOS
+&Scoped-define SELF-NAME BRW-SELECCIONADOS
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL BRW-SELECCIONADOS Dialog-Frame
+ON MOUSE-SELECT-DBLCLICK OF BRW-SELECCIONADOS IN FRAME Dialog-Frame /* Valores seleccionados */
+OR "RETURN" OF BRW-SELECCIONADOS IN FRAME {&FRAME-NAME}
+DO:
+    IF AVAILABLE T-Seleccionados
+        THEN RUN desmarcar_valor.
+        ELSE MESSAGE "No hay valores seleccionados"
+                VIEW-AS ALERT-BOX ERROR.
+  
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME btn_buscar
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL btn_buscar Dialog-Frame
+ON CHOOSE OF btn_buscar IN FRAME Dialog-Frame /* Nueva */
+DO:
+    DEFINE VARIABLE lok AS LOGICAL.
+    DEFINE VARIABLE tau AS DECIMAL.
+    ASSIGN FRAME {&FRAME-NAME} v-importe_objetivo v-importe_tolerancia.
+
+    IF btn_desmarcar_todos:SENSITIVE IN FRAME {&FRAME-NAME} 
+        THEN APPLY "CHOOSE" TO btn_desmarcar_todos IN FRAME {&FRAME-NAME}.
+    IF v-importe_objetivo > 0
+    THEN DO:
+        ETIME(YES).
+        RUN buscar_cheques.
+        tau = ETIME.
+        RUN abrir_queries.
+    END.
+    ELSE DO:
+        MESSAGE "El importe objetivo no debe ser CERO"
+            VIEW-AS ALERT-BOX ERROR.
+    END.
+
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME btn_buscar-2
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL btn_buscar-2 Dialog-Frame
+ON CHOOSE OF btn_buscar-2 IN FRAME Dialog-Frame /* Agregar */
+DO:
+    DEFINE VARIABLE lok AS LOGICAL.
+    DEFINE VARIABLE tau AS DECIMAL.
+    ASSIGN FRAME {&FRAME-NAME} v-importe_objetivo v-importe_tolerancia.
+
+    IF v-importe_objetivo > 0
+    THEN DO:
+        ETIME(YES).
+        RUN buscar_cheques.
+        tau = ETIME.
+        RUN abrir_queries.
+    END.
+    ELSE DO:
+        MESSAGE "El importe objetivo no debe ser CERO"
+            VIEW-AS ALERT-BOX ERROR.
+    END.
+
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME Btn_Cancel
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL Btn_Cancel Dialog-Frame
+ON CHOOSE OF Btn_Cancel IN FRAME Dialog-Frame /* Cancelar y Salir */
+DO:
+  RUN desmarcar_todos.
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME btn_desafectar
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL btn_desafectar Dialog-Frame
+ON CHOOSE OF btn_desafectar IN FRAME Dialog-Frame /* Desafectar */
+DO:
+  DO TRANSACTION:
+      ASSIGN v-cantcheques = v-cantcheques - 1
+             v-totimporte = v-totimporte - T-Seleccionados.importe.
+      DELETE T-Seleccionados.
+  END.
+
+  RUN abrir_queries.
+  RUN mostrar_cantidad_cheques.
+
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME btn_desmarcar_todos
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL btn_desmarcar_todos Dialog-Frame
+ON CHOOSE OF btn_desmarcar_todos IN FRAME Dialog-Frame /* Desmarcar Todos */
+DO:
+    RUN desmarcar_todos.
+/*
+   GET FIRST {&BROWSE-NAME}.
+   nuevo_select = NOT Valor.selectado.
+   DO WHILE AVAILABLE(Valor):
+      FIND B-Valor WHERE ROWID(B-Valor) = ROWID(Valor) EXCLUSIVE-LOCK.
+      B-Valor.selectado = nuevo_select.
+      IF B-Valor.selectado
+        THEN B-Valor.estado = stchq_usuario.
+        ELSE B-Valor.estado = stchq_encarte.
+
+      GET NEXT {&BROWSE-NAME}.
+   END.
+   RUN abrir_query_disponibles.
+*/
+  
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME btn_listar
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL btn_listar Dialog-Frame
+ON CHOOSE OF btn_listar IN FRAME Dialog-Frame /* Listado */
+DO:
+
+   RUN NOESTA.P.
+  /*
+   MESSAGE "Confirme con OK que desea emitir el listado"
+           VIEW-AS ALERT-BOX ERROR BUTTONS OK-CANCEL TITLE "Se pide confirmacion"
+           SET sino AS LOGICAL.
+   IF sino 
+   THEN DO:
+        RUN lsselcarteraval.p.
+   END.  
+  */
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME btn_marcar_todos
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL btn_marcar_todos Dialog-Frame
+ON CHOOSE OF btn_marcar_todos IN FRAME Dialog-Frame /* Marcar Todos */
+DO:
+    RUN marcar_todos.
+/*
+   GET FIRST {&BROWSE-NAME}.
+   nuevo_select = NOT Valor.selectado.
+   DO WHILE AVAILABLE(Valor):
+      FIND B-Valor WHERE ROWID(B-Valor) = ROWID(Valor) EXCLUSIVE-LOCK.
+      B-Valor.selectado = nuevo_select.
+      IF B-Valor.selectado
+        THEN B-Valor.estado = stchq_usuario.
+        ELSE B-Valor.estado = stchq_encarte.
+
+      GET NEXT {&BROWSE-NAME}.
+   END.
+   RUN abrir_query_disponibles.
+*/
+  
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME btn_vercheque
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL btn_vercheque Dialog-Frame
+ON CHOOSE OF btn_vercheque IN FRAME Dialog-Frame /* Ver Cartera */
+DO:
+  FIND Valor WHERE Valor.nro_valor = T-Cartera.nro_valor NO-LOCK.
+  RUN d-muestra_valor.w ( INPUT ROWID(Valor)).
+
+/*
+   IF NOT AVAILABLE Valor 
+   THEN DO:
+        BELL.
+        MESSAGE "No hay cheques que puedan consultarse"
+          VIEW-AS ALERT-BOX ERROR BUTTONS OK.
+        RETURN NO-APPLY.
+   END.
+   ELSE DO:
+        ult_valor = ROWID(Valor).
+        HIDE FRAME frm-cheques NO-PAUSE.
+        RUN ACTVALOR.P (INPUT 2).
+        RUN PONER_SESION.
+        VIEW FRAME frm-cheques.
+        RUN abrir_query_disponibles.
+   END.
+*/
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME btn_vercheque-2
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL btn_vercheque-2 Dialog-Frame
+ON CHOOSE OF btn_vercheque-2 IN FRAME Dialog-Frame /* Ver Selección */
+DO:
+  FIND Valor WHERE Valor.nro_valor = T-Seleccionados.nro_valor NO-LOCK.
+  RUN d-muestra_valor.w ( INPUT ROWID(Valor)).
+
+/*
+   IF NOT AVAILABLE Valor 
+   THEN DO:
+        BELL.
+        MESSAGE "No hay cheques que puedan consultarse"
+          VIEW-AS ALERT-BOX ERROR BUTTONS OK.
+        RETURN NO-APPLY.
+   END.
+   ELSE DO:
+        ult_valor = ROWID(Valor).
+        HIDE FRAME frm-cheques NO-PAUSE.
+        RUN ACTVALOR.P (INPUT 2).
+        RUN PONER_SESION.
+        VIEW FRAME frm-cheques.
+        RUN abrir_query_disponibles.
+   END.
+*/
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME v-des_fecha
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL v-des_fecha Dialog-Frame
+ON LEAVE OF v-des_fecha IN FRAME Dialog-Frame /* Desde */
+DO:
+    IF INPUT v-des_fecha = ? OR INPUT v-has_fecha = ? 
+    THEN DO:
+       BELL.
+       MESSAGE "No puede indicarse una fecha en blanco"
+          VIEW-AS ALERT-BOX ERROR BUTTONS OK.
+       RETURN NO-APPLY.
+    END. 
+
+
+    IF NOT AVAILABLE Caja
+    THEN DO:
+       BELL.
+       MESSAGE "No se ha indicado la caja a consultar"
+          VIEW-AS ALERT-BOX ERROR BUTTONS OK.
+       RETURN NO-APPLY.
+    END.        
+
+
+    ASSIGN FRAME {&FRAME-NAME} 
+           v-des_fecha
+           v-has_fecha.
+
+    RUN abrir_query_disponibles.
+  
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL v-des_fecha Dialog-Frame
+ON MOUSE-MENU-DOWN OF v-des_fecha IN FRAME Dialog-Frame /* Desde */
+DO:
+
+  fecha_inicial = DATE(v-des_fecha:SCREEN-VALUE IN FRAME {&FRAME-NAME}) NO-ERROR.
+  IF fecha_inicial = ? THEN fecha_inicial = TODAY.
+  RUN d-calendario.w ( INPUT fecha_inicial, OUTPUT fecha_elegida).
+  IF fecha_elegida <> ?
+  THEN DO:
+       DISPLAY fecha_elegida @ v-des_fecha 
+               WITH FRAME {&FRAME-NAME}.
+       APPLY "TAB" TO SELF.        
+  END.               
+
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME v-des_importe
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL v-des_importe Dialog-Frame
+ON LEAVE OF v-des_importe IN FRAME Dialog-Frame /* Desde */
+DO:
+    ASSIGN v-des_importe.
+    RUN abrir_query_disponibles.
+  
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME v-has_fecha
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL v-has_fecha Dialog-Frame
+ON LEAVE OF v-has_fecha IN FRAME Dialog-Frame /* Hasta */
+DO:
+    IF INPUT v-des_fecha = ? OR INPUT v-has_fecha = ? 
+    THEN DO:
+       BELL.
+       MESSAGE "No puede indicarse una fecha en blanco"
+          VIEW-AS ALERT-BOX ERROR BUTTONS OK.
+       RETURN NO-APPLY.
+    END. 
+
+
+    IF NOT AVAILABLE Caja
+    THEN DO:
+       BELL.
+       MESSAGE "No se ha indicado la caja a consultar"
+          VIEW-AS ALERT-BOX ERROR BUTTONS OK.
+       RETURN NO-APPLY.
+    END.        
+
+
+    ASSIGN FRAME {&FRAME-NAME} 
+           v-des_fecha
+           v-has_fecha.
+
+    RUN abrir_query_disponibles.
+
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL v-has_fecha Dialog-Frame
+ON MOUSE-MENU-DOWN OF v-has_fecha IN FRAME Dialog-Frame /* Hasta */
+DO:
+
+  fecha_inicial = DATE(v-has_fecha:SCREEN-VALUE IN FRAME {&FRAME-NAME}) NO-ERROR.
+  IF fecha_inicial = ? THEN fecha_inicial = TODAY.
+  RUN d-calendario.w ( INPUT fecha_inicial, OUTPUT fecha_elegida).
+  IF fecha_elegida <> ?
+  THEN DO:
+       DISPLAY fecha_elegida @ v-has_fecha 
+               WITH FRAME {&FRAME-NAME}.
+       APPLY "TAB" TO SELF.        
+  END.               
+
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME v-has_importe
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL v-has_importe Dialog-Frame
+ON LEAVE OF v-has_importe IN FRAME Dialog-Frame /* Hasta */
+DO:
+    ASSIGN v-has_importe.
+    RUN abrir_query_disponibles.
+  
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME v-importe_objetivo
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL v-importe_objetivo Dialog-Frame
+ON RETURN OF v-importe_objetivo IN FRAME Dialog-Frame /* Objetivo */
+OR "TAB" OF v-has_importe IN FRAME {&FRAME-NAME}
+DO:
+    ASSIGN v-has_importe.
+    RUN abrir_query_disponibles.
+  
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME v-importe_tolerancia
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL v-importe_tolerancia Dialog-Frame
+ON RETURN OF v-importe_tolerancia IN FRAME Dialog-Frame /* Tolerancia */
+OR "TAB" OF v-des_importe IN FRAME {&FRAME-NAME}
+DO:
+    ASSIGN v-des_importe.
+    RUN abrir_query_disponibles.
+  
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME v-lista_codigos
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL v-lista_codigos Dialog-Frame
+ON VALUE-CHANGED OF v-lista_codigos IN FRAME Dialog-Frame
+DO:
+    ASSIGN v-lista_codigos.
+    RUN levantar_valores.
+    RUN abrir_queries.
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME v-numero_cheque
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL v-numero_cheque Dialog-Frame
+ON RETURN OF v-numero_cheque IN FRAME Dialog-Frame /* Nro. Cheque */
+DO:
+
+  IF NOT AVAILABLE T-Cartera 
+  THEN DO:
+      BELL.
+      MESSAGE "No hay valores que puedan seleccionarse" VIEW-AS ALERT-BOX ERROR BUTTONS OK.
+  END.
+  ELSE DO:
+      ASSIGN v-numero_cheque v-cdg_banco.
+      IF v-cdg_banco = 0
+          THEN FIND T-Cartera WHERE T-Cartera.numero_cheque = v-numero_cheque NO-ERROR.
+          ELSE FIND T-Cartera WHERE T-Cartera.numero_cheque = v-numero_cheque AND T-Cartera.cdg_banco = v-cdg_banco NO-ERROR.
+
+      IF AVAILABLE T-Cartera
+      THEN DO:
+          REPOSITION {&BROWSE-NAME} TO ROWID ROWID(T-Cartera) NO-ERROR.
+          RUN elegir_valor.
+          RUN mostrar_cantidad_cheques.
+     END.
+      ELSE DO:
+          IF AMBIGUOUS T-Cartera
+          THEN DO:
+              MESSAGE "Especifique el banco emisor. Existe mas de un valor con ese número." VIEW-AS ALERT-BOX WARNING.
+          END.
+          ELSE DO:
+              MESSAGE "No existe el valor indicado" VIEW-AS ALERT-BOX ERROR.
+          END.
+      END.
+  END.
+
+  ASSIGN
+      v-cdg_banco = 0
+      v-numero_cheque = 0.
+  DISPLAY v-cdg_banco v-numero_cheque
+      WITH FRAME {&FRAME-NAME}.
+  RETURN NO-APPLY.
+
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define BROWSE-NAME BRW-DISPONIBLES
+&UNDEFINE SELF-NAME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CUSTOM _MAIN-BLOCK Dialog-Frame 
+
+
+/* ***************************  Main Block  *************************** */
+
+/* Parent the dialog-box to the ACTIVE-WINDOW, if there is no parent.   */
+IF VALID-HANDLE(ACTIVE-WINDOW) AND FRAME {&FRAME-NAME}:PARENT eq ?
+THEN FRAME {&FRAME-NAME}:PARENT = ACTIVE-WINDOW.
+
+/* Now enable the interface and wait for the exit condition.            */
+/* (NOTE: handle ERROR and END-KEY so cleanup code will always fire.    */
+
+RUN inicializar.
+
+MAIN-BLOCK:
+DO ON ERROR   UNDO MAIN-BLOCK, LEAVE MAIN-BLOCK
+   ON END-KEY UNDO MAIN-BLOCK, LEAVE MAIN-BLOCK:
+  RUN enable_UI.
+  RUN mostrar_cantidad_cheques.
+  WAIT-FOR GO OF FRAME {&FRAME-NAME}.
+  
+END.
+RUN disable_UI.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+/* **********************  Internal Procedures  *********************** */
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE abrir_queries Dialog-Frame 
+PROCEDURE abrir_queries :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+
+  RUN abrir_query_disponibles.
+  RUN abrir_query_seleccionados.
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE abrir_query_disponibles Dialog-Frame 
+PROCEDURE abrir_query_disponibles :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+
+  {&OPEN-QUERY-BRW-DISPONIBLES}
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE abrir_query_seleccionados Dialog-Frame 
+PROCEDURE abrir_query_seleccionados :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+
+  {&OPEN-QUERY-BRW-SELECCIONADOS}
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE buscar_cheques Dialog-Frame 
+PROCEDURE buscar_cheques :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+
+    DEFINE VARIABLE chq         AS INTEGER.
+    DEFINE VARIABLE i           AS INTEGER.
+    DEFINE VARIABLE n-seleccion AS INTEGER.
+    DEFINE VARIABLE agregado    AS LOGICAL.
+
+/* =========================================================================== */
+/*                                  PROCESO                                    */
+/* =========================================================================== */
+
+    RUN mostrar_estado ("Buscando ...").
+    
+    EMPTY TEMP-TABLE T-Seleccion.
+    EMPTY TEMP-TABLE T-Lista_cheques.
+
+  /*RUN desmarcar_todos.*/
+
+    i = 1.
+
+    FOR EACH T-Cartera WHERE T-Cartera.fecha_emision <= v-has_fecha 
+                         AND T-Cartera.fecha_emision >= v-des_fecha
+                         AND T-Cartera.importe <= v-importe_objetivo
+                             BY T-Cartera.importe DESCENDING:
+    
+        CREATE T-Seleccion.
+        ASSIGN T-Seleccion.num_seleccion     = i
+               T-Seleccion.importe_resultado = T-Cartera.importe
+               T-Seleccion.cant_cheques = 1.
+    
+        CREATE T-Lista_cheques.
+        ASSIGN T-Lista_cheques.num_seleccion = T-Seleccion.num_seleccion
+               T-Lista_cheques.nro_valor = T-Cartera.nro_valor.
+    
+        i = i + 1.
+    END.
+    
+    n-seleccion = 0.
+    agregado = YES .
+    busqueda:
+    DO WHILE agregado:
+    
+        FOR EACH T-Seleccion:
+
+            IF v-importe_objetivo - T-Seleccion.importe_resultado <= v-importe_tolerancia
+            THEN DO:
+                n-seleccion = T-Seleccion.num_seleccion.
+                LEAVE busqueda.
+            END.
+        
+            agregado = NO.
+
+            FIND FIRST T-Cartera WHERE T-Cartera.fecha_emision <= v-has_fecha 
+                                   AND T-Cartera.fecha_emision >= v-des_fecha
+                                   AND T-Cartera.importe <= v-importe_objetivo - T-Seleccion.importe_resultado
+                                    AND NOT CAN-FIND(FIRST T-Lista_cheques 
+                                                      WHERE T-Lista_cheques.num_seleccion = T-Seleccion.num_seleccion 
+                                                        AND T-Lista_cheques.nro_valor = T-Cartera.nro_valor)
+                                       NO-LOCK NO-ERROR.
+            IF AVAILABLE T-Cartera
+            THEN DO:
+                ASSIGN T-Seleccion.importe_resultado = T-Seleccion.importe_resultado + T-Cartera.importe
+                       T-Seleccion.cant_cheques      = T-Seleccion.cant_cheques + 1.
+    
+                CREATE T-Lista_cheques.
+                ASSIGN T-Lista_cheques.num_seleccion = T-Seleccion.num_seleccion
+                       T-Lista_cheques.nro_valor = T-Cartera.nro_valor.
+    
+                agregado = YES.
+
+            END.
+    
+        END.
+    
+    END.
+    
+    IF n-seleccion = 0
+    THEN DO:
+        FOR EACH T-Seleccion BY T-Seleccion.importe_resultado DESCENDING:
+            n-seleccion = T-Seleccion.num_seleccion.
+            LEAVE.
+        END.
+    END.
+        
+    FIND FIRST T-Seleccion WHERE T-Seleccion.num_seleccion = n-seleccion.
+        
+    FOR EACH T-Lista_cheques WHERE T-Lista_cheques.num_seleccion = T-Seleccion.num_seleccion, 
+           FIRST T-Cartera OF T-Lista_cheques:
+
+        RUN elegir_valor.
+        
+    END.
+    
+    v-ocupado:HIDDEN IN FRAME {&FRAME-NAME} = TRUE.
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE desmarcar_todos Dialog-Frame 
+PROCEDURE desmarcar_todos :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+
+  DO TRANSACTION:
+
+     ASSIGN
+        v-cantcheques = 0
+        v-totimporte  = 0.
+
+     FOR EACH T-Seleccionados:
+         CREATE T-Cartera.
+         BUFFER-COPY T-Seleccionados TO T-Cartera.
+         DELETE T-Seleccionados.
+     END.
+     
+  END.
+
+  RUN abrir_queries.
+  RUN mostrar_cantidad_cheques.
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE desmarcar_valor Dialog-Frame 
+PROCEDURE desmarcar_valor :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+
+  DO TRANSACTION:
+      ASSIGN v-cantcheques = v-cantcheques - 1
+             v-totimporte = v-totimporte - T-Seleccionados.importe.
+      CREATE T-Cartera.
+      BUFFER-COPY T-Seleccionados TO T-Cartera.
+      DELETE T-Seleccionados.
+  END.
+
+  RUN abrir_queries.
+  RUN mostrar_cantidad_cheques.
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE disable_UI Dialog-Frame  _DEFAULT-DISABLE
+PROCEDURE disable_UI :
+/*------------------------------------------------------------------------------
+  Purpose:     DISABLE the User Interface
+  Parameters:  <none>
+  Notes:       Here we clean-up the user-interface by deleting
+               dynamic widgets we have created and/or hide 
+               frames.  This procedure is usually called when
+               we are ready to "clean-up" after running.
+------------------------------------------------------------------------------*/
+  /* Hide all frames. */
+  HIDE FRAME Dialog-Frame.
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE elegir_valor Dialog-Frame 
+PROCEDURE elegir_valor :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+
+  DO TRANSACTION:
+      CREATE T-Seleccionados.
+      BUFFER-COPY T-Cartera TO T-Seleccionados.
+      DELETE T-Cartera.
+      ASSIGN v-cantcheques = v-cantcheques + 1
+             v-totimporte = v-totimporte + T-Seleccionados.importe.
+  END.
+
+  RUN abrir_queries.
+  RUN mostrar_cantidad_cheques.
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE enable_UI Dialog-Frame  _DEFAULT-ENABLE
+PROCEDURE enable_UI :
+/*------------------------------------------------------------------------------
+  Purpose:     ENABLE the User Interface
+  Parameters:  <none>
+  Notes:       Here we display/view/enable the widgets in the
+               user-interface.  In addition, OPEN all queries
+               associated with each FRAME and BROWSE.
+               These statements here are based on the "Other 
+               Settings" section of the widget Property Sheets.
+------------------------------------------------------------------------------*/
+  DISPLAY v-cdg_caja v-dsc_caja v-cantcheques v-totimporte v-numero_cheque 
+          v-des_fecha v-has_fecha v-lista_codigos v-cdg_banco v-importe_objetivo 
+          v-des_importe v-has_importe v-importe_tolerancia 
+      WITH FRAME Dialog-Frame.
+  ENABLE RECT-1 RECT-2 RECT-3 RECT-5 RECT-6 RECT-7 RECT-8 v-numero_cheque 
+         v-des_fecha v-has_fecha v-lista_codigos v-cdg_banco v-importe_objetivo 
+         btn_buscar v-des_importe v-has_importe btn_buscar-2 
+         v-importe_tolerancia Btn_OK btn_marcar_todos btn_vercheque btn_listar 
+         btn_desmarcar_todos Btn_Cancel btn_vercheque-2 btn_desafectar 
+         BRW-DISPONIBLES BRW-SELECCIONADOS 
+      WITH FRAME Dialog-Frame.
+  VIEW FRAME Dialog-Frame.
+  {&OPEN-BROWSERS-IN-QUERY-Dialog-Frame}
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE inicializar Dialog-Frame 
+PROCEDURE inicializar :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+
+    {findempresa.i}
+    
+    DEFINE VARIABLE ok AS LOGICAL.
+    DEFINE VARIABLE lista AS CHARACTER.
+    
+    DO WITH FRAME {&FRAME-NAME}:
+    
+      lista = "".
+      v-lista_codigos:DELETE(1).
+      FOR EACH Rubro WHERE Rubro.tipo = "V" NO-LOCK:
+          lista = lista + "," + Rubro.nombre + "," + STRING(Rubro.cdg_rubro).
+          v-lista_codigos:ADD-LAST(Rubro.nombre,STRING(Rubro.cdg_rubro)).
+      END.
+      /*v-cdg_rubro:LIST-ITEM-PAIRS = SUBSTRING(lista,2).      */
+      FIND FIRST Rubro WHERE Rubro.tipo = "V" NO-LOCK.
+      /*v-cdg_rubro = Rubro.cdg_rubro.  */
+      v-lista_codigos = STRING(Rubro.cdg_rubro).
+      
+    END.          
+    
+    FIND FIRST Caja WHERE Caja.cdg_caja = p-cdg_caja NO-LOCK.
+    ASSIGN v-cdg_caja = Caja.cdg_caja
+           v-dsc_caja = Caja.nombre
+           v-des_fecha = TODAY
+           v-has_fecha = v-des_fecha + 90
+           v-des_importe = 0
+           v-has_importe = 99999999.99.
+    
+    RUN levantar_valores.
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE levantar_valores Dialog-Frame 
+PROCEDURE levantar_valores :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+
+  /* Hay que definir que se hace con la cartera en caso de un cambio de rubro */
+
+  RUN mostrar_estado ("Leyendo...").
+
+  EMPTY TEMP-TABLE T-Cartera.
+  EMPTY TEMP-TABLE T-Seleccionados. /* Ver si borramos la tabla con los cambios de rubro */
+
+  {findempresa.i}
+
+  ASSIGN v-cantcheques = 0
+         v-totimporte = 0.
+
+  FOR EACH Valor WHERE Valor.cdg_caja  = v-cdg_caja 
+                   AND LOOKUP(STRING(Valor.cdg_rubro),v-lista_codigos) <> 0  
+                   AND Valor.estado = "00"
+                   AND Valor.cdg_empresa = Empresa.cdg_empresa NO-LOCK:
+
+      /* Levantamos la cartera de valores que no se haya seleccionado 
+
+      FIND T-Seleccionados WHERE T-Seleccionados.nro_valor = Valor.nro_valor NO-ERROR.
+      IF NOT AVAILABLE T-Seleccionados
+      THEN DO:
+          CREATE T-Cartera.
+          BUFFER-COPY Valor TO T-Cartera.
+      END. */
+
+      CREATE T-Cartera.
+      BUFFER-COPY Valor TO T-Cartera.
+
+  END.
+
+  v-ocupado:HIDDEN IN FRAME {&FRAME-NAME} = TRUE.
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE marcar_todos Dialog-Frame 
+PROCEDURE marcar_todos :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+
+  DO TRANSACTION:
+
+      RUN abrir_query_disponibles.
+
+      GET FIRST BRW-DISPONIBLES.
+      DO WHILE AVAILABLE T-Cartera:
+
+          CREATE T-Seleccionados.
+          BUFFER-COPY T-Cartera TO T-Seleccionados.
+          DELETE T-Cartera.
+          ASSIGN v-cantcheques = v-cantcheques + 1
+                 v-totimporte = v-totimporte + T-Seleccionados.importe.
+          GET NEXT BRW-DISPONIBLES.
+     END.
+  END.
+
+  RUN abrir_queries.
+  RUN mostrar_cantidad_cheques.
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE mostrar_cantidad_cheques Dialog-Frame 
+PROCEDURE mostrar_cantidad_cheques :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+
+  DISPLAY  v-cantcheques
+           v-totimporte
+           WITH FRAME {&FRAME-NAME}.
+
+  ASSIGN  
+      btn_desmarcar_todos:SENSITIVE IN FRAME {&FRAME-NAME} = CAN-FIND(FIRST T-Seleccionados) 
+      btn_listar:SENSITIVE IN FRAME {&FRAME-NAME} = CAN-FIND(FIRST T-Seleccionados) 
+      btn_marcar_todos:SENSITIVE IN FRAME {&FRAME-NAME} = CAN-FIND(FIRST T-Cartera) 
+      Btn_OK:SENSITIVE IN FRAME {&FRAME-NAME} = CAN-FIND(FIRST T-Seleccionados) 
+      btn_vercheque:SENSITIVE IN FRAME {&FRAME-NAME} = CAN-FIND(FIRST T-Cartera).
+      btn_vercheque-2:SENSITIVE IN FRAME {&FRAME-NAME} = CAN-FIND(FIRST T-Seleccionados).
+      btn_desafectar:SENSITIVE IN FRAME {&FRAME-NAME} = CAN-FIND(FIRST T-Seleccionados).
+
+/*
+  ASSIGN btn_depositar:SENSITIVE IN FRAME {&FRAME-NAME} = v-cantcheques > 0 
+         v-cdg_caja:SENSITIVE IN FRAME {&FRAME-NAME} = v-cantcheques = 0 
+         v-cdg_rubro:SENSITIVE IN FRAME {&FRAME-NAME} = v-cantcheques = 0.
+*/
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE mostrar_estado Dialog-Frame 
+PROCEDURE mostrar_estado :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+
+  DEFINE INPUT PARAMETER p-estado AS CHARACTER.
+
+  v-ocupado = " " + p-estado.
+  v-ocupado:FGCOLOR IN FRAME {&FRAME-NAME} = 15.
+  DISPLAY v-ocupado
+      WITH FRAME {&FRAME-NAME}.
+  /*v-ocupado:HIDDEN IN FRAME {&FRAME-NAME} = FALSE.*/
+  
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE sumar_valores Dialog-Frame 
+PROCEDURE sumar_valores :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+/*
+  v-subtotal = 0.
+  v-cantidad = 0.
+  FOR EACH T-Seleccionados:
+      v-subtotal = v-subtotal + T-Seleccionados.Importe.
+      v-cantidad = v-cantidad + 1.
+  END.
+  DISPLAY v-subtotal v-cantidad
+      WITH FRAME {&FRAME-NAME}.
+*/
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+

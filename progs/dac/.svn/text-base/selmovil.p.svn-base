@@ -1,0 +1,15 @@
+/*=================================================================================*/
+/*                                                                                 */
+/*                      SELECCION DE MOVILES                                       */
+/*                                                                                 */
+/*=================================================================================*/
+
+&GLOBAL-DEFINE TABLA           Movil
+&GLOBAL-DEFINE CODIGO          cdg_movil
+&GLOBAL-DEFINE FORMATO-CODIGO  ">>>>9"
+&GLOBAL-DEFINE NOMBRE          dsc_movil
+&GLOBAL-DEFINE FORMATO         "X(50)"
+&GLOBAL-DEFINE TITULO-BROWSE   Tipee un nombre o seleccione de la lista
+&GLOBAL-DEFINE TITULO-FRAME    Seleccion de Moviles
+
+{SELBROWS.I}

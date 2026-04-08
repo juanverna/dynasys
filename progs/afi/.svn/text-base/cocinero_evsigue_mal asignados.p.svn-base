@@ -1,0 +1,27 @@
+DEFINE BUFFER btipo_evento FOR tipo_evento.
+DEFINE BUFFER bevento FOR evento.
+DEFINE BUFFER aevento FOR evento.
+FIND tipo_evento WHERE tipo_evento.cdg_tipo_evento = "CO" NO-LOCK.
+FOR EACH evento OF tipo_evento WHERE evsigue <> 0 AND evento.frealizado = ?:
+    FIND bevento WHERE bevento.nro_evento = evento.evsigue AND evento.frealizado = ?.
+    FIND btipo_evento OF bevento.
+    IF NOT btipo_evento.factura THEN DO:
+        FOR EACH aevento WHERE aevento.nro_cliente = evento.nro_cliente AND
+                                aevento.frealizado = ? AND
+                                aevento.fasignado <> ? and
+                                NOT aevento.anulado NO-LOCK BY aevento.fasignado :
+                                IF aevento.fasignado < TODAY THEN NEXT.
+                                FIND btipo_evento of aevento NO-LOCK.
+                                IF NOT bTipo_evento.factura THEN NEXT.
+                            LEAVE.
+        END.
+        IF AVAILABLE aevento THEN DO:
+            evento.recursos = aevento.recursos.
+            evento.fmin = aevento.fasignado.
+            evento.fmax = aevento.fasignado.
+            evento.evsigue = aevento.nro_evento.
+            evento.mobs = aevento.mobs + "COPER".
+            evento.durac = 1. /*no tarda nada en cobrar*/
+        END.
+    END.
+END.

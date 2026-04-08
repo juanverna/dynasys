@@ -1,0 +1,32 @@
+/*    
+    CASE propias:
+    WHEN "P" 
+    THEN DO:
+         OPEN QUERY br_table 
+                 FOR EACH Ficha NO-LOCK WHERE Ficha.abierta 
+                                        AND Ficha.cdg_tipoemr >= desnum_color
+                                        AND Ficha.cdg_tipoemr <= hasnum_color
+                                        AND NOT Ficha.derivada, 
+                                        BY Ficha.cdg_proveedor
+                                        FIRST Tipcolor OF Ficha
+                                        BY Ficha.cdg_tipoemr
+                                        BY Ficha.fch_alta
+                                        BY Ficha.hor_alta.
+    END.
+    WHEN "D" 
+    THEN DO:
+         OPEN QUERY br_table 
+                 FOR EACH Ficha NO-LOCK WHERE Ficha.abierta 
+                                        AND Ficha.cdg_tipoemr >= desnum_color
+                                        AND Ficha.cdg_tipoemr <= hasnum_color
+                                        AND Ficha.derivada, 
+                                        FIRST Tipcolor OF Ficha
+                                        BY Ficha.cdg_proveedor
+                                        BY Ficha.cdg_tipoemr
+                                        BY Ficha.fch_alta
+                                        BY Ficha.hor_alta.
+    END.
+    END CASE.                                    
+                                            
+    RUN dispatch IN THIS-PROCEDURE ( INPUT 'row-changed':U ) .  
+*/    

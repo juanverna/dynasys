@@ -1,0 +1,13 @@
+
+DEFINE BUFFER aviso FOR evento.
+FOR EACH evento WHERE nro_tipo_evento = 1 AND MONTH(evento.fasignado) = 12,
+aviso WHERE aviso.refevento = evento.nro_evento AND ( aviso.fasignado = 11/11/2011 OR 
+ aviso.fasignado = 11/12/2011 OR
+aviso.fasignado = 11/13/2011)
+ BY aviso.fasignado:
+FIND cliente OF evento.
+FOR EACH recurso_agenda OF aviso:
+ DELETE recurso_agenda.
+END.
+aviso.fasignado = ?.
+END.

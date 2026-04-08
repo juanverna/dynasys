@@ -1,0 +1,1595 @@
+&ANALYZE-SUSPEND _VERSION-NUMBER UIB_v9r12 GUI
+&ANALYZE-RESUME
+/* Connected Databases 
+          sic              PROGRESS
+*/
+&Scoped-define WINDOW-NAME C-Win
+
+
+/* Temp-Table and Buffer definitions                                    */
+DEFINE BUFFER Componente FOR Articulo.
+DEFINE BUFFER Compuesto FOR Articulo.
+DEFINE TEMP-TABLE T-Parteprod_dt NO-UNDO LIKE Parteprod_dt.
+DEFINE TEMP-TABLE T-Parteprod_hd NO-UNDO LIKE Parteprod_hd.
+
+
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CUSTOM _DEFINITIONS C-Win 
+/*------------------------------------------------------------------------
+
+  File: 
+
+  Description: 
+
+  Input Parameters:
+      <none>
+
+  Output Parameters:
+      <none>
+
+  Author: 
+
+  Created: 
+
+------------------------------------------------------------------------*/
+/*          This .W file was created with the Progress AppBuilder.      */
+/*----------------------------------------------------------------------*/
+
+/* Create an unnamed pool to store all the widgets created 
+     by this procedure. This is a good default which assures
+     that this procedure's triggers and internal procedures 
+     will execute in this procedure's storage, and that proper
+     cleanup will occur on deletion of the procedure. */
+
+CREATE WIDGET-POOL.
+
+/* ***************************  Definitions  ************************** */
+
+/* Parameters Definitions ---                                           */
+&IF DEFINED(UIB_is_Running) NE 0
+&THEN
+DEFINE VARIABLE                rid_parteprod  AS ROWID.
+DEFINE VARIABLE                modo          AS INTEGER.
+&ELSE
+DEFINE INPUT-OUTPUT PARAMETER  rid_parteprod  AS ROWID.
+DEFINE INPUT        PARAMETER  modo          AS INTEGER.
+&ENDIF
+
+/* Local Variable Definitions ---                                       */
+
+DEFINE BUFFER T-Consumo FOR T-Parteprod_dt.
+
+{VRSHARED.I "NEW"}
+
+{nrorelea.i}
+{valoresmodo.i}
+{valoressalida.i}
+
+DEFINE VARIABLE sino-msg                  AS LOGICAL NO-UNDO.
+DEFINE VARIABLE rid_tabla                 AS ROWID.
+DEFINE VARIABLE rid_ofabrica              AS ROWID.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-PREPROCESSOR-BLOCK 
+
+/* ********************  Preprocessor Definitions  ******************** */
+
+&Scoped-define PROCEDURE-TYPE Window
+&Scoped-define DB-AWARE no
+
+/* Name of designated FRAME-NAME and/or first browse and/or first query */
+&Scoped-define FRAME-NAME DEFAULT-FRAME
+&Scoped-define BROWSE-NAME BRW-COMPONENTES
+
+/* Internal Tables (found by Frame, Query & Browse Queries)             */
+&Scoped-define INTERNAL-TABLES T-Parteprod_dt Componente Compuesto ~
+T-Parteprod_hd
+
+/* Definitions for BROWSE BRW-COMPONENTES                               */
+&Scoped-define FIELDS-IN-QUERY-BRW-COMPONENTES T-Parteprod_dt.nro_linea ~
+Componente.cdg_articulo Componente.descripcion T-Parteprod_dt.cantidad ~
+T-Parteprod_dt.granel T-Parteprod_dt.observacion 
+&Scoped-define ENABLED-FIELDS-IN-QUERY-BRW-COMPONENTES ~
+T-Parteprod_dt.cantidad T-Parteprod_dt.granel T-Parteprod_dt.observacion 
+&Scoped-define ENABLED-TABLES-IN-QUERY-BRW-COMPONENTES T-Parteprod_dt
+&Scoped-define FIRST-ENABLED-TABLE-IN-QUERY-BRW-COMPONENTES T-Parteprod_dt
+&Scoped-define QUERY-STRING-BRW-COMPONENTES FOR EACH T-Parteprod_dt OF T-Parteprod_hd ~
+      WHERE T-Parteprod_dt.tipo_detalle = "C" NO-LOCK, ~
+      EACH Componente OF T-Parteprod_dt NO-LOCK INDEXED-REPOSITION
+&Scoped-define OPEN-QUERY-BRW-COMPONENTES OPEN QUERY BRW-COMPONENTES FOR EACH T-Parteprod_dt OF T-Parteprod_hd ~
+      WHERE T-Parteprod_dt.tipo_detalle = "C" NO-LOCK, ~
+      EACH Componente OF T-Parteprod_dt NO-LOCK INDEXED-REPOSITION.
+&Scoped-define TABLES-IN-QUERY-BRW-COMPONENTES T-Parteprod_dt Componente
+&Scoped-define FIRST-TABLE-IN-QUERY-BRW-COMPONENTES T-Parteprod_dt
+&Scoped-define SECOND-TABLE-IN-QUERY-BRW-COMPONENTES Componente
+
+
+/* Definitions for BROWSE BRW-COMPUESTOS                                */
+&Scoped-define FIELDS-IN-QUERY-BRW-COMPUESTOS T-Parteprod_dt.nro_linea ~
+Compuesto.cdg_articulo Compuesto.descripcion T-Parteprod_dt.cantidad ~
+T-Parteprod_dt.granel T-Parteprod_dt.observacion 
+&Scoped-define ENABLED-FIELDS-IN-QUERY-BRW-COMPUESTOS ~
+T-Parteprod_dt.cantidad T-Parteprod_dt.granel T-Parteprod_dt.observacion 
+&Scoped-define ENABLED-TABLES-IN-QUERY-BRW-COMPUESTOS T-Parteprod_dt
+&Scoped-define FIRST-ENABLED-TABLE-IN-QUERY-BRW-COMPUESTOS T-Parteprod_dt
+&Scoped-define QUERY-STRING-BRW-COMPUESTOS FOR EACH T-Parteprod_dt OF T-Parteprod_hd ~
+      WHERE T-Parteprod_dt.tipo_detalle = "P" NO-LOCK, ~
+      EACH Compuesto OF T-Parteprod_dt NO-LOCK INDEXED-REPOSITION
+&Scoped-define OPEN-QUERY-BRW-COMPUESTOS OPEN QUERY BRW-COMPUESTOS FOR EACH T-Parteprod_dt OF T-Parteprod_hd ~
+      WHERE T-Parteprod_dt.tipo_detalle = "P" NO-LOCK, ~
+      EACH Compuesto OF T-Parteprod_dt NO-LOCK INDEXED-REPOSITION.
+&Scoped-define TABLES-IN-QUERY-BRW-COMPUESTOS T-Parteprod_dt Compuesto
+&Scoped-define FIRST-TABLE-IN-QUERY-BRW-COMPUESTOS T-Parteprod_dt
+&Scoped-define SECOND-TABLE-IN-QUERY-BRW-COMPUESTOS Compuesto
+
+
+/* Definitions for FRAME DEFAULT-FRAME                                  */
+&Scoped-define FIELDS-IN-QUERY-DEFAULT-FRAME T-Parteprod_hd.tip_comprob ~
+T-Parteprod_hd.prf_comprob T-Parteprod_hd.nro_comprob T-Parteprod_hd.fecha ~
+T-Parteprod_hd.leyenda 
+&Scoped-define ENABLED-FIELDS-IN-QUERY-DEFAULT-FRAME ~
+T-Parteprod_hd.tip_comprob T-Parteprod_hd.prf_comprob ~
+T-Parteprod_hd.nro_comprob T-Parteprod_hd.fecha T-Parteprod_hd.leyenda 
+&Scoped-define ENABLED-TABLES-IN-QUERY-DEFAULT-FRAME T-Parteprod_hd
+&Scoped-define FIRST-ENABLED-TABLE-IN-QUERY-DEFAULT-FRAME T-Parteprod_hd
+&Scoped-define OPEN-BROWSERS-IN-QUERY-DEFAULT-FRAME ~
+    ~{&OPEN-QUERY-BRW-COMPONENTES}~
+    ~{&OPEN-QUERY-BRW-COMPUESTOS}
+&Scoped-define QUERY-STRING-DEFAULT-FRAME FOR EACH T-Parteprod_hd SHARE-LOCK
+&Scoped-define OPEN-QUERY-DEFAULT-FRAME OPEN QUERY DEFAULT-FRAME FOR EACH T-Parteprod_hd SHARE-LOCK.
+&Scoped-define TABLES-IN-QUERY-DEFAULT-FRAME T-Parteprod_hd
+&Scoped-define FIRST-TABLE-IN-QUERY-DEFAULT-FRAME T-Parteprod_hd
+
+
+/* Standard List Definitions                                            */
+&Scoped-Define ENABLED-FIELDS T-Parteprod_hd.tip_comprob ~
+T-Parteprod_hd.prf_comprob T-Parteprod_hd.nro_comprob T-Parteprod_hd.fecha ~
+T-Parteprod_hd.leyenda 
+&Scoped-define ENABLED-TABLES T-Parteprod_hd
+&Scoped-define FIRST-ENABLED-TABLE T-Parteprod_hd
+&Scoped-Define ENABLED-OBJECTS RECT-2 RECT-3 Btn_salir v-tip_comprob ~
+v-prf_comprob v-nro_comprob v-cdg_area v-cdg_empleado v-cdg_articulo ~
+v-cdg_articulo-2 BRW-COMPUESTOS BRW-COMPONENTES 
+&Scoped-Define DISPLAYED-FIELDS T-Parteprod_hd.tip_comprob ~
+T-Parteprod_hd.prf_comprob T-Parteprod_hd.nro_comprob T-Parteprod_hd.fecha ~
+T-Parteprod_hd.leyenda 
+&Scoped-define DISPLAYED-TABLES T-Parteprod_hd
+&Scoped-define FIRST-DISPLAYED-TABLE T-Parteprod_hd
+&Scoped-Define DISPLAYED-OBJECTS v-anulado v-tip_comprob v-prf_comprob ~
+v-nro_comprob v-cdg_area v-dsc_area v-cdg_empleado v-dsc_empleado ~
+v-cdg_articulo v-cdg_articulo-2 
+
+/* Custom List Definitions                                              */
+/* List-1,List-2,List-3,List-4,List-5,List-6                            */
+
+/* _UIB-PREPROCESSOR-BLOCK-END */
+&ANALYZE-RESUME
+
+
+
+/* ***********************  Control Definitions  ********************** */
+
+/* Define the widget handle for the window                              */
+DEFINE VAR C-Win AS WIDGET-HANDLE NO-UNDO.
+
+/* Definitions of the field level widgets                               */
+DEFINE BUTTON btn_anular 
+     LABEL "&Anular" 
+     SIZE 24 BY 1.33.
+
+DEFINE BUTTON btn_cancel 
+     LABEL "&Cancelar" 
+     SIZE 24 BY 1.33.
+
+DEFINE BUTTON btn_copiar 
+     LABEL "&Copiar" 
+     SIZE 24 BY 1.33.
+
+DEFINE BUTTON btn_grabar 
+     LABEL "&Grabar" 
+     SIZE 24 BY 1.33.
+
+DEFINE BUTTON btn_imprim 
+     LABEL "&Reimprimir" 
+     SIZE 24 BY 1.33.
+
+DEFINE BUTTON Btn_salir DEFAULT 
+     LABEL "&Salir" 
+     SIZE 24 BY 1.33
+     BGCOLOR 8 .
+
+DEFINE VARIABLE v-anulado AS CHARACTER FORMAT "X(256)":U 
+     VIEW-AS FILL-IN 
+     SIZE 28 BY 1 NO-UNDO.
+
+DEFINE VARIABLE v-cdg_area AS CHARACTER FORMAT "X(256)":U 
+     LABEL "Area" 
+     VIEW-AS FILL-IN NATIVE 
+     SIZE 18 BY 1
+     BGCOLOR 15 FGCOLOR 9  NO-UNDO.
+
+DEFINE VARIABLE v-cdg_articulo AS CHARACTER FORMAT "X(14)" 
+     VIEW-AS FILL-IN NATIVE 
+     SIZE 22 BY 1
+     BGCOLOR 14 FGCOLOR 12 FONT 6.
+
+DEFINE VARIABLE v-cdg_articulo-2 AS CHARACTER FORMAT "X(14)" 
+     VIEW-AS FILL-IN NATIVE 
+     SIZE 22 BY 1
+     BGCOLOR 14 FGCOLOR 12 FONT 6.
+
+DEFINE VARIABLE v-cdg_empleado AS CHARACTER FORMAT "X(256)":U 
+     LABEL "Responsable" 
+     VIEW-AS FILL-IN NATIVE 
+     SIZE 19 BY 1
+     BGCOLOR 15 FGCOLOR 9  NO-UNDO.
+
+DEFINE VARIABLE v-dsc_area AS CHARACTER FORMAT "X(256)":U 
+     VIEW-AS FILL-IN NATIVE 
+     SIZE 43 BY 1
+     BGCOLOR 7 FGCOLOR 15  NO-UNDO.
+
+DEFINE VARIABLE v-dsc_empleado AS CHARACTER FORMAT "X(256)":U 
+     VIEW-AS FILL-IN NATIVE 
+     SIZE 42 BY 1
+     BGCOLOR 7 FGCOLOR 15  NO-UNDO.
+
+DEFINE VARIABLE v-nro_comprob AS INTEGER FORMAT ">>>>>>>9":U INITIAL ? 
+     VIEW-AS FILL-IN NATIVE 
+     SIZE 14 BY 1
+     BGCOLOR 15 FGCOLOR 9  NO-UNDO.
+
+DEFINE VARIABLE v-prf_comprob AS INTEGER FORMAT "9999":U INITIAL 0 
+     VIEW-AS FILL-IN NATIVE 
+     SIZE 9 BY 1
+     BGCOLOR 15 FGCOLOR 9  NO-UNDO.
+
+DEFINE VARIABLE v-tip_comprob AS CHARACTER FORMAT "X(2)":U 
+     LABEL "Orden Nro." 
+     VIEW-AS FILL-IN NATIVE 
+     SIZE 9 BY 1
+     BGCOLOR 15 FGCOLOR 9  NO-UNDO.
+
+DEFINE RECTANGLE RECT-2
+     EDGE-PIXELS 2 GRAPHIC-EDGE  NO-FILL   
+     SIZE 126 BY 1.86.
+
+DEFINE RECTANGLE RECT-3
+     EDGE-PIXELS 2 GRAPHIC-EDGE  NO-FILL   
+     SIZE 26 BY 1.86.
+
+/* Query definitions                                                    */
+&ANALYZE-SUSPEND
+DEFINE QUERY BRW-COMPONENTES FOR 
+      T-Parteprod_dt, 
+      Componente SCROLLING.
+
+DEFINE QUERY BRW-COMPUESTOS FOR 
+      T-Parteprod_dt, 
+      Compuesto SCROLLING.
+
+DEFINE QUERY DEFAULT-FRAME FOR 
+      T-Parteprod_hd SCROLLING.
+&ANALYZE-RESUME
+
+/* Browse definitions                                                   */
+DEFINE BROWSE BRW-COMPONENTES
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _DISPLAY-FIELDS BRW-COMPONENTES C-Win _STRUCTURED
+  QUERY BRW-COMPONENTES NO-LOCK DISPLAY
+      T-Parteprod_dt.nro_linea COLUMN-LABEL "Número!Linea" FORMAT ">>9":U
+      Componente.cdg_articulo FORMAT "X(12)":U
+      Componente.descripcion FORMAT "X(50)":U
+      T-Parteprod_dt.cantidad COLUMN-LABEL "Cantidad!Consumida" FORMAT "->>,>>>,>>9.99":U
+            COLUMN-FGCOLOR 9 COLUMN-BGCOLOR 11
+      T-Parteprod_dt.granel COLUMN-LABEL "Granel!Consumido" FORMAT "->>,>>>,>>9.99":U
+            COLUMN-FGCOLOR 9 COLUMN-BGCOLOR 11
+      T-Parteprod_dt.observacion COLUMN-LABEL "Leyenda!Detalle" FORMAT "X(300)":U
+            COLUMN-FGCOLOR 9 COLUMN-BGCOLOR 11
+  ENABLE
+      T-Parteprod_dt.cantidad
+      T-Parteprod_dt.granel
+      T-Parteprod_dt.observacion
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+    WITH NO-ROW-MARKERS SEPARATORS SIZE 157 BY 10
+         TITLE "Artículos consumidos en el presente parte de producción" FIT-LAST-COLUMN.
+
+DEFINE BROWSE BRW-COMPUESTOS
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _DISPLAY-FIELDS BRW-COMPUESTOS C-Win _STRUCTURED
+  QUERY BRW-COMPUESTOS NO-LOCK DISPLAY
+      T-Parteprod_dt.nro_linea COLUMN-LABEL "Número!Linea" FORMAT ">>9":U
+      Compuesto.cdg_articulo FORMAT "X(12)":U
+      Compuesto.descripcion FORMAT "X(50)":U
+      T-Parteprod_dt.cantidad COLUMN-LABEL "Cantidad!Producida" FORMAT "->>,>>>,>>9.99":U
+            COLUMN-FGCOLOR 9 COLUMN-BGCOLOR 11
+      T-Parteprod_dt.granel COLUMN-LABEL "Granel!Producido" FORMAT "->>,>>>,>>9.99":U
+            COLUMN-FGCOLOR 9 COLUMN-BGCOLOR 11
+      T-Parteprod_dt.observacion COLUMN-LABEL "Observaciones!De detalle" FORMAT "X(300)":U
+            COLUMN-FGCOLOR 9 COLUMN-BGCOLOR 11
+  ENABLE
+      T-Parteprod_dt.cantidad
+      T-Parteprod_dt.granel
+      T-Parteprod_dt.observacion
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+    WITH NO-ROW-MARKERS SEPARATORS SIZE 157 BY 5.71
+         TITLE "Artículos producidos en el presente parte" FIT-LAST-COLUMN.
+
+
+/* ************************  Frame Definitions  *********************** */
+
+DEFINE FRAME DEFAULT-FRAME
+     btn_copiar AT ROW 1.48 COL 29
+     btn_cancel AT ROW 1.48 COL 54
+     btn_anular AT ROW 1.48 COL 79
+     btn_imprim AT ROW 1.48 COL 104
+     Btn_salir AT ROW 1.48 COL 133
+     btn_grabar AT ROW 1.52 COL 4
+     T-Parteprod_hd.tip_comprob AT ROW 3.62 COL 11 COLON-ALIGNED
+          LABEL "Parte"
+          VIEW-AS FILL-IN NATIVE 
+          SIZE 9 BY 1
+          BGCOLOR 7 FGCOLOR 15 
+     T-Parteprod_hd.prf_comprob AT ROW 3.62 COL 21 COLON-ALIGNED NO-LABEL
+          VIEW-AS FILL-IN NATIVE 
+          SIZE 8 BY 1
+          BGCOLOR 7 FGCOLOR 15 
+     T-Parteprod_hd.nro_comprob AT ROW 3.62 COL 30 COLON-ALIGNED NO-LABEL
+          VIEW-AS FILL-IN NATIVE 
+          SIZE 14 BY 1
+          BGCOLOR 7 FGCOLOR 15 
+     v-anulado AT ROW 3.62 COL 45 COLON-ALIGNED NO-LABEL
+     v-tip_comprob AT ROW 3.62 COL 94 COLON-ALIGNED
+     v-prf_comprob AT ROW 3.62 COL 104 COLON-ALIGNED NO-LABEL
+     v-nro_comprob AT ROW 3.62 COL 114 COLON-ALIGNED NO-LABEL
+     T-Parteprod_hd.fecha AT ROW 3.62 COL 139 COLON-ALIGNED
+          VIEW-AS FILL-IN NATIVE 
+          SIZE 17 BY 1
+          BGCOLOR 15 FGCOLOR 9 
+     v-cdg_area AT ROW 5.05 COL 11 COLON-ALIGNED
+     v-dsc_area AT ROW 5.05 COL 30 COLON-ALIGNED NO-LABEL
+     v-cdg_empleado AT ROW 5.05 COL 94 COLON-ALIGNED
+     v-dsc_empleado AT ROW 5.05 COL 114 COLON-ALIGNED NO-LABEL
+     v-cdg_articulo AT ROW 7.67 COL 2 NO-LABEL
+     T-Parteprod_hd.leyenda AT ROW 7.91 COL 25 NO-LABEL
+          VIEW-AS EDITOR SCROLLBAR-VERTICAL
+          SIZE 133 BY 4
+          BGCOLOR 15 FGCOLOR 9 
+     v-cdg_articulo-2 AT ROW 10.76 COL 2 NO-LABEL
+     BRW-COMPUESTOS AT ROW 12.43 COL 1
+     BRW-COMPONENTES AT ROW 18.38 COL 1
+     "  Articulos Consumidos" VIEW-AS TEXT
+          SIZE 22 BY 1 AT ROW 9.57 COL 2
+          BGCOLOR 5 FGCOLOR 15 
+     "  Articulos Producidos" VIEW-AS TEXT
+          SIZE 22 BY 1 AT ROW 6.48 COL 2
+          BGCOLOR 5 FGCOLOR 15 
+     "         Observaciones pertinentes al presente parte de producción" VIEW-AS TEXT
+          SIZE 133 BY 1 AT ROW 6.48 COL 25
+          BGCOLOR 5 FGCOLOR 15 
+     RECT-2 AT ROW 1.29 COL 3
+     RECT-3 AT ROW 1.24 COL 132
+    WITH 1 DOWN NO-BOX KEEP-TAB-ORDER OVERLAY 
+         SIDE-LABELS NO-UNDERLINE THREE-D 
+         AT COL 1 ROW 1
+         SIZE 158.8 BY 27.52.
+
+
+/* *********************** Procedure Settings ************************ */
+
+&ANALYZE-SUSPEND _PROCEDURE-SETTINGS
+/* Settings for THIS-PROCEDURE
+   Type: Window
+   Allow: Basic,Browse,DB-Fields,Window,Query
+   Other Settings: COMPILE
+   Temp-Tables and Buffers:
+      TABLE: Componente B "?" ? sic Articulo
+      TABLE: Compuesto B "?" ? sic Articulo
+      TABLE: T-Parteprod_dt T "?" NO-UNDO sic Parteprod_dt
+      TABLE: T-Parteprod_hd T "?" NO-UNDO sic Parteprod_hd
+   END-TABLES.
+ */
+&ANALYZE-RESUME _END-PROCEDURE-SETTINGS
+
+/* *************************  Create Window  ************************** */
+
+&ANALYZE-SUSPEND _CREATE-WINDOW
+IF SESSION:DISPLAY-TYPE = "GUI":U THEN
+  CREATE WINDOW C-Win ASSIGN
+         HIDDEN             = YES
+         TITLE              = "Partes de produccion"
+         HEIGHT             = 27.52
+         WIDTH              = 158.8
+         MAX-HEIGHT         = 27.67
+         MAX-WIDTH          = 160
+         VIRTUAL-HEIGHT     = 27.67
+         VIRTUAL-WIDTH      = 160
+         RESIZE             = yes
+         SCROLL-BARS        = no
+         STATUS-AREA        = no
+         BGCOLOR            = ?
+         FGCOLOR            = ?
+         KEEP-FRAME-Z-ORDER = yes
+         THREE-D            = yes
+         MESSAGE-AREA       = no
+         SENSITIVE          = yes.
+ELSE {&WINDOW-NAME} = CURRENT-WINDOW.
+/* END WINDOW DEFINITION                                                */
+&ANALYZE-RESUME
+
+
+
+/* ***********  Runtime Attributes and AppBuilder Settings  *********** */
+
+&ANALYZE-SUSPEND _RUN-TIME-ATTRIBUTES
+/* SETTINGS FOR WINDOW C-Win
+  VISIBLE,,RUN-PERSISTENT                                               */
+/* SETTINGS FOR FRAME DEFAULT-FRAME
+   FRAME-NAME                                                           */
+/* BROWSE-TAB BRW-COMPUESTOS v-cdg_articulo-2 DEFAULT-FRAME */
+/* BROWSE-TAB BRW-COMPONENTES BRW-COMPUESTOS DEFAULT-FRAME */
+/* SETTINGS FOR BUTTON btn_anular IN FRAME DEFAULT-FRAME
+   NO-ENABLE                                                            */
+/* SETTINGS FOR BUTTON btn_cancel IN FRAME DEFAULT-FRAME
+   NO-ENABLE                                                            */
+/* SETTINGS FOR BUTTON btn_copiar IN FRAME DEFAULT-FRAME
+   NO-ENABLE                                                            */
+/* SETTINGS FOR BUTTON btn_grabar IN FRAME DEFAULT-FRAME
+   NO-ENABLE                                                            */
+/* SETTINGS FOR BUTTON btn_imprim IN FRAME DEFAULT-FRAME
+   NO-ENABLE                                                            */
+/* SETTINGS FOR FILL-IN T-Parteprod_hd.tip_comprob IN FRAME DEFAULT-FRAME
+   EXP-LABEL                                                            */
+/* SETTINGS FOR FILL-IN v-anulado IN FRAME DEFAULT-FRAME
+   NO-ENABLE                                                            */
+/* SETTINGS FOR FILL-IN v-cdg_articulo IN FRAME DEFAULT-FRAME
+   ALIGN-L                                                              */
+/* SETTINGS FOR FILL-IN v-cdg_articulo-2 IN FRAME DEFAULT-FRAME
+   ALIGN-L                                                              */
+/* SETTINGS FOR FILL-IN v-dsc_area IN FRAME DEFAULT-FRAME
+   NO-ENABLE                                                            */
+/* SETTINGS FOR FILL-IN v-dsc_empleado IN FRAME DEFAULT-FRAME
+   NO-ENABLE                                                            */
+IF SESSION:DISPLAY-TYPE = "GUI":U AND VALID-HANDLE(C-Win)
+THEN C-Win:HIDDEN = no.
+
+/* _RUN-TIME-ATTRIBUTES-END */
+&ANALYZE-RESUME
+
+
+/* Setting information for Queries and Browse Widgets fields            */
+
+&ANALYZE-SUSPEND _QUERY-BLOCK BROWSE BRW-COMPONENTES
+/* Query rebuild information for BROWSE BRW-COMPONENTES
+     _TblList          = "Temp-Tables.T-Parteprod_dt OF Temp-Tables.T-Parteprod_hd,Componente OF Temp-Tables.T-Parteprod_dt"
+     _Options          = "NO-LOCK INDEXED-REPOSITION"
+     _Where[1]         = "Temp-Tables.T-Parteprod_dt.tipo_detalle = ""C"""
+     _FldNameList[1]   > Temp-Tables.T-Parteprod_dt.nro_linea
+"T-Parteprod_dt.nro_linea" "Número!Linea" ? "integer" ? ? ? ? ? ? no ? no no ? yes no no "U" "" "" "" "" "" "" 0 no 0 no no
+     _FldNameList[2]   = Temp-Tables.Componente.cdg_articulo
+     _FldNameList[3]   = Temp-Tables.Componente.descripcion
+     _FldNameList[4]   > Temp-Tables.T-Parteprod_dt.cantidad
+"T-Parteprod_dt.cantidad" "Cantidad!Consumida" ? "decimal" 11 9 ? ? ? ? yes ? no no ? yes no no "U" "" "" "" "" "" "" 0 no 0 no no
+     _FldNameList[5]   > Temp-Tables.T-Parteprod_dt.granel
+"T-Parteprod_dt.granel" "Granel!Consumido" ? "decimal" 11 9 ? ? ? ? yes ? no no ? yes no no "U" "" "" "" "" "" "" 0 no 0 no no
+     _FldNameList[6]   > Temp-Tables.T-Parteprod_dt.observacion
+"T-Parteprod_dt.observacion" "Leyenda!Detalle" ? "character" 11 9 ? ? ? ? yes ? no no ? yes no no "U" "" "" "" "" "" "" 0 no 0 no no
+     _Query            is OPENED
+*/  /* BROWSE BRW-COMPONENTES */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _QUERY-BLOCK BROWSE BRW-COMPUESTOS
+/* Query rebuild information for BROWSE BRW-COMPUESTOS
+     _TblList          = "Temp-Tables.T-Parteprod_dt OF Temp-Tables.T-Parteprod_hd,Compuesto OF Temp-Tables.T-Parteprod_dt"
+     _Options          = "NO-LOCK INDEXED-REPOSITION"
+     _Where[1]         = "Temp-Tables.T-Parteprod_dt.tipo_detalle = ""P"""
+     _FldNameList[1]   > Temp-Tables.T-Parteprod_dt.nro_linea
+"T-Parteprod_dt.nro_linea" "Número!Linea" ? "integer" ? ? ? ? ? ? no ? no no ? yes no no "U" "" "" "" "" "" "" 0 no 0 no no
+     _FldNameList[2]   = Temp-Tables.Compuesto.cdg_articulo
+     _FldNameList[3]   = Temp-Tables.Compuesto.descripcion
+     _FldNameList[4]   > Temp-Tables.T-Parteprod_dt.cantidad
+"T-Parteprod_dt.cantidad" "Cantidad!Producida" ? "decimal" 11 9 ? ? ? ? yes ? no no ? yes no no "U" "" "" "" "" "" "" 0 no 0 no no
+     _FldNameList[5]   > Temp-Tables.T-Parteprod_dt.granel
+"T-Parteprod_dt.granel" "Granel!Producido" ? "decimal" 11 9 ? ? ? ? yes ? no no ? yes no no "U" "" "" "" "" "" "" 0 no 0 no no
+     _FldNameList[6]   > Temp-Tables.T-Parteprod_dt.observacion
+"T-Parteprod_dt.observacion" "Observaciones!De detalle" ? "character" 11 9 ? ? ? ? yes ? no no ? yes no no "U" "" "" "" "" "" "" 0 no 0 no no
+     _Query            is OPENED
+*/  /* BROWSE BRW-COMPUESTOS */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _QUERY-BLOCK FRAME DEFAULT-FRAME
+/* Query rebuild information for FRAME DEFAULT-FRAME
+     _TblList          = "Temp-Tables.T-Parteprod_hd"
+     _Query            is OPENED
+*/  /* FRAME DEFAULT-FRAME */
+&ANALYZE-RESUME
+
+ 
+
+
+
+/* ************************  Control Triggers  ************************ */
+
+&Scoped-define SELF-NAME C-Win
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL C-Win C-Win
+ON END-ERROR OF C-Win /* Partes de produccion */
+OR ENDKEY OF {&WINDOW-NAME} ANYWHERE DO:
+  /* This case occurs when the user presses the "Esc" key.
+     In a persistently run window, just ignore this.  If we did not, the
+     application would exit. */
+  IF THIS-PROCEDURE:PERSISTENT THEN RETURN NO-APPLY.
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL C-Win C-Win
+ON WINDOW-CLOSE OF C-Win /* Partes de produccion */
+DO:
+  /* This event will close the window and terminate the procedure.  */
+  /* APPLY "CLOSE":U TO THIS-PROCEDURE. */
+  APPLY "CHOOSE":U TO Btn_salir IN FRAME {&FRAME-NAME}.
+  RETURN NO-APPLY.
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME btn_anular
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL btn_anular C-Win
+ON CHOOSE OF btn_anular IN FRAME DEFAULT-FRAME /* Anular */
+DO:
+
+    DEFINE VARIABLE pudo_anular AS INTEGER.
+    sino-msg = NO.
+    MESSAGE "Desea ANULAR este comprobante" 
+            VIEW-AS ALERT-BOX QUESTION BUTTONS YES-NO TITLE "Confirmación" UPDATE sino-msg.
+    IF sino-msg
+    THEN DO:
+         RUN anular_comprobante_cliente.p (INPUT ROWID(Fac_header), OUTPUT pudo_anular,NO).
+         IF pudo_anular = 0
+         THEN DO:
+              DO TRANSACTION:
+                RUN borrar_tablas_temporales.
+              END.
+              MESSAGE "El comprobante ha sido anulado" 
+                      VIEW-AS ALERT-BOX MESSAGE TITLE "Aviso".
+              
+         END.
+         ASSIGN codigo_salir = CD_GRABAR.
+         APPLY "U1":U TO THIS-PROCEDURE.
+    END.
+  
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME btn_cancel
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL btn_cancel C-Win
+ON CHOOSE OF btn_cancel IN FRAME DEFAULT-FRAME /* Cancelar */
+DO: /*
+    sino-msg = NO.
+    MESSAGE "Desea cancelar la operación en curso?" 
+            VIEW-AS ALERT-BOX QUESTION BUTTONS YES-NO TITLE "Confirmación" UPDATE sino-msg.
+    IF sino-msg
+    THEN DO:
+
+        FOR EACH T-Color:
+            DELETE T-Color.
+        END.
+
+        FOR EACH T-Ped_detalle:
+            DELETE T-Ped_detalle.
+        END.
+
+        FOR EACH T-Parteprod_hd:
+            DELETE T-Parteprod_hd.
+        END.
+
+        FOR EACH T-Ped_detalle-bon:
+            DELETE T-Ped_detalle-bon.
+        END.
+
+        FOR EACH T-Parteprod_hd-bon:
+            DELETE T-Parteprod_hd-bon.
+        END.
+
+        FOR EACH T-Sub_header_vta:
+            DELETE T-Sub_header_vta.
+        END.
+
+        FOR EACH T-Sub_detalle_vta:
+            DELETE T-Sub_detalle_vta.
+        END.
+
+        ASSIGN codigo_salir = CD_CANCELAR.
+        APPLY "U1" TO THIS-PROCEDURE.
+
+    END.
+      */
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME btn_copiar
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL btn_copiar C-Win
+ON CHOOSE OF btn_copiar IN FRAME DEFAULT-FRAME /* Copiar */
+DO:
+/*
+  RUN d-seleccionar_pedido.w (INPUT-OUTPUT rid_pedido).
+  IF rid_pedido <> ?
+  THEN DO:
+     FIND Parteprod_hd WHERE ROWID(Parteprod_hd) = rid_pedido NO-LOCK.
+     DISPLAY Parteprod_hd.nro_comprob @ T-Parteprod_hd.nro_comprob
+             WITH FRAME {&FRAME-NAME}.
+     RUN traer_documento.
+  END.  
+*/  
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME btn_grabar
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL btn_grabar C-Win
+ON CHOOSE OF btn_grabar IN FRAME DEFAULT-FRAME /* Grabar */
+DO:
+  /*
+  ASSIGN FRAME {&FRAME-NAME}
+         T-Parteprod_hd.cambio
+         T-Parteprod_hd.fecha
+         T-Parteprod_hd.transportista
+         T-Parteprod_hd.nro_ocm .
+         
+  RUN validar_datos ( OUTPUT hay_error ).
+  IF NOT hay_error
+  THEN DO:
+
+       RUN grabar_datos.
+
+       ASSIGN codigo_salir = CD_GRABAR.
+       APPLY "U1" TO THIS-PROCEDURE.
+  
+  END.
+  */
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME btn_imprim
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL btn_imprim C-Win
+ON CHOOSE OF btn_imprim IN FRAME DEFAULT-FRAME /* Reimprimir */
+DO:
+    sino-msg = NO.
+    MESSAGE "Desea REIMPRIMIR este comprobante?" 
+            VIEW-AS ALERT-BOX QUESTION BUTTONS YES-NO TITLE "Confirmación" UPDATE sino-msg.
+    IF sino-msg
+    THEN DO:
+         RUN imprimir_planprod.p (ROWID(Planprod_hd)).
+    END.
+  
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME Btn_salir
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL Btn_salir C-Win
+ON CHOOSE OF Btn_salir IN FRAME DEFAULT-FRAME /* Salir */
+DO:
+
+    sino-msg = NO.
+    MESSAGE "Desea abandonar esta función?" 
+            VIEW-AS ALERT-BOX QUESTION BUTTONS YES-NO TITLE "Confirmación" UPDATE sino-msg.
+    IF sino-msg
+    THEN DO:
+        &IF DEFINED (adm-panel) <> 0 &THEN
+            RUN dispatch IN THIS-PROCEDURE ('exit').
+        &ELSE
+/*          APPLY "CLOSE":U TO THIS-PROCEDURE.*/
+            ASSIGN codigo_salir = CD_SALIR.
+            APPLY "U1":U TO THIS-PROCEDURE.
+
+        &ENDIF
+
+    END.
+  
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME T-Parteprod_hd.nro_comprob
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL T-Parteprod_hd.nro_comprob C-Win
+ON MOUSE-SELECT-DBLCLICK OF T-Parteprod_hd.nro_comprob IN FRAME DEFAULT-FRAME /* nro_comprob */
+OR MOUSE-MENU-DOWN,"." OF T-Parteprod_hd.nro_comprob IN FRAME {&FRAME-NAME}
+DO:
+  DEFINE VARIABLE lista_estados AS CHARACTER.
+  DEFINE VARIABLE titulo_window AS CHARACTER.
+
+  CASE modo:
+     WHEN MD_ALTA          
+     THEN DO:
+          titulo_window = "".     /* Esta opcion la contemplamos por unicidad pero no debería producirse nunca */
+          lista_estados = "".
+     END.
+     WHEN MD_MULTIPLE      
+     THEN DO:
+          titulo_window = "Selección de Partes de Producción".
+          lista_estados = "*".
+     END.
+     WHEN MD_DEFINIDA             /* Esta opcion la contemplamos por unicidad pero no debería producirse nunca */
+     THEN DO:
+          titulo_window = "".
+          lista_estados = "".
+     END.
+     WHEN MD_RELACION             /* Esta opcion la contemplamos por unicidad pero no debería producirse nunca */
+     THEN DO:
+          titulo_window = "".
+          lista_estados = "".
+     END.
+     WHEN MD_READONLY      
+     THEN DO:
+          titulo_window = "Selección Partes de Producción".
+          lista_estados = "*".
+     END.
+     WHEN MD_CAMBIO        
+     THEN DO:
+          titulo_window = "".
+          lista_estados = "".
+     END.
+     WHEN MD_ANULACION        
+     THEN DO:
+          titulo_window = "Selección de Partes de Producción".
+          lista_estados = "P,E".
+     END.
+     WHEN MD_EMISION        
+     THEN DO:
+          titulo_window = "Selección de Partes de Producción".
+          lista_estados = "".
+     END.
+  END CASE.     
+
+  RUN d-selparteprod.w (INPUT titulo_window, INPUT lista_estados, INPUT "", INPUT-OUTPUT rid_parteprod).
+  IF rid_parteprod <> ?
+  THEN DO:
+     FIND Parteprod_hd WHERE ROWID(Parteprod_hd) = rid_parteprod NO-LOCK.
+     DISPLAY Parteprod_hd.tip_comprob @ T-Parteprod_hd.tip_comprob 
+             Parteprod_hd.prf_comprob @ T-Parteprod_hd.prf_comprob
+             Parteprod_hd.nro_comprob @ T-Parteprod_hd.nro_comprob
+             WITH FRAME {&FRAME-NAME}.
+     IF modo = MD_ANULACION AND Parteprod_hd.anulado
+     THEN DO:
+          RUN PONMENSJ.P (INPUT "DOCS002").
+          RETURN NO-APPLY.
+     END.
+     ELSE DO:
+          RUN traer_documento.
+     END.
+  END.  
+  RETURN NO-APPLY.  
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL T-Parteprod_hd.nro_comprob C-Win
+ON RETURN OF T-Parteprod_hd.nro_comprob IN FRAME DEFAULT-FRAME /* nro_comprob */
+DO:
+
+   IF LOOKUP(INPUT FRAME {&FRAME-NAME} T-Parteprod_hd.tip_comprob,"PR") = 0 
+   THEN DO:
+      RUN PONMENSJ.P (INPUT "DOCS010").
+      RETURN NO-APPLY.
+   END.
+
+   FIND Parteprod_hd 
+        WHERE Parteprod_hd.cdg_empresa = Empresa.cdg_empresa
+          AND Parteprod_hd.tip_comprob = INPUT T-Parteprod_hd.tip_comprob 
+          AND Parteprod_hd.prf_comprob = INPUT T-Parteprod_hd.prf_comprob
+          AND Parteprod_hd.nro_comprob = INPUT T-Parteprod_hd.nro_comprob
+              NO-ERROR.
+
+   IF NOT AVAILABLE Parteprod_hd 
+   THEN DO:
+        IF LOCKED Parteprod_hd
+           THEN RUN PONMENSJ.P (INPUT "DOCS000").
+           ELSE RUN PONMENSJ.P (INPUT "DOCS001").
+        RETURN NO-APPLY.
+   END.
+   ELSE DO:
+        rid_Parteprod = ROWID(Parteprod_hd).
+        RUN traer_documento.
+   END.
+  
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME v-cdg_articulo
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL v-cdg_articulo C-Win
+ON ENTRY OF v-cdg_articulo IN FRAME DEFAULT-FRAME
+DO:
+    v-cdg_articulo = "".
+    DISPLAY v-cdg_articulo
+            WITH FRAME {&FRAME-NAME}.
+  
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL v-cdg_articulo C-Win
+ON LEFT-MOUSE-DBLCLICK OF v-cdg_articulo IN FRAME DEFAULT-FRAME
+OR "+" OF v-cdg_articulo IN FRAME {&FRAME-NAME}
+DO:
+  
+  DEFINE VARIABLE rid_articulo AS ROWID.
+  RUN selartic.p ( INPUT-OUTPUT rid_articulo, "P", INPUT YES).
+  IF rid_articulo <> ?
+  THEN DO:
+       FIND Articulo WHERE ROWID(Articulo) = rid_articulo NO-LOCK.
+       DISPLAY Articulo.cdg_articulo @ v-cdg_articulo
+               WITH FRAME {&FRAME-NAME}.
+       APPLY "RETURN" TO SELF.
+       RETURN NO-APPLY.
+  END.             
+  
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL v-cdg_articulo C-Win
+ON MOUSE-MENU-DOWN OF v-cdg_articulo IN FRAME DEFAULT-FRAME
+DO:
+  APPLY "LEFT-MOUSE-DBLCLICK" TO v-cdg_articulo IN FRAME {&FRAME-NAME}.
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL v-cdg_articulo C-Win
+ON RETURN OF v-cdg_articulo IN FRAME DEFAULT-FRAME
+DO:
+
+  FIND Articulo WHERE Articulo.cdg_articulo = INPUT FRAME {&FRAME-NAME} v-cdg_articulo NO-LOCK NO-ERROR.
+  IF NOT AVAILABLE Articulo 
+  THEN DO:
+       RUN PONMENSJ.P ( 'CLIE020' ).
+       RETURN NO-APPLY.
+  END.
+  ELSE DO:
+       FIND FIRST T-Parteprod_dt WHERE T-Parteprod_dt.nro_articulo = Articulo.nro_articulo NO-ERROR.
+       IF AVAILABLE T-Parteprod_dt
+       THEN DO:
+           RUN PONMENSJ.P ( 'CLIE020' ).
+           RETURN NO-APPLY.
+       END.
+       ELSE DO:
+           RUN crear_detalle.
+       END.
+
+  END.
+
+  v-cdg_articulo = "".
+  DISPLAY v-cdg_articulo
+          WITH FRAME {&FRAME-NAME}.
+  
+  APPLY "ENTRY" TO BRW-COMPUESTOS.
+  
+  RETURN NO-APPLY.
+
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME v-cdg_articulo-2
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL v-cdg_articulo-2 C-Win
+ON ENTRY OF v-cdg_articulo-2 IN FRAME DEFAULT-FRAME
+DO:
+    v-cdg_articulo = "".
+    DISPLAY v-cdg_articulo
+            WITH FRAME {&FRAME-NAME}.
+  
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL v-cdg_articulo-2 C-Win
+ON LEFT-MOUSE-DBLCLICK OF v-cdg_articulo-2 IN FRAME DEFAULT-FRAME
+OR "+" OF v-cdg_articulo IN FRAME {&FRAME-NAME}
+DO:
+  
+  DEFINE VARIABLE rid_articulo AS ROWID.
+  RUN selartic.p ( INPUT-OUTPUT rid_articulo, "P", INPUT YES).
+  IF rid_articulo <> ?
+  THEN DO:
+       FIND Articulo WHERE ROWID(Articulo) = rid_articulo NO-LOCK.
+       DISPLAY Articulo.cdg_articulo @ v-cdg_articulo
+               WITH FRAME {&FRAME-NAME}.
+       APPLY "RETURN" TO SELF.
+       RETURN NO-APPLY.
+  END.             
+  
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL v-cdg_articulo-2 C-Win
+ON MOUSE-MENU-DOWN OF v-cdg_articulo-2 IN FRAME DEFAULT-FRAME
+DO:
+  APPLY "LEFT-MOUSE-DBLCLICK" TO v-cdg_articulo IN FRAME {&FRAME-NAME}.
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL v-cdg_articulo-2 C-Win
+ON RETURN OF v-cdg_articulo-2 IN FRAME DEFAULT-FRAME
+DO:
+
+  FIND Articulo WHERE Articulo.cdg_articulo = INPUT FRAME {&FRAME-NAME} v-cdg_articulo NO-LOCK NO-ERROR.
+  IF NOT AVAILABLE Articulo 
+  THEN DO:
+       RUN PONMENSJ.P ( 'CLIE020' ).
+       RETURN NO-APPLY.
+  END.
+  ELSE DO:
+       FIND FIRST T-Parteprod_dt WHERE T-Parteprod_dt.nro_articulo = Articulo.nro_articulo NO-ERROR.
+       IF AVAILABLE T-Parteprod_dt
+       THEN DO:
+           RUN PONMENSJ.P ( 'CLIE020' ).
+           RETURN NO-APPLY.
+       END.
+       ELSE DO:
+           RUN crear_detalle.
+       END.
+
+  END.
+
+  v-cdg_articulo = "".
+  DISPLAY v-cdg_articulo
+          WITH FRAME {&FRAME-NAME}.
+  
+  APPLY "ENTRY" TO BRW-COMPUESTOS.
+  
+  RETURN NO-APPLY.
+
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME v-nro_comprob
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL v-nro_comprob C-Win
+ON RETURN OF v-nro_comprob IN FRAME DEFAULT-FRAME
+DO:
+
+   IF LOOKUP(INPUT FRAME {&FRAME-NAME} v-tip_comprob,"OF") = 0 
+   THEN DO:
+      RUN PONMENSJ.P (INPUT "DOCS010").
+      RETURN NO-APPLY.
+   END.
+
+   FIND Ofabrica_hd 
+        WHERE Ofabrica_hd.cdg_empresa = Empresa.cdg_empresa
+          AND Ofabrica_hd.tip_comprob = INPUT v-tip_comprob 
+          AND Ofabrica_hd.prf_comprob = INPUT v-prf_comprob
+          AND Ofabrica_hd.nro_comprob = INPUT v-nro_comprob
+              NO-ERROR.
+
+   IF NOT AVAILABLE Ofabrica_hd 
+   THEN DO:
+        IF LOCKED Ofabrica_hd
+           THEN RUN PONMENSJ.P (INPUT "DOCS000").
+           ELSE RUN PONMENSJ.P (INPUT "DOCS001").
+        RETURN NO-APPLY.
+   END.
+   ELSE DO:
+        rid_ofabrica = ROWID(Ofabrica_hd).
+        RUN traer_ofabrica.
+   END.
+  
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define BROWSE-NAME BRW-COMPONENTES
+&UNDEFINE SELF-NAME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CUSTOM _MAIN-BLOCK C-Win 
+
+
+/* ***************************  Main Block  *************************** */
+
+/* Set CURRENT-WINDOW: this will parent dialog-boxes and frames.        */
+ASSIGN CURRENT-WINDOW                = {&WINDOW-NAME} 
+       THIS-PROCEDURE:CURRENT-WINDOW = {&WINDOW-NAME}.
+
+/* The CLOSE event can be used from inside or outside the procedure to  */
+/* terminate it.                                                        */
+ON CLOSE OF THIS-PROCEDURE 
+   RUN disable_UI.
+
+{findempresa.i}
+
+/* Best default for GUI applications is...                              */
+PAUSE 0 BEFORE-HIDE.
+
+/* Now enable the interface and wait for the exit condition.            */
+/* (NOTE: handle ERROR and END-KEY so cleanup code will always fire.    */
+MAIN-BLOCK:
+REPEAT ON ERROR   UNDO MAIN-BLOCK, LEAVE MAIN-BLOCK
+       ON END-KEY UNDO MAIN-BLOCK, LEAVE MAIN-BLOCK:
+  RUN enable_UI.
+  RUN iniciar_documento.
+  RUN frame_sensitiva ( INPUT NO ).  
+  CLEAR FRAME {&FRAME-NAME} ALL.
+  RUN crear_registro.
+  IF modo = MD_DEFINIDA
+     THEN RUN traer_documento.
+     ELSE RUN frame_sensitiva ( INPUT YES ).
+  /*
+  DISPLAY v-ultimo_pedido
+          v-ultimo_estado
+          WITH FRAME {&FRAME-NAME}.   
+  */        
+  IF modo = MD_ALTA THEN APPLY "ENTRY" TO v-cdg_area.
+  
+  WAIT-FOR U1 OF THIS-PROCEDURE.
+  CASE codigo_salir:
+       WHEN CD_SALIR THEN UNDO,LEAVE.
+       WHEN CD_CANCELAR THEN UNDO,RETRY.
+       WHEN CD_GRABAR THEN NEXT.
+  END CASE.
+   
+END.
+APPLY "CLOSE" TO THIS-PROCEDURE. /* hay que ver si realmente hace falta */
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+/* **********************  Internal Procedures  *********************** */
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE abre_query_componentes C-Win 
+PROCEDURE abre_query_componentes :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+
+  OPEN QUERY BRW-COMPONENTES
+      FOR EACH T-Parteprod_dt WHERE T-Parteprod_dt.tipo_detalle = "C",
+          FIRST Componente OF T-Parteprod_dt.
+
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE abre_query_compuestos C-Win 
+PROCEDURE abre_query_compuestos :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+
+  OPEN QUERY BRW-COMPUESTOS
+      FOR EACH T-Parteprod_dt WHERE T-Parteprod_dt.tipo_detalle = "P",
+          FIRST Compuesto OF T-Parteprod_dt.
+      
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE calculos C-Win 
+PROCEDURE calculos :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE crear_detalle C-Win 
+PROCEDURE crear_detalle :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+
+  CREATE T-Parteprod_dt.
+  ASSIGN T-Parteprod_hd.ultima_linea = T-Parteprod_hd.ultima_linea + 1
+         T-Parteprod_dt.nro_linea    = T-Parteprod_hd.ultima_linea 
+         T-Parteprod_dt.nro_articulo = Articulo.nro_articulo
+         T-Parteprod_dt.tipo_detalle = "P". 
+
+  RUN abre_query_compuestos.
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE crear_registro C-Win 
+PROCEDURE crear_registro :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+
+  DO TRANSACTION:
+    
+      CREATE T-Parteprod_hd.
+      ASSIGN T-Parteprod_hd.nro_usuario    = Usuario.nro_usuario 
+             T-Parteprod_hd.cdg_empresa    = Empresa.cdg_empresa
+             T-Parteprod_hd.fecha          = TODAY 
+             T-Parteprod_hd.tip_comprob    = "" 
+             T-Parteprod_hd.nro_parteprod   = 0  
+             T-Parteprod_hd.estado         = "E" 
+             T-Parteprod_hd.cdg_estado     = "AA"              
+             T-Parteprod_hd.nro_comprob    = T-Parteprod_hd.nro_parteprod
+             T-Parteprod_hd.prf_comprob    = 0 /* v-pto_venta */
+             T-Parteprod_hd.origen         = "M".
+      /*
+             v-cdg_moneda                = Moneda.cdg_moneda
+             v-dsc_moneda                = Moneda.descripcion
+             v-cdg_imputacion            = Imputacion.cdg_imputacion
+             v-dsc_imputacion            = Imputacion.dsc_imputacion 
+             v-cdg_deposito              = Deposito.cdg_deposito
+             v-dsc_deposito              = Deposito.nombre. 
+      */      
+
+  END.
+
+  DISPLAY
+         T-Parteprod_hd.fecha   
+         WITH FRAME {&FRAME-NAME}.
+
+  codigo_salir = ?.
+
+  IF    modo = MD_MULTIPLE
+     OR modo = MD_ANULACION
+     OR modo = MD_EMISION
+  THEN DO:
+       DO WITH FRAME {&FRAME-NAME}:
+          
+          T-Parteprod_hd.tip_comprob:FGCOLOR = 9.
+          T-Parteprod_hd.tip_comprob:BGCOLOR = 15.
+
+          T-Parteprod_hd.prf_comprob:FGCOLOR = 9.
+          T-Parteprod_hd.prf_comprob:BGCOLOR = 15.
+          
+          T-Parteprod_hd.nro_comprob:FGCOLOR = 9.
+          T-Parteprod_hd.nro_comprob:BGCOLOR = 15.
+       END.
+  END.
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE disable_UI C-Win  _DEFAULT-DISABLE
+PROCEDURE disable_UI :
+/*------------------------------------------------------------------------------
+  Purpose:     DISABLE the User Interface
+  Parameters:  <none>
+  Notes:       Here we clean-up the user-interface by deleting
+               dynamic widgets we have created and/or hide 
+               frames.  This procedure is usually called when
+               we are ready to "clean-up" after running.
+------------------------------------------------------------------------------*/
+  /* Delete the WINDOW we created */
+  IF SESSION:DISPLAY-TYPE = "GUI":U AND VALID-HANDLE(C-Win)
+  THEN DELETE WIDGET C-Win.
+  IF THIS-PROCEDURE:PERSISTENT THEN DELETE PROCEDURE THIS-PROCEDURE.
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE enable_UI C-Win  _DEFAULT-ENABLE
+PROCEDURE enable_UI :
+/*------------------------------------------------------------------------------
+  Purpose:     ENABLE the User Interface
+  Parameters:  <none>
+  Notes:       Here we display/view/enable the widgets in the
+               user-interface.  In addition, OPEN all queries
+               associated with each FRAME and BROWSE.
+               These statements here are based on the "Other 
+               Settings" section of the widget Property Sheets.
+------------------------------------------------------------------------------*/
+
+  {&OPEN-QUERY-DEFAULT-FRAME}
+  GET FIRST DEFAULT-FRAME.
+  DISPLAY v-anulado v-tip_comprob v-prf_comprob v-nro_comprob v-cdg_area 
+          v-dsc_area v-cdg_empleado v-dsc_empleado v-cdg_articulo 
+          v-cdg_articulo-2 
+      WITH FRAME DEFAULT-FRAME IN WINDOW C-Win.
+  IF AVAILABLE T-Parteprod_hd THEN 
+    DISPLAY T-Parteprod_hd.tip_comprob T-Parteprod_hd.prf_comprob 
+          T-Parteprod_hd.nro_comprob T-Parteprod_hd.fecha T-Parteprod_hd.leyenda 
+      WITH FRAME DEFAULT-FRAME IN WINDOW C-Win.
+  ENABLE RECT-2 RECT-3 Btn_salir T-Parteprod_hd.tip_comprob 
+         T-Parteprod_hd.prf_comprob T-Parteprod_hd.nro_comprob v-tip_comprob 
+         v-prf_comprob v-nro_comprob T-Parteprod_hd.fecha v-cdg_area 
+         v-cdg_empleado v-cdg_articulo T-Parteprod_hd.leyenda v-cdg_articulo-2 
+         BRW-COMPUESTOS BRW-COMPONENTES 
+      WITH FRAME DEFAULT-FRAME IN WINDOW C-Win.
+  {&OPEN-BROWSERS-IN-QUERY-DEFAULT-FRAME}
+  VIEW C-Win.
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE frame_sensitiva C-Win 
+PROCEDURE frame_sensitiva :
+/*------------------------------------------------------------------------------
+  Purpose: habilita o deshabilita los campos de la frame para el estado inicial
+           de la misma que se da cuando comienza el ciclo de transaccion. El es-
+           tado definitivo de los campos lo ajusta la rutina habilitar_campos ( INPUT YES ).   
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+
+  DEFINE INPUT PARAMETER habilitado AS LOGICAL.
+
+  DO WITH FRAME {&FRAME-NAME}:
+
+     IF NOT habilitado
+     THEN DO:
+          ASSIGN
+                btn_grabar:SENSITIVE                      = NO
+                btn_copiar:SENSITIVE                      = NO
+                
+                btn_cancel:SENSITIVE                      = NO
+
+                btn_anular:SENSITIVE                      = NO
+                btn_imprim:SENSITIVE                      = NO
+
+                T-Parteprod_hd.tip_comprob:SENSITIVE        = NO
+                T-Parteprod_hd.prf_comprob:SENSITIVE        = NO
+                T-Parteprod_hd.nro_comprob:SENSITIVE        = NO
+                T-Parteprod_hd.fecha:SENSITIVE              = NO.
+     END.
+     ELSE DO:
+
+            RUN frame_sensitiva ( NO ).
+
+            CASE modo:
+       
+                WHEN MD_ALTA          
+                THEN DO:
+                     ASSIGN
+                        btn_grabar:SENSITIVE                      = YES
+                        btn_copiar:SENSITIVE                      = YES
+                        btn_cancel:SENSITIVE                      = YES
+                        btn_imprim:SENSITIVE                      = YES
+                        v-cdg_area:SENSITIVE                      = YES
+                        v-cdg_empleado:SENSITIVE                  = YES.
+
+                END.
+                WHEN MD_MULTIPLE      
+                THEN DO:
+                     ASSIGN
+                        T-Parteprod_hd.tip_comprob:SENSITIVE        = YES
+                        T-Parteprod_hd.prf_comprob:SENSITIVE        = YES
+                        T-Parteprod_hd.nro_comprob:SENSITIVE        = YES.
+
+                END.
+                WHEN MD_DEFINIDA      
+                THEN DO:
+         
+                END.
+                WHEN MD_RELACION      
+                THEN DO:
+         
+                END.
+                WHEN MD_READONLY      
+                THEN DO:
+         
+                END.
+                WHEN MD_CAMBIO        
+                THEN DO:
+
+                END.
+                WHEN MD_ANULACION        
+                THEN DO:
+                     ASSIGN
+                        T-Parteprod_hd.tip_comprob:SENSITIVE        = YES
+                        T-Parteprod_hd.prf_comprob:SENSITIVE        = YES
+                        T-Parteprod_hd.nro_comprob:SENSITIVE        = YES.
+                END.
+                WHEN MD_EMISION        
+                THEN DO:
+                     ASSIGN
+                        T-Parteprod_hd.tip_comprob:SENSITIVE        = YES
+                        T-Parteprod_hd.prf_comprob:SENSITIVE        = YES
+                        T-Parteprod_hd.nro_comprob:SENSITIVE        = YES.
+                END.
+       
+           END CASE.     
+     END.
+  END.
+  
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE habilitar_campos C-Win 
+PROCEDURE habilitar_campos :
+/*------------------------------------------------------------------------------
+  Purpose: habilita o deshabilita los campos de la frame para el estado final
+           de la misma que se da cuando se ejecuta el ciclo de transaccion. El es-
+           tado inicial de los campos lo ajusta la rutina frame_sensitiva.   
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+
+  DEFINE INPUT PARAMETER habilitado AS LOGICAL.
+
+  DO WITH FRAME {&FRAME-NAME}:
+
+    ASSIGN
+          btn_grabar:SENSITIVE                      = NO
+          btn_copiar:SENSITIVE                      = NO
+          btn_cancel:SENSITIVE                      = NO
+          btn_anular:SENSITIVE                      = NO
+
+          btn_imprim:SENSITIVE                      = NO
+          T-Parteprod_hd.tip_comprob:SENSITIVE       = NO
+          T-Parteprod_hd.prf_comprob:SENSITIVE       = NO
+          T-Parteprod_hd.nro_comprob:SENSITIVE       = NO
+          T-Parteprod_hd.fecha:SENSITIVE             = NO
+          T-Parteprod_hd.leyenda:SENSITIVE           = NO
+          v-cdg_articulo:SENSITIVE                  = NO
+          v-cdg_area:SENSITIVE                      = NO
+          v-cdg_empleado:SENSITIVE                  = NO
+          BRW-COMPUESTOS:READ-ONLY                  = YES
+          BRW-COMPONENTES:READ-ONLY                 = YES.
+
+     CASE modo:
+
+       WHEN MD_ALTA          
+       THEN DO:
+            ASSIGN
+                btn_cancel:SENSITIVE                       = YES
+                btn_imprim:SENSITIVE                       = YES
+                T-Parteprod_hd.tip_comprob:SENSITIVE        = NO
+                T-Parteprod_hd.prf_comprob:SENSITIVE        = NO
+                T-Parteprod_hd.nro_comprob:SENSITIVE        = NO
+                BRW-COMPUESTOS:READ-ONLY                   = NO
+                BRW-COMPONENTES:READ-ONLY                  = NO.
+
+       END.
+       WHEN MD_MULTIPLE      
+       THEN DO:
+            ASSIGN
+                btn_cancel:SENSITIVE                      = YES
+
+                btn_imprim:SENSITIVE                      = YES
+                T-Parteprod_hd.tip_comprob:SENSITIVE        = NO
+                T-Parteprod_hd.prf_comprob:SENSITIVE        = NO
+                T-Parteprod_hd.nro_comprob:SENSITIVE        = NO.
+       END.
+       WHEN MD_DEFINIDA      
+       THEN DO:
+            ASSIGN
+
+                btn_imprim:SENSITIVE                      = YES.
+       END.
+       WHEN MD_RELACION      
+       THEN DO:
+            ASSIGN
+                btn_imprim:SENSITIVE                      = YES.
+       END.
+       WHEN MD_READONLY      
+       THEN DO:
+            ASSIGN
+                btn_imprim:SENSITIVE                      = YES.
+       END.
+       WHEN MD_CAMBIO        
+       THEN DO:
+            ASSIGN
+
+                btn_imprim:SENSITIVE                      = YES.
+       END.
+       WHEN MD_ANULACION        
+       THEN DO:
+            ASSIGN
+                btn_anular:SENSITIVE                      = YES
+                btn_imprim:SENSITIVE                      = YES.
+       END.
+       WHEN MD_EMISION        
+       THEN DO:
+            ASSIGN
+                btn_grabar:SENSITIVE                      = YES
+                btn_imprim:SENSITIVE                      = YES.
+
+       END.
+
+    END CASE.     
+
+  END.
+  
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE iniciar_documento C-Win 
+PROCEDURE iniciar_documento :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+
+  RUN titulo_window ("Partes de Producción").
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE titulo_window C-Win 
+PROCEDURE titulo_window :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+
+ DEFINE INPUT PARAMETER txtitulo AS CHARACTER.
+
+ DEFINE VARIABLE v-txtitulo AS CHARACTER.
+
+ CASE modo:
+    
+     WHEN MD_ALTA      THEN v-txtitulo = " Ingreso de " + txtitulo.
+     WHEN MD_MULTIPLE  THEN v-txtitulo = " Consulta Múltiple de " + txtitulo.
+     WHEN MD_DEFINIDA  THEN v-txtitulo = " Consulta Individual de " + txtitulo.
+     WHEN MD_RELACION  THEN v-txtitulo = " Consulta Relacionada de " + txtitulo.
+     WHEN MD_READONLY  THEN v-txtitulo = " Consulta Sólo Lectura de " + txtitulo.
+     WHEN MD_CAMBIO    THEN v-txtitulo = " Modificación y Reemisión de " + txtitulo.
+     WHEN MD_ANULACION THEN v-txtitulo = " Anulación de " + txtitulo.
+     WHEN MD_EMISION   THEN v-txtitulo = " Emisión de " + txtitulo + "Pendientes".
+
+ END CASE.     
+
+ {&WINDOW-NAME}:TITLE = "DYNASYS/PRD " + NRO_RELEASE + " - " + Usuario.cdg_empresa + " - " + v-txtitulo + " User:" + USERID("sic").
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE traer_documento C-Win 
+PROCEDURE traer_documento :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+
+   FIND Parteprod_hd WHERE ROWID(Parteprod_hd) = rid_parteprod NO-LOCK.
+   BUFFER-COPY Parteprod_hd TO T-Parteprod_hd.
+
+   FOR EACH Parteprod_dt OF Parteprod_hd:
+       CREATE T-Parteprod_dt.
+       BUFFER-COPY Parteprod_dt TO T-Parteprod_dt.
+   END.    
+   
+   v-anulado = IF Parteprod_hd.anulado THEN "ANULADA" ELSE "".
+
+   RUN traer_tablas.
+   DISPLAY
+        T-Parteprod_hd.fecha 
+        T-Parteprod_hd.leyenda
+        v-cdg_area v-cdg_empleado 
+        v-dsc_area v-dsc_empleado
+        WITH FRAME {&FRAME-NAME}.
+
+   RUN abre_query_compuestos.
+   RUN abre_query_componentes.
+       
+   RUN habilitar_campos ( INPUT YES ).
+   
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE traer_ofabrica C-Win 
+PROCEDURE traer_ofabrica :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+
+   FIND Ofabrica_hd WHERE ROWID(Ofabrica_hd) = rid_ofabrica NO-LOCK.
+   BUFFER-COPY Ofabrica_hd 
+       EXCEPT Ofabrica_hd.tip_comprob Ofabrica_hd.prf_comprob Ofabrica_hd.nro_comprob TO T-Parteprod_hd.
+
+   FOR EACH Ofabrica_dt OF Ofabrica_hd:
+       CREATE T-Parteprod_dt.
+       BUFFER-COPY Ofabrica_dt TO T-Parteprod_dt.
+   END.    
+
+   RUN traer_tablas.
+   DISPLAY
+        T-Parteprod_hd.fecha 
+        T-Parteprod_hd.leyenda
+        v-cdg_area v-cdg_empleado 
+        v-dsc_area v-dsc_empleado
+        WITH FRAME {&FRAME-NAME}.
+
+   RUN abre_query_compuestos.
+   RUN abre_query_componentes.
+       
+   RUN habilitar_campos ( INPUT YES ).
+   
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE traer_tablas C-Win 
+PROCEDURE traer_tablas :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+

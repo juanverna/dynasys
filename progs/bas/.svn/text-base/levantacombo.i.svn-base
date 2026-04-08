@@ -1,0 +1,15 @@
+     lista = "".
+     {&OBJETO}:DELIMITER = "|".
+     FOR EACH {&TABLA} NO-LOCK &IF DEFINED(CONDICION) &THEN WHERE {&CONDICION} &ENDIF
+         BY {&TABLA}.{&NOMBRE}:
+         lista = lista + "|" + TRIM({&TABLA}.{&NOMBRE}) + "|" + STRING({&TABLA}.{&CODIGO}).
+     END.
+     lista = SUBSTRING(lista,2).
+
+     IF num-entries(lista,"|") >= 2
+     THEN DO:
+         {&OBJETO}:LIST-ITEM-PAIRS = lista.
+         {&OBJETO}:SCREEN-VALUE=ENTRY(2,lista,"|").
+     END.
+     IF NUM-ENTRIES(lista,"|") <= 2 THEN
+        {&OBJETO}:SENSITIVE = FALSE.

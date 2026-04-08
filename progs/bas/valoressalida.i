@@ -1,0 +1,10 @@
+/*===========================================================================*/
+/*       VALORES POSIBLES DEL CODIGO DE SALIDA DE LAS TRANSACCIONES          */
+/*===========================================================================*/
+
+DEFINE VARIABLE codigo_salir              AS INTEGER.
+DEFINE VARIABLE CD_SALIR                  AS INTEGER INITIAL 0.
+DEFINE VARIABLE CD_CANCELAR               AS INTEGER INITIAL 1.
+DEFINE VARIABLE CD_GRABAR                 AS INTEGER INITIAL 2.
+DEFINE VARIABLE CD_BAJA                   AS INTEGER INITIAL 3.
+DEFINE VARIABLE CD_GRABARYSALIR           AS INTEGER INITIAL 4.

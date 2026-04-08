@@ -1,0 +1,108 @@
+USING Progress.Lang.*.
+
+/* most of the code is self-documenting ;) */
+
+CLASS ClientSocket INHERITS Socket :
+
+    DEF PRIVATE VAR ServerSocket AS CLASS serversocket NO-UNDO.
+    
+    DEF PUBLIC PROPERTY Port       AS CHAR NO-UNDO GET. SET. 
+
+    DEF PUBLIC PROPERTY SENSITIVE AS LOGICAL NO-UNDO 
+        GET():
+         RETURN SocketHandle:SENSITIVE.
+        END GET.
+        
+        SET(p_Sensitive AS LOGICAL):
+         ASSIGN SocketHandle:SENSITIVE = p_Sensitive.
+        END SET. 
+
+    CONSTRUCTOR PUBLIC ClientSocket (p_MessageHandler AS HANDLE):
+		SUPER ().
+		
+		CREATE SOCKET SocketHandle.
+		
+		ASSIGN MessageHandler = p_MessageHandler.
+
+	END CONSTRUCTOR.
+
+    CONSTRUCTOR PUBLIC ClientSocket (p_Name AS CHAR,p_MessageHandler AS HANDLE):
+		SUPER ().
+		ASSIGN SocketName     = p_Name
+		       MessageHandler = p_MessageHandler.
+		
+		CREATE SOCKET SocketHandle.
+	END CONSTRUCTOR.
+
+    CONSTRUCTOR PUBLIC ClientSocket (p_Socket AS HANDLE,p_MessageHandler AS HANDLE):
+		SUPER ().
+		ASSIGN SocketHandle   = p_Socket
+		       MessageHandler = p_MessageHandler.
+		
+	END CONSTRUCTOR.
+
+    CONSTRUCTOR PUBLIC ClientSocket (p_Server AS CLASS serversocket,p_Socket AS HANDLE,p_MessageHandler AS HANDLE):
+		SUPER ().
+		ASSIGN SocketHandle   = p_Socket
+		       MessageHandler = p_MessageHandler.
+		
+	END CONSTRUCTOR.
+
+	DESTRUCTOR PUBLIC ClientSocket ( ):
+	END DESTRUCTOR.
+	
+/*  =========================================================================
+    Connect
+    ==========================================================================*/ 
+
+    METHOD PUBLIC LOGICAL Connect():
+     RETURN CONNECT(Port).
+    END METHOD.
+
+/*  =========================================================================
+    Connect
+    ==========================================================================*/ 
+
+    METHOD PUBLIC LOGICAL Connect(p_Port AS CHAR):
+     RETURN CONNECT("LocalHost",p_Port).
+    END METHOD.
+
+/*  =========================================================================
+    Connect
+    ==========================================================================*/ 
+
+    METHOD PUBLIC LOGICAL Connect(p_Host AS CHAR,p_Port AS CHAR):
+
+     SocketHandle:CONNECT(SUBSTITUTE("-H &1 -S &2":U,p_Host,p_Port)) .
+     
+     IF ERROR-STATUS:NUM-MESSAGES GT 0 THEN RETURN NO.
+
+     ASSIGN Port = p_Port.
+     IF SocketName EQ "" THEN ASSIGN SocketName = SUBSTITUTE("Port&1",p_Port).
+	 RUN ClientSocketHandler.p PERSISTENT SET SocketHandler (THIS-OBJECT).
+	 SocketHandle:SET-READ-RESPONSE-PROCEDURE("InboundData":U,SocketHandler).
+		
+    END METHOD. 
+
+/*  =========================================================================
+    ClientDisconnected
+    ==========================================================================*/ 
+
+    METHOD PUBLIC LOGICAL ClientDisconnected():
+     IF VALID-OBJECT(ServerSocket) THEN ServerSocket:RemoveClient(SocketHandle).
+     SocketHandle:DISCONNECT() NO-ERROR.
+     APPLY "CLOSE" TO SocketHandler.
+     RETURN YES.
+    END METHOD.
+
+/*  =========================================================================
+    ClientConnected
+    ==========================================================================*/ 
+
+    METHOD PUBLIC LOGICAL ClientConnected():
+     SendMessage(SUBSTITUTE("ClientName=&1",SocketName)).
+    END METHOD.
+	
+
+
+END CLASS.

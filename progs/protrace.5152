@@ -1,0 +1,95 @@
+=====================================================
+PROGRESS stack trace as of Mon May 08 10:56:41 2017
+=====================================================
+Startup parameters:
+-pf C:\Progress102\OpenEdge\startup.pf,-cpinternal ISO8859-1,-cpstream ISO8859-1,-cpcoll Spanish9,-cpcase Basic,-d dmy,-numsep 46,-numdec 44,(end .pf),-p largar.p,-db c:\bases\dynasys102,-ld sic,-T c:\temp,-basekey INI,-ininame c:\dynasys10\procs\dynasys10.ini,-s 200,-inp 8192,-nb 150,-l 4000,-bibufs 25,-q,-rr
+
+Exception code: C0000005 ACCESS_VIOLATION
+Fault address:  00000000 77ADE0A3:77ADE025 
+
+Registers:
+EAX:04F1F700
+EBX:00000000
+ECX:05108F18
+EDX:00000000
+ESI:05108F18
+EDI:0018F548
+CS:EIP:0023:00000000
+SS:ESP:002B:0018F4E8  EBP:0018F50C
+DS:002B  ES:002B  FS:0053  GS:002B
+Flags:00010246
+
+Call Stack:
+Address   Frame
+00000000  00000000  0000:00000000 
+7281F725  00000000  0001:0007E725 C:\Windows\WinSxS\x86_microsoft.vc80.mfc_1fc8b3b9a1e18e3b_8.0.50727.6195_none_cbf5e994470a1a8f\MFC80.DLL
+7281F796  00000000  0001:0007E796 C:\Windows\WinSxS\x86_microsoft.vc80.mfc_1fc8b3b9a1e18e3b_8.0.50727.6195_none_cbf5e994470a1a8f\MFC80.DLL
+10498712  00000000  utConvertToIx+67A2
+104963E6  00000000  utConvertToIx+4476
+10283CFD  00000000  pam_get_item+7ED1D
+10284564  00000000  pam_get_item+7F584
+10285C0F  00000000  pam_get_item+80C2F
+102B2B3D  00000000  pam_get_item+ADB5D
+102869D5  00000000  pam_get_item+819F5
+10286AD9  00000000  pam_get_item+81AF9
+100015D6  00000000  0001:000005D6 C:\Progress102\OpenEdge\bin\prow32.dll
+
+
+** ABL Stack Trace **
+
+--> USER-INTERFACE-TRIGGER plan2.w (.\opr\plan2.r) at line 4645
+    plan2.w (.\opr\plan2.r) at line 5085
+    ejecutar w-dynasys.w (.\bas\w-dynasys.r) at line 1392
+    tvDoubleClick w-dynasys.w (.\bas\w-dynasys.r) at line 7328
+    tvnodeEvent w-dynasys.w (.\bas\w-dynasys.r) at line 7763
+    picLeftMouseEvent pure4gltv.w (.\bas\pure4gltv.r) at line 7293
+    labLeftMouseEvent pure4gltv.w (.\bas\pure4gltv.r) at line 6139
+    w-tareas-red.w (.\cpy\w-tareas-red.r) at line 1585
+    USER-INTERFACE-TRIGGER w-dynasys.w (.\bas\w-dynasys.r) at line 5977
+    w-dynasys.w (.\bas\w-dynasys.r) at line 6508
+    rundynasys-noquit.p (.\bas\rundynasys-noquit.r) at line 104
+
+** Persistent procedures/Classes **
+
+Handle  File Name
+001588  .\cpy\v-temp_tareaD.r
+001397  .\cpy\v-temp_tareaD.r
+001266  .\bas\p-soloedita.r
+001261  .\cpy\v-tarea-red11.r
+001256  .\cpy\v-tarea-red2.r
+001255  .\PAU\q-cliente.r
+001247  .\bas\p-soloedita.r
+001242  .\cpy\v-tarea-redsolotel.r
+001231  .\cpy\b-tareas-red.r
+001227  C:\Progress102\OpenEdge\gui\adm\objects\folder.r
+001224  C:\Progress102\OpenEdge\gui\adm\objects\broker.r
+001039  .\bas\pure4gltv.r
+001021  .\bas\sfavoritos.r
+001013  C:\Progress102\OpenEdge\gui\adm2\containr.r
+001011  C:\Progress102\OpenEdge\gui\adm2\visual.r
+001006  C:\Progress102\OpenEdge\gui\adm2\smart.r
+001002  .\bas\Winfunc.r
+001001  .\bas\Windows.r
+
+//=====================================================
+PROGRESS stack trace as of Mon May 08 10:56:41 2017
+//=====================================================
+Exception code: C0000005 ACCESS_VIOLATION
+Fault address:  00000000 00:00000000 
+
+Registers:
+EAX:04F1F700
+EBX:00000000
+ECX:05108F18
+EDX:00000000
+ESI:05108F18
+EDI:0018F548
+CS:EIP:0023:00000000
+SS:ESP:002B:0018F768  EBP:0018F50C
+DS:002B  ES:002B  FS:0053  GS:002B
+Flags:00010246
+
+Call Stack:
+Address   Frame
+00000000  0018F764  0000:00000000 
+

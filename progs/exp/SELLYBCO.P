@@ -1,0 +1,141 @@
+DEFINE INPUT  PARAMETER rid_banco      AS ROWID.
+DEFINE INPUT-OUTPUT PARAMETER rid_leyenda    AS ROWID.
+
+{VRSHARED.I}
+
+DEFINE VAR que_item     AS CHARACTER FORMAT "X(20)".
+DEFINE VAR que_tecla    AS CHARACTER FORMAT "X(1)".
+DEFINE VAR des_domi     AS CHARACTER FORMAT "X(20)".
+DEFINE VAR p_letra      AS INTEGER.
+DEFINE VAR que_char     AS INTEGER.
+DEFINE VAR ldes         AS INTEGER.
+DEFINE VARIABLE ancho   AS INTEGER.
+DEFINE VARIABLE alto    AS INTEGER.
+
+DEFINE BUTTON btn_elegir  
+     LABEL "Elegir":L 
+     SIZE 2 BY 1.
+     
+DEFINE BUTTON btn_salir  
+     LABEL "Cancelar":L 
+     SIZE 2 BY 1.
+     
+DEFINE VARIABLE sel_leyen AS CHARACTER FORMAT "X(26)":U
+     VIEW-AS FILL-IN 
+     SIZE 40 BY 1
+     BGCOLOR 15 FGCOLOR 0  NO-UNDO.
+
+DEFINE QUERY qry-leyenda FOR Leyenda_banco SCROLLING.
+
+DEFINE BROWSE qry-leyenda QUERY qry-leyenda DISPLAY 
+      Leyenda_banco.nro_leyenda
+      Leyenda_banco.texto
+      WITH NO-LABELS NO-UNDERLINE SIZE 60 BY 6 
+         BGCOLOR h-bg_c FGCOLOR h-fg_c FONT 9
+         TITLE "Leyendas asociadas al Banco-comex":L.
+
+
+/* ************************  Frame Definitions  *********************** */
+
+DEFINE FRAME frm-sel
+     sel_leyen AT ROW 1 COL 1 HELP
+          "Ingrese la leyenda  a seleccionar" NO-LABEL
+     qry-leyenda   AT ROW 2 COL 1
+     btn_elegir AT ROW 8 COL 1
+     btn_salir  AT ROW 8 COL 21
+    WITH 1 DOWN OVERLAY SIDE-LABELS 
+         AT COL 10 ROW 5
+         /*SIZE 40 BY 10*/
+         BGCOLOR 7 FGCOLOR 8 FONT 9
+         TITLE BGCOLOR 7 FGCOLOR 8 "Seleccion de Leyendas":L
+         VIEW-AS DIALOG-BOX.
+         
+/* ************************  Control Triggers  ************************ */
+
+ON ANY-KEY OF sel_leyen IN FRAME FRM-SEL
+DO:
+
+  ldes = LENGTH(des_domi).
+  que_char = LASTKEY.
+  
+  IF KEYFUNCTION(que_char) = "GO" 
+     THEN APPLY "RETURN" TO SELF.
+
+  IF KEYFUNCTION(que_char) = "TAB" 
+     THEN APPLY "TAB" TO SELF.
+
+  IF KEYFUNCTION(que_char) = "END-ERROR" 
+     THEN APPLY "END-ERROR" TO SELF.
+            
+  que_tecla = CAPS(CHR(que_char)).
+  p_letra = INDEX("ABCDEFGHIJKLMN¥OPQRSTUVWXYZ ",que_tecla).
+  
+  IF p_letra <> 0
+  THEN DO:
+    des_domi = des_domi + que_tecla.
+    ldes = ldes + 1.
+  END.  
+  ELSE
+    IF KEYFUNCTION(que_char) = "BACKSPACE" 
+    THEN DO:
+       des_domi = substring(des_domi,1,ldes - 1).
+       ldes = ldes - 1.
+    END.   
+ 
+  OPEN QUERY qry-leyenda 
+       FOR EACH Leyenda_banco OF Banco-comex 
+           WHERE Leyenda_banco.texto BEGINS des_domi BY Leyenda_banco.texto.
+       
+  sel_leyen:SCREEN-VALUE IN FRAME frm-sel = des_domi.
+  IF ldes >= 0 THEN 
+     sel_leyen:CURSOR-OFFSET IN FRAME frm-sel = ldes + 1.
+     
+  RETURN NO-APPLY.  
+
+END.
+
+ON RETURN OF sel_leyen IN FRAME FRM-SEL OR
+   MOUSE-SELECT-DBLCLICK OF qry-leyenda IN FRAME FRM-SEL OR
+   RETURN OF qry-leyenda IN FRAME FRM-SEL
+DO:
+  APPLY "CHOOSE" TO btn_elegir.
+END.
+
+ON CHOOSE OF btn_elegir IN FRAME FRM-SEL
+DO:
+  rid_leyenda = ROWID(Leyenda_banco).
+  APPLY "CHOOSE" TO btn_salir.
+END.  
+
+/* ****************(**********  Main Block  *************************** */
+
+ancho = FRAME frm-sel:WIDTH.
+alto  = FRAME frm-sel:HEIGHT.
+
+sel_leyen:WIDTH IN FRAME frm-sel = ancho - 2.0.
+sel_leyen:HEIGHT = 1.
+sel_leyen:FORMAT IN FRAME frm-sel = "X(" + STRING(ancho - 2.0) + ")".
+
+btn_elegir:WIDTH IN FRAME frm-sel = TRUNCATE ( ancho / 2 , 0).
+btn_salir:WIDTH IN FRAME frm-sel  = TRUNCATE ( ancho / 2 , 0).
+btn_elegir:COLUMN IN FRAME frm-sel = 1.
+btn_salir:COLUMN IN FRAME frm-sel = FRAME frm-sel:WIDTH  - btn_salir:WIDTH - 0.5.
+btn_elegir:ROW    IN FRAME frm-sel = FRAME frm-sel:HEIGHT - btn_elegir:HEIGHT - 0.2.
+btn_salir:ROW    IN FRAME frm-sel = FRAME frm-sel:HEIGHT - btn_salir:HEIGHT - 0.2.
+
+
+ASSIGN 
+  sel_leyen = ""
+  des_domi = ""
+  rid_leyenda = ?.
+
+VIEW FRAME frm-sel.
+FIND Banco-comex WHERE ROWID(Banco-comex) = rid_banco NO-LOCK.
+OPEN QUERY qry-leyenda 
+     FOR EACH Leyenda_banco OF Banco-comex BY Leyenda_banco.texto.
+RUN TOCARSND.P ( INPUT "SOUND\ABREHELP.WAV").
+ENABLE ALL WITH FRAME frm-sel.       
+WAIT-FOR CHOOSE OF btn_elegir, btn_salir.
+DISABLE ALL WITH FRAME frm-sel.
+HIDE FRAME frm-sel.
+RUN TOCARSND.P ( INPUT "SOUND\CIERHELP.WAV").

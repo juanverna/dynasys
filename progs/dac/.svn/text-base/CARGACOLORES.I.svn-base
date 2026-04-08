@@ -1,0 +1,6 @@
+lista_colores = "".
+FOR EACH Tipcolor BREAK BY Tipcolor.cdg_tipoemr:
+    lista_colores = lista_colores + Tipcolor.cdg_tipoemr.
+    IF NOT LAST-OF(Tipcolor.cdg_tipoemr)
+       THEN lista_colores = lista_colores + ",".
+END.       

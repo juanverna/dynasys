@@ -1,0 +1,37 @@
+/***********************************************************************************************/
+/*                             IGUAL QUE EL "LSSERVICIOS.P", PERO SIN EXCEL                    */
+/***********************************************************************************************/
+
+DEF VAR desde AS DATE LABEL "Desde".
+DEF VAR hasta AS DATE LABEL "Hasta".
+
+DEF VAR locan AS INT.
+DEF VAR locac AS CHAR.
+
+DEF VAR params AS CHAR.
+DEF VAR filtro AS CHAR.
+
+DEF VAR cdesde AS CHAR.
+DEF VAR chasta AS CHAR.
+
+UPDATE desde hasta WITH SIDE-LABELS VIEW-AS DIALOG-BOX THREE-D TITLE "Indique fechas".
+
+RUN rbfecha.p (INPUT desde, OUTPUT cdesde).
+RUN rbfecha.p (INPUT hasta, OUTPUT chasta).
+
+params = "Desde = " + STRING(desde,"99/99/99") + "~n" +
+         "Hasta = " + STRING(hasta,"99/99/99") + "~n".
+
+filtro = "fch_alta <= " + chasta + " AND fch_alta >= " + cdesde +
+         " AND cdg_destino <> 'a'" +
+         " AND ((cdg_cliente = 5000 AND" +
+         " LOOKUP(STRING(cdg_subconvenio,'99'),'01,09,10,11,12,18,19,20,21') > 0) OR" +
+         " LOOKUP(STRING(cdg_cliente,'9999'),'0200,0700,1006') > 0 )".
+         
+RUN exreport.p (INPUT "reports.prl",
+                INPUT "Servicios",
+                INPUT filtro,
+                INPUT "D",
+                INPUT SESSION:PRINTER-NAME,
+                INPUT params).
+

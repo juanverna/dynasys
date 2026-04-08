@@ -1,0 +1,25 @@
+=====================================================
+PROGRESS stack trace as of Tue Oct 13 09:46:51 2020
+=====================================================
+Command line arguments are
+C:\Progress102\OpenEdge\bin\prowin32.exe -p largar.p -db c:\bases\dynasys102 -ld sic -T c:\temp -basekey INI -ininame c:\dynasys10\procs\dynasys10.ini -s 200 -inp 8192 -nb 150 -l 4000 -bibufs 25 -q -rr 
+
+Exception code: C0000005 ACCESS_VIOLATION
+Fault address:  1043390F 01:0043290F C:\Progress102\OpenEdge\bin\prow32.dll
+
+Registers:
+EAX:0247A8C8
+EBX:00000000
+ECX:764F77E2
+EDX:02486E64
+ESI:0001019C
+EDI:0247A8C8
+CS:EIP:0023:1043390F
+SS:ESP:002B:0018FAD0  EBP:00000001
+DS:002B  ES:002B  FS:0053  GS:002B
+Flags:00010212
+
+Call Stack:
+Address   Frame
+1043390F  00000000  rcUpdateFieldMap+5FBFF
+

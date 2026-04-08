@@ -1,0 +1,10 @@
+  estados_pedidos = "".
+  IF    st_encartera    THEN estados_pedidos = "00,".  
+  IF    st_depositados  THEN estados_pedidos = estados_pedidos + "01,".
+  IF    st_acreditados  THEN estados_pedidos = estados_pedidos + "02,".
+  IF    st_rechazados   THEN estados_pedidos = estados_pedidos + "03,".
+  IF    st_levantados   THEN estados_pedidos = estados_pedidos + "04,".
+  IF    st_cedidos      THEN estados_pedidos = estados_pedidos + "10".
+  lest = LENGTH(estados_pedidos).
+  IF SUBSTRING(estados_pedidos,lest,1) = "," 
+     THEN estados_pedidos = SUBSTRING(estados_pedidos,1,lest - 1).

@@ -1,0 +1,9 @@
+find opg_header where nro_comprob = 544.
+display anulado.
+if anulado
+then do:
+    for each caj_detalle WHERE caj_detalle.nro_transaccion = opg_header.nro_transaccion:
+       find valor of caj_detalle no-error.
+       if available valor then valor.estado = "00".
+    end.   
+end.

@@ -1,0 +1,122 @@
+/*===================================================================================*/
+/*             Emite el listado de coseguros por algun campo                         */
+/*===================================================================================*/
+
+DEFINE INPUT PARAMETER p-des_legajo     LIKE Empleado.nro_legajo.
+DEFINE INPUT PARAMETER p-has_legajo     LIKE Empleado.nro_legajo.
+DEFINE INPUT PARAMETER p-des_fecha      AS DATE.
+DEFINE INPUT PARAMETER p-has_fecha      AS DATE.
+DEFINE INPUT PARAMETER p-lista_empresas AS CHARACTER.
+DEFINE INPUT PARAMETER p-ctl_salto      AS LOGICAL.
+
+DEFINE VARIABLE v-horas  AS DECIMAL FORMAT ">>9.99".
+DEFINE VARIABLE t-horas  AS DECIMAL FORMAT ">>9.99".
+
+{defvarcolores.i}
+
+DEFINE FRAME frm-titulo HEADER
+  que_empresa 
+  "{&TITULO-LST}" AT 52 
+  "Página:" AT 111 PAGE-NUMBER FORMAT ">9" AT 118
+  SKIP
+  des_fecha AT 52
+  "al"
+  has_fecha
+  "/"
+  fecha_lis AT 111
+  SKIP
+  hora_lis AT 111
+  SKIP(1)
+  WITH WIDTH 160 FRAME frm-titulo TOP-ONLY PAGE-TOP STREAM-IO.
+
+FORM
+  Empleado.nro_legajo COLUMN-LABEL "Legajo!Empleado"
+  Empleado.nom_persona COLUMN-LABEL "Nombre!Empleado"
+  Guardia.cdg_movil COLUMN-LABEL "Código!de Móvil"
+  Guardia.fch_entrada COLUMN-LABEL "Fecha!Entrada"
+  Guardia.cho_entrada  COLUMN-LABEL "Hora!Entrada"
+  Guardia.fch_salida COLUMN-LABEL "Fecha!Salida"
+  Guardia.cho_salida  COLUMN-LABEL "Hora!Salida"
+  v-horas    COLUMN-LABEL "Cantida!de Horas"
+  WITH WIDTH 160 DOWN CENTERED FRAME frm-listado USE-TEXT STREAM-IO.
+
+ASSIGN 
+  des_fecha = p-des_fecha
+  has_fecha = p-has_fecha
+  ctl_salto = p-ctl_salto.
+
+lista_empresas = p-lista_empresas.
+
+{cargaempresas.i}
+{drsalida.i "55"} /* Direcciona la salida de impresión */
+{setvarimpre.i}
+
+t-horas = 0.
+
+FOR EACH Guardia NO-LOCK
+    WHERE Guardia.fch_entrada <= has_fecha 
+      AND Guardia.fch_entrada >= des_fecha
+      AND Guardia.nro_legajo <= p-has_legajo
+      AND Guardia.nro_legajo >= p-des_legajo
+          BREAK BY Guardia.nro_legajo 
+                BY Guardia.fch_entrada
+                   WITH FRAME f-listado:
+
+    VIEW FRAME frm-titulo.
+
+    FIND Empleado OF Guardia NO-LOCK.
+    IF Empleado.cdg_ocupacion = {&OCUPACION}
+    THEN DO:
+
+            v-horas = 24 * ( Guardia.fch_salida - Guardia.fch_entrada ) +
+                    ( Guardia.hor_salida - Guardia.hor_entrada ) / 3600.
+                     
+            DISPLAY Empleado.nro_legajo  WHEN FIRST-OF(Guardia.nro_legajo)
+                    Empleado.nom_persona WHEN FIRST-OF(Guardia.nro_legajo)
+                    Guardia.cdg_movil 
+                    Guardia.fch_entrada 
+                    Guardia.cho_entrada 
+                    Guardia.fch_salida 
+                    Guardia.cho_salida 
+                    v-horas
+                    WITH FRAME frm-listado.
+        
+            DOWN WITH FRAME frm-listado.        
+        
+            t-horas = t-horas + v-horas.
+    END.
+    
+    IF LAST-OF(Guardia.nro_legajo) AND Empleado.cdg_ocupacion = {&OCUPACION}
+    THEN DO:
+
+         UNDERLINE  Empleado.nro_legajo
+                    Empleado.nom_persona
+                    Guardia.cdg_movil 
+                    Guardia.fch_entrada 
+                    Guardia.cho_entrada 
+                    Guardia.fch_salida 
+                    Guardia.cho_salida 
+                    v-horas
+                   WITH FRAME frm-listado.
+
+         DISPLAY   "Total Horas" @ Empleado.nom_persona 
+                   t-horas       @ v-horas 
+                   WITH FRAME frm-listado.
+
+         DOWN 2 WITH FRAME frm-listado.        
+
+         t-horas = 0.
+                  
+         IF NOT LAST(Guardia.nro_legajo) AND ctl_salto THEN PAGE.
+
+    END.
+
+END.            
+
+OUTPUT CLOSE.
+
+   /* Visualiza en pantalla el archivo de salida */
+
+RUN veresult.w ( INPUT  arch_salida ,  /* Archivo */
+                 INPUT 8 ).            /* FONT a utilizar por default */               
+           

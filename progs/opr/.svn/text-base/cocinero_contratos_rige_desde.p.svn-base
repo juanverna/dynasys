@@ -1,0 +1,12 @@
+    OUTPUT TO "clipboard".
+    DEFINE VAR k AS INT NO-UNDO.
+    FOR EACH contrato_hd WHERE nro_tipo_evento = 3 AND contrato_hd.estado = "A" AND contrato_hd.rige_desde > 1/1/2009  AND contrato_hd.fecha_baja = ?:
+    DO k = 1 TO contrato_hd.numero_eventos:
+        FIND FIRST evento WHERE evento.nro_identificacion = contrato_hd.nro_contrato AND
+            evento.sub_evento = k AND NOT evento.anulado NO-ERROR.
+        IF NOT AVAILABLE evento THEN NEXT.
+            /*MESSAGE contrato_hd.nro_contrato.*/
+        IF MONTH(evento.fmin) <> month(contrato_hd.rige_desde) THEN
+           DISPLAY nro_contrato contrato_hd.rige_desde evento.fmin evento.frealizado.
+    END.
+END.

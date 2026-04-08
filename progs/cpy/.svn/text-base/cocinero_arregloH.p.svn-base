@@ -1,0 +1,53 @@
+{extrae.i}
+
+PROCEDURE crea_entrega_libro:
+/*creando el evento*/
+DEFINE VAR precursos AS CHAR.
+ FIND tipo_evento WHERE tipo_evento.cdg_tipo_evento = "EL" NO-LOCK.
+ precursos  =  entry(1,extrae("frecursos" , tarea.dato)) .
+ IF precursos = "" OR tarea.fecha_prevista = ? THEN DO:
+   MESSAGE "Datos para cerrar la tarea insuficientes" SKIP
+           "especifique fecha y recurso" VIEW-AS ALERT-BOX ERROR.
+   RETURN ERROR.
+ END.
+ CREATE evento.
+ 
+        ASSIGN evento.nro_evento = NEXT-VALUE(proximo_evento)
+               evento.nro_tipo_evento = tipo_evento.nro_tipo_evento
+               evento.fasignado = tarea.fecha_prevista
+evento.frealizado = tarea.fecha_prevista
+               evento.nro_identificacion = tarea.nro_tarea /*porque deviene de una tarea tiene numero de tarea sino tiene 0*/
+               evento.origen = "TAREA"
+               evento.nro_cliente = tarea.nro_cliente
+               Evento.FCreado = TODAY
+               evento.periodo = YEAR(today) * 100 + MONTH(today)
+               evento.fmin = TODAY
+               evento.fmax = TODAY + 20 /*fijo cualquier cosa se vera*/
+               evento.recurso = precursos
+               evento.observacion = tarea.descripcion.
+               evento.duracion = 15.
+               tarea.destino = "EVENTO".
+               tarea.nro_destino = evento.nro_evento.
+               evento.turno = "**".
+
+                CREATE recurso_agenda.
+                ASSIGN recurso_agenda.cdg_recurso = precursos
+                       recurso_agenda.Fecha = evento.fasignado
+                       recurso_agenda.nro_evento = evento.nro_evento.
+                RELEASE recurso_agenda.
+END PROCEDURE.
+
+DEFINE STREAM ing.
+INPUT STREAM ing FROM "c:\a1.csv".
+DEFINE VAR nt AS INTEGER.
+DEFINE VAR fr AS character.
+
+IMPORT STREAM ing DELIMITER ";" ^ ^ ^ ^ ^ ^ fr .
+REPEAT:
+IMPORT STREAM ing DELIMITER ";"^ nt ^ ^ ^ ^ fr NO-ERROR.
+DISPLAY nt DATE(int(SUBSTRING(fr,4,2)),int(SUBSTRING(fr,1,2)), 2011).
+FIND tarea WHERE tarea.nro_tarea = nt NO-ERROR.
+tarea.dato="frecursos|504|ARREGLO|".
+tarea.fecha_prevista = DATE(int(SUBSTRING(fr,4,2)),int(SUBSTRING(fr,1,2)), 2011).
+RUN crea_entrega_libro.
+END.

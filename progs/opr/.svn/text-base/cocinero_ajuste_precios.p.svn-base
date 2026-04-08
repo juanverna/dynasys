@@ -1,0 +1,24 @@
+INPUT FROM c:\p20111001.txt NO-ECHO.
+DEFINE VAR nro AS INT.
+DEFINE VAR p1 AS DECIMAL.
+DEFINE VAR p AS DECIMAL.
+REPEAT :
+SET nro p.
+FIND contrato_hd WHERE contrato_hd.nro_contrato = nro.
+FIND contrato_dt OF contrato_hd.
+IF contrato_hd.prf_contrato = 1 THEN 
+   contrato_dt.precio =  round( p /  1.21 , 2 ).
+ELSE
+   contrato_dt.precio =  p.
+contrato_dt.precio_cf = round( p , 0 ).
+contrato_dt.subtotal_bruto = contrato_dt.precio.
+contrato_dt.subtotal_bruto_cf = contrato_dt.precio_cf.
+contrato_dt.subtotal_neto_cf = contrato_dt.precio_cf.
+contrato_dt.subtotal_gral = contrato_dt.subtotal_bruto_cf.
+contrato_dt.subtotal_neto = contrato_dt.precio.
+contrato_dt.subtotal_neto_cf = contrato_dt.precio_cf.
+contrato_hd.imp_bruto = contrato_dt.subtotal_bruto.
+Contrato_hd.imp_iva = contrato_dt.precio_cf - contrato_dt.precio.
+Contrato_hd.imp_neto = contrato_dt.subtotal_neto.
+contrato_hd.imp_total = contrato_dt.subtotal_gral.
+END.

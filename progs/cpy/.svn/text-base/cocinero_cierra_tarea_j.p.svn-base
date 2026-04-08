@@ -1,0 +1,136 @@
+{extrae.i}
+{advTexto.i}
+{crystal_dyna.p}
+{impresoras.i}
+DEFINE TEMP-TABLE aimp
+    FIELD c_nro_tipo_evento LIKE tipo_evento.nro_tipo_evento COLUMN-LABEL "Tipo!Evento"
+    FIELD nro_evento AS INT LABEL "EVENTO"
+    FIELD recurso LIKE evento.recurso 
+    FIELD turno LIKE evento.turno
+    FIELD aviso_evento AS INT LABEL "AVISO EVENTO"
+    FIELD aviso_fasignado AS DATE LABEL "REPARTIR"
+    FIELD aviso_recurso AS CHAR LABEL "RECURSO"
+    FIELD tipoespecial AS CHAR LABEL "ESPECIAL".
+PROCEDURE aa :
+DEFINE OUTPUT PARAM explica AS CHAR.
+DEFINE OUTPUT PARAMETER todook AS LOGICAL NO-UNDO.
+DEFINE VAR precursos AS CHAR.
+DEFI VAR xfile AS CHAR NO-UNDO.
+DEF VAR ReportePath AS CHAR NO-UNDO.
+DEF VAR cFullPath AS CHAR NO-UNDO.
+DEF VAR XFullPath AS CHAR NO-UNDO.
+DEF VAR exportFileName AS CHAR NO-UNDO.
+DEFINE VAR p-des_fecha AS DATE.
+DEFINE VAR p-has_fecha AS DATE.
+DEFINE VAR ERROR_rango AS LOGICAL.
+DEFINE VAR rok AS LOGICAL NO-UNDO.
+DEFINE VAR rimprime AS LOGICAL NO-UNDO.
+DEFINE VAR tev AS CHAR NO-UNDO.
+DEFINE BUFFER administrador FOR cliente.
+todook = FALSE.
+IF NOT LOGICAL(extrae("tienelibro",tarea.dato)) THEN DO:
+        MESSAGE "Esta por cerrar la tarea indicando que el cliente no tiene el libro" SKIP
+                "esto generara un evento de Entrega de certificado" VIEW-AS ALERT-BOX QUESTION BUTTONS OK-CANCEL SET rok.
+        IF NOT rok THEN RETURN.
+END.
+IF tarea.fecha_prevista < TODAY THEN DO:
+        MESSAGE "No puede asignar con una fecha anterior a hoy" VIEW-AS ALERT-BOX ERROR.
+        RETURN ERROR.
+END.
+ precursos  =  entry(1,extrae("frecursos" , tarea.dato)) .
+
+ IF precursos = "" OR tarea.fecha_prevista = ? THEN DO:
+   MESSAGE "Se cerrara la tarea creando un evento no asignado" SKIP
+           "sino especifique fecha y recurso" VIEW-AS ALERT-BOX BUTTONS OK-CANCEL SET todook.
+   IF NOT todook THEN RETURN ERROR.
+END.
+ tev = "RL".
+    find restriccion no-lock where restriccion.cdg_restriccion = "LIBROT".
+    find cliente_restriccion where cliente_restriccion.nro_restriccion = restriccion.nro_restriccion and
+                                   cliente_restriccion.nro_cliente = evento.nro_cliente no-lock no-error.
+    if available cliente_restriccion then do:
+       if cliente_restriccion.valor = "N" then tev = "EC".
+    end.
+    else do:
+     IF NOT LOGICAL(extrae("tienelibro", tarea.dato)) THEN tev="EC".
+    END.
+
+ FIND tipo_evento WHERE tipo_evento.cdg_tipo_evento = tev NO-LOCK.
+ CREATE evento.
+        ASSIGN evento.nro_evento = NEXT-VALUE(proximo_evento)
+               evento.nro_tipo_evento = tipo_evento.nro_tipo_evento
+               evento.fasignado = tarea.fecha_prevista
+               evento.nro_identificacion = tarea.nro_tarea /*porque deviene de una tarea tiene numero de tarea sino tiene 0*/
+               evento.origen = "TAREA"
+               evento.nro_cliente = tarea.nro_cliente
+               Evento.FCreado = TODAY
+               evento.periodo = YEAR(today) * 100 + MONTH(today)
+               evento.fmin = TODAY
+               evento.fmax = TODAY + 20 /*fijo cualquier cosa se vera*/
+               evento.recurso = precursos
+               evento.observacion = tarea.descripcion.
+               evento.leyenda = tarea.leyenda.
+               evento.duracion = 15.
+               tarea.destino = "EVENTO".
+               tarea.nro_destino = evento.nro_evento.
+               evento.turno = "**".
+               explica ="Evento:" + string(evento.nro_evento).
+     IF extrae("retira",tarea.dato)="A" then do:
+        FIND administrador WHERE administrador.nro_cliente = cliente.nro_admin NO-LOCK NO-ERROR.
+        IF AVAILABLE administrador THEN DO:
+            evento.leyenda = evento.leyenda + " Retirar por administracion " + administrador.direccion.
+        END.
+     END.
+    evento.leyenda = evento.leyenda + extrae("TEXTO_ADIC",tarea.dato).
+    IF evento.fasignado <> ? AND evento.recursos <> "" THEN DO:
+                   CREATE recurso_agenda.
+                   ASSIGN recurso_agenda.cdg_recurso = entry(1,precursos)
+                           recurso_agenda.Fecha = evento.fasignado
+                           recurso_agenda.nro_evento = evento.nro_evento.
+                    RELEASE recurso_agenda.
+        IF tev = "RL" THEN DO:
+            MESSAGE "Desea imprimir la orden de trabajo " tev SET rimprime VIEW-AS ALERT-BOX BUTTONS YES-NO.
+            IF rimprime THEN DO:
+            /*impresion de la orden ya que esta asignada*/
+              ReportePath = "orden_" + STRING(evento.nro_tipo_evento) .
+              RUN fullPath (ReportePath, '.rpt':U, OUTPUT cFullPath).
+              IF cFullPath = ? THEN DO:
+                  MESSAGE "No se encuentra el archivo de impresion " ReportePath SKIP
+                     "para el tipo de evento seleccionado" VIEW-AS ALERT-BOX ERROR.
+                  RETURN NO-apply.  
+              END.
+              EMPTY TEMP-TABLE aimp.
+              CREATE aimp.
+              ASSIGN aimp.c_nro_tipo_evento = evento.nro_tipo_evento
+                     aimp.nro_evento = evento.nro_evento
+                     aimp.recurso = evento.recurso
+                     aimp.turno = evento.turno.
+              RUN printorden.p ( INPUT TABLE aimp, OUTPUT xfile, 1 ). 
+            
+              CREATE "CrystalRuntime.Application" chApplication.
+                chReport = chApplication:OpenReport(cFullPath, {&crOpenReportByTempCopy}).
+                chReport:DiscardSavedData(). /*eliminando lo previamente grabado*/
+              RUN fullpath ( INPUT xfile, INPUT "", OUTPUT xFullPath ).
+                chReport:Database:Tables:item(1):setTableLocation(xFullPath, '', '').
+              RUN crearReporte(chReport,"rpt",/*ViewReport*/ TRUE,/*PrinterName*/ "?",
+                                   /*exportToDisk*/ FALSE, INPUT-OUTPUT exportFileName ).    
+              RELEASE OBJECT chReport. 
+              chReport = ?.
+              RELEASE OBJECT chApplication.     
+            END.  
+        END.
+    END.
+    todook = TRUE.
+END.
+
+DEFINE VAR explica AS CHAR.
+DEFINE VAR todook AS LOGICAL.
+FOR EACH tarea WHERE tarea.estado = "A" AND cdg_tipotarea = "J":
+RUN aa(OUTPUT explica, OUTPUT todook ).
+IF todook THEN DO:
+
+             Tarea.estado = "R".
+              tarea.descripcion = agregaAdvTexto("Cerro " + explica ,tarea.descripcion).
+              IF Tarea.fecha_resuelto = ? THEN Tarea.fecha_resuelto = TODAY.
+END.
+END.

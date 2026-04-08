@@ -1,0 +1,14 @@
+DEFINE VARIABLE v-hora AS INTEGER.
+DEFINE VARIABLE v-minu AS INTEGER.
+DEFINE VARIABLE v-segu AS INTEGER.
+DEFINE VARIABLE v-hor_alta AS INTEGER.
+
+FOR EACH Ficha WHERE Ficha.hor_alta = ? AND Ficha.hms_alta <> ? EXCLUSIVE-LOCK:
+
+    v-hora = INTEGER(SUBSTRING(Ficha.hms_alta,1,2)).
+    v-minu = INTEGER(SUBSTRING(Ficha.hms_alta,4,2)).
+    v-segu = INTEGER(SUBSTRING(Ficha.hms_alta,7,2)).
+    v-hor_alta = v-hora * 3600 + v-minu * 60 + v-segu.
+    Ficha.hor_alta = v-hor_alta.
+
+END.

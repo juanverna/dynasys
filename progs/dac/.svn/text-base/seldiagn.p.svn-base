@@ -1,0 +1,13 @@
+/*=================================================================================*/
+/*                                                                                 */
+/*                      SELECCION DE DIAGNOSTICOS                                  */
+/*                                                                                 */
+/*=================================================================================*/
+
+&GLOBAL-DEFINE TABLA           Diagnostico
+&GLOBAL-DEFINE CODIGO          cdg_diagnostico
+&GLOBAL-DEFINE NOMBRE          dsc_diagnostico
+&GLOBAL-DEFINE TITULO-BROWSE   Tipee un nombre o seleccione de la lista
+&GLOBAL-DEFINE TITULO-FRAME    Seleccion de Diagnosticos de Llamada
+
+{SELBROWS.I}

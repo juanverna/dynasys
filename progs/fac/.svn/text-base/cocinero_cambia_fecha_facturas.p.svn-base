@@ -1,0 +1,4 @@
+/*arregla las facturas por cambio de fecha*/
+FOR EACH fac_header WHERE fac_header.nro_comprob >= 107415 AND fac_header.nro_comprob <= 107438 AND fac_header.prf_comprob = 1:
+fac_header.fecha = 02/01/2011.
+RUN regenerar_subdiario_ventas.p( ROWID(fac_header)).

@@ -1,0 +1,155 @@
+/*=================================================================================*/
+/*               GENERA LA INTERFACE DE SUCURSALES PARA DESPACHO                   */
+/*=================================================================================*/
+
+DEFINE INPUT PARAMETER p-pto_venta  AS CHARACTER.
+DEFINE INPUT PARAMETER p-des_fecha  AS DATE. 
+DEFINE INPUT PARAMETER p-has_fecha  AS DATE. 
+DEFINE INPUT PARAMETER p-archivo    AS CHARACTER. 
+
+DEFINE TEMP-TABLE T-Caj_header      LIKE Caj_header.
+DEFINE TEMP-TABLE T-Caj_detalle     LIKE Caj_detalle.
+DEFINE TEMP-TABLE T-Cheque          LIKE Cheque.
+DEFINE TEMP-TABLE T-Valor           LIKE Valor.
+
+{VRSHARED.I }
+  
+DEFINE STREAM Errores.
+
+DEFINE NEW SHARED VARIABLE emitir_remito  AS LOGICAL LABEL "Emitir remito".
+DEFINE NEW SHARED VARIABLE emitir_factura AS LOGICAL LABEL "Emitir" INITIAL YES.
+
+DEFINE VARIABLE archivo             AS CHARACTER.
+DEFINE VARIABLE direc_tmp           AS CHARACTER INITIAL ".\".
+DEFINE VARIABLE ant_remyfact        AS INTEGER.
+DEFINE VARIABLE ncopias_fa          AS INTEGER.
+DEFINE VARIABLE ncopias_fb          AS INTEGER.
+DEFINE VARIABLE ncopias_fc          AS INTEGER.
+
+/*=================================================================================*/
+/*           AVERIGUA LOS NUMEROS INTERNOS DE LOS REMITOS A IMPORTAR               */
+/*=================================================================================*/
+
+     /*---------------------------------------------*/ 
+     /* Importa la interface en tablas temporarias  */ 
+     /*---------------------------------------------*/ 
+
+FIND Parametro "DIRECTMP" NO-LOCK NO-ERROR.
+IF AVAILABLE Parametro THEN direc_tmp = Parametro.valor_c.
+
+archivo = direc_tmp + "\" + p-archivo + 
+          STRING(YEAR(p-has_fecha),"9999") + 
+          STRING(MONTH(p-has_fecha),"99") + 
+          STRING(DAY(p-has_fecha),"99") + "TESCXXX.TXT".
+          
+INPUT FROM VALUE(REPLACE(archivo,"XXX","TEH")). 
+REPEAT:
+    CREATE T-Caj_header.
+    IMPORT DELIMITER "|" T-Caj_header.
+END.
+INPUT CLOSE.
+
+INPUT FROM VALUE(REPLACE(archivo,"XXX","TED")). 
+REPEAT:
+    CREATE T-Caj_detalle.
+    IMPORT DELIMITER "|" T-Caj_detalle.
+END.
+INPUT CLOSE.
+
+INPUT FROM VALUE(REPLACE(archivo,"XXX","CHQ")). 
+REPEAT:
+    CREATE T-Cheque.
+    IMPORT DELIMITER "|" T-Cheque.
+END.
+INPUT CLOSE.
+
+INPUT FROM VALUE(REPLACE(archivo,"XXX","VAL")). 
+REPEAT:
+    CREATE T-Valor.
+    IMPORT DELIMITER "|" T-Valor.
+END.
+INPUT CLOSE.
+
+     /*-----------------------------------------------------------------*/ 
+     /* Baja los datos a las tablas permanentes y emite los documentos  */ 
+     /*-----------------------------------------------------------------*/ 
+
+OUTPUT STREAM Errores TO VALUE(REPLACE(archivo,".TXT",".LOG")). 
+
+FOR EACH T-Caj_header:
+
+    FIND Caj_header WHERE Caj_header.tip_comprob  = T-Caj_header.tip_comprob
+                      AND Caj_header.prf_comprob  = T-Caj_header.prf_comprob
+                      AND Caj_header.nro_comprob  = T-Caj_header.nro_comprob NO-ERROR.
+
+    IF AVAILABLE Caj_header
+    THEN DO:
+         EXPORT STREAM Errores 
+                "Ya Existe"
+                T-Caj_header.tip_comprob
+                T-Caj_header.prf_comprob
+                T-Caj_header.nro_comprob.
+
+    END.
+    ELSE DO:
+        RUN BAJAR_T-Caj_header.
+        RUN BAJAR_T-Caj_detalle.
+        RUN BAJAR_T-Cheque.
+        RUN BAJAR_T-Valor.
+        act_Caj_head = ROWID(Caj_header).
+        RUN EMIMCAJA.P.
+    END.
+    
+END.    
+
+/*=================================================================================*/
+/*           AVERIGUA LOS NUMEROS INTERNOS DE LOS REMITOS A IMPORTAR               */
+/*=================================================================================*/
+
+PROCEDURE BAJAR_T-Caj_header:
+
+    /*
+
+              Tabla de Ctl DESACTIVADA.
+
+    CREATE Ctl-despacho.
+    ASSIGN Ctl-despacho.nro_factura     = NEXT-VALUE(proxima_transaccion)
+           Ctl-despacho.nro_factura-suc = T-Caj_header.nro_factura.
+     
+    CREATE Caj_header.
+    BUFFER-COPY T-Caj_header TO Caj_header ASSIGN Caj_header.nro_factura = Ctl-despacho.nro_factura.
+    
+    */
+
+    CREATE Caj_header.
+    BUFFER-COPY T-Caj_header TO Caj_header.
+
+END PROCEDURE.
+
+PROCEDURE BAJAR_T-Caj_detalle:
+
+    FOR EACH T-Caj_detalle OF T-Caj_header:
+        CREATE Caj_detalle.
+        BUFFER-COPY T-Caj_detalle TO Caj_detalle.
+    END.
+
+END PROCEDURE.
+
+PROCEDURE BAJAR_T-Cheque:
+
+    FOR EACH T-Cheque OF T-Caj_header:
+        CREATE Cheque.
+        BUFFER-COPY T-Cheque TO Cheque.
+    END.
+
+END PROCEDURE.
+
+PROCEDURE BAJAR_T-Valor:
+
+    FOR EACH T-Valor OF T-Caj_header:
+        CREATE Valor.
+        BUFFER-COPY T-Valor TO Valor.
+    END.
+
+END PROCEDURE.
+

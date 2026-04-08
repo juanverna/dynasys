@@ -1,0 +1,9 @@
+&GLOBAL-DEFINE TABLA           Notify
+&GLOBAL-DEFINE CODIGO          cdg_notify
+&GLOBAL-DEFINE NOMBRE          nom_notify
+&GLOBAL-DEFINE TITULO-BROWSE   Seleccione el Notify o ingrese nombre
+&GLOBAL-DEFINE TITULO-FRAME    Seleccion de Notify
+&GLOBAL-DEFINE PROCESO         ACTNOTIF
+&GLOBAL-DEFINE ULT_REGISTRO    ult_notify
+
+{SELBROWS.I}

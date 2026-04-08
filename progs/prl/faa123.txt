@@ -1,0 +1,66 @@
+DD,01  
+MM,11  
+AA,2000
+DMA,01  11  00 
+FECH,01 de Noviembre de 2000       
+NOM,CORNEJO CRISTINA                    
+CUIT,30-12311218-1               
+DIR,GRECIA 2346                         
+LOC,()                                  
+CNV,CONTADO                             
+CIV,Consumidor Final                    
+NCLI,[R606679G] 
+NCOB,[152]  
+D01,Cuota del Mes de Noviembre de 2000.-                                                  
+I01,     100.00 
+D02,                  
+I02,              
+D03,                  
+I03,              
+D04,                  
+I04,              
+D05,                  
+I05,              
+D06,                  
+I06,              
+D07,                  
+I07,              
+D08,                  
+I08,              
+D09,                  
+I09,              
+D10,                  
+I10,              
+D11,                  
+I11,              
+D12,                  
+I12,              
+D13,                  
+I13,              
+D14,                  
+I14,              
+D15,                  
+I15,              
+D16,                  
+I16,              
+D17,                  
+I17,              
+D18,                  
+I18,              
+D19,                  
+I19,              
+D20,                  
+I20,              
+ILE1,CIENTO VEINTIUNO CON 0/00.-                                                                                   
+ILE2,                                                                                     
+LEY1,Esta es la primera linea de leyenda                                                                                     
+LEY2,                                                                                     
+LEY3,                                                                                     
+LEY4,                                                                                     
+LEY5,                                                                                     
+BRUT,      100.00 
+PIVA,       21.00 
+ITOT,      121.00 
+INOI,        0.00 
+CTL,0001 00007095 
+!PAGE!

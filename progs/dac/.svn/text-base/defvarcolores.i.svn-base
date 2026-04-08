@@ -1,0 +1,10 @@
+DEFINE VARIABLE des_tipoemr  LIKE Tipcolor.cdg_tipoemr LABEL "De Color".
+DEFINE VARIABLE has_tipoemr  LIKE Tipcolor.cdg_tipoemr LABEL "A Color".
+DEFINE VARIABLE deshas_color AS CHARACTER LABEL "De Color" FORMAT "X(15)".
+
+DEFINE VARIABLE lista_estados  AS CHARACTER LABEL "Estados".
+
+DEFINE VARIABLE des_fecha AS DATE LABEL "De Fecha".
+DEFINE VARIABLE has_fecha AS DATE LABEL "A Fecha".
+
+{defvarimpre.i}

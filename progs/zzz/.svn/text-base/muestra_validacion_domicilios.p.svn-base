@@ -1,0 +1,19 @@
+DEFINE VARIABLE nok AS LOGICAL EXTENT 20.     
+     
+FIND Cliente WHERE cdg_cliente = "044269".
+FIND FIRST Domicilio OF Cliente.
+
+     nok [ 01 ] = CAN-FIND(FIRST Contrato_hd WHERE Contrato_hd.nro_domicilio = Domicilio.nro_domicilio) .
+     nok [ 02 ] = CAN-FIND(FIRST Domicilio_prv WHERE Domicilio_prv.nro_domicilio = Domicilio.nro_domicilio) .
+     nok [ 03 ] = CAN-FIND(FIRST Emb_header_prv WHERE Emb_header_prv.nro_domicilio = Domicilio.nro_domicilio) .
+     nok [ 04 ] = CAN-FIND(FIRST Fac_header WHERE Fac_header.nro_domicilio = Domicilio.nro_domicilio) .
+     nok [ 05 ] = CAN-FIND(FIRST Fac_header_prv WHERE Fac_header_prv.nro_domicilio = Domicilio.nro_domicilio) .
+     nok [ 06 ] = CAN-FIND(FIRST Oci_header WHERE Oci_header.nro_domicilio = Domicilio.nro_domicilio) .
+     nok [ 07 ] = CAN-FIND(FIRST Ocm_header WHERE Ocm_header.nro_domicilio = Domicilio.nro_domicilio) .
+     nok [ 08 ] = CAN-FIND(FIRST Ped_header WHERE Ped_header.nro_domicilio = Domicilio.nro_domicilio) .
+     nok [ 09 ] = CAN-FIND(FIRST Rec_header WHERE Rec_header.nro_domicilio = Domicilio.nro_domicilio) .
+     nok [ 10 ] = CAN-FIND(FIRST Rem_header WHERE Rem_header.nro_domicilio = Domicilio.nro_domicilio) .
+     nok [ 11 ] = CAN-FIND(FIRST Rem_header_prv WHERE Rem_header_prv.nro_domicilio = Domicilio.nro_domicilio).
+     
+         DISPLAY NOK WITH SIDE-LABELS.
+

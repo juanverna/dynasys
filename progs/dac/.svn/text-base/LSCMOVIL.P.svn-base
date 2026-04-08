@@ -1,0 +1,4 @@
+&GLOBAL-DEFINE  TABLA         Movil
+&GLOBAL-DEFINE  NOMBRE-TABLA  dsc_movil
+&GLOBAL-DEFINE  CODIGO-TABLA  cdg_movil
+&GLOBAL-DEFINE  TITULO-LST    Servicios del Movil

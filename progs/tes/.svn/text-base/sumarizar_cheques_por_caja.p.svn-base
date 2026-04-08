@@ -1,0 +1,74 @@
+DEF VAR saldo AS DECIMAL FORMAT "->>>>>>>>9.99" COLUMN-LABEL "Saldo!Caja".
+DEF VAR saldo-ch AS DECIMAL FORMAT "->>>>>>>>9.99" COLUMN-LABEL "Saldo!Cheques".
+DEFINE VARIABLE i-caja AS INTEGER COLUMN-LABEL "Codigo!Caja".
+
+
+FOR EACH caja NO-LOCK:
+
+    FOR EACH empresa NO-LOCK:
+
+        saldo = 0.
+        saldo-ch = 0.
+
+        FOR EACH caj_detalle NO-LOCK WHERE cdg_rubro = 2, FIRST caj_header NO-LOCK OF caj_detalle WHERE NOT caj_header.anulado 
+            and caj_header.cdg_caja = caja.cdg_caja AND caj_header.cdg_empresa = Empresa.cdg_empresa:
+        
+            IF caj_detalle.tipo_mov = "I" THEN saldo = saldo + caj_detalle.importe.
+                              ELSE saldo = saldo - caj_detalle.importe.
+                              
+        END.
+
+        FOR EACH valor NO-LOCK WHERE valor.estado = "00" AND valor.cdg_caja = caja.cdg_caja AND valor.cdg_empresa = Empresa.cdg_empresa:
+            saldo-ch = saldo-ch + importe.
+        END.
+        
+        DISPLAY empresa.cdg_empresa caja.cdg_caja saldo saldo-ch saldo saldo-ch WITH FRAME ff DOWN.
+        DOWN WITH FRAME ff.
+
+        DO TRANSACTION:
+
+            FIND Parametro WHERE Parametro.cdg_empresa = Empresa.cdg_empresa AND Parametro.cdg_parametro = "PROXNCAJ".
+            FIND Usuario WHERE Usuario.cdg_usuario = USERID("SIC").
+    
+            CREATE caj_header.
+            ASSIGN Caj_header.anulado         = NO
+                   Caj_header.cambio          = 1
+                   Caj_header.cambio_dolar    = 1
+                   Caj_header.cdg_caja        = Caja.cdg_caja
+                   Caj_header.cdg_empresa     = Empresa.cdg_empresa
+                   Caj_header.contable        = NO
+                   Caj_header.emitir          = NO
+                   Caj_header.estado          = "E"
+                   Caj_header.fch_cambio      = 05/31/2004
+                   Caj_header.fecha           = 05/31/2004
+                   Caj_header.fecha_grab      = 05/31/2004
+                   Caj_header.hora_grab       = TIME
+                   Caj_header.importe         = abs(saldo - saldo-ch)
+                   Caj_header.ingreso         = Caj_header.importe 
+                   Caj_header.nro_comprob     = Parametro.valor_n
+                   Caj_header.nro_moneda      = 1
+                   Caj_header.nro_transaccion = NEXT-VALUE(proxima_transaccion)
+                   Caj_header.nro_usuario     = Usuario.nro_usuario
+                   Caj_header.origen          = "A"
+                   Caj_header.pc_name         = "karlos"
+                   Caj_header.prf_comprob     = 0
+                   Caj_header.tipo_mov        = IF saldo - saldo-ch > 0 THEN "E" ELSE "I"
+                   Caj_header.tip_comprob     = "CJ"
+                   Caj_header.ultima_linea    = 1.
+    
+            Parametro.valor_n = Parametro.valor_n + 1.
+    
+            CREATE Caj_detalle.
+            BUFFER-COPY caj_header TO Caj_detalle
+                ASSIGN Caj_detalle.cambio          = 1
+                       Caj_detalle.cdg_rubro       = 2
+                       Caj_detalle.nro_linea       = 1.
+        END.
+
+    END.
+
+END.
+
+OUTPUT CLOSE.
+
+

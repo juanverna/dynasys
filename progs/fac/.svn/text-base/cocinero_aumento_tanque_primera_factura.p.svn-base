@@ -1,0 +1,41 @@
+/*primera cuota de contratos de tanques*/
+{vrshared.i NEW }
+
+DEFINE VAR difi AS DECIMAL.
+DEFINE VAR pudo_anular AS LOGICAL NO-UNDO.
+OUTPUT TO c:\facturas_primera_cuota_tanques_marzo4.txt.
+DEFINE VAR preimp LIKE contrato_hd.imp_total.
+FIND articulo WHERE articulo.cdg_articulo = "11".
+FOR EACH fac_header WHERE fecha >= 03/01/2011 AND fac_header.anulado, 
+first contrato_hd OF fac_header WHERE cant_periodos - resto_periodos = 0,
+first contrato_dt OF contrato_hd WHERE contrato_dt.nro_articulo = articulo.nro_articulo:
+preimp = contrato_hd.imp_total.
+IF contrato_hd.prf_contrato = 1 THEN DO:
+                                contrato_dt.precio_cf = contrato_dt.precio_cf - 72.
+                                difi = contrato_dt.precio.
+                                contrato_dt.precio =  round( contrato_dt.precio_cf /  1.21 , 0 ).
+                                difi = contrato_dt.precio - difi.
+
+                            END.
+                        ELSE DO: 
+                            contrato_dt.precio_cf = contrato_dt.precio_cf - 72.
+                            difi = contrato_dt.precio.
+                            contrato_dt.precio =  contrato_dt.precio_cf .
+                            difi = contrato_dt.precio - difi.
+                        END.
+
+       ASSIGN
+                contrato_dt.subtotal_bruto = contrato_dt.precio
+                contrato_dt.subtotal_bruto_cf = contrato_dt.precio_cf
+                contrato_dt.subtotal_neto_cf = contrato_dt.precio_cf
+                contrato_dt.subtotal_gral = contrato_dt.subtotal_bruto_cf
+                contrato_dt.subtotal_neto = contrato_dt.precio
+                contrato_dt.subtotal_neto_cf = contrato_dt.precio_cf
+                contrato_hd.imp_bruto = contrato_hd.imp_bruto + difi
+                contrato_hd.imp_neto = contrato_hd.imp_neto + difi
+                contrato_hd.imp_total = contrato_hd.imp_total - 72
+                contrato_hd.imp_iva = contrato_hd.imp_total - contrato_hd.imp_bruto.
+    
+DISPLAY fac_header.prf_comprob fac_header.nro_comprob fac_header.nro_contrato preimp contrato_hd.imp_total.
+               /*RUN anular_comprobante_cliente.p (INPUT ROWID(Fac_header), OUTPUT pudo_anular).*/
+END.

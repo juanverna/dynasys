@@ -1,0 +1,29 @@
+/*======================================================================================*/
+/*                  CAMBIA LA DISPONIBILIDAD DE UN GRUPO DE MOVILES                     */
+/*======================================================================================*/
+
+/*
+
+  Utilizado el 28/12/99 para activar el seguimiento de disponibilidad de moviles en THERAPIA
+  
+*/
+
+DEFINE VARIABLE que_movil LIKE Movil.cdg_movil.
+
+FOR EACH Movil EXCLUSIVE-LOCK:
+
+    Movil.disponible = NO.
+    
+END.
+
+REPEAT ON ERROR UNDO,LEAVE:      
+
+    PROMPT-FOR Movil.cdg_movil.
+    FIND Movil USING Movil.cdg_movil EXCLUSIVE-LOCK.
+    Movil.disponible = YES.
+
+END.
+
+FOR EACH Movil WHERE CAN-FIND(FIRST Ficha OF Movil WHERE Ficha.abierta) EXCLUSIVE-LOCK:
+    Movil.disponible = NO.
+END.

@@ -1,0 +1,15 @@
+FOR EACH CAJ_header WHERE origen = "C":
+    FOR EACH CAJ_detalle OF CAJ_header:
+        FOR EACH Valor OF Caj_detalle:
+            DELETE Valor.
+        END.
+        DELETE CAJ_detalle.
+    END.
+    DELETE CAJ_header.
+END.
+FOR EACH Rec_header WHERE tip_comprob = "RX":
+    DELETE Rec_header.
+END.
+FOR EACH Cta_cte WHERE tip_comprob = "RX":
+    DELETE Cta_cte.
+END.

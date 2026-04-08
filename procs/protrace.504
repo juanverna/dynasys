@@ -1,0 +1,45 @@
+=====================================================
+PROGRESS stack trace as of Wed Oct 21 18:33:22 2020
+=====================================================
+Startup parameters:
+-pf C:\Progress102\OpenEdge\startup.pf,-cpinternal ISO8859-1,-cpstream ISO8859-1,-cpcoll Spanish9,-cpcase Basic,-d dmy,-numsep 46,-numdec 44,(end .pf),-db c:\bases\dynasys102,-C
+
+Exception code: C0000005 ACCESS_VIOLATION
+Fault address:  0045F2B6 01:0005E2B6 C:\Progress102\OpenEdge\bin\_mprshut.exe
+
+Registers:
+EAX:0009E614
+EBX:00D8FB58
+ECX:0009E5F4
+EDX:0009E614
+ESI:0009E5F4
+EDI:011178D8
+CS:EIP:0023:0045F2B6
+SS:ESP:002B:0018FBFC  EBP:00000000
+DS:002B  ES:002B  FS:0053  GS:002B
+Flags:00010206
+
+Call Stack:
+Address   Frame
+
+//=====================================================
+PROGRESS stack trace as of Wed Oct 21 18:33:24 2020
+//=====================================================
+Exception code: C0000005 ACCESS_VIOLATION
+Fault address:  0045F2B6 01:0005E2B6 C:\Progress102\OpenEdge\bin\_mprshut.exe
+
+Registers:
+EAX:0009E614
+EBX:00D8FB58
+ECX:0009E5F4
+EDX:0009E614
+ESI:0009E5F4
+EDI:011178D8
+CS:EIP:0023:0045F2B6
+SS:ESP:002B:0018FBFC  EBP:00000000
+DS:002B  ES:002B  FS:0053  GS:002B
+Flags:00010206
+
+Call Stack:
+Address   Frame
+

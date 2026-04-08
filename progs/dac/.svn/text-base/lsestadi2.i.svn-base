@@ -1,0 +1,273 @@
+/*===================================================================================*/
+/*  Emite el listado de servicios prestados agrupados por algun campo codificado     */
+/*===================================================================================*/
+
+DEFINE VARIABLE des_{&TABLA} LIKE {&TABLA}.{&CODIGO-TABLA} LABEL "Desde {&TABLA}".
+DEFINE VARIABLE has_{&TABLA} LIKE {&TABLA}.{&CODIGO-TABLA} LABEL "Hasta {&TABLA}".
+
+{defvarcolores.i}
+{varestad.i}
+
+DEFINE STREAM errores.
+
+{formtitulo.i}
+
+FORM
+  Ficha.{&CODIGO-FICHA}
+  {&TABLA}.{&NOMBRE-TABLA} FORMAT "X(20)"
+  {formcnt.i}
+  cnt_marron                
+  cnt_naranja               
+  cnt_azul                  
+  cnt_gris
+  WITH WIDTH 196 DOWN CENTERED FRAME frm-listado USE-TEXT STREAM-IO.
+
+{cargaempresas.i}
+
+UPDATE des_fecha COLON 20 has_fecha COLON 55 SKIP
+      des_{&TABLA} COLON 20 has_{&TABLA} COLON 55 SKIP
+      lista_empresas COLON 20
+       WITH FRAME aa SIDE-LABELS THREE-D VIEW-AS DIALOG-BOX WIDTH 90
+            TITLE "Ingrese parámetros del listado {&TITULO-LST}".
+
+{borracnt.i}
+{pone0act.i}
+
+{drsalida.i "65"} /* Direcciona la salida de impresión */
+{drerrlog.i}
+{setvarimpre.i}
+
+FOR EACH Ficha USE-INDEX por_fecha
+    WHERE Ficha.fch_alta <= has_fecha 
+      AND Ficha.fch_alta >= des_fecha
+      AND Ficha.{&CODIGO-FICHA} <= has_{&TABLA}
+      AND Ficha.{&CODIGO-FICHA} >= des_{&TABLA}
+      AND LOOKUP(Ficha.cdg_empresa,lista_empresas) <> 0 
+/*    AND LOOKUP(Ficha.cdg_tipoemr,"1,2,3,4,6,7,8,9,A") <> 0 */
+      AND Ficha.cdg_destino <> "A" NO-LOCK 
+      BREAK BY Ficha.{&CODIGO-FICHA}
+            BY Ficha.fch_alta 
+            BY Ficha.cdg_tipoemr
+            WITH FRAME f-datos:
+
+    VIEW FRAME frm-titulo.
+
+    tr = IF Ficha.hor_arrdom - Ficha.hor_alta > 0 
+            THEN Ficha.hor_arrdom - Ficha.hor_alta
+            ELSE Ficha.hor_arrdom + 86400 - Ficha.hor_alta.
+
+    IF tr = ? 
+    THEN DO:
+         DISPLAY STREAM errores Ficha.num_ficha Ficha.fch_alta
+                 WITH STREAM-IO NO-LABELS NO-BOX.
+         tot_err = tot_err + 1.        
+         NEXT.        
+    END.
+ 
+    min_tieres  = IF Ficha.hor_arrdom > Ficha.hor_alta
+                     THEN (Ficha.hor_arrdom - Ficha.hor_alta) / 60
+                     ELSE (Ficha.hor_arrdom + 86400 - Ficha.hor_alta) / 60.
+
+    tot_fichas = tot_fichas + 1.
+    cnt_incid  = cnt_incid  + 1.
+
+    CASE Ficha.cdg_tipoemr:
+
+         WHEN "1"
+         THEN DO:
+              cnt_rojo        = cnt_rojo + 1.
+              act_rojo        = act_rojo + tr.
+              IF min_tieres > 10 
+                 THEN IF min_tieres <= 16
+                      THEN cnt_rojo-tarde    = cnt_rojo-tarde + 1.
+                      ELSE cnt_rojo-muytarde = cnt_rojo-muytarde + 1.
+         END.     
+
+         WHEN "2"
+         THEN DO:
+              cnt_amarillo    = cnt_amarillo + 1.
+              act_amarillo    = act_amarillo + tr.
+              IF min_tieres > 20 
+                 THEN IF min_tieres <= 31 
+                         THEN cnt_amarillo-tarde = cnt_amarillo-tarde + 1.
+                         ELSE cnt_amarillo-muytarde = cnt_amarillo-muytarde + 1.
+         END.     
+
+         WHEN "3" 
+         THEN DO:
+              IF Ficha.edad_pac > 12
+              THEN DO:
+                   cnt_verdeadu    = cnt_verdeadu + 1.
+                   act_verdeadu    = act_verdeadu + tr.
+                   IF min_tieres > 123 
+                      THEN IF min_tieres <= 183 
+                              THEN cnt_verdeadu-tarde = cnt_verdeadu-tarde + 1.
+                              ELSE cnt_verdeadu-muytarde = cnt_verdeadu-muytarde + 1.
+              END.
+              ELSE DO:
+                   cnt_verdeped    = cnt_verdeped + 1.
+                   act_verdeped    = act_verdeped + tr.
+                   IF min_tieres > 123 
+                      THEN IF min_tieres <= 183
+                              THEN cnt_verdeped-tarde = cnt_verdeped-tarde + 1.
+                              ELSE cnt_verdeped-muytarde = cnt_verdeped-muytarde + 1.
+              END.
+                              
+         END.     
+
+         WHEN "4"
+         THEN DO:
+              cnt_azul      = cnt_azul + 1.
+              act_azul      = act_azul + tr.
+         END.     
+
+         WHEN "6"
+         THEN DO:
+              cnt_naranja     = cnt_naranja + 1.
+              act_naranja     = act_naranja + tr.
+         END.     
+
+         WHEN "7"   /* Lilas */
+         THEN DO:
+              cnt_verdeadu    = cnt_verdeadu + 1.
+              act_verdeadu    = act_verdeadu + tr.
+              IF min_tieres > 120 
+                 THEN IF min_tieres <= 180 
+                         THEN cnt_verdeadu-tarde = cnt_verdeadu-tarde + 1.
+                         ELSE cnt_verdeadu-muytarde = cnt_verdeadu-muytarde + 1.
+         END.     
+
+         WHEN "8"
+         THEN DO:
+              cnt_marron        = cnt_marron + 1.
+              act_marron        = act_marron + tr.
+         END.     
+
+         WHEN "9"
+         THEN DO:
+              cnt_gris      = cnt_gris + 1.
+              act_gris      = act_gris + tr.
+         END.     
+
+         WHEN "A"   /* Visita Prioritaria */
+         THEN DO:
+              cnt_celeste    = cnt_celeste + 1.
+              act_celeste    = act_celeste + tr.
+              IF min_tieres > 120 
+                 THEN IF min_tieres <= 180 
+                         THEN cnt_celeste-tarde = cnt_celeste-tarde + 1.
+                         ELSE cnt_celeste-muytarde = cnt_celeste-muytarde + 1.
+         END.     
+
+         OTHERWISE DO:
+              cnt_otros     = cnt_otros + 1.
+              act_otros     = act_otros + tr.
+         END.     
+
+    END CASE.
+
+    IF LAST-OF(Ficha.{&CODIGO-FICHA})
+    THEN DO:
+
+         FIND {&TABLA} WHERE {&TABLA}.{&CODIGO-TABLA} = Ficha.{&CODIGO-FICHA} NO-LOCK. 
+         DISPLAY Ficha.{&CODIGO-FICHA}
+                {&TABLA}.{&NOMBRE-TABLA}
+                {formcnt.i}
+                cnt_marron
+                cnt_naranja
+                cnt_azul
+                cnt_gris
+                cnt_otros
+                WITH FRAME frm-listado.
+
+
+         DOWN WITH FRAME frm-listado.       
+
+         {acumularcolores.i}
+
+         ASSIGN
+                {acucolor.i "marron               "}
+                {acucolor.i "naranja              "}
+                {acucolor.i "azul                 "}
+                {acucolor.i "gris                 "}.
+                {acucolor.i "otros                "}.
+
+         {borracnt.i}
+
+         ASSIGN 
+                cnt_gris            = 0
+                cnt_otros           = 0.
+         
+    END.
+
+END.            
+
+UNDERLINE
+      Ficha.{&CODIGO-FICHA}
+      {&TABLA}.{&NOMBRE-TABLA}
+      {formcnt.i}
+      cnt_marron
+      cnt_naranja
+      cnt_azul
+      cnt_gris
+      WITH FRAME frm-listado.
+
+DISPLAY
+      {displaytotales.i}       
+      WITH FRAME frm-listado.
+
+
+DISPLAY
+      {discolor.i "marron           "}
+      {discolor.i "naranja          "}
+      {discolor.i "azul             "}
+      {discolor.i "gris             "}
+      {discolor.i "otros            "}
+      WITH FRAME frm-listado.
+
+UNDERLINE
+      Ficha.{&CODIGO-FICHA}
+      {&TABLA}.{&NOMBRE-TABLA}
+      {formcnt.i}
+      cnt_marron
+      cnt_naranja
+      cnt_azul
+      cnt_gris
+      cnt_otros
+      WITH FRAME frm-listado.
+
+DISPLAY
+      {displaypromedios.i}
+      WITH FRAME frm-listado.
+
+DISPLAY
+      {disprome.i "marron           "}
+      {disprome.i "naranja          "}
+      {disprome.i "azul             "}
+      {disprome.i "gris             "}
+      {disprome.i "otros            "}
+      WITH FRAME frm-listado.
+
+UNDERLINE
+      Ficha.{&CODIGO-FICHA}
+      {&TABLA}.{&NOMBRE-TABLA}
+      {formcnt.i}
+      cnt_marron
+      cnt_naranja
+      cnt_azul
+      cnt_gris
+      cnt_otros
+      WITH FRAME frm-listado.
+
+IF tot_err <> 0
+   THEN DISPLAY "HAY " + STRING(tot_err) + " ERRORES"  @ {&TABLA}.{&NOMBRE-TABLA}
+                WITH FRAME frm-listado.
+
+OUTPUT CLOSE.
+OUTPUT STREAM errores CLOSE.
+
+   /* Visualiza en pantalla el archivo de salida */
+
+RUN veresult.w ( INPUT  arch_salida ,  /* Archivo */
+                 INPUT 8 ).            /* FONT a utilizar por default */               
+

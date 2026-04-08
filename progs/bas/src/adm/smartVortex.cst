@@ -1,0 +1,19 @@
+/* smartvortex.cst - custom SmartObject file - Version 8 - 01/08/98 
+ ************************************************************************
+ Esta basado el el Viewer de V8, Ferver 26/08/2006
+*/
+
+
+#SmartV8Vortex    &Default
+UP-IMAGE-FILE   vortex24.bmp
+DOWN-IMAGE-FILE vortex24.bmp
+LABEL           SmartVortex
+DB-CONNECT
+NEW-TEMPLATE    src/adm/template/Vortexaf.w
+DIRECTORY-LIST  .,src/adm/samples
+FILTER          vo-*.*,vo-*.w,vo-*.r,*.*
+TITLE           Elija SmartVortex
+
+*NEW-SMARTOBJECT SmartVortex
+TYPE            SmartVortex
+NEW-TEMPLATE    src/adm/template/Vortexaf.w

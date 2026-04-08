@@ -1,0 +1,9 @@
+&GLOBAL-DEFINE TABLA           Contenedor
+&GLOBAL-DEFINE CODIGO          cdg_contenedor
+&GLOBAL-DEFINE NOMBRE          descripcion
+&GLOBAL-DEFINE TITULO-BROWSE   Seleccione el Cont.o ingrese cdg.
+&GLOBAL-DEFINE TITULO-FRAME    Seleccion de Contenedores
+&GLOBAL-DEFINE PROCESO         ACTCONTE
+&GLOBAL-DEFINE ULT_REGISTRO    ult_Contenedor
+
+{SELBROWS.I}

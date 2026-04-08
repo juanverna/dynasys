@@ -1,0 +1,1256 @@
+&ANALYZE-SUSPEND _VERSION-NUMBER UIB_v8r12 GUI ADM1
+&ANALYZE-RESUME
+/* Connected Databases 
+          sic              PROGRESS
+*/
+&Scoped-define WINDOW-NAME CURRENT-WINDOW
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CUSTOM _DEFINITIONS V-table-Win 
+/*------------------------------------------------------------------------
+
+  File:
+
+  Description: from VIEWER.W - Template for SmartViewer Objects
+
+  Input Parameters:
+      <none>
+
+  Output Parameters:
+      <none>
+
+------------------------------------------------------------------------*/
+/*          This .W file was created with the Progress UIB.             */
+/*----------------------------------------------------------------------*/
+
+/* Create an unnamed pool to store all the widgets created 
+     by this procedure. This is a good default which assures
+     that this procedure's triggers and internal procedures 
+     will execute in this procedure's storage, and that proper
+     cleanup will occur on deletion of the procedure. */
+
+CREATE WIDGET-POOL.
+
+/* ***************************  Definitions  ************************** */
+
+/* Parameters Definitions ---                                           */
+DEFINE VAR SSMonth1 AS COM-HANDLE NO-UNDO.
+/* Local Variable Definitions ---                                       */
+
+DEFINE TEMP-TABLE mescap NO-UNDO
+    FIELD fecha AS DATE
+    FIELD valor AS INT
+    FIELD horas AS INT
+    INDEX fecha fecha.
+
+DEFINE VAR dd AS DATE NO-UNDO. /*hasta del rango*/
+DEFINE VAR hh AS DATE NO-UNDO. /*desde del rango*/
+DEFINE VAR ff AS DATE NO-UNDO. /*var auxiliar*/
+DEFINE VAR i AS INT NO-UNDO. /*var auxiliar*/
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-PREPROCESSOR-BLOCK 
+
+/* ********************  Preprocessor Definitions  ******************** */
+
+&Scoped-define PROCEDURE-TYPE SmartViewer
+&Scoped-define DB-AWARE no
+
+&Scoped-define ADM-SUPPORTED-LINKS Record-Source,Record-Target,TableIO-Target
+
+/* Name of designated FRAME-NAME and/or first browse and/or first query */
+&Scoped-define FRAME-NAME F-Main
+
+/* External Tables                                                      */
+&Scoped-define EXTERNAL-TABLES Recurso
+&Scoped-define FIRST-EXTERNAL-TABLE Recurso
+
+
+/* Need to scope the external tables to this procedure                  */
+DEFINE QUERY external_tables FOR Recurso.
+/* Standard List Definitions                                            */
+&Scoped-Define ENABLED-OBJECTS RECT-9 c_nro_tipo_evento Minutos Bok ~
+Tdomingo queveo Bseltodo bninguno min_dia r-1 r-2 r-3 r-4 mes ano Copia 
+&Scoped-Define DISPLAYED-FIELDS Recurso.cdg_recurso 
+&Scoped-define DISPLAYED-TABLES Recurso
+&Scoped-define FIRST-DISPLAYED-TABLE Recurso
+&Scoped-Define DISPLAYED-OBJECTS c_nro_tipo_evento Minutos Tdomingo queveo ~
+min_dia r-1 r-2 r-3 r-4 mes ano 
+
+/* Custom List Definitions                                              */
+/* ADM-CREATE-FIELDS,ADM-ASSIGN-FIELDS,List-3,List-4,List-5,List-6      */
+
+/* _UIB-PREPROCESSOR-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _XFTR "Foreign Keys" V-table-Win _INLINE
+/* Actions: ? adm/support/keyedit.w ? ? ? */
+/* STRUCTURED-DATA
+<KEY-OBJECT>
+THIS-PROCEDURE
+</KEY-OBJECT>
+<FOREIGN-KEYS>
+</FOREIGN-KEYS> 
+<EXECUTING-CODE>
+**************************
+* Set attributes related to FOREIGN KEYS
+*/
+RUN set-attribute-list (
+    'Keys-Accepted = "",
+     Keys-Supplied = ""':U).
+/**************************
+</EXECUTING-CODE> */   
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+/* ************************  Function Prototypes ********************** */
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _FUNCTION-FORWARD DOW V-table-Win 
+FUNCTION DOW returns int (dd as date , fwd as int ) FORWARD.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _FUNCTION-FORWARD fechado V-table-Win 
+FUNCTION fechado returns date ( tnMes AS int, tnAnio AS INT , tnDiaSem AS INT , tnOrdinal AS INT )  FORWARD.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+/* ***********************  Control Definitions  ********************** */
+
+
+/* Definitions of handles for OCX Containers                            */
+DEFINE VARIABLE CtrlFrame AS WIDGET-HANDLE NO-UNDO.
+DEFINE VARIABLE chCtrlFrame AS COMPONENT-HANDLE NO-UNDO.
+
+/* Definitions of the field level widgets                               */
+DEFINE BUTTON Agregar 
+     IMAGE-UP FILE "img/add.gif":U
+     LABEL "Agregar" 
+     SIZE 7 BY 1.14.
+
+DEFINE BUTTON bninguno 
+     LABEL "NADA" 
+     SIZE 7.4 BY 1.14 TOOLTIP "Borrar la seleccion".
+
+DEFINE BUTTON Bok 
+     IMAGE-UP FILE "img/commit.gif":U
+     LABEL "OK" 
+     SIZE 18 BY 1.14 TOOLTIP "Graba los valores indicados".
+
+DEFINE BUTTON Borrado 
+     IMAGE-UP FILE "img/delete.gif":U
+     LABEL "Elimina" 
+     SIZE 7 BY 1.14.
+
+DEFINE BUTTON Bseltodo 
+     LABEL "TODO" 
+     SIZE 7 BY 1.14 TOOLTIP "Seleccionar Todos los dias".
+
+DEFINE BUTTON Copia 
+     IMAGE-UP FILE "img/copy.gif":U
+     LABEL "Copia" 
+     SIZE 12 BY 1.14 TOOLTIP "Copia del mes seleccionado al encurso".
+
+DEFINE VARIABLE ano AS INTEGER FORMAT "9999":U INITIAL 2005 
+     LABEL "-" 
+     VIEW-AS COMBO-BOX INNER-LINES 5
+     LIST-ITEMS "2005","2006","2007","2008","2009","2010","2011","2012","2013","2014","2015","2016" 
+     DROP-DOWN-LIST
+     SIZE 11 BY 1 NO-UNDO.
+
+DEFINE VARIABLE c_nro_tipo_evento AS INTEGER FORMAT ">>>>>>>>9" INITIAL 0 
+     LABEL "Tipo" 
+     VIEW-AS COMBO-BOX INNER-LINES 5
+     LIST-ITEM-PAIRS "0",1
+     DROP-DOWN-LIST
+     SIZE 36 BY 1 TOOLTIP "Tipo de Restriccion o Tipo de Evento".
+
+DEFINE VARIABLE mes AS INTEGER FORMAT "->,>>>,>>9":U INITIAL 1 
+     VIEW-AS COMBO-BOX INNER-LINES 5
+     LIST-ITEM-PAIRS "Enero",1,
+                     "Febrero",2,
+                     "Marzo",3,
+                     "Abril",4,
+                     "Mayo",5,
+                     "Junio",6,
+                     "Julio",7,
+                     "Agosto",8,
+                     "Septiembre",9,
+                     "Octubre",10,
+                     "Noviembre",11,
+                     "Diciembre",12
+     DROP-DOWN-LIST
+     SIZE 16 BY 1 NO-UNDO.
+
+DEFINE VARIABLE Minutos AS INTEGER FORMAT ">>9":U INITIAL 0 
+     LABEL "Minutos" 
+     VIEW-AS FILL-IN 
+     SIZE 9 BY 1 NO-UNDO.
+
+DEFINE VARIABLE min_dia AS INTEGER FORMAT "->,>>>,>>9":U INITIAL 240 
+     LABEL "Total" 
+     VIEW-AS FILL-IN 
+     SIZE 6 BY 1 NO-UNDO.
+
+DEFINE VARIABLE r-1 AS INTEGER FORMAT ">>9":U INITIAL 20 
+     LABEL "SubUtil%" 
+     VIEW-AS FILL-IN 
+     SIZE 6 BY 1
+     BGCOLOR 11  NO-UNDO.
+
+DEFINE VARIABLE r-2 AS INTEGER FORMAT ">>9":U INITIAL 50 
+     LABEL "Bajo%" 
+     VIEW-AS FILL-IN 
+     SIZE 6 BY 1
+     BGCOLOR 10  NO-UNDO.
+
+DEFINE VARIABLE r-3 AS INTEGER FORMAT "->,>>>,>>9":U INITIAL 90 
+     LABEL "Normal%" 
+     VIEW-AS FILL-IN 
+     SIZE 6 BY 1
+     BGCOLOR 14  NO-UNDO.
+
+DEFINE VARIABLE r-4 AS INTEGER FORMAT ">>9":U INITIAL 100 
+     LABEL "Exceso%" 
+     VIEW-AS FILL-IN 
+     SIZE 6 BY 1
+     BGCOLOR 12  NO-UNDO.
+
+DEFINE VARIABLE queveo AS INTEGER INITIAL 2 
+     VIEW-AS RADIO-SET VERTICAL
+     RADIO-BUTTONS 
+          "Habilidad", 2,
+"Capacidad", 1,
+"Horas Trab", 3
+     SIZE 16 BY 2.14 TOOLTIP "Capacidad es la suma de las Habilidades" NO-UNDO.
+
+DEFINE RECTANGLE RECT-9
+     EDGE-PIXELS 2 GRAPHIC-EDGE  NO-FILL   
+     SIZE 18 BY 5.71.
+
+DEFINE VARIABLE Tdomingo AS LOGICAL INITIAL no 
+     LABEL "Domingos" 
+     VIEW-AS TOGGLE-BOX
+     SIZE 13.4 BY .81 NO-UNDO.
+
+
+/* ************************  Frame Definitions  *********************** */
+
+DEFINE FRAME F-Main
+     c_nro_tipo_evento AT ROW 1.24 COL 5 COLON-ALIGNED
+     Minutos AT ROW 1.24 COL 53 COLON-ALIGNED
+     Bok AT ROW 1.24 COL 69
+     Tdomingo AT ROW 2.48 COL 71
+     queveo AT ROW 3.38 COL 71 NO-LABEL
+     Bseltodo AT ROW 5.76 COL 71 WIDGET-ID 2
+     bninguno AT ROW 5.76 COL 79 WIDGET-ID 4
+     Recurso.cdg_recurso AT ROW 6.48 COL 69 COLON-ALIGNED NO-LABEL
+          VIEW-AS FILL-IN 
+          SIZE 6 BY .48
+     min_dia AT ROW 8.62 COL 79 COLON-ALIGNED
+     r-1 AT ROW 9.57 COL 79 COLON-ALIGNED
+     r-2 AT ROW 10.52 COL 79 COLON-ALIGNED
+     r-3 AT ROW 11.48 COL 79 COLON-ALIGNED
+     r-4 AT ROW 12.43 COL 79 COLON-ALIGNED
+     Borrado AT ROW 14.1 COL 71
+     Agregar AT ROW 14.1 COL 79
+     mes AT ROW 14.33 COL 3 NO-LABEL
+     ano AT ROW 14.33 COL 19 COLON-ALIGNED
+     Copia AT ROW 14.33 COL 33
+     "Indic. Porcentual" VIEW-AS TEXT
+          SIZE 19 BY .71 AT ROW 7.19 COL 70
+     RECT-9 AT ROW 8.14 COL 70
+     SPACE(0.00) SKIP(0.01)
+    WITH 1 DOWN NO-BOX KEEP-TAB-ORDER OVERLAY 
+         SIDE-LABELS NO-UNDERLINE THREE-D 
+         AT COL 1 ROW 1 SCROLLABLE .
+
+
+/* *********************** Procedure Settings ************************ */
+
+&ANALYZE-SUSPEND _PROCEDURE-SETTINGS
+/* Settings for THIS-PROCEDURE
+   Type: SmartViewer
+   External Tables: sic.Recurso
+   Allow: Basic,DB-Fields
+   Frames: 1
+   Add Fields to: EXTERNAL-TABLES
+   Other Settings: PERSISTENT-ONLY COMPILE
+ */
+
+/* This procedure should always be RUN PERSISTENT.  Report the error,  */
+/* then cleanup and return.                                            */
+IF NOT THIS-PROCEDURE:PERSISTENT THEN DO:
+  MESSAGE "{&FILE-NAME} should only be RUN PERSISTENT.":U
+          VIEW-AS ALERT-BOX ERROR BUTTONS OK.
+  RETURN.
+END.
+
+&ANALYZE-RESUME _END-PROCEDURE-SETTINGS
+
+/* *************************  Create Window  ************************** */
+
+&ANALYZE-SUSPEND _CREATE-WINDOW
+/* DESIGN Window definition (used by the UIB) 
+  CREATE WINDOW V-table-Win ASSIGN
+         HEIGHT             = 14.71
+         WIDTH              = 88.6.
+/* END WINDOW DEFINITION */
+                                                                        */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CUSTOM _INCLUDED-LIB V-table-Win 
+/* ************************* Included-Libraries *********************** */
+
+{src/adm/method/viewer.i}
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+
+
+/* ***********  Runtime Attributes and AppBuilder Settings  *********** */
+
+&ANALYZE-SUSPEND _RUN-TIME-ATTRIBUTES
+/* SETTINGS FOR WINDOW V-table-Win
+  VISIBLE,,RUN-PERSISTENT                                               */
+/* SETTINGS FOR FRAME F-Main
+   NOT-VISIBLE FRAME-NAME Size-to-Fit                                   */
+ASSIGN 
+       FRAME F-Main:SCROLLABLE       = FALSE
+       FRAME F-Main:HIDDEN           = TRUE.
+
+/* SETTINGS FOR BUTTON Agregar IN FRAME F-Main
+   NO-ENABLE                                                            */
+ASSIGN 
+       Agregar:HIDDEN IN FRAME F-Main           = TRUE.
+
+/* SETTINGS FOR BUTTON Borrado IN FRAME F-Main
+   NO-ENABLE                                                            */
+ASSIGN 
+       Borrado:HIDDEN IN FRAME F-Main           = TRUE.
+
+/* SETTINGS FOR FILL-IN Recurso.cdg_recurso IN FRAME F-Main
+   NO-ENABLE                                                            */
+ASSIGN 
+       Recurso.cdg_recurso:HIDDEN IN FRAME F-Main           = TRUE.
+
+/* SETTINGS FOR COMBO-BOX mes IN FRAME F-Main
+   ALIGN-L                                                              */
+/* _RUN-TIME-ATTRIBUTES-END */
+&ANALYZE-RESUME
+
+
+/* Setting information for Queries and Browse Widgets fields            */
+
+&ANALYZE-SUSPEND _QUERY-BLOCK FRAME F-Main
+/* Query rebuild information for FRAME F-Main
+     _Options          = "NO-LOCK"
+     _Query            is NOT OPENED
+*/  /* FRAME F-Main */
+&ANALYZE-RESUME
+
+ 
+
+
+/* **********************  Create OCX Containers  ********************** */
+
+&ANALYZE-SUSPEND _CREATE-DYNAMIC
+
+&IF "{&OPSYS}" = "WIN32":U AND "{&WINDOW-SYSTEM}" NE "TTY":U &THEN
+
+CREATE CONTROL-FRAME CtrlFrame ASSIGN
+       FRAME           = FRAME F-Main:HANDLE
+       ROW             = 2.91
+       COLUMN          = 2
+       HEIGHT          = 10.95
+       WIDTH           = 66
+       HIDDEN          = no
+       SENSITIVE       = yes.
+
+PROCEDURE adm-create-controls:
+      CtrlFrame:NAME = "CtrlFrame":U .
+/* CtrlFrame OCXINFO:CREATE-CONTROL from: {E8671A88-E5DD-11CD-836C-0000C0C14E92} type: SSMonth */
+      CtrlFrame:MOVE-AFTER(Tdomingo:HANDLE IN FRAME F-Main).
+
+END PROCEDURE.
+
+&ENDIF
+
+&ANALYZE-RESUME /* End of _CREATE-DYNAMIC */
+
+
+/* ************************  Control Triggers  ************************ */
+
+&Scoped-define SELF-NAME Agregar
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL Agregar V-table-Win
+ON CHOOSE OF Agregar IN FRAME F-Main /* Agregar */
+DO:
+  DEF VAR opt AS LOGICAL NO-UNDO.
+  DEF VAR hbr AS HANDLE NO-UNDO.
+DEF VAR hcbr AS CHAR NO-UNDO.
+DEF VAR j AS INT NO-UNDO.
+DEF VAR cdd AS DATE NO-UNDO.
+DEF VAR chh AS DATE NO-UNDO.
+DEF VAR seleccionados AS CHAR NO-UNDO.
+DEF BUFFER brecurso_capacidad FOR recurso_capacidad.  
+    ASSIGN mes ano c_nro_tipo_evento.
+MESSAGE  "Esta seguro de agregar a las asignaciones a" skip
+           "los recursos seleccionados en el mes actual" SKIP
+           "las asignaciones del que figuran el " mes "/" ano  skip
+      VIEW-AS ALERT-BOX INFO BUTTONS yes-no SET opt.
+  IF opt THEN DO:
+      cdd = DATE(mes,1,ano).
+      chh = DATE(month(cdd + 32),1,YEAR(cdd + 32)).
+      chh = chh - 1.
+      dd = DATE(SSMonth1:VisibleMonth(0):MONTH,1,SSMonth1:VisibleMonth(0):YEAR).
+      hh = dd + SSMonth1:VisibleMonth(0):DayCount - 1.
+      RUN get-link-handle IN adm-broker-hdl
+    ( INPUT THIS-PROCEDURE,
+      INPUT "record-source",
+      OUTPUT hcbr ).
+    hbr = WIDGET-HANDLE(hcbr).
+    IF VALID-HANDLE(hbr) THEN RUN seleccionados IN hbr (OUTPUT seleccionados).
+    IF NUM-ENTRIES(seleccionados) = 0  THEN DO:
+        MESSAGE "Debe Seleccionar registros"
+            VIEW-AS ALERT-BOX INFO BUTTONS OK.
+        RETURN NO-APPLY.
+    END.
+    DO j = 1 TO NUM-ENTRIES(seleccionados):
+        MESSAGE cdd chh
+            VIEW-AS ALERT-BOX INFO BUTTONS OK.
+        FOR EACH recurso_capacidad WHERE recurso_capacidad.cdg_recurso = ENTRY(j, seleccionados ) AND
+            recurso_capacidad.fecha >= cdd AND recurso_capacidad.fecha <= chh:
+            IF queveo = 2 THEN IF recurso_capacidad.nro_tipo_evento <> c_nro_tipo_evento THEN NEXT.
+            FIND brecurso_capacidad WHERE brecurso_capacidad.cdg_recurso = recurso_capacidad.cdg_recurso AND
+            brecurso_capacidad.fecha = DATE(month(dd),DAY(recurso_capacidad.fecha),YEAR(dd)) AND
+            brecurso_capacidad.nro_tipo_evento = recurso_capacidad.nro_tipo_evento NO-ERROR.
+            IF NOT AVAILABLE brecurso_capacidad THEN
+            CREATE brecurso_capacidad .
+        
+            BUFFER-COPY recurso_capacidad EXCEPT recurso_capacidad.capacidad recurso_capacidad.fecha TO brecurso_capacidad 
+                ASSIGN brecurso_capacidad.fecha = DATE(month(dd),DAY(recurso_capacidad.fecha),YEAR(dd))
+                       brecurso_capacidad.capacidad = brecurso_capacidad.capacidad + recurso_capacidad.capacidad.
+        END.
+    END.
+  END.
+RUN dispatch IN THIS-PROCEDURE ( INPUT 'display-fields':U ).
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME bninguno
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL bninguno V-table-Win
+ON CHOOSE OF bninguno IN FRAME F-Main /* NADA */
+DO:
+    define var ii as int no-undo.
+  SSMonth1 = chCtrlFrame:SSMonth.
+  dd = DATE(SSMonth1:VisibleMonth(0):MONTH,1,SSMonth1:VisibleMonth(0):YEAR).
+  hh = dd + SSMonth1:VisibleMonth(0):DayCount - 1.
+  SSMonth1:X:SelectedDays:RemoveAll.
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME Bok
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL Bok V-table-Win
+ON CHOOSE OF Bok IN FRAME F-Main /* OK */
+DO:
+DEFINE VAR MyCaption As CHAR no-undo.
+DEFINE VAR i AS INTEGER NO-UNDO.   
+DEFINE VAR estilo AS CHAR.
+DEFINE VAR ff AS DATE NO-UNDO.
+DEF VAR hbr AS HANDLE NO-UNDO.
+DEF VAR hcbr AS CHAR NO-UNDO.
+DEF VAR j AS INT NO-UNDO.
+
+DEFINE VAR seleccionados AS CHAR NO-UNDO.
+
+ASSIGN FRAME {&FRAME-NAME} minutos MIN_dia c_nro_tipo_evento.
+
+      /*  
+       SSMonth1:X:StyleSets("Birthday").Font.Size = 14
+   SSMonth1.X.StyleSets("Event").Picture = "C:\SSCALWDG\
+   
+   */
+RUN get-link-handle IN adm-broker-hdl
+    ( INPUT THIS-PROCEDURE,
+      INPUT "record-source",
+      OUTPUT hcbr ).
+    hbr = WIDGET-HANDLE(hcbr).
+IF VALID-HANDLE(hbr) THEN RUN seleccionados IN hbr (OUTPUT seleccionados).
+IF NUM-ENTRIES(seleccionados) = 0  THEN DO:
+    RUN ponmensj.p("OPR0007").
+    RETURN NO-APPLY.
+END.
+
+    DO j = 1 TO NUM-ENTRIES(seleccionados):
+    DO i = 0 TO (SSMonth1:X:SelectedDays:Count - 1 ):
+        ff = SSMonth1:X:SelectedDays(i):DATE . 
+        IF queveo = 2 THEN DO:
+            FIND recurso_capacidad WHERE 
+                recurso_capacidad.cdg_recurso = trim(ENTRY(j,seleccionados))
+                AND recurso_capacidad.fecha = ff 
+                AND recurso_capacidad.nro_tipo_evento = c_nro_tipo_evento NO-ERROR.
+    
+            IF NOT AVAILABLE recurso_capacidad THEN DO:
+                CREATE recurso_capacidad.
+                ASSIGN recurso_capacidad.cdg_recurso = trim(ENTRY(j,seleccionados))
+                       recurso_capacidad.fecha = ff
+                       recurso_capacidad.nro_tipo_evento = c_nro_tipo_evento.
+            END.
+            ASSIGN recurso_capacidad.capacidad = minutos.
+        END.
+        ELSE DO:
+
+            FIND recurso_horasxdia WHERE recurso_horasxdia.cdg_recurso = trim(ENTRY(j,seleccionados)) AND 
+                recurso_horasxdia.fecha = ff NO-ERROR.
+            IF NOT AVAILABLE recurso_horasxdia THEN DO:
+                CREATE recurso_horasxdia.
+                ASSIGN recurso_horasxdia.fecha = ff
+                       recurso_horasxdia.cdg_recurso = trim(ENTRY(j,seleccionados)).
+            END.
+            recurso_horasxdia.horas = minutos.
+        END.
+    END.
+END.
+SSMonth1:X:SelectedDays:RemoveAll.
+RUN dispatch IN THIS-PROCEDURE ( INPUT 'display-fields':U ).
+
+   
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME Borrado
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL Borrado V-table-Win
+ON CHOOSE OF Borrado IN FRAME F-Main /* Elimina */
+DO:
+  DEF VAR opt AS LOGICAL NO-UNDO.
+  DEF VAR hbr AS HANDLE NO-UNDO.
+DEF VAR hcbr AS CHAR NO-UNDO.
+DEF VAR j AS INT NO-UNDO.
+DEF VAR seleccionados AS CHAR NO-UNDO.
+    ASSIGN mes ano c_nro_tipo_evento.
+MESSAGE  "Esta seguro de eliminar" skip
+           "las asignaciones los recursos seleccionados " skip
+           "en el mes actual"
+      VIEW-AS ALERT-BOX INFO BUTTONS yes-no SET opt.
+  IF opt THEN DO:
+      dd = DATE(SSMonth1:VisibleMonth(0):MONTH,1,SSMonth1:VisibleMonth(0):YEAR).
+      hh = dd + SSMonth1:VisibleMonth(0):DayCount - 1.
+      RUN get-link-handle IN adm-broker-hdl
+    ( INPUT THIS-PROCEDURE,
+      INPUT "record-source",
+      OUTPUT hcbr ).
+    hbr = WIDGET-HANDLE(hcbr).
+    IF VALID-HANDLE(hbr) THEN RUN seleccionados IN hbr (OUTPUT seleccionados).
+    IF NUM-ENTRIES(seleccionados) = 0  THEN DO:
+        MESSAGE "Debe Seleccionar registros"
+            VIEW-AS ALERT-BOX INFO BUTTONS OK.
+        RETURN NO-APPLY.
+    END.
+    DO j = 1 TO NUM-ENTRIES(seleccionados):
+        FOR EACH recurso_capacidad WHERE recurso_capacidad.cdg_recurso = ENTRY(j, seleccionados ) AND
+            recurso_capacidad.fecha >= dd AND recurso_capacidad.fecha <= hh:
+            IF queveo = 2 THEN IF recurso_capacidad.nro_tipo_evento <> c_nro_tipo_evento THEN NEXT.
+            DELETE recurso_capacidad.
+        END.
+    END.
+  END.
+RUN dispatch IN THIS-PROCEDURE ( INPUT 'display-fields':U ).
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME Bseltodo
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL Bseltodo V-table-Win
+ON CHOOSE OF Bseltodo IN FRAME F-Main /* TODO */
+DO:
+  define var ii as int no-undo.
+  SSMonth1 = chCtrlFrame:SSMonth.
+  dd = DATE(SSMonth1:VisibleMonth(0):MONTH,1,SSMonth1:VisibleMonth(0):YEAR).
+  hh = dd + SSMonth1:VisibleMonth(0):DayCount - 1.
+  SSMonth1:X:SelectedDays:RemoveAll.
+
+  DO ii = 1 to day(hh):
+      find feriado where feriado.fecha = date( month(dd) , ii , year(dd)) no-lock no-error.
+      IF available feriado THEN next.
+      SSMonth1:X:SelectedDays:add( date( month(dd) , ii , year(dd)) ) .
+      /*SSMonth1:X:Day(date( month(dd) , ii , year(dd))):StyleSet = 1.*/
+  END.
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME Copia
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL Copia V-table-Win
+ON CHOOSE OF Copia IN FRAME F-Main /* Copia */
+DO:
+  DEF VAR opt AS LOGICAL NO-UNDO.
+  DEF VAR hbr AS HANDLE NO-UNDO.
+DEF VAR hcbr AS CHAR NO-UNDO.
+DEF VAR j AS INT NO-UNDO.
+DEF VAR isem AS INT NO-UNDO.
+DEF VAR idia AS INT NO-UNDO.
+DEFINE VAR ffo AS DATE NO-UNDO.
+DEFINE VAR ffd AS DATE NO-UNDO.
+DEF VAR seleccionados AS CHAR NO-UNDO.
+DEF BUFFER brecurso_capacidad FOR recurso_capacidad.  
+DEF BUFFER brecurso_horasxdia FOR recurso_horasxdia.  
+
+ASSIGN mes ano c_nro_tipo_evento.
+MESSAGE  "Esta seguro de copiar a los recursos seleccionados" skip
+         "las capacidades y horas trabajadas del " mes "/" ano
+         "al mes " SSMonth1:VisibleMonth(0):MONTH "/" SSMonth1:VisibleMonth(0):YEAR
+         VIEW-AS ALERT-BOX INFO BUTTONS yes-no SET opt.
+IF NOT opt THEN RETURN NO-APPLY.
+
+ dd = DATE(SSMonth1:VisibleMonth(0):MONTH,1,SSMonth1:VisibleMonth(0):YEAR).
+ hh = dd + 32.
+ hh = DATE(MONTH(hh),1,YEAR(hh)) - 1.
+      
+ RUN get-link-handle IN adm-broker-hdl
+    ( INPUT THIS-PROCEDURE,
+      INPUT "record-source",
+      OUTPUT hcbr ).
+ hbr = WIDGET-HANDLE(hcbr).
+ IF VALID-HANDLE(hbr) THEN RUN seleccionados IN hbr (OUTPUT seleccionados).
+ IF NUM-ENTRIES(seleccionados) < 1  THEN DO:
+        MESSAGE "Debe seleccionar al menos un recurso"
+            VIEW-AS ALERT-BOX INFO BUTTONS OK.
+        RETURN NO-APPLY.
+  END.
+  DO j = 1 TO NUM-ENTRIES(seleccionados):
+    FOR EACH recurso_capacidad WHERE recurso_capacidad.cdg_recurso = ENTRY(j, seleccionados ) AND
+        recurso_capacidad.fecha >= dd AND recurso_capacidad.fecha <= hh:
+        DELETE recurso_capacidad.
+    END.
+    FOR EACH recurso_horasxdia WHERE recurso_horasxdia.cdg_recurso = ENTRY(j, seleccionados ) AND
+        recurso_horasxdia.fecha >= dd AND recurso_horasxdia.fecha <= hh:
+        DELETE recurso_horasxdia.
+    END.
+  END.
+
+  DO j = 1 TO NUM-ENTRIES(seleccionados):
+        DO isem = 1 to 5:
+           DO idia = 1 to 7:
+               ffo = fechado( mes , ano,  idia, isem ).
+               ffd = fechado( month(dd) , year(dd),  idia , isem ).
+               FOR EACH recurso_capacidad WHERE recurso_capacidad.cdg_recurso = ENTRY(j, seleccionados ) AND
+                   recurso_capacidad.fecha = ffo:
+                        CREATE brecurso_capacidad .
+                        BUFFER-COPY recurso_capacidad 
+                            EXCEPT recurso_capacidad.fecha TO brecurso_capacidad
+                            ASSIGN brecurso_capacidad.fecha = ffd.
+               END.
+               FOR EACH recurso_horasxdia WHERE recurso_horasxdia.cdg_recurso = ENTRY(j, seleccionados ) AND
+                   recurso_horasxdia.fecha = ffo:
+                        CREATE brecurso_horasxdia .
+                        BUFFER-COPY recurso_horasxdia 
+                            EXCEPT recurso_horasxdia.fecha TO brecurso_horasxdia
+                            ASSIGN brecurso_horasxdia.fecha = ffd.
+               END.
+           END.
+        END.
+  END.
+
+RUN dispatch IN THIS-PROCEDURE ( INPUT 'display-fields':U ).
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME CtrlFrame
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL CtrlFrame V-table-Win OCX.InitMonth
+PROCEDURE CtrlFrame.SSMonth.InitMonth .
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  Required for OCX.
+    MonthNum
+    YearNum
+    RtnCancel
+  Notes:       
+------------------------------------------------------------------------------*/
+
+DEFINE INPUT-OUTPUT PARAMETER p-MonthNum  AS INTEGER NO-UNDO.
+DEFINE INPUT-OUTPUT PARAMETER p-YearNum   AS INTEGER NO-UNDO.
+DEFINE INPUT-OUTPUT PARAMETER p-RtnCancel AS INTEGER NO-UNDO.
+
+ff=DATE(p-MonthNum,1,p-YearNum) - 1 NO-ERROR.
+IF ff = ? THEN ff=DATE(month(TODAY),1,year(today)) - 1.
+mes = MONTH(ff).
+ano = year(ff).
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL CtrlFrame V-table-Win OCX.KeyDown
+PROCEDURE CtrlFrame.SSMonth.KeyDown .
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  Required for OCX.
+    KeyCode
+    Shift
+  Notes:       
+------------------------------------------------------------------------------*/
+
+DEFINE INPUT-OUTPUT PARAMETER p-KeyCode AS INTEGER NO-UNDO.
+DEFINE INPUT        PARAMETER p-Shift   AS INTEGER NO-UNDO.
+
+DEFINE VAR ffo AS DATE NO-UNDO.
+DEFINE VAR ffd AS DATE NO-UNDO.
+DEFINE VAR opt AS LOGICAL NO-UNDO.
+
+DEF VAR hbr AS HANDLE NO-UNDO.
+DEF VAR hcbr AS CHAR NO-UNDO.
+DEF VAR j AS INT NO-UNDO.
+DEF VAR isem AS INT NO-UNDO.
+DEF VAR idia AS INT NO-UNDO.
+DEF VAR seleccionados AS CHAR NO-UNDO.
+DEF BUFFER brecurso_capacidad FOR recurso_capacidad.  
+DEF BUFFER brecurso_horasxdia FOR recurso_horasxdia.  
+
+IF CHR(p-KeyCode) = "P" THEN DO:
+    MESSAGE  "Copia las asignaciones del dia " ffo skip
+             "a los dias seleccionados"
+             VIEW-AS ALERT-BOX INFO BUTTONS yes-no SET opt.
+    IF NOT opt THEN RETURN NO-APPLY.
+
+RUN get-link-handle IN adm-broker-hdl
+    ( INPUT THIS-PROCEDURE,
+      INPUT "record-source",
+      OUTPUT hcbr ).
+ hbr = WIDGET-HANDLE(hcbr).
+ IF VALID-HANDLE(hbr) THEN RUN seleccionados IN hbr (OUTPUT seleccionados).
+ IF NUM-ENTRIES(seleccionados) < 1  THEN DO:
+        MESSAGE "Debe seleccionar al menos un recurso"
+            VIEW-AS ALERT-BOX INFO BUTTONS OK.
+        RETURN NO-APPLY.
+  END.
+/*  
+  DO j = 1 TO NUM-ENTRIES(seleccionados):
+   DO idia = 1 TO 
+   
+    FOR EACH recurso_capacidad WHERE recurso_capacidad.cdg_recurso = ENTRY(j, seleccionados ) AND
+        recurso_capacidad.fecha >= dd AND recurso_capacidad.fecha <= hh:
+        DELETE recurso_capacidad.
+    END.
+    FOR EACH recurso_horasxdia WHERE recurso_horasxdia.cdg_recurso = ENTRY(j, seleccionados ) AND
+        recurso_horasxdia.fecha >= dd AND recurso_horasxdia.fecha <= hh:
+        DELETE recurso_horasxdia.
+    END.
+  END.
+*/ 
+  DO j = 1 TO NUM-ENTRIES(seleccionados):
+        DO isem = 1 to 5:
+           DO idia = 1 to 7:
+               ffd = fechado( month(dd) , year(dd),  idia , isem ).
+               FOR EACH recurso_capacidad WHERE recurso_capacidad.cdg_recurso = ENTRY(j, seleccionados ) AND
+                   recurso_capacidad.fecha = ffo:
+                        CREATE brecurso_capacidad .
+                        BUFFER-COPY recurso_capacidad 
+                            EXCEPT recurso_capacidad.fecha TO brecurso_capacidad
+                            ASSIGN brecurso_capacidad.fecha = ffd.
+               END.
+               FOR EACH recurso_horasxdia WHERE recurso_horasxdia.cdg_recurso = ENTRY(j, seleccionados ) AND
+                   recurso_horasxdia.fecha = ffo:
+                        CREATE brecurso_horasxdia .
+                        BUFFER-COPY recurso_horasxdia 
+                            EXCEPT recurso_horasxdia.fecha TO brecurso_horasxdia
+                            ASSIGN brecurso_horasxdia.fecha = ffd.
+               END.
+           END.
+        END.
+  END.
+
+RUN dispatch IN THIS-PROCEDURE ( INPUT 'display-fields':U ).
+
+
+
+
+END.
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL CtrlFrame V-table-Win OCX.MouseDown
+PROCEDURE CtrlFrame.SSMonth.MouseDown .
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  Required for OCX.
+    Button
+    Shift
+    X
+    Y
+  Notes:       
+------------------------------------------------------------------------------*/
+
+DEFINE INPUT PARAMETER p-Button AS INTEGER NO-UNDO.
+DEFINE INPUT PARAMETER p-Shift  AS INTEGER NO-UNDO.
+DEFINE INPUT PARAMETER p-X      AS INTEGER NO-UNDO.
+DEFINE INPUT PARAMETER p-Y      AS INTEGER NO-UNDO.
+DEFINE VAR fechao AS DATE NO-UNDO.
+fechao = ?.
+fechao = SSmonth1:X:DayFromPos ( 
+          p-X,
+          p-Y,
+          1 ):DATE NO-ERROR.
+FIND mescap WHERE mescap.fecha = fechao NO-LOCK NO-ERROR.
+MIN_dia = 0.
+IF AVAILABLE mescap THEN DO:
+    min_dia = mescap.horas.
+    DISPLAY MIN_dia WITH FRAME {&FRAME-NAME}.
+END.
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME c_nro_tipo_evento
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL c_nro_tipo_evento V-table-Win
+ON VALUE-CHANGED OF c_nro_tipo_evento IN FRAME F-Main /* Tipo */
+DO:
+  ASSIGN c_nro_tipo_evento.
+  RUN dispatch IN THIS-PROCEDURE ( INPUT 'display-fields':U ).
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME min_dia
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL min_dia V-table-Win
+ON LEAVE OF min_dia IN FRAME F-Main /* Total */
+DO:
+  RUN dispatch IN THIS-PROCEDURE ( INPUT 'display-fields':U ).
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME queveo
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL queveo V-table-Win
+ON VALUE-CHANGED OF queveo IN FRAME F-Main
+DO:
+  ASSIGN queveo.
+  c_nro_tipo_evento:HIDDEN = queveo <> 2.
+  c_nro_tipo_evento:SENSITIVE = queveo = 2.
+
+  minutos:HIDDEN = queveo = 1.
+
+  bok:SENSITIVE = queveo = 2 OR queveo = 3.
+  minutos:SENSITIVE = queveo = 2 OR queveo = 3.
+RUN dispatch IN THIS-PROCEDURE ( INPUT 'display-fields':U ).
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME r-1
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL r-1 V-table-Win
+ON LEAVE OF r-1 IN FRAME F-Main /* SubUtil% */
+DO:
+   RUN dispatch IN THIS-PROCEDURE ( INPUT 'display-fields':U ).
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME r-2
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL r-2 V-table-Win
+ON LEAVE OF r-2 IN FRAME F-Main /* Bajo% */
+DO:
+  RUN dispatch IN THIS-PROCEDURE ( INPUT 'display-fields':U ).
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME r-3
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL r-3 V-table-Win
+ON LEAVE OF r-3 IN FRAME F-Main /* Normal% */
+DO:
+  RUN dispatch IN THIS-PROCEDURE ( INPUT 'display-fields':U ).
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME r-4
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL r-4 V-table-Win
+ON LEAVE OF r-4 IN FRAME F-Main /* Exceso% */
+DO:
+  RUN dispatch IN THIS-PROCEDURE ( INPUT 'display-fields':U ).
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME Tdomingo
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL Tdomingo V-table-Win
+ON VALUE-CHANGED OF Tdomingo IN FRAME F-Main /* Domingos */
+DO:
+  ASSIGN tdomingo.
+  SSMonth1:X:DayofWeek(1):Visible = tdomingo.
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&UNDEFINE SELF-NAME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CUSTOM _MAIN-BLOCK V-table-Win 
+
+
+/* ***************************  Main Block  *************************** */
+
+  &IF DEFINED(UIB_IS_RUNNING) <> 0 &THEN          
+    RUN dispatch IN THIS-PROCEDURE ('initialize':U).        
+  &ENDIF         
+  
+  /************************ INTERNAL PROCEDURES ********************/
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+/* **********************  Internal Procedures  *********************** */
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE adm-row-available V-table-Win  _ADM-ROW-AVAILABLE
+PROCEDURE adm-row-available :
+/*------------------------------------------------------------------------------
+  Purpose:     Dispatched to this procedure when the Record-
+               Source has a new row available.  This procedure
+               tries to get the new row (or foriegn keys) from
+               the Record-Source and process it.
+  Parameters:  <none>
+------------------------------------------------------------------------------*/
+
+  /* Define variables needed by this internal procedure.             */
+  {src/adm/template/row-head.i}
+
+  /* Create a list of all the tables that we need to get.            */
+  {src/adm/template/row-list.i "Recurso"}
+
+  /* Get the record ROWID's from the RECORD-SOURCE.                  */
+  {src/adm/template/row-get.i}
+
+  /* FIND each record specified by the RECORD-SOURCE.                */
+  {src/adm/template/row-find.i "Recurso"}
+
+  /* Process the newly available records (i.e. display fields,
+     open queries, and/or pass records on to any RECORD-TARGETS).    */
+  {src/adm/template/row-end.i}
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE control_load V-table-Win  _CONTROL-LOAD
+PROCEDURE control_load :
+/*------------------------------------------------------------------------------
+  Purpose:     Load the OCXs    
+  Parameters:  <none>
+  Notes:       Here we load, initialize and make visible the 
+               OCXs in the interface.                        
+------------------------------------------------------------------------------*/
+
+&IF "{&OPSYS}" = "WIN32":U AND "{&WINDOW-SYSTEM}" NE "TTY":U &THEN
+DEFINE VARIABLE UIB_S    AS LOGICAL    NO-UNDO.
+DEFINE VARIABLE OCXFile  AS CHARACTER  NO-UNDO.
+
+OCXFile = SEARCH( "v-capacidad.wrx":U ).
+IF OCXFile = ? THEN
+  OCXFile = SEARCH(SUBSTRING(THIS-PROCEDURE:FILE-NAME, 1,
+                     R-INDEX(THIS-PROCEDURE:FILE-NAME, ".":U), "CHARACTER":U) + "wrx":U).
+
+IF OCXFile <> ? THEN
+DO:
+  ASSIGN
+    chCtrlFrame = CtrlFrame:COM-HANDLE
+    UIB_S = chCtrlFrame:LoadControls( OCXFile, "CtrlFrame":U)
+  .
+  RUN DISPATCH IN THIS-PROCEDURE("initialize-controls":U) NO-ERROR.
+END.
+ELSE MESSAGE "v-capacidad.wrx":U SKIP(1)
+             "The binary control file could not be found. The controls cannot be loaded."
+             VIEW-AS ALERT-BOX TITLE "Controls Not Loaded".
+
+&ENDIF
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE disable_UI V-table-Win  _DEFAULT-DISABLE
+PROCEDURE disable_UI :
+/*------------------------------------------------------------------------------
+  Purpose:     DISABLE the User Interface
+  Parameters:  <none>
+  Notes:       Here we clean-up the user-interface by deleting
+               dynamic widgets we have created and/or hide 
+               frames.  This procedure is usually called when
+               we are ready to "clean-up" after running.
+------------------------------------------------------------------------------*/
+  /* Hide all frames. */
+  HIDE FRAME F-Main.
+  IF THIS-PROCEDURE:PERSISTENT THEN DELETE PROCEDURE THIS-PROCEDURE.
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE local-display-fields V-table-Win 
+PROCEDURE local-display-fields :
+/*------------------------------------------------------------------------------
+  Purpose:     Override standard ADM method
+  Notes:       
+------------------------------------------------------------------------------*/
+DEF VAR estilo AS CHAR NO-UNDO.
+DEFINE VAR ff AS DATE NO-UNDO.
+
+   ASSIGN FRAME {&frame-name} c_nro_tipo_evento
+         queveo r-1 r-2 r-3 r-4. 
+  /* Code placed here will execute PRIOR to standard behavior. */
+
+  /* Dispatch standard ADM method.                             */
+  RUN dispatch IN THIS-PROCEDURE ( INPUT 'display-fields':U ) .
+  
+  SSMonth1 = chCtrlFrame:SSMonth.
+
+  dd = DATE(SSMonth1:VisibleMonth(0):MONTH,1,SSMonth1:VisibleMonth(0):YEAR).
+  hh = dd + SSMonth1:VisibleMonth(0):DayCount.
+
+/*llenar la temp table*/
+  EMPTY TEMP-TABLE mescap.
+  IF queveo =1 OR queveo = 2 THEN DO:
+      FOR EACH recurso_capacidad OF recurso WHERE recurso_capacidad.fecha >= dd 
+           AND recurso_capacidad.fecha <= hh:
+          IF queveo = 2 AND sic.recurso_capacidad.nro_tipo_evento <> c_nro_tipo_evento THEN NEXT.
+          FIND mescap WHERE mescap.fecha = recurso_capacidad.fecha NO-ERROR.
+          IF NOT AVAILABLE mescap THEN DO:
+            CREATE mescap.
+            ASSIGN mescap.fecha = recurso_capacidad.fecha.
+                   
+          END.
+          ASSIGN mescap.valor = mescap.valor + recurso_capacidad.capacidad.
+      END.
+  END.
+
+  ff = dd.
+  DO WHILE ff <= hh :
+          FIND recurso_horasxdia OF recurso WHERE recurso_horasxdia.fecha = ff NO-LOCK NO-ERROR.
+          FIND mescap WHERE mescap.fecha = ff NO-LOCK NO-ERROR.
+          IF NOT AVAILABLE mescap THEN DO:
+          CREATE mescap.
+          ASSIGN mescap.fecha = ff.
+                 
+          END.
+                 ASSIGN mescap.horas = IF AVAILABLE recurso_horasxdia THEN recurso_horasxdia.horas ELSE 0
+                     mescap.valor = IF queveo = 3 THEN mescap.horas ELSE mescap.valor.
+          ff = ff + 1.
+  END.
+  
+    RUN poner_feriado.
+    /*limpiar el calendario*/
+
+        DO i = 1 TO DAY(hh):
+         ff = DATE(SSMonth1:VisibleMonth(0):MONTH,i,SSMonth1:VisibleMonth(0):YEAR).
+          SSMonth1:X:Day(ff):StyleSet = "".
+          SSMonth1:X:Day(ff):Caption = "".
+      END.
+
+
+/*   DO i = 1 TO SSMonth1:VisibleMonth(0):DayCount : */
+/*       SSMonth1:X:Day(i):StyleSet = "".            */
+/*       SSMonth1:X:Day(i):Caption = "".             */
+/*   END.                                            */
+
+
+
+  FOR EACH mescap:
+    IF mescap.horas = 0 THEN estilo = "ausente".
+    ELSE DO:
+        IF mescap.valor >= r-4 * mescap.horas / 100 THEN estilo = "4".
+        ELSE IF mescap.valor >= r-3 * mescap.horas / 100 THEN estilo = "3".
+        ELSE IF mescap.valor >= r-2 * mescap.horas / 100 THEN estilo = "2".
+        ELSE estilo = "1".
+    END.
+    SSMonth1:X:Day(mescap.fecha ):Caption = IF queveo = 3 THEN string(mescap.horas) ELSE STRING(mescap.valor).
+    IF SSMonth1:X:Day(mescap.fecha):StyleSet <> "Feriado" THEN
+         SSMonth1:X:Day(mescap.fecha):StyleSet = estilo.
+  END.
+      
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE local-initialize V-table-Win 
+PROCEDURE local-initialize :
+/*------------------------------------------------------------------------------
+  Purpose:     Override standard ADM method
+  Notes:       
+------------------------------------------------------------------------------*/
+  DEF VAR lista AS CHAR NO-UNDO.
+  def var proxmes as date no-undo.
+/* Code placed here will execute PRIOR to standard behavior. */
+
+  /* Dispatch standard ADM method.                             */
+  RUN dispatch IN THIS-PROCEDURE ( INPUT 'initialize':U ) .
+    /* Code placed here will execute AFTER standard behavior.    */
+
+  DO WITH FRAME {&FRAME-NAME}:
+     {levantacombo.i &TABLA=Tipo_evento &NOMBRE=cdg_tipo_evento &CODIGO=nro_tipo_evento &OBJETO=c_nro_tipo_evento}
+  END. 
+
+    FIND FIRST tipo_evento NO-LOCK.
+    c_nro_tipo_evento = tipo_evento.nro_tipo_evento.
+    SSMonth1 = chCtrlFrame:SSMonth.
+    SSMonth1:SelectionType = 1. /*seleccion multiple*/
+     /*preparar los estilos a utilizar*/
+    SSMonth1:X:StyleSets("1"):BackColor = RGB-VALUE(28, 207,227).
+    SSMonth1:X:StyleSets("2"):BackColor = RGB-VALUE(0, 255, 0).
+    SSMonth1:X:StyleSets("3"):BackColor = RGB-VALUE(255, 255, 0).
+    SSMonth1:X:StyleSets("4"):BackColor = RGB-VALUE(255, 0, 0).
+    SSMonth1:X:StyleSets("Ausente"):BackColor = RGB-VALUE(128, 128 , 0).
+    SSMonth1:X:StyleSets("Ausente"):ForeColor = RGB-VALUE(255, 255 , 255).
+    SSMonth1:X:StyleSets("Feriado"):BackColor = RGB-VALUE(120, 120 , 120).
+    SSMonth1:X:StyleSets("Feriado"):ForeColor = RGB-VALUE(255, 255 , 255).
+
+    ASSIGN
+       MIN_dia:SCREEN-VALUE = "240"
+       r-1:SCREEN-VALUE = "20"
+       r-2:SCREEN-VALUE = "50"
+       r-3:SCREEN-VALUE = "90"   
+       r-4:SCREEN-VALUE = "101".
+       mes:screen-value = string(month(today)).
+       ano:screen-value = string(year(today)).
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE poner_feriado V-table-Win 
+PROCEDURE poner_feriado :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+  DEF VAR dd AS DATE NO-UNDO.
+  DEF VAR hh AS DATE NO-UNDO.
+  /*veamos si hay feriados en el mes*/
+  SSMonth1 = chCtrlFrame:SSMonth.
+  dd = DATE(SSMonth1:VisibleMonth(0):MONTH,1,SSMonth1:VisibleMonth(0):YEAR).
+  hh = dd + SSMonth1:VisibleMonth(0):DayCount - 1.
+  FOR EACH feriado WHERE fecha >= dd AND fecha <= hh:
+    /*SSMonth1:X:Day(DAY(feriado.fecha)):Enabled = false*/.
+    SSMonth1:X:Day(DAY(feriado.fecha)):StyleSet = "Feriado".
+    /*SSMonth1:X:Day(DAY(feriado.fecha)):Caption = sic.Feriado.dsc_feriado.*/
+  END.
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE send-records V-table-Win  _ADM-SEND-RECORDS
+PROCEDURE send-records :
+/*------------------------------------------------------------------------------
+  Purpose:     Send record ROWID's for all tables used by
+               this file.
+  Parameters:  see template/snd-head.i
+------------------------------------------------------------------------------*/
+
+  /* Define variables needed by this internal procedure.               */
+  {src/adm/template/snd-head.i}
+
+  /* For each requested table, put it's ROWID in the output list.      */
+  {src/adm/template/snd-list.i "Recurso"}
+
+  /* Deal with any unexpected table requests before closing.           */
+  {src/adm/template/snd-end.i}
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE state-changed V-table-Win 
+PROCEDURE state-changed :
+/* -----------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+-------------------------------------------------------------*/
+  DEFINE INPUT PARAMETER p-issuer-hdl AS HANDLE    NO-UNDO.
+  DEFINE INPUT PARAMETER p-state      AS CHARACTER NO-UNDO.
+
+  CASE p-state:
+      /* Object instance CASEs can go here to replace standard behavior
+         or add new cases. */
+      {src/adm/template/vstates.i}
+  END CASE.
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+/* ************************  Function Implementations ***************** */
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _FUNCTION DOW V-table-Win 
+FUNCTION DOW returns int (dd as date , fwd as int ):
+    IF weekday(dd) < fwd THEN return weekday(dd) + 8 - fwd .
+    else return weekday(dd) - fwd + 1 .
+END function.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _FUNCTION fechado V-table-Win 
+FUNCTION fechado returns date ( tnMes AS int, tnAnio AS INT , tnDiaSem AS INT , tnOrdinal AS INT ) :
+/*retorna una fecha data un dia de la semana y su ordinal en el mes*/
+    define variable dd as date.
+    define var daju as int.
+    return DATE(  tnMes , 1 , tnAnio ) + tnOrdinal * 7 - dow( DATE(  tnMes , 1, tnAnio ) + tnOrdinal * 7 - 1 ,tnDiasem ).
+END function.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+

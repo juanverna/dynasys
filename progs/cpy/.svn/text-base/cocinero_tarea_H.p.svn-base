@@ -1,0 +1,48 @@
+{extrae.i}
+
+FUNCTION reemplaza RETURNS CHARACTER
+  (  ppatron AS CHAR ,pdata AS CHAR,pvalor AS CHAR) :
+/*------------------------------------------------------------------------------
+  Purpose:  
+    Notes:  
+------------------------------------------------------------------------------*/
+DEFINE VAR kk AS INT NO-UNDO.
+kk = LOOKUP( ppatron , pdata , "|" ). 
+IF kk = 0 THEN RETURN ?.
+ENTRY(kk + 1, pdata , "|" ) = pvalor.
+RETURN pdata.
+
+END FUNCTION.
+DEFINE VAR i AS INT.
+DEFINE VAR j AS INT.
+DEFINE VAR k AS INT.
+DEFINE VAR jj AS INT.
+DEFINE BUFFER tareaJ FOR tarea.
+DEFINE BUFFER eventoRL FOR evento.
+DEFINE BUFFER eventoLT FOR evento.
+FOR EACH tarea WHERE tarea.cdg_tipotarea = "H":
+/*DISPLAY tarea.datos-template FORMAT "X(70)".*/
+DO i = 1 TO NUM-ENTRIES(tarea.descripcion,"|"):
+ IF INDEX(entry(i,tarea.descripcion,"|"),"Evento:") <> 0 THEN DO:
+        j = INT( SUBSTR( entry(i,tarea.descripcion,"|"),8,6 )).
+    FIND eventoRL WHERE eventoRL.nro_evento = j.
+    FIND tareaJ WHERE TareaJ.Nro_tarea = eventoRL.Nro_identificacion.
+    IF tarea.datos-template = ? THEN tarea.datos-template = "".
+    DO k = 1 TO NUM-ENTRIES(tareaJ.descripcion,"|"):
+        IF INDEX(entry(k,tareaJ.descripcion,"|"),"Evento:") <> 0 THEN 
+        jj = INT( SUBSTR( entry(k,tareaJ.descripcion,"|"),8,6 )).
+    END.
+    
+    DISPLAY extrae("EVENTOLT",tarea.datos-template) jj.
+    /*tarea.datos-template = reemplaza("EVENTOLT",tarea.datos-template, string(jj)).*/
+    /*
+    IF tarea.datos-template = "" THEN
+
+    tarea.datos-template = "EventoLT|" + STRING(tarea.nro_identificacion). 
+    ELSE
+    tarea.datos-template = "EventoLT|" + STRING(tarea.nro_identificacion) + "|" + tarea.datos-template .
+      */
+            
+ END.
+END.
+END.

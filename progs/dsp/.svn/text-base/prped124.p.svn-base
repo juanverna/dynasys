@@ -1,0 +1,349 @@
+/*=================================================================================*/
+/*                     IMPRESION DE FORMULARIO DE PEDIDOS                          */
+/*=================================================================================*/
+
+DEFINE INPUT PARAMETER rid_pedido AS ROWID.
+
+/*=================================================================================*/
+/*                                    VARIABLES                                    */
+/*=================================================================================*/
+
+{NOMMESES.I}
+{xprint.i}
+
+DEFINE VARIABLE TextColor      AS CHARACTER INITIAL "BLACK".
+DEFINE VARIABLE bg-color       AS CHARACTER INITIAL "BLACK".
+DEFINE VARIABLE gradiente      AS LOGICAL INITIAL NO.
+DEFINE VARIABLE i              AS INTEGER INITIAL 10.
+DEFINE VARIABLE delta-f        AS INTEGER INITIAL 6.
+DEFINE VARIABLE delta-c        AS INTEGER INITIAL 4.
+DEFINE VARIABLE ncopia         AS INTEGER.
+DEFINE VARIABLE det0           AS INTEGER INITIAL 62.
+
+DEFINE VARIABLE ancho          AS DECIMAL INITIAL 1.0.
+
+DEFINE VARIABLE max_det        AS INTEGER INITIAL 47. /* Cantidad de lineas de detalle */
+DEFINE VARIABLE v-leng_detalle AS INTEGER INITIAL 72. /* Ancho en chars del detalle    */
+
+DEFINE VARIABLE v-reng_observacion AS INTEGER INITIAL 5.  /* Cantidad de lineas de observacion */
+DEFINE VARIABLE v-leng_observacion AS INTEGER INITIAL 70. /* Ancho en chars de la observacion  */
+
+DEFINE VARIABLE v-reng_monto   AS INTEGER INITIAL 2.  /* Cantidad de lineas de monto   */
+DEFINE VARIABLE v-leng_monto   AS INTEGER INITIAL 60. /* Ancho en chars del monto      */
+
+DEFINE VARIABLE j              AS INTEGER.
+DEFINE VARIABLE nreng          AS INTEGER.
+DEFINE VARIABLE linea0         AS INTEGER.
+DEFINE VARIABLE n_hoja         AS INTEGER.
+
+DEFINE VARIABLE total_articulo AS INTEGER.
+
+DEFINE VARIABLE que_dia        AS CHARACTER FORMAT "X(2)".
+DEFINE VARIABLE que_mes        AS CHARACTER FORMAT "X(2)".
+DEFINE VARIABLE que_ano        AS CHARACTER FORMAT "X(4)".
+DEFINE VARIABLE str_fecha      AS CHARACTER FORMAT "X(75)".
+DEFINE VARIABLE f-titulo       AS CHARACTER FORMAT "X(75)".
+DEFINE VARIABLE v-detallada    AS CHARACTER FORMAT "X(75)".
+DEFINE VARIABLE v-monto_letras AS CHARACTER FORMAT "X(75)".
+DEFINE VARIABLE v-observacion      AS CHARACTER FORMAT "X(75)".
+DEFINE VARIABLE ltexto         AS CHARACTER FORMAT "X(75)".
+DEFINE VARIABLE prciva         LIKE Impuesto.tasa FORMAT "ZZ9.99".
+DEFINE VARIABLE prcnoi         LIKE Impuesto.tasa FORMAT "ZZ9.99".
+DEFINE VARIABLE importe_iva    LIKE Ped_header.imp_neto FORMAT "Z,ZZZ,ZZ9.99-".
+DEFINE VARIABLE importe_noi    LIKE Ped_header.imp_neto FORMAT "Z,ZZZ,ZZ9.99-".
+
+DEFINE STREAM Formulario.
+
+FUNCTION ch_linea RETURN CHARACTER ( INPUT n0 AS INTEGER, INPUT n AS INTEGER).
+    RETURN STRING(n0 + n * 4,"9999").
+END FUNCTION.
+
+/*=========================================================================================*/
+/*                           B L O Q U E   P R I N C I P A L                               */
+/*=========================================================================================*/
+
+RUN LoadXprint.
+DO TRANSACTION:
+
+    FIND Ped_header WHERE ROWID(Ped_header) = rid_pedido EXCLUSIVE-LOCK.
+
+    FIND Condicion_impos OF Ped_header NO-LOCK.
+    FIND Condicion_venta OF Ped_header NO-LOCK.
+    FIND Cliente         OF Ped_header NO-LOCK NO-ERROR.
+    FIND Vendedor        OF Ped_header NO-LOCK NO-ERROR.
+    FIND Domicilio       OF Ped_header NO-LOCK.
+    FIND Recorrido       OF Domicilio NO-LOCK.
+    FIND Provincia       OF Domicilio NO-LOCK.
+    FIND Estado_pedido   OF Ped_header NO-LOCK.
+    FIND Usuario         OF Ped_header NO-LOCK.
+
+    que_mes = STRING(MONTH(Ped_header.fecha),"99").
+    que_ano = STRING(YEAR(Ped_header.fecha),"9999").
+    que_dia = STRING(DAY(Ped_header.fecha),"99").
+    str_fecha = que_dia + " de " + nom_mes [ MONTH(Ped_header.fecha) ] + " de " + que_ano.
+        
+    /*---------------------------------------------------------------------------------*/
+    /*                          ENCABEZADO DEL PEDIDO                                  */
+    /*---------------------------------------------------------------------------------*/
+    
+    SESSION:NUMERIC-FORMAT = "AMERICAN".        /* for the AT command. restore it if necessary */
+    
+    OUTPUT STREAM Formulario TO "c:\sic-temp\pedido114.xpr" CONVERT TARGET "iso8859-1".
+
+    ncopia = 1.
+    n_hoja = 0.
+    RUN forma.
+   
+    OUTPUT STREAM Formulario CLOSE.
+    FILE-INFO:File-NAME = "c:\sic-temp\pedido114.xpr".
+      
+    RUN printFile( FILE-INFO:FULL-PATHNAME). /* Primera copia */
+    /*
+    RUN printFile( FILE-INFO:FULL-PATHNAME). /* Segunda copia */
+    */
+
+END.
+RUN UnLoadXprint.
+
+/*=================================================================================*/
+/*                          PROCEDIMIENTOS                                         */
+/*=================================================================================*/
+
+PROCEDURE inicia_hoja:
+
+    n_hoja = n_hoja + 1.
+
+/*  PUT STREAM Formulario CONTROL '<PREVIEW=70>' /*=ZoomToWidth>'*/.  */
+/*  PUT STREAM Formulario CONTROL '<TOOLBAR=!PRINT>'.                   */
+    
+    PUT STREAM Formulario CONTROL "<OPORTRAIT><Title=Impresión de Pedido Nro.:" + STRING(Ped_header.nro_comprob,'999999')
+                                  + " Hoja:" + STRING(n_hoja,'>9') + "><UNITS=mm><|2>".
+    PUT STREAM Formulario CONTROL "<FORMAT=A4>".
+    PUT STREAM Formulario CONTROL "<#1>".    
+    PUT STREAM Formulario CONTROL "<R172><C1><#2>".    
+
+    PUT STREAM Formulario UNFORMATTED "<=#1><BGCOLOR=WHITE><AT=+05,+5><FROM><AT=+10,+190><FILLRECT)>". 
+    PUT STREAM Formulario UNFORMATTED "<=#1><BGCOLOR=WHITE><AT=+15,+5><FROM><AT=+42,+190><FILLRECT)>". 
+    PUT STREAM Formulario UNFORMATTED "<=#1><BGCOLOR=WHITE><AT=+57,+5><FROM><AT=+200,+190><FILLRECT)>". 
+    PUT STREAM Formulario UNFORMATTED "<=#1><BGCOLOR=WHITE><AT=+257,+5><FROM><AT=+25,+190><FILLRECT)>". 
+
+/*  ---------- Boxes
+    PUT STREAM Formulario UNFORMATTED "<=#1><BGCOLOR=WHITE><AT=+237,+138><FROM><AT=+25,+30><FILLRECT)>". 
+    PUT STREAM Formulario UNFORMATTED "<=#1><BGCOLOR=WHITE><AT=+237,+168><FROM><AT=+25,+27><FILLRECT)>". 
+*/
+
+    IF Ped_header.tip_comprob = "PD"
+        THEN RUN escribir ( INPUT "07,70", INPUT "PEDIDOS DE CLIENTES", INPUT 14, INPUT YES). 
+        ELSE RUN escribir ( INPUT "07,70", INPUT "DEVOLUCIONES", INPUT 14, INPUT YES). 
+    RUN escribir ( INPUT "07,165", INPUT "<B>NRO:</B>" + STRING(Ped_header.nro_comprob), INPUT 12, INPUT NO). 
+    
+    RUN escribir ( INPUT "20,20", INPUT "<B>RECORRIDO:</B>" + Domicilio.cdg_recorrido + "-" + Recorrido.dsc_recorrido, INPUT 12, INPUT NO). 
+    RUN escribir ( INPUT "25,20", INPUT "<B>ENTREGA:</B>" + que_dia + "/" + que_mes + "/" + que_ano, INPUT 12, INPUT NO). 
+
+    RUN escribir ( INPUT "20,115", INPUT "<B>HOJA:</B>" + STRING(n_hoja,'>9'), INPUT 12, INPUT NO). 
+
+    PUT STREAM Formulario UNFORMATTED "<=#1><BGCOLOR=WHITE><AT=+18,+183><FROM><AT=+9,+9><FILLRECT)>". 
+    RUN escribir ( INPUT "20,186", INPUT Ped_header.cdg_empresa, INPUT 12, INPUT YES). 
+
+    RUN escribir ( INPUT "33,20", INPUT "[" + Cliente.cdg_cliente + "] " + Cliente.nom_cliente, INPUT 10, INPUT YES).
+    RUN escribir ( INPUT "33,115", INPUT "<B>Alta:</B>" + STRING(Ped_header.fecha_alta,"99/99/99") , INPUT 10, INPUT NO). 
+
+    RUN escribir ( INPUT "37,20", INPUT Domicilio.direccion, INPUT 8, INPUT NO).
+    RUN escribir ( INPUT "37,115", INPUT "<B>Estado:</B>" + Estado_pedido.descripcion, INPUT 10, INPUT NO).
+
+    RUN escribir ( INPUT "41,20", INPUT "(" + Domicilio.cdg_postal + ") " +  
+                 Domicilio.localidad, INPUT 8, INPUT NO).
+
+    RUN escribir ( INPUT "41,115", INPUT "Vendedor:" + Vendedor.nombre, INPUT 10, INPUT NO).  
+
+    RUN escribir ( INPUT "45,20", INPUT Provincia.nombre, INPUT 8, INPUT NO).
+    RUN escribir ( INPUT "45,115", INPUT "Zona: [" + Domicilio.cdg_zonag + "]", INPUT 8, INPUT NO).
+    RUN escribir ( INPUT "45,145", INPUT "Nro. O/C: " + Ped_header.nro_ocm, INPUT 8, INPUT NO).
+
+    RUN escribir ( INPUT "51,20", INPUT "Transporte:" + Ped_header.transportista, INPUT 8, INPUT NO).
+    RUN escribir ( INPUT "51,115", INPUT "Usuario:" + Usuario.cdg_usuario, INPUT 8, INPUT NO).
+    IF Ped_header.cdg_oferta <> ""
+    THEN DO:
+         FIND Oferta OF Ped_header.
+         RUN escribir ( INPUT "51,135", INPUT "Oferta:" + Oferta.dsc_oferta, INPUT 10, INPUT YES).
+    END.
+    RUN escribir ( ch_linea(det0 + 1,-1)  + ",9", INPUT "Código", INPUT 8, INPUT NO).
+    RUN escribir ( ch_linea(det0 + 1,-1)  + ",28", INPUT "Descripción", INPUT 8, INPUT NO).
+    RUN escribir ( ch_linea(det0 + 1,-1)  + ",114", INPUT "Color", INPUT 8, INPUT NO).
+    RUN escribir ( ch_linea(det0 + 1,-1)  + ",128", INPUT "Pedido", INPUT 8, INPUT NO).
+    RUN escribir ( ch_linea(det0 + 1,-1)  + ",155", INPUT "Precio", INPUT 8, INPUT NO).
+    RUN escribir ( ch_linea(det0 + 1,-1)  + ",175", INPUT "Preparado", INPUT 8, INPUT NO).
+
+    RUN linea    ( ch_linea(det0 - 2,1)  + ",5", INPUT "190", "H" ).
+
+    RUN linea    ( "57,26", INPUT "200", "V" ).
+    RUN linea    ( "57,110", INPUT "200", "V" ).
+    RUN linea    ( "57,124", INPUT "200", "V" ).
+    RUN linea    ( "57,138", INPUT "225", "V" ).
+    RUN linea    ( "57,168", INPUT "225", "V" ).
+
+    RUN linea    ( "262,138", INPUT "57", "H" ).
+    RUN escribir ( INPUT "258,143", INPUT "Valor Declarado", INPUT 8, INPUT YES).
+    RUN escribir ( INPUT "258,171", INPUT "Cantidad Bultos", INPUT 8, INPUT YES).
+
+    linea0 = 1.
+
+END PROCEDURE.
+
+PROCEDURE forma:
+
+    RUN inicia_hoja.
+
+    FOR EACH Ped_detalle OF Ped_header, Articulo OF Ped_detalle,
+        Partida OF Ped_detalle
+        BREAK BY Articulo.cdg_articulo BY Partida.cdg_partida:
+
+        IF linea0 > max_det
+        THEN DO:
+           /*RUN escribir ( ch_linea(det0,linea0 + 1)  + ",30", INPUT "CONTINUA EN HOJA " + STRING(n_hoja + 1,">9"), INPUT 12, INPUT YES).*/
+             RUN escribir ( "258,30", INPUT "CONTINUA EN HOJA " + STRING(n_hoja + 1,">9"), INPUT 12, INPUT YES).
+             OUTPUT STREAM Formulario CLOSE.
+             FILE-INFO:File-NAME = "c:\sic-temp\pedido114.xpr".
+             RUN printFile( FILE-INFO:FULL-PATHNAME).
+             
+             OUTPUT STREAM Formulario TO "c:\sic-temp\pedido114.xpr" CONVERT TARGET "iso8859-1".
+             RUN inicia_hoja.             
+        END.
+
+        RUN escribir      ( ch_linea(det0,linea0)  + ",9", INPUT Articulo.cdg_articulo, INPUT 8, INPUT NO).
+        RUN escribir      ( ch_linea(det0,linea0)  + ",28", INPUT Articulo.descripcion, INPUT 8, INPUT NO).
+        RUN escribir      ( ch_linea(det0,linea0)  + ",112", INPUT Partida.cdg_partida, INPUT 8, INPUT NO).
+        RUN escribenumero ( ch_linea(det0,linea0)  + ",142", INPUT STRING(Ped_detalle.precio,"->>>>9.9999"), INPUT 8, INPUT NO). 
+        RUN escribenumero ( ch_linea(det0,linea0)  + ",117", INPUT STRING(Ped_detalle.cantidad,"ZZZZZZ9"), INPUT 8, INPUT NO).
+        RUN linea         ( ch_linea(det0 + 3,linea0)  + ",170", INPUT "23", "H" ).
+        linea0 = linea0 + 1.
+
+        total_articulo = total_articulo + Ped_detalle.cantidad.    
+        IF LAST-OF(Articulo.cdg_articulo)
+        THEN DO:
+            /*
+            IF NOT CAN-FIND(FIRST Partida OF Articulo 
+                            WHERE Partida.cdg_partida = "" )
+            */
+
+            RUN linea         ( ch_linea(det0 + 1,linea0)  + ",126", INPUT "11", "H" ).
+            linea0 = linea0 + 1.       
+            RUN escribenumero ( ch_linea(det0,linea0)  + ",117", INPUT STRING(total_articulo,"ZZZZZZ9"), INPUT 8, INPUT NO).
+
+            linea0 = linea0 + 2.       
+            total_articulo = 0.
+        END. 
+    
+    END.
+
+    RUN escribir ( ch_linea(det0,linea0 + 1)  + ",30", INPUT "FIN DE LOS ITEMS DE PEDIDO", INPUT 12, INPUT YES).
+
+    IF Ped_header.observacion <> ""
+    THEN DO:    
+        RUN RENGLONS.P (INPUT  Ped_header.observacion, 
+                        INPUT  v-leng_observacion,
+                        OUTPUT v-observacion,
+                        INPUT  "|").
+    
+    
+        linea0 = 258.
+        DO j = 1 TO v-reng_observacion:
+            IF j <= NUM-ENTRIES(v-observacion, "|")
+               THEN RUN escribir ( INPUT TRIM(STRING(linea0,">>9")) + ",10", INPUT ENTRY(j,v-observacion, "|"), INPUT 10, INPUT NO).
+            linea0 = linea0 + 3.
+        END.
+    
+    
+    END.
+
+END PROCEDURE.
+
+PROCEDURE escribir:
+
+    DEFINE INPUT PARAMETER posicion AS CHARACTER.
+    DEFINE INPUT PARAMETER texto    AS CHARACTER.
+    DEFINE INPUT PARAMETER puntos   AS CHARACTER.
+    DEFINE INPUT PARAMETER negrita  AS LOGICAL.
+    
+    DEFINE VARIABLE linea           AS CHARACTER.
+
+    DEFINE VARIABLE i-linea         AS INTEGER.
+    DEFINE VARIABLE i-columna       AS INTEGER.
+
+    i-linea   = INTEGER(ENTRY(1,posicion,",")).
+    i-columna = INTEGER(ENTRY(2,posicion,",")).
+
+    linea = '<FGCOLOR=' + textColor + '><=#1><AT=+' + TRIM(STRING(i-linea,">>9")) + ',+' + TRIM(STRING(i-columna,">>9")) + '><FArial><P' + puntos + '>'.
+
+    IF negrita THEN linea = linea + '<B>'.
+    linea = linea + texto.
+    IF negrita THEN linea = linea + '</B>'.
+
+    PUT STREAM FORMULARIO UNFORMATTED linea.
+
+END PROCEDURE.
+
+PROCEDURE escribenumero:
+
+    DEFINE INPUT PARAMETER posicion AS CHARACTER.
+    DEFINE INPUT PARAMETER texto    AS CHARACTER.
+    DEFINE INPUT PARAMETER puntos   AS CHARACTER.
+    DEFINE INPUT PARAMETER negrita  AS LOGICAL.
+    
+    DEFINE VARIABLE linea           AS CHARACTER.
+    DEFINE VARIABLE s-font          AS CHARACTER.
+    DEFINE VARIABLE r-texto         AS CHARACTER.
+
+    DEFINE VARIABLE i-linea         AS INTEGER.
+    DEFINE VARIABLE i-columna       AS DECIMAL.
+    DEFINE VARIABLE offset          AS DECIMAL.
+
+    s-font = 'Arial,' + puntos + IF negrita THEN ',B' ELSE ''.
+    offset = DECIMAL(ENTRY(2,ENTRY(1,RightJustify(TRIM(texto), s-font, ancho),">"),",")) * 12.
+
+    i-linea   = INTEGER(ENTRY(1,posicion,",")).
+    i-columna = DECIMAL(ENTRY(2,posicion,",")) + offset.
+
+    linea = '<FGCOLOR=' + textColor + '><FArial><P' + puntos + '>' +
+            '<=#1><AT=+' + TRIM(STRING(i-linea,">>9")) + ',+' + 
+             TRIM(STRING(i-columna,">>9.999999")) + '>' +
+             ( IF negrita THEN '<B>' ELSE '')  + 
+             texto + 
+             ( IF negrita THEN '</B>' ELSE '' ). 
+/*
+    message linea view-as alert-box message title "plot".
+*/    
+    PUT STREAM Formulario UNFORMATTED linea.
+
+END PROCEDURE.
+
+PROCEDURE linea:
+
+    DEFINE INPUT PARAMETER posicion    AS CHARACTER.
+    DEFINE INPUT PARAMETER longitud    AS CHARACTER.
+    DEFINE INPUT PARAMETER orientacion AS CHARACTER.
+
+    DEFINE VARIABLE i-linea         AS INTEGER.
+    DEFINE VARIABLE i-columna       AS INTEGER.
+
+    DEFINE VARIABLE linea           AS CHARACTER.
+
+    i-linea   = INTEGER(ENTRY(1,posicion,",")).
+    i-columna = INTEGER(ENTRY(2,posicion,",")).
+
+    linea = '<=#1><FGCOLOR=' + 
+           textColor + 
+           '><AT=+' + 
+           TRIM(STRING(i-linea,">>9")) + 
+            ',+' + 
+            TRIM(STRING(i-columna,">>9")) + 
+            '><FROM><AT=' + 
+            (IF orientacion = "H" THEN ',' ELSE '') + 
+            '+' + 
+            longitud + 
+            '><LINE>'.
+
+    PUT STREAM Formulario UNFORMATTED linea.
+    
+
+END PROCEDURE.

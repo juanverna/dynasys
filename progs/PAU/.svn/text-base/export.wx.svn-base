@@ -1,0 +1,454 @@
+&ANALYZE-SUSPEND _EXPORT-NUMBER AB_v10r12
+&ANALYZE-RESUME
+/* Connected Databases 
+          sic              PROGRESS
+*/
+&Scoped-define WINDOW-NAME CURRENT-WINDOW
+&Scoped-define FRAME-NAME Dialog-Frame
+
+
+/* Temp-Table and Buffer definitions                                    */
+DEFINE BUFFER Administrador FOR Cliente.
+DEFINE TEMP-TABLE T-Caja-imputacion NO-UNDO LIKE Caja-imputacion.
+DEFINE TEMP-TABLE T-Caj_detalle NO-UNDO LIKE Caj_detalle.
+DEFINE TEMP-TABLE T-Caj_header NO-UNDO LIKE Caj_header.
+DEFINE TEMP-TABLE T-Cheque NO-UNDO LIKE Cheque.
+DEFINE TEMP-TABLE T-Cupon_rendicion NO-UNDO LIKE Cupon_rendicion.
+DEFINE TEMP-TABLE T-Rendicion_hd NO-UNDO LIKE Rendicion_hd.
+DEFINE TEMP-TABLE T-Valor NO-UNDO LIKE Valor.
+
+
+
+&ANALYZE-SUSPEND _UIB-PREPROCESSOR-BLOCK 
+
+/* ********************  Preprocessor Definitions  ******************** */
+
+&Scoped-define PROCEDURE-TYPE DIALOG-BOX
+&Scoped-define DB-AWARE no
+
+
+/* Internal Tables (found by Frame, Query & Browse Queries)             */
+&Scoped-define INTERNAL-TABLES T-Cupon_rendicion Cupon Cliente ~
+T-Rendicion_hd
+
+/* Custom List Definitions                                              */
+/* List-1,List-2,List-3,List-4,List-5,List-6                            */
+
+/* _UIB-PREPROCESSOR-BLOCK-END */
+&ANALYZE-RESUME
+
+
+
+/* ***********************  Control Definitions  ********************** */
+
+/* Define a dialog box                                                  */
+
+/* Definitions of the field level widgets                               */
+
+/* ************************  Frame Definitions  *********************** */
+
+
+
+
+/* ***********  Runtime Attributes and AppBuilder Settings  *********** */
+
+ 
+
+&Scoped-define FRAME-NAME 
+
+/* **********************  Internal Procedures  *********************** */
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE asignar_caja  ^ 
+PROCEDURE asignar_caja :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+
+    ASSIGN T-Caj_header.importe         = T-Rendicion_hd.imp_imputado.
+
+    EMPTY TEMP-TABLE T-Caja-imputacion.
+    RUN crear_caja_imputacion.
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE cambiar_color  ^ 
+PROCEDURE cambiar_color :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+   FIND rinde WHERE rinde.rid = ROWID(t-cupon_rendicion) NO-ERROR.
+   IF available(rinde) THEN DO:
+    cupon.tip_cupon:fGCOLOR IN BROWSE {&BROWSE-NAME} = 15. 
+    cupon.tip_cupon:bGCOLOR IN BROWSE {&BROWSE-NAME} = 9. 
+    cupon.prf_cupon:fGCOLOR IN BROWSE {&BROWSE-NAME} = 15. 
+    cupon.prf_cupon:bGCOLOR IN BROWSE {&BROWSE-NAME} = 9. 
+    cupon.nro_cupon:fGCOLOR IN BROWSE {&BROWSE-NAME} = 15. 
+    cupon.nro_cupon:bGCOLOR IN BROWSE {&BROWSE-NAME} = 9. 
+    cupon.importe:fGCOLOR IN BROWSE {&BROWSE-NAME} = 15. 
+    cupon.importe:bGCOLOR IN BROWSE {&BROWSE-NAME} = 9. 
+   END.
+   ELSE DO:
+    cupon.tip_cupon:fGCOLOR IN BROWSE {&BROWSE-NAME} = 9. 
+    cupon.tip_cupon:bGCOLOR IN BROWSE {&BROWSE-NAME} = 15. 
+    cupon.prf_cupon:fGCOLOR IN BROWSE {&BROWSE-NAME} = 9. 
+    cupon.prf_cupon:bGCOLOR IN BROWSE {&BROWSE-NAME} = 15. 
+    cupon.nro_cupon:fGCOLOR IN BROWSE {&BROWSE-NAME} = 9. 
+    cupon.nro_cupon:bGCOLOR IN BROWSE {&BROWSE-NAME} = 15. 
+    cupon.importe:fGCOLOR IN BROWSE {&BROWSE-NAME} = 9. 
+    cupon.importe:bGCOLOR IN BROWSE {&BROWSE-NAME} = 15.  
+   END.
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE cierrarendicion  ^ 
+PROCEDURE cierrarendicion :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+
+  DO TRANSACTION:
+      
+      RUN completar_auditoria.p ( OUTPUT T-Rendicion_hd.nro_usuario,
+                                  OUTPUT T-Rendicion_hd.fecha_grab,
+                                  OUTPUT T-Rendicion_hd.hora_grab,
+                                  OUTPUT T-Rendicion_hd.pc_name).
+ 
+      FOR EACH t-cupon_rendicion:
+          FIND rinde WHERE rinde.rid = ROWID(t-cupon_rendicion) NO-ERROR.
+          IF NOT AVAILABLE rinde THEN DELETE t-cupon_rendicion.
+      END.
+      RUN cierrarendicion.p ( INPUT-OUTPUT TABLE T-Rendicion_hd,
+                              INPUT-OUTPUT TABLE T-Cupon_rendicion).
+          
+  END.
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE crear_caja  ^ 
+PROCEDURE crear_caja :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+
+    DEFINE VARIABLE que_caja LIKE Caja.cdg_caja.
+
+    RUN getparametro_n.p (  INPUT  "DFNROCAJ", OUTPUT que_caja ).
+    FIND Caja WHERE Caja.cdg_caja = que_caja NO-LOCK.
+
+    FIND Administrador WHERE Administrador.cdg_cliente = v-cdg_administrador NO-LOCK.
+    FIND Familia_cliente OF Administrador NO-LOCK.
+
+    CREATE T-Caj_header.
+    BUFFER-COPY T-Rendicion_hd TO T-Caj_header
+        ASSIGN T-Caj_header.fecha               = TODAY
+               T-Caj_header.hora                = TIME
+               T-Caj_header.ultima_linea        = 0
+               T-Caj_header.nro_transaccion     = NEXT-VALUE(proxima_txncaja)
+               T-Caj_header.importe             = T-Rendicion_hd.imp_imputado
+               T-Caj_header.emitir              = NO
+               T-Caj_header.cdg_caja            = Caja.cdg_caja
+               T-Caj_header.nro_cuenta          = Familia_cliente.nro_cuenta
+               T-Caj_header.observacion         = Administrador.cdg_cliente + "-" + Administrador.nom_cliente
+               T-Caj_header.tipo_mov            = "I"
+               T-Rendicion_hd.nro_transaccion   = T-Caj_header.nro_transaccion.
+
+    EMPTY TEMP-TABLE T-Caja-imputacion.
+    RUN crear_caja_imputacion.
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE crear_caja_imputacion  ^ 
+PROCEDURE crear_caja_imputacion :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+
+    CREATE T-Caja-imputacion.
+    ASSIGN T-Caja-imputacion.nro_cuenta       = Familia_cliente.nro_cuenta
+           T-Caja-imputacion.nro_entidad      = Caja.nro_entidad
+           T-Caja-imputacion.nro_obra         = 0
+           T-Caja-imputacion.nro_transaccion  = T-Caj_header.nro_transaccion
+           T-Caja-imputacion.observacion      = ""
+           T-Caja-imputacion.valor            = T-Caj_header.importe.
+
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE open-query  ^ 
+PROCEDURE open-query :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+
+  OPEN QUERY {&BROWSE-NAME} 
+       FOR EACH T-Cupon_rendicion OF T-Rendicion_hd,
+           FIRST Cupon OF T-Cupon_rendicion NO-LOCK, 
+           FIRST Cliente OF Cupon NO-LOCK.
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE poner_administrador  ^ 
+PROCEDURE poner_administrador :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+
+  FIND Cobrador OF Administrador NO-LOCK.
+  T-Rendicion_hd.nro_cobrador = Cobrador.nro_cobrador.
+
+  FOR EACH Cliente WHERE Cliente.nro_administrador = Administrador.nro_cliente NO-LOCK,
+      EACH Cupon OF Cliente WHERE Cupon.estado = "0":
+          CREATE T-Cupon_rendicion.
+          BUFFER-COPY Cupon TO T-Cupon_rendicion.
+  END.
+  v-hat:SCREEN-VALUE IN FRAME {&FRAME-NAME} = string(administrador.hat).
+  ASSIGN v-hat.
+  RUN poner_pendientes.
+  RUN open-query.
+  FIND FIRST T-Cupon_rendicion NO-ERROR.
+  IF AVAILABLE T-Cupon_rendicion THEN
+    v-cdg_administrador:SENSITIVE IN FRAME {&FRAME-NAME} = NO.
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE poner_pendientes  ^ 
+PROCEDURE poner_pendientes :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+ASSIGN v-pendiente = 0
+       v-importependiente = 0.
+
+  FOR EACH T-Cupon_rendicion , FIRST Cupon OF T-Cupon_rendicion:
+      ASSIGN v-pendiente = v-pendiente + 1
+             v-importependiente = v-importependiente + Cupon.importe.
+  END.
+
+  DISPLAY v-importependiente
+          v-pendiente
+     WITH FRAME {&FRAME-NAME}.
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE poner_totales  ^ 
+PROCEDURE poner_totales :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+
+  FIND Cobrador OF T-Rendicion_hd NO-LOCK NO-ERROR.
+  v-nom_cobrador = IF AVAILABLE Cobrador THEN Cobrador.nom_cobrador ELSE "??".
+
+  ASSIGN T-Rendicion_hd.cant_recibos = 0
+         T-Rendicion_hd.imp_imputado = 0.
+
+  FOR EACH rinde  , FIRST t-cupon_rendicion WHERE ROWID(t-cupon_rendicion) = rinde.rid , FIRST Cupon OF T-Cupon_rendicion:
+      ASSIGN T-Rendicion_hd.cant_recibos = T-Rendicion_hd.cant_recibos + 1
+             T-Rendicion_hd.imp_imputado = T-Rendicion_hd.imp_imputado + Cupon.importe.
+  END.
+
+  DISPLAY T-Rendicion_hd.cant_recibos 
+          T-Rendicion_hd.imp_imputado
+          v-nom_cobrador 
+          WITH FRAME {&FRAME-NAME}.
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE prinrendicion  ^ 
+PROCEDURE prinrendicion :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+
+    /*=================================================================================*/
+    /*                     IMPRESION DE RENDICIONES                     */
+    /*=================================================================================*/
+    
+    
+    /*=================================================================================*/
+    /*                           VARIABLES, FRAMES, Y SUBMENUES                        */
+    /*=================================================================================*/
+    
+    DEFINE VARIABLE nt_lineas       AS INTEGER.
+    DEFINE VARIABLE total_chars     AS INTEGER.
+    DEFINE VARIABLE ancho_linea     AS INTEGER INITIAL 40.
+    DEFINE VARIABLE total_recibos   AS INTEGER.
+    DEFINE VARIABLE total_rendicion AS DECIMAL FORMAT "->>>,>>9.99 $".
+    DEFINE VARIABLE que_empresa     LIKE Empresa.nombre.
+    DEFINE VARIABLE fecha_lis       AS DATE.
+    DEFINE VARIABLE hora_lis        AS CHARACTER.
+    DEFINE VARIABLE titulo_det      AS CHARACTER FORMAT "X(40)".
+    DEFINE VARIABLE titulo_lis      AS CHARACTER FORMAT "X(40)".
+    DEFINE VARIABLE v-tipo          AS CHARACTER FORMAT "X(20)".
+    
+    DEFINE VARIABLE que_archivo     AS CHARACTER.
+    DEFINE VARIABLE p_printed       AS LOGICAL.
+    
+    DEFINE FRAME frm-titulo HEADER
+           que_empresa
+           titulo_lis AT 37
+           "Página:" AT 103 PAGE-NUMBER FORMAT ">>9" AT 111
+           SKIP  
+           fecha_lis       
+           hora_lis AT 103
+           SKIP
+           titulo_det AT 37  
+           SKIP(1)
+           WITH WIDTH 135 FRAME frm-titulo PAGE-TOP USE-TEXT STREAM-IO.
+        
+    FORM
+            Cupon.tip_comprob     COLUMN-LABEL "Tip!Comp"
+            Cupon.prf_comprob 
+            Cupon.nro_comprob 
+            Cliente.cdg_cliente 
+            Cliente.nom_cliente 
+            Cupon.fecha_emision 
+            Cupon.mes_imputa     COLUMN-LABEL "Mes!Imp" 
+            Cupon.importe_cuota FORMAT "->>>,>>9.99"
+            Cupon.cdg_motbaja    COLUMN-LABEL "Mot!Baja" 
+            WITH WIDTH 135 DOWN FRAME frm-listado USE-TEXT STREAM-IO .
+    
+    fecha_lis = TODAY.
+    hora_lis = STRING(TIME,"HH:MM:SS").
+    
+    FIND Cobrador OF T-Rendicion_hd NO-LOCK.
+    FIND Empresa OF T-Rendicion_hd.
+    que_empresa = Empresa.nombre.
+    
+    v-tipo = T-Rendicion_hd.tipo.
+    CASE T-Rendicion_hd.tipo:
+         WHEN "1" THEN v-tipo = "Recibos Cobrados".
+         WHEN "2" THEN v-tipo = "Recibos En Mora".
+         WHEN "3" THEN v-tipo = "Recibos de Baja".
+         WHEN "4" THEN v-tipo = "Recibos Devueltos".
+    END CASE.
+    
+    titulo_det =  Cobrador.cdg_cobrador + " " + Cobrador.nom_cobrador + " - " + v-tipo.
+    
+    titulo_lis = "Rendición de Cobradores Nro." + STRING(T-Rendicion_hd.nro_rendicion,"999999").
+    que_archivo = "C:\SIC-TEMP\prinrendicion.txt".
+    
+    OUTPUT TO VALUE(que_archivo) PAGED.
+    
+    FOR EACH T-Cupon_rendicion OF T-Rendicion_hd, FIRST Cupon OF T-Cupon_rendicion NO-LOCK, FIRST Cliente NO-LOCK OF Cupon:
+     FIND rinde WHERE ROWID(t-cupon_rendicion) = rinde.rid NO-ERROR.
+     IF NOT AVAILABLE rinde THEN NEXT.
+        VIEW FRAME frm-titulo.
+    
+        DISPLAY
+            Cupon.tip_comprob 
+            Cupon.prf_comprob 
+            Cupon.nro_comprob 
+            Cliente.cdg_cliente 
+            Cliente.nom_cliente 
+            Cupon.fecha_emision 
+            Cupon.mes_imputa 
+            Cupon.importe_cuota
+            Cupon.cdg_motbaja
+            WITH FRAME frm-listado USE-TEXT STREAM-IO DOWN.
+            
+        DOWN WITH FRAME frm-listado.
+        
+        total_rendicion = total_rendicion + Cupon.importe_cuota.
+        total_Recibos   = total_Recibos   + 1.
+    
+    END.
+    
+    
+    /*---------------------------------------------------------------------------------*/
+    /*                                       PIE                                       */
+    /*---------------------------------------------------------------------------------*/
+    
+    UNDERLINE
+            Cupon.tip_comprob 
+            Cupon.prf_comprob 
+            Cupon.nro_comprob 
+            Cliente.cdg_cliente 
+            Cliente.nom_cliente 
+            Cupon.fecha_emision 
+            Cupon.mes_imputa 
+            Cupon.importe_cuota
+            Cupon.cdg_motbaja
+            WITH FRAME frm-listado USE-TEXT STREAM-IO DOWN.
+    
+    
+    DISPLAY
+        "<---  TOTAL  --->"   @ Cliente.nom_cliente
+        total_Recibos   @ Cupon.prf_comprob
+        total_rendicion @ Cupon.importe_cuota
+        WITH DOWN FRAME frm-listado USE-TEXT STREAM-IO.
+        DOWN WITH DOWN FRAME frm-listado.
+    
+    UNDERLINE
+            Cupon.tip_comprob 
+            Cupon.prf_comprob 
+            Cupon.nro_comprob 
+            Cliente.cdg_cliente 
+            Cliente.nom_cliente 
+            Cupon.fecha_emision 
+            Cupon.mes_imputa 
+            Cupon.importe_cuota
+            Cupon.cdg_motbaja
+            WITH FRAME frm-listado USE-TEXT STREAM-IO DOWN.
+    
+    
+    /*=================================================================================*/
+    /*                                       FIN                                       */
+    /*=================================================================================*/
+    
+    OUTPUT CLOSE.
+    
+    RUN veresult.w ( INPUT que_archivo, INPUT 22 ).
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+

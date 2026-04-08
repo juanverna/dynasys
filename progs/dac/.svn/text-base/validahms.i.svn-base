@@ -1,0 +1,16 @@
+       /*
+       ch_hora = {1}.
+       ch_hh = SUBSTRING({1},1,2).
+       ch_mm = SUBSTRING({1},4,2).
+       */
+       IF INTEGER(SUBSTRING({1},1,2)) > 23 OR 
+          INTEGER(SUBSTRING({1},1,2)) < 00 OR
+          INTEGER(SUBSTRING({1},4,2)) > 59 OR
+          INTEGER(SUBSTRING({1},4,2)) < 00 OR 
+          LENGTH({1}) <> 5 OR
+          LOOKUP(SUBSTRING({1},3,1),":|.|-|,","|") = 0
+          THEN DO:
+               MESSAGE "Formato de Hora incorrecto" 
+                       VIEW-AS ALERT-BOX ERROR.
+               {2}
+          END.             

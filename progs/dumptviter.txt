@@ -1,0 +1,12 @@
+
+-------------gid ---gTvIterations picImg-------- -----------picX- -----------picY- -----------labX- -----------labY-labScreenValue-- -labWidthPixels-
+
+         1                1       tvpics/u               2                1               35                1       MANTENIM               157
+         2                2       tvpics/u               2               18               35               18       COBRANZA                70
+         3                3       tvpics/u               2               35               35               35       MOVIMIEN                80
+
+-------------gid ---gTvIterations picImg-------- -----------picX- -----------picY- -----------labX- -----------labY-labScreenValue-- -labWidthPixels-
+
+         1                1       tvpics/u               2                1               35                1       COBRANZA                70
+         2                2       tvpics/w              19               18               52               18       Carga de               234
+         3                3       tvpics/w              19               35               52               35       Impresio               186

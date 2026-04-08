@@ -1,0 +1,1 @@
+      {1}:COLUMN = 3 * ( nivel - 1 ) + {1}:COLUMN.

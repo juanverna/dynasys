@@ -1,0 +1,20 @@
+DEFINE VARIABLE anterior LIKE Persona.nombre.
+DEFINE VARIABLE ant_recid AS RECID.
+DEFINE BUFFER Antpersona FOR Persona.
+DEFINE VARIABLE c AS INTEGER.
+
+FOR EACH Persona:
+    c = c + 1.
+    IF Persona.nombre = anterior
+    THEN DO:
+       FIND Antpersona WHERE RECID(Antpersona) = ant_recid.
+       DISPLAY Antpersona
+               WITH FRAME a FONT 8 SIDE-LABELS 2 COLUMNS TITLE "Anterior" THREE-D.
+       DELETE Antpersona.
+    END.
+    anterior = Persona.nombre.
+    ant_recid = RECID(Persona).
+
+END.                   
+
+DISPLAY C.

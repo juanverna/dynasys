@@ -1,0 +1,506 @@
+&ANALYZE-SUSPEND _VERSION-NUMBER UIB_v8r12 GUI ADM1
+&ANALYZE-RESUME
+/* Connected Databases 
+          sic              PROGRESS
+*/
+&Scoped-define WINDOW-NAME CURRENT-WINDOW
+&Scoped-define FRAME-NAME D-Dialog
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CUSTOM _DEFINITIONS D-Dialog 
+/*********************************************************************
+* Copyright (C) 2000 by Progress Software Corporation ("PSC"),       *
+* 14 Oak Park, Bedford, MA 01730, and other contributors as listed   *
+* below.  All Rights Reserved.                                       *
+*                                                                    *
+* The Initial Developer of the Original Code is PSC.  The Original   *
+* Code is Progress IDE code released to open source December 1, 2000.*
+*                                                                    *
+* The contents of this file are subject to the Possenet Public       *
+* License Version 1.0 (the "License"); you may not use this file     *
+* except in compliance with the License.  A copy of the License is   *
+* available as of the date of this notice at                         *
+* http://www.possenet.org/license.html                               *
+*                                                                    *
+* Software distributed under the License is distributed on an "AS IS"*
+* basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. You*
+* should refer to the License for the specific language governing    *
+* rights and limitations under the License.                          *
+*                                                                    *
+* Contributors:                                                      *
+*                                                                    *
+*********************************************************************/
+/*------------------------------------------------------------------------
+
+  File: 
+
+  Description: from cntnrdlg.w - ADM SmartDialog Template
+
+  Input Parameters:
+      <none>
+
+  Output Parameters:
+      <none>
+
+  Author: 
+
+  Created: 
+------------------------------------------------------------------------*/
+/*          This .W file was created with the Progress UIB.             */
+/*----------------------------------------------------------------------*/
+
+/* Create an unnamed pool to store all the widgets created 
+     by this procedure. This is a good default which assures
+     that this procedure's triggers and internal procedures 
+     will execute in this procedure's storage, and that proper
+     cleanup will occur on deletion of the procedure. */
+
+CREATE WIDGET-POOL.
+
+/* ***************************  Definitions  ************************** */
+
+/* Parameters Definitions ---                                           */
+
+&IF DEFINED(UIB_is_Running) NE 0
+&THEN
+DEFINE VARIABLE         titulo_w      AS CHARACTER INITIAL "Selección de Contratos Activos".
+DEFINE VARIABLE         p-cdg_cliente LIKE cliente.cdg_cliente.
+DEFINE VARIABLE         rid_contrato   AS ROWID.
+&ELSE
+DEFINE INPUT  PARAMETER titulo_w      AS CHARACTER.
+DEFINE INPUT PARAM p-cdg_cliente LIKE cliente.cdg_cliente.
+DEFINE INPUT-OUTPUT PARAMETER rid_contrato  AS ROWID.
+&ENDIF
+
+
+/* Local Variable Definitions ---                                       */
+
+DEFINE VARIABLE que_empresa      LIKE Empresa.cdg_empresa.
+DEFINE VARIABLE fecha_inicial    AS DATE.
+DEFINE VARIABLE fecha_elegida    AS DATE.
+DEFINE VARIABLE que_moneda       LIKE Moneda.nro_moneda.
+DEFINE VARIABLE que_cliente      LIKE Cliente.nro_cliente.
+
+DEFINE BUFFER B-Cliente FOR Cliente.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-PREPROCESSOR-BLOCK 
+
+/* ********************  Preprocessor Definitions  ******************** */
+
+&Scoped-define PROCEDURE-TYPE SmartDialog
+&Scoped-define DB-AWARE no
+
+&Scoped-define ADM-CONTAINER DIALOG-BOX
+
+/* Name of designated FRAME-NAME and/or first browse and/or first query */
+&Scoped-define FRAME-NAME D-Dialog
+&Scoped-define BROWSE-NAME BROWSE-2
+
+/* Internal Tables (found by Frame, Query & Browse Queries)             */
+&Scoped-define INTERNAL-TABLES contrato_hd tipo_evento
+
+/* Definitions for BROWSE BROWSE-2                                      */
+&Scoped-define FIELDS-IN-QUERY-BROWSE-2 contrato_hd.prf_contrato contrato_hd.nro_contrato (IF ( contrato_hd.fecha_baja <> ? AND contrato_hd.rige_hasta <= TODAY ) THEN "A" ELSE "" )COLUMN-LABEL "S!T" contrato_hd.rige_desde contrato_hd.rige_hasta contrato_hd.primer_mes contrato_hd.primer_ano contrato_hd.imp_total tipo_evento.DESCRIPCION /* Cliente.cdg_cliente Cliente.nom_cliente */   
+&Scoped-define ENABLED-FIELDS-IN-QUERY-BROWSE-2   
+&Scoped-define SELF-NAME BROWSE-2
+&Scoped-define OPEN-QUERY-BROWSE-2    ASSIGN cestado es_activo.    FIND cliente WHERE cliente.cdg_cliente = p-cdg_cliente.    IF es_activo    THEN DO:       OPEN QUERY {&SELF-NAME}           FOR EACH contrato_hd                 WHERE (cestado = "*" OR cestado = contrato_hd.estado ) AND                     contrato_hd.cdg_empresa = que_empresa                     AND contrato_hd.nro_cliente = cliente.nro_cliente                     AND Contrato_hd.fecha_baja = ?  AND Contrato_hd.rige_hasta > TODAY AND                     ( contrato_hd.cant_periodos  = contrato_hd.resto_periodos OR                     contrato_hd.cant_periodos > 0 )                     , ~
+       FIRST tipo_evento WHERE tipo_evento.nro_tipo_evento = Contrato_hd.nro_tipo_evento                     BY contrato_hd.cdg_empresa BY contrato_hd.nro_contrato BY contrato_hd.prf_contrato.           END.    ELSE DO:       OPEN QUERY {&SELF-NAME}           FOR EACH contrato_hd                 WHERE contrato_hd.cdg_empresa = que_empresa                    (cestado = "*" OR cestado = contrato_hd.estado ) AND                     AND contrato_hd.nro_cliente = cliente.nro_cliente                     , ~
+       FIRST tipo_evento WHERE tipo_evento.nro_tipo_evento = Contrato_hd.nro_tipo_evento                     BY contrato_hd.cdg_empresa BY contrato_hd.nro_contrato BY contrato_hd.prf_contrato.           END.  /*tipo_evento WHERE tipo_evento.nro_tipo_evento = Contrato_hd.nro_tipo_evento*/.
+&Scoped-define TABLES-IN-QUERY-BROWSE-2 contrato_hd tipo_evento
+&Scoped-define FIRST-TABLE-IN-QUERY-BROWSE-2 contrato_hd
+&Scoped-define SECOND-TABLE-IN-QUERY-BROWSE-2 tipo_evento
+
+
+/* Definitions for DIALOG-BOX D-Dialog                                  */
+&Scoped-define OPEN-BROWSERS-IN-QUERY-D-Dialog ~
+    ~{&OPEN-QUERY-BROWSE-2}
+
+/* Standard List Definitions                                            */
+&Scoped-Define ENABLED-OBJECTS cestado es_activo BROWSE-2 Btn_OK Btn_Cancel 
+&Scoped-Define DISPLAYED-OBJECTS cestado es_activo 
+
+/* Custom List Definitions                                              */
+/* List-1,List-2,List-3,List-4,List-5,List-6                            */
+
+/* _UIB-PREPROCESSOR-BLOCK-END */
+&ANALYZE-RESUME
+
+
+
+/* ***********************  Control Definitions  ********************** */
+
+/* Define a dialog box                                                  */
+
+/* Definitions of the field level widgets                               */
+DEFINE BUTTON Btn_Cancel AUTO-END-KEY 
+     LABEL "Cancelar" 
+     SIZE 15 BY 1.33
+     BGCOLOR 8 .
+
+DEFINE BUTTON Btn_OK AUTO-GO 
+     LABEL "Elegir" 
+     SIZE 15 BY 1.33
+     BGCOLOR 8 .
+
+DEFINE VARIABLE cestado AS CHARACTER FORMAT "X(256)":U INITIAL "A" 
+     LABEL "Estado" 
+     VIEW-AS COMBO-BOX INNER-LINES 5
+     LIST-ITEM-PAIRS "Aprobado","A",
+                     "Rechazado","R",
+                     "Pendiente","P",
+                     "Todos","*"
+     DROP-DOWN-LIST
+     SIZE 16 BY 1 NO-UNDO.
+
+DEFINE VARIABLE es_activo AS LOGICAL INITIAL yes 
+     VIEW-AS RADIO-SET HORIZONTAL
+     RADIO-BUTTONS 
+          "Si", yes,
+"No", no
+     SIZE 14 BY .81 NO-UNDO.
+
+/* Query definitions                                                    */
+&ANALYZE-SUSPEND
+DEFINE QUERY BROWSE-2 FOR 
+      contrato_hd, 
+      tipo_evento SCROLLING.
+&ANALYZE-RESUME
+
+/* Browse definitions                                                   */
+DEFINE BROWSE BROWSE-2
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _DISPLAY-FIELDS BROWSE-2 D-Dialog _FREEFORM
+  QUERY BROWSE-2 DISPLAY
+      contrato_hd.prf_contrato COLUMN-LABEL "Pre-!fijo" FORMAT "9999"
+      contrato_hd.nro_contrato COLUMN-LABEL "Número!Compbte" FORMAT "99999999"
+      (IF ( contrato_hd.fecha_baja <> ? AND contrato_hd.rige_hasta <= TODAY ) THEN "A" ELSE "" )COLUMN-LABEL "S!T"
+      contrato_hd.rige_desde   COLUMN-LABEL "Fecha!Desde"
+      contrato_hd.rige_hasta   COLUMN-LABEL "Fecha!Hasta"
+      contrato_hd.primer_mes   COLUMN-LABEL "Per!Mes" 
+      contrato_hd.primer_ano   COLUMN-LABEL "Per!Año"
+      contrato_hd.imp_total    COLUMN-LABEL "Importe!Total"
+      tipo_evento.DESCRIPCION
+  /*    Cliente.cdg_cliente      COLUMN-LABEL "Código!Cliente"
+      Cliente.nom_cliente      COLUMN-LABEL "Razón!Social" FORMAT "X(35)"
+    */
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+    WITH NO-ROW-MARKERS SIZE 102 BY 10.86.
+
+
+/* ************************  Frame Definitions  *********************** */
+
+DEFINE FRAME D-Dialog
+     cestado AT ROW 1 COL 40 COLON-ALIGNED WIDGET-ID 20
+     es_activo AT ROW 1.14 COL 13 NO-LABEL WIDGET-ID 6
+     BROWSE-2 AT ROW 2.19 COL 2 WIDGET-ID 200
+     Btn_OK AT ROW 13.38 COL 17 WIDGET-ID 4
+     Btn_Cancel AT ROW 13.38 COL 76 WIDGET-ID 2
+     "Activos" VIEW-AS TEXT
+          SIZE 9 BY .81 AT ROW 1.14 COL 3 WIDGET-ID 18
+     SPACE(93.39) SKIP(12.90)
+    WITH VIEW-AS DIALOG-BOX KEEP-TAB-ORDER 
+         SIDE-LABELS NO-UNDERLINE THREE-D  SCROLLABLE 
+         TITLE "Selector de Contratos" WIDGET-ID 100.
+
+
+/* *********************** Procedure Settings ************************ */
+
+&ANALYZE-SUSPEND _PROCEDURE-SETTINGS
+/* Settings for THIS-PROCEDURE
+   Type: SmartDialog
+   Allow: Basic,Browse,DB-Fields,Query,Smart
+ */
+&ANALYZE-RESUME _END-PROCEDURE-SETTINGS
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CUSTOM _INCLUDED-LIB D-Dialog 
+/* ************************* Included-Libraries *********************** */
+
+{src/adm/method/containr.i}
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+
+
+/* ***********  Runtime Attributes and AppBuilder Settings  *********** */
+
+&ANALYZE-SUSPEND _RUN-TIME-ATTRIBUTES
+/* SETTINGS FOR DIALOG-BOX D-Dialog
+   FRAME-NAME                                                           */
+/* BROWSE-TAB BROWSE-2 es_activo D-Dialog */
+ASSIGN 
+       FRAME D-Dialog:SCROLLABLE       = FALSE
+       FRAME D-Dialog:HIDDEN           = TRUE.
+
+/* _RUN-TIME-ATTRIBUTES-END */
+&ANALYZE-RESUME
+
+
+/* Setting information for Queries and Browse Widgets fields            */
+
+&ANALYZE-SUSPEND _QUERY-BLOCK BROWSE BROWSE-2
+/* Query rebuild information for BROWSE BROWSE-2
+     _START_FREEFORM
+   ASSIGN cestado es_activo.
+   FIND cliente WHERE cliente.cdg_cliente = p-cdg_cliente.
+   IF es_activo
+   THEN DO:
+      OPEN QUERY {&SELF-NAME}
+          FOR EACH contrato_hd
+                WHERE (cestado = "*" OR cestado = contrato_hd.estado ) AND
+                    contrato_hd.cdg_empresa = que_empresa
+                    AND contrato_hd.nro_cliente = cliente.nro_cliente
+                    AND Contrato_hd.fecha_baja = ?  AND Contrato_hd.rige_hasta > TODAY AND
+                    ( contrato_hd.cant_periodos  = contrato_hd.resto_periodos OR
+                    contrato_hd.cant_periodos > 0 )
+                    , FIRST tipo_evento WHERE tipo_evento.nro_tipo_evento = Contrato_hd.nro_tipo_evento
+                    BY contrato_hd.cdg_empresa BY contrato_hd.nro_contrato BY contrato_hd.prf_contrato.
+          END.
+   ELSE DO:
+      OPEN QUERY {&SELF-NAME}
+          FOR EACH contrato_hd
+                WHERE contrato_hd.cdg_empresa = que_empresa
+                   (cestado = "*" OR cestado = contrato_hd.estado ) AND
+                    AND contrato_hd.nro_cliente = cliente.nro_cliente
+                    , FIRST tipo_evento WHERE tipo_evento.nro_tipo_evento = Contrato_hd.nro_tipo_evento
+                    BY contrato_hd.cdg_empresa BY contrato_hd.nro_contrato BY contrato_hd.prf_contrato.
+          END.
+ /*tipo_evento WHERE tipo_evento.nro_tipo_evento = Contrato_hd.nro_tipo_evento*/
+     _END_FREEFORM
+     _Query            is OPENED
+*/  /* BROWSE BROWSE-2 */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _QUERY-BLOCK DIALOG-BOX D-Dialog
+/* Query rebuild information for DIALOG-BOX D-Dialog
+     _Options          = "SHARE-LOCK"
+     _Query            is NOT OPENED
+*/  /* DIALOG-BOX D-Dialog */
+&ANALYZE-RESUME
+
+ 
+
+
+
+/* ************************  Control Triggers  ************************ */
+
+&Scoped-define SELF-NAME D-Dialog
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL D-Dialog D-Dialog
+ON WINDOW-CLOSE OF FRAME D-Dialog /* Selector de Contratos */
+DO:  
+  /* Add Trigger to equate WINDOW-CLOSE to END-ERROR. */
+  APPLY "END-ERROR":U TO SELF.
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define BROWSE-NAME BROWSE-2
+&Scoped-define SELF-NAME BROWSE-2
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL BROWSE-2 D-Dialog
+ON MOUSE-SELECT-DBLCLICK OF BROWSE-2 IN FRAME D-Dialog
+OR RETURN OF BROWSE-2 IN FRAME {&FRAME-NAME}
+DO:
+   IF AVAILABLE contrato_hd
+   THEN DO:
+        APPLY "CHOOSE" TO Btn_OK IN FRAME {&FRAME-NAME}.
+   END.
+   ELSE DO:
+        BELL.
+   END.
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME Btn_Cancel
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL Btn_Cancel D-Dialog
+ON CHOOSE OF Btn_Cancel IN FRAME D-Dialog /* Cancelar */
+DO:
+  rid_contrato = ?.
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME Btn_OK
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL Btn_OK D-Dialog
+ON CHOOSE OF Btn_OK IN FRAME D-Dialog /* Elegir */
+DO:
+  rid_contrato = ROWID(contrato_hd).
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME es_activo
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL es_activo D-Dialog
+ON VALUE-CHANGED OF es_activo IN FRAME D-Dialog
+DO:
+  ASSIGN es_activo.
+  {&OPEN-QUERY-{&BROWSE-NAME}}
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&UNDEFINE SELF-NAME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CUSTOM _MAIN-BLOCK D-Dialog 
+
+
+/* ***************************  Main Block  *************************** */
+
+{src/adm/template/dialogmn.i}
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+/* **********************  Internal Procedures  *********************** */
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE adm-create-objects D-Dialog  _ADM-CREATE-OBJECTS
+PROCEDURE adm-create-objects :
+/*------------------------------------------------------------------------------
+  Purpose:     Create handles for all SmartObjects used in this procedure.
+               After SmartObjects are initialized, then SmartLinks are added.
+  Parameters:  <none>
+------------------------------------------------------------------------------*/
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE adm-row-available D-Dialog  _ADM-ROW-AVAILABLE
+PROCEDURE adm-row-available :
+/*------------------------------------------------------------------------------
+  Purpose:     Dispatched to this procedure when the Record-
+               Source has a new row available.  This procedure
+               tries to get the new row (or foriegn keys) from
+               the Record-Source and process it.
+  Parameters:  <none>
+------------------------------------------------------------------------------*/
+
+  /* Define variables needed by this internal procedure.             */
+  {src/adm/template/row-head.i}
+
+  /* Process the newly available records (i.e. display fields,
+     open queries, and/or pass records on to any RECORD-TARGETS).    */
+  {src/adm/template/row-end.i}
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE disable_UI D-Dialog  _DEFAULT-DISABLE
+PROCEDURE disable_UI :
+/*------------------------------------------------------------------------------
+  Purpose:     DISABLE the User Interface
+  Parameters:  <none>
+  Notes:       Here we clean-up the user-interface by deleting
+               dynamic widgets we have created and/or hide 
+               frames.  This procedure is usually called when
+               we are ready to "clean-up" after running.
+------------------------------------------------------------------------------*/
+  /* Hide all frames. */
+  HIDE FRAME D-Dialog.
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE enable_UI D-Dialog  _DEFAULT-ENABLE
+PROCEDURE enable_UI :
+/*------------------------------------------------------------------------------
+  Purpose:     ENABLE the User Interface
+  Parameters:  <none>
+  Notes:       Here we display/view/enable the widgets in the
+               user-interface.  In addition, OPEN all queries
+               associated with each FRAME and BROWSE.
+               These statements here are based on the "Other 
+               Settings" section of the widget Property Sheets.
+------------------------------------------------------------------------------*/
+  DISPLAY cestado es_activo 
+      WITH FRAME D-Dialog.
+  ENABLE cestado es_activo BROWSE-2 Btn_OK Btn_Cancel 
+      WITH FRAME D-Dialog.
+  VIEW FRAME D-Dialog.
+  {&OPEN-BROWSERS-IN-QUERY-D-Dialog}
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE local-initialize D-Dialog 
+PROCEDURE local-initialize :
+/*------------------------------------------------------------------------------
+  Purpose:     Override standard ADM method
+  Notes:       
+------------------------------------------------------------------------------*/
+
+  /* Code placed here will execute PRIOR to standard behavior. */
+
+   {findempresa.i}
+   que_empresa = Empresa.cdg_empresa.
+
+   {&OPEN-QUERY-{&BROWSE-NAME}}
+   
+  /* Dispatch standard ADM method.                             */
+  RUN dispatch IN THIS-PROCEDURE ( INPUT 'initialize':U ) .
+
+  /* Code placed here will execute AFTER standard behavior.    */
+
+  FRAME {&FRAME-NAME}:TITLE = titulo_w.
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE send-records D-Dialog  _ADM-SEND-RECORDS
+PROCEDURE send-records :
+/*------------------------------------------------------------------------------
+  Purpose:     Send record ROWID's for all tables used by
+               this file.
+  Parameters:  see template/snd-head.i
+------------------------------------------------------------------------------*/
+
+  /* Define variables needed by this internal procedure.               */
+  {src/adm/template/snd-head.i}
+
+  /* For each requested table, put it's ROWID in the output list.      */
+  {src/adm/template/snd-list.i "contrato_hd"}
+  {src/adm/template/snd-list.i "tipo_evento"}
+
+  /* Deal with any unexpected table requests before closing.           */
+  {src/adm/template/snd-end.i}
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE state-changed D-Dialog 
+PROCEDURE state-changed :
+/* -----------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+-------------------------------------------------------------*/
+  DEFINE INPUT PARAMETER p-issuer-hdl AS HANDLE NO-UNDO.
+  DEFINE INPUT PARAMETER p-state AS CHARACTER NO-UNDO.
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+

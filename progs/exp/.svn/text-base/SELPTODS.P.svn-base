@@ -1,0 +1,9 @@
+&GLOBAL-DEFINE TABLA           Puerto_destino
+&GLOBAL-DEFINE CODIGO          cdg_puerto_dest
+&GLOBAL-DEFINE NOMBRE          nombre_puerto_dest
+&GLOBAL-DEFINE TITULO-BROWSE   Seleccione el Puerto de destino o ingrese nombre
+&GLOBAL-DEFINE TITULO-FRAME    Seleccion de Puertos de destino
+&GLOBAL-DEFINE PROCESO         ACBRWPDS
+&GLOBAL-DEFINE ULT_REGISTRO    ult_puerto_dst
+
+{SELBROWS.I}

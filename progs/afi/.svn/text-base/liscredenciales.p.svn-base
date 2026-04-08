@@ -1,0 +1,13 @@
+for each pedido_credencial:
+  find afiliado of pedido_credencial no-error.
+  if available afiliado 
+  then do:
+       find grupofam of afiliado no-error.
+       if grupofam.num_sucursal = "T"
+       then do:
+            display pedido_credencial except observacion nro_afiliado Pedido_credencial.fecha_cump Pedido_credencial.hms_cump Pedido_credencial.Usuario-alta Pedido_credencial.Usuario-cumpl.
+            display cdg_afiliado nom_afiliado.
+            display cdg_cobrador with width 130 stream-io.
+       end.
+  end.
+end.

@@ -1,0 +1,1 @@
+   v-cdg_{1}:SENSITIVE IN FRAME {&FRAME-NAME} = YES.

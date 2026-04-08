@@ -1,0 +1,25 @@
+/*=============================================================================================*/
+/*                CONECTA LAS BASES AUXILIARES DE PADRONES PROPIOS Y EXTERNOS                  */
+/*=============================================================================================*/
+
+IF SEARCH("./procs/svafiliados.pf") <> ?
+THEN DO:   
+    connect -pf ./procs/svafiliados.pf NO-ERROR.
+    IF NOT CONNECTED('padron')
+    THEN DO:
+          MESSAGE "No pudo conectarse la base de datos Auxiliar. No estará disponible"
+                  "la funcion de Afiliados Externos."
+                  VIEW-AS ALERT-BOX WARNING TITLE "Base Auxiliar NO Conectada".
+    END.                 
+END.
+
+IF SEARCH("./procs/svcobranzas.pf") <> ?
+THEN DO:   
+    connect -pf ./procs/svcobranzas.pf NO-ERROR.
+    IF NOT CONNECTED('cobranzas')
+    THEN DO:
+          MESSAGE "No pudo conectarse la base de datos de COBRANZAS. No estará disponible"
+                  "la funcion de CONSULTA DE PADRONES PROPIOS."
+                  VIEW-AS ALERT-BOX WARNING TITLE "Base Auxiliar NO Conectada".
+    END.                 
+END.

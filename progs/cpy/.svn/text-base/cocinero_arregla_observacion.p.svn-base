@@ -1,0 +1,16 @@
+{advtexto.i}
+/*FOR EACH tarea ON ERROR undo,NEXT:
+    RUN loadadvTTTexto(tarea.descripcion,OUTPUT TABLE tttexto).
+    tarea.descripcion = saveadvtexto("",TABLE tttexto).
+END.*/
+DEF VAR rr AS CHAR  VIEW-AS EDITOR SIZE 70 BY  20.
+FOR EACH evento WHERE evento.observacion BEGINS "No se c":
+rr = evento.observacion.
+UPDATE rr.
+evento.observacion = rr.
+/*
+    RUN loadadvTTTexto(tarea.descripcion,OUTPUT TABLE tttexto).
+    tarea.descripcion = saveadvtexto("",TABLE tttexto).
+  */
+    
+END.

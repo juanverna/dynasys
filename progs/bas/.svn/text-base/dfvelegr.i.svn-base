@@ -1,0 +1,4 @@
+
+DEFINE BUTTON BTN_ELEGIR
+     LABEL "&Elegir":L 
+     SIZE 15 BY 0.9 FONT 4.

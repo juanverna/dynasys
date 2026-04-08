@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<com.openedge.pdt.t4bl.model:Diagram xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:com.openedge.pdt.t4bl.model="http://com.openedge.pdt.t4bl" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmi:id="_xy-r3d5pEeSK3d5PLkT48g" componentType="Dataset" primaryComponent="_xy-r3t5pEeSK3d5PLkT48g">
+  <contents xsi:type="com.openedge.pdt.t4bl.model:NamedElement" xmi:id="_xy-r3t5pEeSK3d5PLkT48g" dimension="150,100" location="426,98">
+    <outgoingConnections xsi:type="com.openedge.pdt.t4bl.model:ReferenceLink" xmi:id="_2B5jgt5pEeSK3d5PLkT48g" target="_2B5jfN5pEeSK3d5PLkT48g">
+      <eReference href="../../appModel.t4bl#_2B5jfd5pEeSK3d5PLkT48g"/>
+    </outgoingConnections>
+    <outgoingConnections xsi:type="com.openedge.pdt.t4bl.model:ReferenceLink" xmi:id="_2PmBNt5pEeSK3d5PLkT48g" target="_2PmBMN5pEeSK3d5PLkT48g">
+      <eReference href="../../appModel.t4bl#_2PmBMd5pEeSK3d5PLkT48g"/>
+    </outgoingConnections>
+    <eNamedElement xsi:type="ecore:EClass" href="../../appModel.t4bl#_xy-rwd5pEeSK3d5PLkT48g"/>
+  </contents>
+  <contents xsi:type="com.openedge.pdt.t4bl.model:NamedElement" xmi:id="_2B5jfN5pEeSK3d5PLkT48g" dimension="150,-1" location="426,343" incomingConnections="_2B5jgt5pEeSK3d5PLkT48g _BqhzTN5qEeSK3d5PLkT48g">
+    <eNamedElement xsi:type="ecore:EClass" href="../../appModel.t4bl#_2B5jQN5pEeSK3d5PLkT48g"/>
+  </contents>
+  <contents xsi:type="com.openedge.pdt.t4bl.model:NamedElement" xmi:id="_2PmBMN5pEeSK3d5PLkT48g" dimension="150,-1" location="174,98" incomingConnections="_2PmBNt5pEeSK3d5PLkT48g">
+    <outgoingConnections xsi:type="com.openedge.pdt.t4bl.model:ReferenceLink" xmi:id="_BqhzTN5qEeSK3d5PLkT48g" target="_2B5jfN5pEeSK3d5PLkT48g" oppositeShown="true">
+      <eReference href="../../appModel.t4bl#_BqhzQ95qEeSK3d5PLkT48g"/>
+    </outgoingConnections>
+    <eNamedElement xsi:type="ecore:EClass" href="../../appModel.t4bl#_2PmBAN5pEeSK3d5PLkT48g"/>
+  </contents>
+  <imports href="../../appModel.t4bl#_2f5N0d4cEeS4P9sA3y4xbg"/>
+</com.openedge.pdt.t4bl.model:Diagram>

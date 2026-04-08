@@ -1,0 +1,133 @@
+/*===================================================================================*/
+/*  Emite el listado de tiempos de respuesta agrupados por algun campo codificado    */
+/*===================================================================================*/
+
+DEFINE VARIABLE tr          AS INTEGER.
+DEFINE VARIABLE acum_tr     AS INTEGER.
+DEFINE VARIABLE ctr         AS CHARACTER LABEL "T.Resp.".
+DEFINE VARIABLE ch_promedio AS CHARACTER.
+DEFINE VARIABLE que_{&TABLA} LIKE {&TABLA}.cdg_{&TABLA} LABEL "{&TABLA}".
+DEFINE VARIABLE chr_{&TABLA} LIKE {&TABLA}.nom_{&TABLA}.
+DEFINE VARIABLE des_fecha AS DATE LABEL "De Fecha".
+DEFINE VARIABLE has_fecha AS DATE LABEL "A Fecha".
+DEFINE VARIABLE lista_empresas AS CHARACTER LABEL "Empresas".
+DEFINE VARIABLE tarifa       AS CHARACTER EXTENT 8 
+       INITIAL ["Rojo","Amarillo","Verde","Azul","Negro","Naranja","Lila","Marrón"].
+
+DEFINE VARIABLE fecha_lis    AS CHARACTER.
+DEFINE VARIABLE hora_lis     AS CHARACTER.
+DEFINE VARIABLE arch_salida  AS CHARACTER.
+DEFINE VARIABLE v-color      AS CHARACTER FORMAT "X(4)" COLUMN-LABEL "Tipo".
+DEFINE VARIABLE tot_fichas   AS INTEGER.
+
+DEFINE VARIABLE p_printed    AS LOGICAL.
+
+DEFINE FRAME frm-titulo HEADER
+  que_empresa 
+  "{&TITULO-LST}" AT 22 
+  "Pagina:" AT 70 PAGE-NUMBER FORMAT ">9" AT 77
+  SKIP
+  des_fecha AT 22
+  "al"
+  has_fecha
+  fecha_lis AT 70
+  SKIP
+  chr_{&TABLA} AT 22
+  hora_lis AT 70
+  SKIP(1)
+  WITH WIDTH 80 FRAME frm-titulo TOP-ONLY PAGE-TOP STREAM-IO.
+
+FORM
+  Ficha.fch_alta 
+  v-color
+  Ficha.hms_alta 
+  Ficha.num_ficha 
+  Ficha.cdg_motivo 
+  ctr 
+  Ficha.cdg_movil 
+  Ficha.solicita
+  Ficha.cdg_empresa
+  WITH WIDTH 80 DOWN CENTERED FRAME frm-listado USE-TEXT STREAM-IO.
+
+
+UPDATE des_fecha has_fecha que_{&TABLA} lista_empresas
+       WITH FRAME aa SIDE-LABELS THREE-D VIEW-AS DIALOG-BOX WIDTH 90
+            TITLE "Ingrese parametros del listado: {&TITULO-LST}".
+
+fecha_lis = STRING(TODAY).
+hora_lis = STRING(TIME,"HH:MM:SS").
+FIND {&TABLA} WHERE {&TABLA}.cdg_{&TABLA} = que_{&TABLA} NO-LOCK.
+ASSIGN chr_{&TABLA} = {&TABLA}.nom_{&TABLA}.
+
+{drsalida.i "65"} /* Direcciona la salida de impresión */
+
+tot_fichas = 0 .
+
+FOR EACH Ficha 
+    WHERE Ficha.fch_alta <= has_fecha 
+      AND Ficha.fch_alta >= des_fecha
+      AND Ficha.cdg_{&TABLA} = que_{&TABLA}
+      AND LOOKUP(Ficha.cdg_empresa,lista_empresas) <> 0 NO-LOCK 
+      BREAK BY Ficha.fch_alta 
+            BY Ficha.cdg_tipoemr
+            BY Ficha.num_ficha WITH FRAME f-datos:
+
+    VIEW FRAME frm-titulo.
+
+    tot_fichas = tot_fichas + 1.
+    tr = IF hor_arrdom - hor_alta > 0 THEN hor_arrdom - hor_alta
+                                      ELSE hor_arrdom + 86400 - hor_alta.
+    ctr = STRING(tr,"HH:MM:SS").
+    v-color = IF INTEGER(Ficha.cdg_tipoemr) <> 0 
+                 THEN tarifa [ INTEGER(Ficha.cdg_tipoemr) ] 
+                 ELSE "?".
+
+    DISPLAY Ficha.fch_alta   WHEN FIRST-OF(Ficha.fch_alta)
+            Ficha.hms_alta 
+            Ficha.num_ficha 
+            v-color WHEN FIRST-OF(Ficha.cdg_tipoemr)
+            Ficha.cdg_motivo 
+            ctr 
+            Ficha.cdg_movil 
+            Ficha.solicita
+            Ficha.cdg_empresa
+            WITH FRAME frm-listado.
+
+    DOWN WITH FRAME frm-listado.
+
+END.            
+
+UNDERLINE Ficha.fch_alta
+          Ficha.hms_alta 
+          Ficha.num_ficha 
+          v-color
+          Ficha.cdg_motivo 
+          ctr 
+          Ficha.cdg_movil 
+          Ficha.solicita
+          Ficha.cdg_empresa
+          WITH FRAME frm-listado.
+
+DISPLAY   tot_fichas @ Ficha.num_ficha
+          ch_promedio @ ctr
+          WITH FRAME frm-listado.
+
+UNDERLINE Ficha.fch_alta
+          Ficha.hms_alta 
+          Ficha.num_ficha 
+          v-color
+          Ficha.cdg_motivo 
+          ctr 
+          Ficha.cdg_movil 
+          Ficha.solicita
+          Ficha.cdg_empresa
+          WITH FRAME frm-listado.
+
+
+OUTPUT CLOSE.
+
+   /* Visualiza en pantalla el archivo de salida */
+
+RUN veresult.w ( INPUT  arch_salida ,  /* Archivo */
+                 INPUT 8 ).            /* FONT a utilizar por default */               
+            

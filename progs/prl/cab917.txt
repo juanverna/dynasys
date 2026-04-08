@@ -1,0 +1,48 @@
+DMA,24/10/2000  
+NOM,ABEL GRANDE                         
+NCLI,[R236326G]
+NCOB,021
+CUIT,33-63837821-9
+DIR,Viamonte 768                        
+LOC,(5000) Cordoba -                    
+CNV,R 30 Días Neto                      
+CIV,Responsable Inscripto
+D01,Por los servicios de vigilancia y limpieza
+I01,            
+D02,prestados en el mes en curso en vuestras      
+I02,            
+D03,sucursales de las localidades de Merlo,       
+I03,            
+D04,Moron, Liniers, Capital Federal, Lomas de     
+I04,            
+D05,Zamora, Banfield, Burzaco y otras. En un todo 
+I05,            
+D06,de acuerdo al contrato de referencia          
+I06,            
+D07,REF7779087/2000.                              
+I07,      31.00 
+D08,                  
+I08,              
+D09,                  
+I09,              
+D10,                  
+I10,              
+D11,                  
+I11,              
+D12,                  
+I12,              
+D13,                  
+I13,              
+D14,                  
+I14,              
+ILE1,  TREINTA Y SIETE CON 51 CENTAVOS.-
+ILE2,                                   
+LEY1,Las acciones privadas de los hombres que en modo alguno        
+LEY2,afecten la moral o el orden publicos ni perjudiquen a un
+LEY3,tercero estan solo reservadas a su conciencia
+BRUT,       31.00
+INOI,        0.00
+IIVA,        0.00
+ITOT,       37.51 
+CTL,0001 00001234
+!PAGE!

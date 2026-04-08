@@ -1,0 +1,9 @@
+&GLOBAL-DEFINE TABLA           Documento
+&GLOBAL-DEFINE CODIGO          cdg_documento
+&GLOBAL-DEFINE NOMBRE          descripcion
+&GLOBAL-DEFINE TITULO-BROWSE   Seleccione el Documento o ingrese nombre
+&GLOBAL-DEFINE TITULO-FRAME    Seleccion de Documentos
+&GLOBAL-DEFINE PROCESO         ACBRWDCM
+&GLOBAL-DEFINE ULT_REGISTRO    ult_documento
+
+{SELBROWS.I}

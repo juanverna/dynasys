@@ -1,0 +1,12 @@
+*.r
+procore*.*
+*.i~
+*.p~
+*.w~
+*.log
+Copia*.*
+Thumbs.db
+debugger.pref
+null
+*.bak
+

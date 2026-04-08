@@ -1,0 +1,240 @@
+/*=========================================================================================*/
+/*                                   IMPRESION DE CUPONES                                  */
+/*=========================================================================================*/
+
+DEFINE INPUT PARAMETER p-que_empresa      AS CHARACTER.
+DEFINE INPUT PARAMETER p-des_cobrador     LIKE Cobrador.cdg_cobrador.
+DEFINE INPUT PARAMETER p-has_cobrador     LIKE Cobrador.cdg_cobrador.
+DEFINE INPUT PARAMETER p-des_fecha        AS DATE.
+DEFINE INPUT PARAMETER p-has_fecha        AS DATE.
+DEFINE INPUT PARAMETER p-des_cupon        AS INTEGER.
+DEFINE INPUT PARAMETER p-has_cupon        AS INTEGER.
+DEFINE INPUT PARAMETER p-id_lote          AS CHARACTER.
+
+{dfvarcupones.i}
+
+DEFINE VARIABLE j          AS INTEGER.
+DEFINE VARIABLE k          AS INTEGER.
+DEFINE VARIABLE n-hoja     AS INTEGER.
+
+DEFINE VARIABLE alto_cupon AS DECIMAL INITIAL 49.0.
+DEFINE VARIABLE TextColor      AS CHARACTER INITIAL "BLACK".
+DEFINE VARIABLE formato    AS CHARACTER.
+DEFINE VARIABLE salida     AS CHARACTER.
+
+DEFINE STREAM Cupones.
+
+/*=========================================================================================*/
+/*                           B L O Q U E   P R I N C I P A L                               */
+/*=========================================================================================*/
+
+salida = "c:\sic-temp\cupones.xpr".
+
+OUTPUT STREAM Cupones TO VALUE(salida) CONVERT TARGET "iso8859-1".
+
+n-hoja = 0.
+
+RUN inicia_hoja.
+
+alto_cupon = 49.4.
+
+FOR EACH Cobrador NO-LOCK 
+    WHERE Cobrador.cdg_cobrador >= p-des_cobrador
+      AND Cobrador.cdg_cobrador <= p-has_cobrador:
+
+    j = 0.
+
+    FOR EACH Cupon OF Cobrador 
+       WHERE Cupon.cdg_empresa     = p-que_empresa
+         AND Cupon.fecha_emision  >= p-des_fecha
+         AND Cupon.fecha_emision  <= p-has_fecha
+         AND Cupon.nro_cupon      >= p-des_cupon
+         AND Cupon.nro_cupon      <= p-has_cupon,
+             FIRST Cliente OF Cupon NO-LOCK BY Cupon.cdg_zona BY Cliente.cdg_cliente:
+
+            IF j = 2
+            THEN DO:
+                RUN salto_hoja.
+                OUTPUT STREAM Cupones TO VALUE(salida) CONVERT TARGET "iso8859-1".
+                RUN inicia_hoja.
+                j = 0.
+            END.
+    
+            ASSIGN
+                xrec   = Cupon.tip_cupon + STRING(Cupon.prf_cupon,"9999") + STRING(Cupon.nro_cupon,"99999999")
+                xrecb  = "*" + xrec + "*"                                                          
+                cnume  = Cliente.cdg_cliente                                                       
+                czona  = ""                                                                        
+                ccobr  = Cobrador.cdg_cobrador                                                     
+                cplan  = ""                                                                        
+                cnomb  = Cliente.nom_cliente                                                       
+                cdomi  = Cliente.direccion                                                         
+                cloca  = Cliente.localidad                                                         
+                qper   = STRING(Cupon.mes_imputa,"99") + "/" + STRING(Cupon.ano_imputa,"9999")     
+                ctele  = Cliente.telefono                                                          
+                zimpo  = STRING(Cupon.importe_cuota,"****9.99")                                    
+                hoy    = STRING(Cupon.fecha_emision,"99/99/9999").
+                      
+            cloca = REPLACE(cloca, "á" , CHR(225)).
+            cloca = REPLACE(cloca, "é" , CHR(233)).
+            cloca = REPLACE(cloca, "í" , CHR(237)).
+            cloca = REPLACE(cloca, "ó" , CHR(243)).
+            cloca = REPLACE(cloca, "ú" , CHR(250)).
+            cloca = REPLACE(cloca, "ñ" , CHR(241)).
+            cloca = REPLACE(cloca, "Ñ" , CHR(209)).
+
+            cnomb = REPLACE(cnomb, "á" , CHR(225)).
+            cnomb = REPLACE(cnomb, "é" , CHR(233)).
+            cnomb = REPLACE(cnomb, "í" , CHR(237)).
+            cnomb = REPLACE(cnomb, "ó" , CHR(243)).
+            cnomb = REPLACE(cnomb, "ú" , CHR(250)).
+            cnomb = REPLACE(cnomb, "ñ" , CHR(241)).
+            cnomb = REPLACE(cnomb, "Ñ" , CHR(209)).
+
+            formato = "original".
+            PUT STREAM Cupones UNFORMATTED "<AT=" STRING(j * alto_cupon , ">>>9") ",12><#1>".
+            RUN generar_impresion.
+            formato = "duplicado".
+            PUT STREAM Cupones UNFORMATTED "<AT=" STRING(j * alto_cupon , ">>>9") ",117><#1>".
+            RUN generar_impresion.
+            j = j + 1.
+
+    END. /* De los cupones de un cobrador */
+    
+    RUN salto_hoja.
+
+END. /* Del rango de cobradores */
+
+OUTPUT STREAM Cupones CLOSE.
+
+/*=========================================================================================*/
+/*                           P R O C E D I M I E N T O S                                   */
+/*=========================================================================================*/
+
+PROCEDURE generar_impresion:
+
+    RUN escribir ( INPUT "9,47",  INPUT "X", INPUT 10, INPUT no).
+    RUN escribir ( INPUT "9,0" , INPUT "Rec:" + xrec , INPUT 10, INPUT yes).
+    RUN escribir ( INPUT "9,53" , INPUT "Importe:", INPUT 8, INPUT no).
+    RUN escribir ( INPUT "9,64" , INPUT zimpo, INPUT 10, INPUT yes).
+
+    RUN escribir ( INPUT "13,0" , INPUT "Cliente:<B>" + cnume + "</B>", INPUT 8, INPUT NO).
+  
+    RUN escribir ( INPUT "13,30" , INPUT "Zona:" + czona , INPUT 8, INPUT no).
+    RUN escribir ( INPUT "13,50" , INPUT "Cob:" + ccobr, INPUT 8, INPUT no).
+    RUN escribir ( INPUT "13,65" , INPUT "Plan:" + cplan , INPUT 8, INPUT no).
+
+    RUN escribir ( INPUT "16,0" , INPUT "Titular:" + cnomb, INPUT 8, INPUT no).
+
+    RUN escribir ( INPUT "19,0" , INPUT "Domicilio:" + cdomi, INPUT 8, INPUT no).
+    RUN escribir ( INPUT "19,50" , INPUT "Loc:" + cloca, INPUT 8, INPUT no).
+    IF formato = "duplicado"
+    THEN DO:
+         RUN escribir ( INPUT "22,0" , INPUT "Tel:" + ctele, INPUT 8, INPUT no).
+         RUN escribir ( INPUT "22,50" , INPUT "Mes Alta:" + cmes, INPUT 8, INPUT no).
+
+    END.
+    RUN escribir ( INPUT "25,0" , INPUT "Período:" + qper, INPUT 8, INPUT no).
+    RUN escribir ( INPUT "25,43" , INPUT "Fecha Emisión:" + hoy , INPUT 8, INPUT no).
+    
+    RUN escribarra ( INPUT "32,18" , INPUT xrec , INPUT 8, INPUT no).
+
+END PROCEDURE.
+
+PROCEDURE salto_hoja:
+
+    OUTPUT STREAM Cupones CLOSE.
+    FILE-INFO:File-NAME = salida.
+    RUN printFile( FILE-INFO:FULL-PATHNAME).
+
+END PROCEDURE.
+
+PROCEDURE escribir:
+
+    DEFINE INPUT PARAMETER posicion AS CHARACTER.
+    DEFINE INPUT PARAMETER texto    AS CHARACTER.
+    DEFINE INPUT PARAMETER puntos   AS CHARACTER.
+    DEFINE INPUT PARAMETER negrita  AS LOGICAL.
+    
+    DEFINE VARIABLE linea           AS CHARACTER.
+
+    DEFINE VARIABLE i-linea         AS INTEGER.
+    DEFINE VARIABLE i-columna       AS INTEGER.
+
+    i-linea   = INTEGER(ENTRY(1,posicion,",")).
+    i-columna = INTEGER(ENTRY(2,posicion,",")).
+
+    linea = '<FGCOLOR=' + textColor + '><=#1><AT=+' + TRIM(STRING(i-linea,">>9")) + ',+' + TRIM(STRING(i-columna,">>9")) + '><FArial><P' + puntos + '>'.
+
+    IF negrita THEN linea = linea + '<B>'.
+    linea = linea + texto.
+    IF negrita THEN linea = linea + '</B>'.
+
+    PUT STREAM Cupones UNFORMATTED linea.
+
+END PROCEDURE.
+
+PROCEDURE escribenumero:
+
+    DEFINE INPUT PARAMETER posicion AS CHARACTER.
+    DEFINE INPUT PARAMETER texto    AS CHARACTER.
+    DEFINE INPUT PARAMETER puntos   AS CHARACTER.
+    DEFINE INPUT PARAMETER negrita  AS LOGICAL.
+    
+    DEFINE VARIABLE linea           AS CHARACTER.
+
+    DEFINE VARIABLE i-linea         AS INTEGER.
+    DEFINE VARIABLE i-columna       AS INTEGER.
+
+    i-linea   = INTEGER(ENTRY(1,posicion,",")).
+    i-columna = INTEGER(ENTRY(2,posicion,",")).
+
+    linea = '<FGCOLOR=' + textColor + '>>=#1><AT=' + TRIM(STRING(i-linea,">>9")) + ',+' + TRIM(STRING(i-columna,">>9")) + '><Flineprinter><P' + puntos + '>'.
+
+    IF negrita THEN linea = linea + '<B>'.
+    linea = linea + texto.
+    IF negrita THEN linea = linea + '</B>'.
+
+    PUT UNFORMATTED linea.
+
+END PROCEDURE.
+
+PROCEDURE escribarra:
+
+    DEFINE INPUT PARAMETER posicion AS CHARACTER.
+    DEFINE INPUT PARAMETER texto    AS CHARACTER.
+    DEFINE INPUT PARAMETER puntos   AS CHARACTER.
+    DEFINE INPUT PARAMETER negrita  AS LOGICAL.
+    
+    DEFINE VARIABLE linea           AS CHARACTER.
+
+    DEFINE VARIABLE i-linea         AS INTEGER.
+    DEFINE VARIABLE i-columna       AS INTEGER.
+
+    i-linea   = INTEGER(ENTRY(1,posicion,",")).
+    i-columna = INTEGER(ENTRY(2,posicion,",")).
+
+    PUT STREAM Cupones UNFORMATTED "<=#1><AT=+" TRIM(STRING(i-linea,">>9")) ",+" TRIM(STRING(i-columna,'>>9')) "><#2>".
+    PUT STREAM Cupones UNFORMATTED "<=#2><AT=+7,+55><#3>".
+    PUT STREAM Cupones UNFORMATTED "<=#2><FROM><BARCODE#3,TYPE=128A,CHECKSUM=TRUE,VALUE=" texto ">".
+
+END PROCEDURE.
+
+PROCEDURE inicia_hoja:
+
+    PUT STREAM Cupones CONTROL '<PREVIEW=70>' /*=ZoomToWidth>'*/. 
+/*  PUT STREAM Cupones CONTROL '<TOOLBAR=!PRINT>'.*/
+        
+    n-hoja = n-hoja + 1.
+    PUT STREAM Cupones CONTROL "<OLANDSCAPE><Title=Impresion de cupones. Hoja:" + STRING(n-hoja,">>>9") + "><UNITS=mm><|2>".
+    PUT STREAM Cupones CONTROL "<FORMAT=A4>".
+
+END PROCEDURE.
+
+PROCEDURE printFile EXTERNAL "xPrint.dll" :
+
+    DEFINE INPUT PARAMETER a AS CHARACTER.
+
+END PROCEDURE.
+
+

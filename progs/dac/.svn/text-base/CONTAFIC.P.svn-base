@@ -1,0 +1,5 @@
+DEFINE VARIABLE cn AS INTEGER.
+FOR EACH Ficha:
+    CN = CN + 1.
+END.
+DISPLAY CN.    

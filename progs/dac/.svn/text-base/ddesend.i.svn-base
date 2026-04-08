@@ -1,0 +1,8 @@
+    iColumna = iColumna + 1.
+    IF iColumna <= 26 
+       THEN cRange = CHR(ASC("A") + iColumna - 1) + STRING(iFila).
+       ELSE cRange = CHR(ASC("A") + INTEGER(TRUNC((iColumna - 1) / 26,0)) - 1 ) +
+                     CHR(ASC("A") + (iColumna - 1) MOD 26 ) + STRING(iFila).
+    chWorkSheet:Range(cRange):Value = {1}.
+
+

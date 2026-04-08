@@ -1,0 +1,4 @@
+RUN p.p NO-ERROR.
+        IF ERROR-STATUS:ERROR THEN DO:
+            DISPLAY RETURN-VALUE.
+        END. 

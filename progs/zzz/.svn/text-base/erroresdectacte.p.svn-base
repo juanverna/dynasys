@@ -1,0 +1,13 @@
+    DEFINE BUFFER bcta FOR cta_cte.
+    DEFINE BUFFER bfac FOR fac_header.
+    FOR EACH cta_cte WHERE  cta_cte.tip_comprob BEGINS "RA" AND cta_cte.fecha_emision = ? OR cta_cte.fecha_vencimiento = ?:
+        FIND bcta WHERE bcta.tip_comprob = "FA" AND bcta.nro_comprob = cta_cte.nro_comprob AND bcta.prf_comprob = cta_cte.prf_comprob NO-ERROR.
+        IF NOT AVAILABLE bcta THEN NEXT.
+        FIND bfac WHERE bfac.tip_comprob = bcta.tip_comprob AND bcta.nro_comprob = bfac.nro_comprob AND bcta.prf_comprob = bfac.prf_comprob NO-ERROR.
+       IF NOT AVAILABLE bfac THEN NEXT.
+    DISPLAY cta_cte.tip_comprob cta_cte.nro_comprob
+        bfac.nro_comprob bfac.fecha .
+    cta_cte.fecha_emision = bcta.fecha_emision.
+    cta_cte.fecha_vencimiento = bcta.fecha_vencimiento + 1.
+PAUSE 0.
+        END. ejecutar al reporte movimiento de cuenta corriente

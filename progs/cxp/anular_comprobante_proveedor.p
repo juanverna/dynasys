@@ -1,0 +1,121 @@
+/*===========================================================================================*/
+/*                        PRODUCE LA ANULACION DE UNA ORDEN DE PAGO                          */
+/*===========================================================================================*/
+
+DEFINE INPUT  PARAMETER rid_factura   AS ROWID.
+DEFINE OUTPUT PARAMETER puede_anular  AS INTEGER.
+
+/*===========================================================================================*/
+/*                                      VARIABLES                                            */
+/*===========================================================================================*/
+
+DEFINE VARIABLE codigo_error AS INTEGER NO-UNDO.
+DEFINE VARIABLE anular_caja  AS INTEGER NO-UNDO.
+
+{vrshared.i}
+
+/*===========================================================================================*/
+/*                                  BLOQUE PRINCIPAL                                         */
+/*===========================================================================================*/
+
+Anulacion:
+DO TRANSACTION:
+
+     FIND Fac_header_prv WHERE ROWID(Fac_header_prv) = rid_factura EXCLUSIVE-LOCK.
+
+     IF Fac_header_prv.cta_cte 
+     THEN DO:
+        FOR EACH Cta_cte_prv 
+             WHERE Cta_cte_prv.nro_proveedor = Fac_header_prv.nro_proveedor 
+               AND Cta_cte_prv.cdg_empresa   = Fac_header_prv.cdg_empresa
+               AND Cta_cte_prv.tip_comprob   = Fac_header_prv.tip_comprob
+               AND Cta_cte_prv.prf_comprob   = Fac_header_prv.prf_comprob
+               AND Cta_cte_prv.nro_comprob   = Fac_header_prv.nro_comprob 
+                   EXCLUSIVE-LOCK:
+             IF Cta_cte_prv.debito <> 0 AND Cta_cte_prv.credito <> 0
+             THEN DO:
+                codigo_error = 1.
+                RUN PONMENSJ.P (INPUT "FAPR016").
+                UNDO Anulacion, LEAVE Anulacion.
+             END.   
+             ELSE DELETE Cta_cte_prv.          
+        END.
+     END.   
+     ELSE DO:
+        FIND Caj_header 
+             WHERE Caj_header.cdg_empresa = Fac_header_prv.cdg_empresa
+               AND Caj_header.tip_comprob = Fac_header_prv.tip_comprob
+               AND Caj_header.prf_comprob = Fac_header_prv.prf_comprob
+               AND Caj_header.nro_comprob = Fac_header_prv.nro_comprob
+                   EXCLUSIVE-LOCK NO-ERROR.
+        IF AVAILABLE Caj_header THEN DO:
+            act_caj_head = ROWID(Caj_header).     
+            RUN ANULCAJA.P ( OUTPUT anular_caja ).
+            IF anular_caja <> 0 
+            THEN DO:
+               codigo_error = 2.
+               RUN PONMENSJ.P (INPUT "FAPR015").
+               UNDO Anulacion, LEAVE Anulacion.
+            END. 
+        END.
+     END.   
+
+     FIND Asn_header 
+         WHERE Asn_header.tabla_comprobante = "Fac_header_prv"
+           AND Asn_header.nro_idcabecera = Fac_header_prv.nro_facprov
+               EXCLUSIVE-LOCK NO-ERROR.
+
+     IF AVAILABLE Asn_header
+     THEN DO:
+         IF Asn_header.cdg_estado > "0"
+         THEN DO:
+            codigo_error = 3.
+            RUN PONMENSJ.P (INPUT "FAPR056").
+            UNDO Anulacion, LEAVE Anulacion.
+         END.
+     END.
+
+     FIND Sub_header_prv 
+          WHERE Sub_header_prv.nro_proveedor = Fac_header_prv.nro_proveedor
+            AND Sub_header_prv.cdg_empresa   = Fac_header_prv.cdg_empresa 
+            AND Sub_header_prv.tip_comprob   = Fac_header_prv.tip_comprob 
+            AND Sub_header_prv.prf_comprob   = Fac_header_prv.prf_comprob
+            AND Sub_header_prv.nro_comprob   = Fac_header_prv.nro_comprob 
+                EXCLUSIVE-LOCK NO-ERROR.
+     IF AVAILABLE sub_header_prv THEN DO:
+          FOR EACH Sub_detalle_prv
+        WHERE Sub_detalle_prv.nro_proveedor = Sub_header_prv.nro_proveedor
+          AND Sub_detalle_prv.cdg_empresa   = Sub_header_prv.cdg_empresa 
+          AND Sub_detalle_prv.tip_comprob   = Sub_header_prv.tip_comprob 
+          AND Sub_detalle_prv.prf_comprob   = Sub_header_prv.prf_comprob
+          AND Sub_detalle_prv.nro_comprob   = Sub_header_prv.nro_comprob 
+              EXCLUSIVE-LOCK:
+
+         DELETE Sub_detalle_prv.
+           
+     END.       
+     
+     DELETE Sub_header_prv.
+     END.
+     FOR EACH Fac_prv-gasto OF Fac_header_prv EXCLUSIVE-LOCK:
+         DELETE Fac_prv-gasto.
+     END.
+
+     FOR EACH Fac_detalle_prv OF Fac_header_prv EXCLUSIVE-LOCK:
+         DELETE Fac_detalle_prv.
+     END.
+     
+     DELETE Fac_header_prv.
+
+     /* Borra el asiento contable correspondiente */
+
+     IF AVAILABLE Asn_header
+     THEN DO:
+         {borrarasiento.i}
+     END.
+
+     codigo_error = 0.
+
+END.
+
+puede_anular = codigo_error.

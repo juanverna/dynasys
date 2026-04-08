@@ -1,0 +1,4 @@
+fecha_lis = STRING(TODAY).
+hora_lis = STRING(TIME,"HH:MM:SS").
+FIND FIRST Empresa WHERE Empresa.cdg_empresa = SUBSTRING(lista_empresas,1,1) NO-LOCK NO-ERROR.
+IF AVAILABLE Empresa THEN que_empresa = Empresa.rso_empresa.

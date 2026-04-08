@@ -1,0 +1,69 @@
+COMPILE VLB-ENTIDADES.P SAVE.
+define variable EN_USO as logical.
+FOR EACH Entidad:
+
+
+  run vlb-entidades.p (INPUT ROWID(Entidad) , OUTPUT en_uso).
+if en_uso then
+MESSAGE 
+     "00" CAN-FIND(FIRST Acumulado_ctapsp WHERE Acumulado_ctapsp.nro_entidad = Entidad.nro_entidad) 
+     "01" CAN-FIND(FIRST Acumulado_cuenta WHERE Acumulado_cuenta.nro_entidad = Entidad.nro_entidad) 
+     "02" CAN-FIND(FIRST Ajusteinv_dt WHERE Ajusteinv_dt.nro_entidad = Entidad.nro_entidad) 
+     "03" CAN-FIND(FIRST Ajusteinv_hd WHERE Ajusteinv_hd.nro_entidad = Entidad.nro_entidad) 
+     "04" CAN-FIND(FIRST Amd_detalle WHERE Amd_detalle.nro_entidad = Entidad.nro_entidad) 
+     "00" CAN-FIND(FIRST Amp_detalle WHERE Amp_detalle.nro_entidad = Entidad.nro_entidad) 
+     "06" CAN-FIND(FIRST Aps_detalle WHERE Aps_detalle.nro_entidad = Entidad.nro_entidad) 
+     "07" CAN-FIND(FIRST Aps_header WHERE Aps_header.nro_entidad = Entidad.nro_entidad) 
+     "08" CAN-FIND(FIRST Area WHERE Area.nro_entidad = Entidad.nro_entidad) 
+     "09" CAN-FIND(FIRST Asn_detalle WHERE Asn_detalle.nro_entidad = Entidad.nro_entidad) SKIP
+     "10" CAN-FIND(FIRST Asn_header WHERE Asn_header.nro_entidad = Entidad.nro_entidad) 
+     "11" CAN-FIND(FIRST Caj_detalle WHERE Caj_detalle.nro_entidad = Entidad.nro_entidad) 
+     "12" CAN-FIND(FIRST Caj_header WHERE Caj_header.nro_entidad = Entidad.nro_entidad) 
+/*   "13" CAN-FIND(FIRST Cct_stock WHERE Cct_stock.nro_entidad = Entidad.nro_entidad) */
+     "13" "**"
+     "14" CAN-FIND(FIRST Cliente WHERE Cliente.nro_entidad = Entidad.nro_entidad) 
+     "15" CAN-FIND(FIRST Concepto-cuenta WHERE Concepto-cuenta.nro_entidad = Entidad.nro_entidad) 
+     "16" CAN-FIND(FIRST Deposito WHERE Deposito.nro_entidad = Entidad.nro_entidad) 
+     "17" CAN-FIND(FIRST Destino WHERE Destino.nro_entidad = Entidad.nro_entidad) 
+     "18" CAN-FIND(FIRST Dev_header WHERE Dev_header.nro_entidad = Entidad.nro_entidad) 
+     "19" CAN-FIND(FIRST Emb_detalle_prv WHERE Emb_detalle_prv.nro_entidad = Entidad.nro_entidad) SKIP
+     "20" CAN-FIND(FIRST Emb_header_prv WHERE Emb_header_prv.nro_entidad = Entidad.nro_entidad) 
+     "21" CAN-FIND(FIRST Emb_prv-gasto WHERE Emb_prv-gasto.nro_entidad = Entidad.nro_entidad) 
+     "22" CAN-FIND(FIRST Empleado WHERE Empleado.nro_entidad = Entidad.nro_entidad) 
+     "23" CAN-FIND(FIRST Empleado-entidad WHERE Empleado-entidad.nro_entidad = Entidad.nro_entidad) 
+     "24" CAN-FIND(FIRST Fac_cli-gasto WHERE Fac_cli-gasto.nro_entidad = Entidad.nro_entidad) 
+     "25" CAN-FIND(FIRST Fac_detalle WHERE Fac_detalle.nro_entidad = Entidad.nro_entidad) 
+     "26" CAN-FIND(FIRST Fac_detalle_prv WHERE Fac_detalle_prv.nro_entidad = Entidad.nro_entidad) 
+     "27" CAN-FIND(FIRST Fac_header WHERE Fac_header.nro_entidad = Entidad.nro_entidad) 
+     "28" CAN-FIND(FIRST Fac_header_prv WHERE Fac_header_prv.nro_entidad = Entidad.nro_entidad) 
+     "29" CAN-FIND(FIRST Fac_prv-gasto WHERE Fac_prv-gasto.nro_entidad = Entidad.nro_entidad) SKIP
+     "30" CAN-FIND(FIRST Obra WHERE Obra.nro_entidad = Entidad.nro_entidad) 
+     "31" CAN-FIND(FIRST Oci_header WHERE Oci_header.nro_entidad = Entidad.nro_entidad) 
+     "32" CAN-FIND(FIRST Ocm_header WHERE Ocm_header.nro_entidad = Entidad.nro_entidad) 
+     "33" CAN-FIND(FIRST Opg_header WHERE Opg_header.nro_entidad = Entidad.nro_entidad) 
+     "34" CAN-FIND(FIRST Ped_header WHERE Ped_header.nro_entidad = Entidad.nro_entidad) 
+     "35" CAN-FIND(FIRST Proveedor  WHERE Proveedor.nro_entidad = Entidad.nro_entidad) 
+     "36" CAN-FIND(FIRST Rcb_header WHERE Rcb_header.nro_entidad = Entidad.nro_entidad) 
+     "37" CAN-FIND(FIRST Rec_header WHERE Rec_header.nro_entidad = Entidad.nro_entidad) 
+     "38" CAN-FIND(FIRST Rem_detalle_prv WHERE Rem_detalle_prv.nro_entidad = Entidad.nro_entidad) 
+     "39" CAN-FIND(FIRST Rem_header WHERE Rem_header.nro_entidad = Entidad.nro_entidad) SKIP
+     "40" CAN-FIND(FIRST Rem_header_prv WHERE Rem_header_prv.nro_entidad = Entidad.nro_entidad) 
+     "41" CAN-FIND(FIRST Rqs_header WHERE Rqs_header.nro_entidad = Entidad.nro_entidad) 
+     "42" CAN-FIND(FIRST Sub_detalle_bco WHERE Sub_detalle_bco.nro_entidad = Entidad.nro_entidad) 
+     "43" CAN-FIND(FIRST Sub_detalle_inv WHERE Sub_detalle_inv.nro_entidad = Entidad.nro_entidad) 
+     "44" CAN-FIND(FIRST Sub_detalle_prv WHERE Sub_detalle_prv.nro_entidad = Entidad.nro_entidad) 
+     "45" CAN-FIND(FIRST Sub_detalle_syj WHERE Sub_detalle_syj.nro_entidad = Entidad.nro_entidad) 
+     "46" CAN-FIND(FIRST Sub_detalle_vta WHERE Sub_detalle_vta.nro_entidad = Entidad.nro_entidad) 
+     "47" CAN-FIND(FIRST Sub_header_bco WHERE Sub_header_bco.nro_entidad = Entidad.nro_entidad) 
+     "48" CAN-FIND(FIRST Sub_header_inv WHERE Sub_header_inv.nro_entidad = Entidad.nro_entidad) 
+     "49" CAN-FIND(FIRST Sub_header_prv WHERE Sub_header_prv.nro_entidad = Entidad.nro_entidad) SKIP
+     "50" CAN-FIND(FIRST Sub_header_syj WHERE Sub_header_syj.nro_entidad = Entidad.nro_entidad) 
+     "51" CAN-FIND(FIRST Sub_header_vta WHERE Sub_header_vta.nro_entidad = Entidad.nro_entidad) 
+     "52" CAN-FIND(FIRST Transdep_dt WHERE Transdep_dt.nro_entidad = Entidad.nro_entidad) 
+     "53" CAN-FIND(FIRST Transdep_hd WHERE Transdep_hd.nro_entidad = Entidad.nro_entidad) 
+     "54" CAN-FIND(FIRST Valeinv_dt WHERE Valeinv_dt.nro_entidad = Entidad.nro_entidad) 
+     "55" CAN-FIND(FIRST Valeinv_hd WHERE Valeinv_hd.nro_entidad = Entidad.nro_entidad)
+     VIEW-AS ALERT-BOX MESSAGE TITLE Entidad.cdg_entidad + "-" + Entidad.dsc_entidad.
+else delete entidad.
+
+end.

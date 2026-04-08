@@ -1,0 +1,14 @@
+{tiempo.i}
+{extrae.i}
+
+DEFINE VAR pfmin AS DATE.
+DEFINE VAR pfmax AS DATE.
+FOR EACH tarea WHERE tarea.cdg_tipotarea = "C" AND tarea.estado = "R":
+pfmin = date( extrae("fmin" , tarea.dato) ).
+pfmax = date( extrae("fmax" , tarea.dato) ).
+FIND FIRST evento WHERE evento.origen = "COBRANZA" AND NOT anulado AND evento.nro_identificacion = tarea.nro_tarea NO-LOCK NO-ERROR.
+IF NOT AVAILABLE evento THEN NEXT.
+
+IF evento.fmin <> fmin OR evento.fmax <> fmax THEN 
+DISPLAY  evento.fmin pfmin evento.fmax pfmax. 
+END.

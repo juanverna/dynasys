@@ -1,0 +1,54 @@
+/*=================================================================================*/
+/*                           VARIABLES Y FRAMES                                    */
+/*=================================================================================*/
+
+{VRSHARED.I}
+
+DEFINE VARIABLE que_ciclo LIKE Ciclo.nro_ciclo.
+
+FORM 
+   que_ciclo LABEL "Indique el numero de ciclo actual" FGCOLOR fe_c BGCOLOR be_c
+   Ciclo.descripcion FGCOLOR fg_c BGCOLOR bg_c NO-LABEL 
+   SPACE(1) 
+   WITH CENTERED OVERLAY ROW 7 TITLE "Fijar ciclo actual para el sistema"
+        SIDE-LABEL FRAME frm-ciclo VIEW-AS DIALOG-BOX THREE-D
+        FGCOLOR f-fg_c BGCOLOR f-bg_c FONT 8.
+
+FIND FIRST Usuario WHERE LOCKED Usuario AND ROWID(Usuario) <> act_usuario NO-ERROR.
+IF AVAILABLE Usuario
+THEN DO:
+   BELL.
+   MESSAGE "Se han detectado usuarios conectados al sistema" SKIP
+           "No puede cambiarse el ciclo actual" 
+             VIEW-AS ALERT-BOX ERROR BUTTONS OK
+             TITLE "Se ha detectado un error".
+END.
+ELSE DO:
+  REPEAT WITH FRAME frm-ciclo:
+     FIND FIRST Ciclo WHERE actual EXCLUSIVE-LOCK.
+     IF NOT AVAILABLE Ciclo THEN FIND FIRST Ciclo EXCLUSIVE-LOCK.
+     aux_ROWID = ROWID(Ciclo).
+     que_ciclo = Ciclo.nro_ciclo.
+     DISPLAY que_ciclo Ciclo.descripcion WITH FRAME frm-ciclo.
+     UPDATE que_ciclo WITH FRAME frm-ciclo.
+     IF que_ciclo = Ciclo.nro_ciclo THEN LEAVE.
+     FIND Ciclo WHERE nro_ciclo = que_ciclo EXCLUSIVE-LOCK NO-ERROR.
+     IF NOT AVAILABLE Ciclo
+     THEN DO:
+        BELL.
+        MESSAGE "No ha sido hallado el ciclo indicado"
+             VIEW-AS ALERT-BOX ERROR BUTTONS OK
+             TITLE "Se ha detectado un error".
+        UNDO, RETRY.
+     END.
+     ELSE DO:
+        Ciclo.actual = YES.
+        FIND Ciclo WHERE aux_ROWID = ROWID(Ciclo) EXCLUSIVE-LOCK.   
+        Ciclo.actual = NO.
+        LEAVE.
+     END.
+  END.
+END.
+
+FIND FIRST Ciclo WHERE actual NO-LOCK.
+act_ciclo = ROWID(Ciclo).   

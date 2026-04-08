@@ -1,0 +1,48 @@
+/*evaluador de v-difSEdias.w*/
+/*distancia al subevento anterior es exacto no una distribucion */
+/*si es 0 es exacto el mismo dia sino una pequeña campana a derecha*/
+/*02/abr/09 agrandamos la campana a 5 dias*/
+define input parameter nroE as int no-undo.
+DEFINE INPUT PARAMETER fecha AS DATE NO-UNDO.
+DEFINE INPUT PARAMETER ss AS character NO-UNDO.
+DEFINE OUTPUT PARAMETER v AS DECIMAL NO-UNDO.
+DEFINE OUTPUT PARAMETER esdesborde AS LOGICAL NO-UNDO.
+DEFINE OUTPUT PARAMETER vmobs AS CHAR NO-UNDO.
+
+DEFINE VAR I AS INT NO-UNDO.
+DEFINE BUFFER bevento FOR evento.
+v = 0.
+
+FIND bevento WHERE bevento.nro_evento = nroE NO-ERROR.
+IF NOT AVAILABLE bevento THEN RETURN ERROR.
+
+FIND first evento where 
+     evento.nro_tipo_evento = bevento.nro_tipo_evento AND
+     evento.nro_identificacion = bevento.nro_identificacion and 
+     evento.sub_evento = bevento.sub_evento - 1 AND
+     evento.fasignado<>? AND 
+     evento.periodo = bevento.periodo AND
+     NOT evento.anulado AND
+     Evento.FAsignado >= date(month(fecha),1,year(fecha))
+     no-lock no-error.
+
+IF available evento THEN
+DO:
+        FIND tipo_evento OF evento NO-LOCK.
+        i = day( fecha ) - day( evento.fasignado ) - int( ss ).
+        IF int( ss ) = 0 OR tipo_evento.cdg_tipo_evento = "LT" THEN  /*para LT es exacto y puede ser un sabado*/
+            IF i = 0  THEN v = 1.
+             ELSE v = 0.
+        ELSE do:
+            IF WEEKDAY(fecha) = 7 OR WEEKDAY(fecha) = 1 THEN /*no puede ser desborde un sabado por definicion*/
+                v = 0.
+            ELSE
+                IF i >= 0 THEN
+                  IF i <= 5 THEN v  = 1.00 - DECIMAL( i ) * 0.2.
+        END.
+END.
+IF v <> 1 AND v > 0 THEN DO:
+        esdesborde = TRUE.
+        vmobs = "DSE[" + ss + "<->" + string( i , "9" ) + "]".
+    END.
+ELSE esdesborde = FALSE.

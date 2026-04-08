@@ -1,0 +1,731 @@
+/*=================================================================================*/
+/*               GENERA LA Cabecera DE SUCURSALES PARA DESPACHO                   */
+/*=================================================================================*/
+/*
+DEFINE VARIABLE usu                 AS LOGICAL.
+usu = SETUSERID("666","666").
+RUN pone.p.
+*/
+
+DEFINE TEMP-TABLE T-Caj_header      LIKE Caj_header.
+DEFINE TEMP-TABLE T-Caj_detalle     LIKE Caj_detalle.
+DEFINE TEMP-TABLE T-Valor           LIKE Valor.
+DEFINE TEMP-TABLE T-Rec_header      LIKE Rec_header.
+DEFINE TEMP-TABLE T-Rec_detalle     LIKE Rec_detalle.
+
+{VRSHARED.I "new"}
+
+DEFINE TEMP-TABLE T-Cabecera
+       FIELD anulado         AS LOGICAL
+       FIELD cdg_caja        AS INTEGER   FORMAT "999"
+       FIELD fecha           AS DATE      FORMAT "99/99/99"
+       FIELD importe         AS DECIMAL   FORMAT "9999999.99"
+       FIELD nro_cliente     AS INTEGER   FORMAT "999999"   COLUMN-LABEL "Número!Cliente"
+       FIELD nro_comprob     AS INTEGER   FORMAT "99999999" COLUMN-LABEL "Número!Comprobante"
+       FIELD nro_transaccion AS INTEGER   FORMAT "9999999"
+       FIELD prf_comprob     AS INTEGER   FORMAT "9999"     COLUMN-LABEL "Pre-!fijo"
+       FIELD tipo_mov        AS CHARACTER FORMAT "X(1)"
+       FIELD tip_comprob     AS CHARACTER FORMAT "X(3)"     COLUMN-LABEL "Ti-!po"
+       FIELD hay_error       AS CHARACTER FORMAT "x(40)"    COLUMN-LABEL "Condicion!de Error"
+       INDEX T-Cabecera IS UNIQUE nro_transaccion ASCENDING.
+
+DEFINE TEMP-TABLE T-Detalle     
+       FIELD cambio          AS DECIMAL   FORMAT "99999.9999"
+       FIELD cdg_cuenta_ban  AS CHARACTER FORMAT "X(35)"
+       FIELD cdg_rubro       AS INTEGER   FORMAT "999" 
+       FIELD importe         AS DECIMAL   FORMAT "9999999.99"
+       FIELD nro_linea       AS INTEGER   FORMAT "999"
+       FIELD nro_transaccion AS INTEGER   FORMAT "9999999"
+       FIELD nro_valor       AS INTEGER   FORMAT "99999999"
+       INDEX T-Detalle IS UNIQUE nro_transaccion nro_linea ASCENDING.
+            
+DEFINE TEMP-TABLE T-Cheques
+       FIELD cdg_banco       AS INTEGER   FORMAT "999"
+       FIELD cdg_caja        AS INTEGER   FORMAT "999"
+       FIELD fecha_emision   AS DATE      FORMAT "99/99/99"
+       FIELD fecha_recepcion AS DATE      FORMAT "99/99/99"              
+       FIELD importe         AS DECIMAL   FORMAT "9999999.99"
+       FIELD nro_cliente     AS INTEGER   FORMAT "999999"
+       FIELD nro_transaccion AS INTEGER   FORMAT "9999999"
+       FIELD numero_cheque   AS INTEGER   FORMAT "99999999"
+       INDEX T-Valor nro_transaccion ASCENDING.
+              
+DEFINE STREAM Errores.
+DEFINE STREAM Encabezado.
+DEFINE STREAM Detalle.
+DEFINE STREAM Archivos.
+DEFINE STREAM Cheques.
+
+DEFINE VARIABLE v-anulado         AS LOGICAL.
+DEFINE VARIABLE v-cdg_caja        AS INTEGER   FORMAT "999".
+DEFINE VARIABLE v-fecha           AS DATE      FORMAT "99/99/99".
+DEFINE VARIABLE v-importe         AS DECIMAL   FORMAT "9999999.99".
+DEFINE VARIABLE v-nro_cliente     AS INTEGER   FORMAT "999999".
+DEFINE VARIABLE v-nro_comprob     AS INTEGER   FORMAT "99999999".
+DEFINE VARIABLE v-nro_transaccion AS INTEGER   FORMAT "9999999".
+DEFINE VARIABLE v-prf_comprob     AS INTEGER   FORMAT "9999".
+DEFINE VARIABLE v-tipo_mov        AS CHARACTER FORMAT "X(1)".
+DEFINE VARIABLE v-tip_comprob     AS CHARACTER FORMAT "X(3)".
+
+DEFINE VARIABLE v-cambio          AS DECIMAL   FORMAT "99999.9999".
+DEFINE VARIABLE v-cdg_cuenta_ban  AS CHARACTER FORMAT "X(35)".
+DEFINE VARIABLE v-cdg_rubro       AS INTEGER   FORMAT "999". 
+DEFINE VARIABLE v-nro_linea       AS INTEGER   FORMAT "999".
+DEFINE VARIABLE v-nro_valor       AS INTEGER   FORMAT "99999999".
+
+DEFINE VARIABLE v-cdg_banco       AS INTEGER   FORMAT "999".
+
+DEFINE VARIABLE v-fecha_emision   AS DATE FORMAT "99/99/99".
+DEFINE VARIABLE v-fecha_recepcion AS DATE FORMAT "99/99/99".              
+
+DEFINE VARIABLE v-numero_cheque   AS INTEGER   FORMAT "99999999".
+
+DEFINE VARIABLE mensaje             AS CHARACTER FORMAT "X(40)".
+DEFINE VARIABLE linea               AS INTEGER.
+DEFINE VARIABLE archivo             AS CHARACTER.
+DEFINE VARIABLE newseq              LIKE Caj_header.nro_transaccion.
+DEFINE VARIABLE newsee              LIKE Caj_header.nro_transaccion.
+DEFINE VARIABLE cn_rub              AS INTEGER.
+DEFINE VARIABLE ultima              LIKE Caj_header.nro_transaccion.
+
+DEFINE VARIABLE ncopiaa             LIKE Parametro.valor_n.
+DEFINE VARIABLE ncopiab             LIKE Parametro.valor_n.
+DEFINE VARIABLE barra_dir           AS CHARACTER.
+DEFINE VARIABLE fecha_proceso       AS DATE.
+DEFINE VARIABLE arch_err            AS CHARACTER.
+DEFINE VARIABLE arch_cab            AS CHARACTER.
+DEFINE VARIABLE arch_det            AS CHARACTER.
+DEFINE VARIABLE arch_val            AS CHARACTER.
+DEFINE VARIABLE arch_log            AS CHARACTER.
+DEFINE VARIABLE directorio          AS CHARACTER.
+DEFINE VARIABLE ch_fecha            AS CHARACTER.
+DEFINE VARIABLE que_archivo         AS CHARACTER FORMAT "X(40)".
+DEFINE VARIABLE que_camino          AS CHARACTER.
+DEFINE VARIABLE que_tipo            AS CHARACTER.
+DEFINE VARIABLE seguir              AS LOGICAL INITIAL NO.
+DEFINE VARIABLE bajar               AS LOGICAL.
+
+/*=================================================================================*/
+/*        AVERIGUA LOS NUMEROS INTERNOS DE LOS MOVIMIENTOS A IMPORTAR              */
+/*=================================================================================*/
+
+SESSION:NUMERIC-FORMAT = "AMERICAN".
+
+{findempresa.i}
+
+     /*---------------------------------------------*/ 
+     /*   Pone en 0 la cantida de copias de recibo  */ 
+     /*---------------------------------------------*/ 
+
+
+DO TRANSACTION:
+    FIND Parametro WHERE Parametro.cdg_empresa   = Empresa.cdg_empresa
+                     AND Parametro.cdg_parametro = "NCOPIARA" 
+                     EXCLUSIVE-LOCK NO-ERROR.
+    ncopiaa = parametro.valor_n.
+    Parametro.valor_n = 0.
+    FIND Parametro WHERE Parametro.cdg_empresa   = Empresa.cdg_empresa
+                     AND Parametro.cdg_parametro = "NCOPIARB" 
+                     EXCLUSIVE-LOCK NO-ERROR.
+    ncopiab = parametro.valor_n.
+    Parametro.valor_n = 0.
+END.
+     /*---------------------------------------------*/ 
+     /* Importa la Cabecera en tablas temporarias  */ 
+     /*---------------------------------------------*/ 
+
+barra_dir = IF OPSYS = "WIN32" THEN CHR(92) ELSE CHR(47).
+FIND Parametro WHERE Parametro.cdg_empresa = Empresa.cdg_empresa
+                 AND Parametro.cdg_parametro = "DIRINCAJ"
+                     NO-LOCK.
+directorio = Parametro.observacion.
+
+INPUT STREAM Archivos FROM OS-DIR(directorio).     
+
+arch_log = directorio + barra_dir + "valores" + 
+                         STRING(YEAR(TODAY),"9999") + STRING(MONTH(TODAY),"99") + STRING(DAY(TODAY),"99") + "." + 
+                         SUBSTRING(STRING(TIME,"HH:MM:SS"),1,2) + 
+                         SUBSTRING(STRING(TIME,"HH:MM:SS"),4,2) +
+                         SUBSTRING(STRING(TIME,"HH:MM:SS"),7,2) + ".log".
+
+OUTPUT TO VALUE(arch_log) PAGE-SIZE 72. 
+
+PUT "=============================================================" SKIP
+    "                                                             " SKIP
+    "                   INTERFACE DE TESORERIA                    " SKIP
+    "                                                             " SKIP
+    " Proceso: " STRING(TODAY,"99/99/9999") " - " STRING(TIME,"HH:MM:SS") SKIP
+    "                                                             " SKIP
+    "=============================================================" SKIP(2).
+
+REPEAT:
+
+   IMPORT STREAM Archivos que_archivo que_camino que_tipo.
+   IF que_tipo = "F"   /* Es un archivo */
+       AND NUM-ENTRIES(que_archivo,".") = 2  /* Con nombre de la forma xxxx.yyyy */
+       AND ENTRY(1,que_archivo,".") = "cabecera" /* Empieza con "cabecera", con lo que asumimos cabecera */
+   THEN DO:
+
+        arch_cab = que_camino. /* asignamos el full-path */
+        arch_det = REPLACE(arch_cab,"cabecera","detalle").
+        arch_val = REPLACE(arch_cab,"cabecera","valores").
+        arch_err = REPLACE(arch_cab,"cabecera","errores").
+
+        IF seguir THEN MESSAGE arch_cab VIEW-AS ALERT-BOX  MESSAGE TITLE "Procesando...".
+
+        RUN levantar_tablas.        
+        IF NOT CAN-FIND(FIRST T-Cabecera WHERE T-Cabecera.hay_error <> "")
+        THEN DO:
+            RUN validar_tablas.
+/*
+            IF seguir THEN MESSAGE arch_cab VIEW-AS ALERT-BOX  MESSAGE TITLE "Bajando...".
+            FOR EACH t-cabecera:
+                DISPLAY t-cabecera.hay_error.
+            END.
+*/                
+            RUN crear_tablas.       /* Copia T-Cabecera en T-Caj_header, etc. */
+            RUN modificar_tablas.   /* Renumera las tablas temporales       . */
+                 IF seguir THEN MESSAGE arch_cab VIEW-AS ALERT-BOX  MESSAGE TITLE "Comienza a bajar ...".
+            RUN bajar_tablas.       /* Copia T-Caj_header en Caj_header, etc. */
+                 IF seguir THEN MESSAGE arch_cab VIEW-AS ALERT-BOX  MESSAGE TITLE "Termino de bajar ...".
+        END.
+        ELSE DO:
+            RUN grabar_errores.
+        END.
+   END.
+END.  /* De recorrer el directorio de interfaces */
+
+     /*---------------------------------------------*/ 
+     /*   Restaura la cantida de copias de recibo   */ 
+     /*---------------------------------------------*/ 
+DO TRANSACTION:
+    FIND Parametro WHERE Parametro.cdg_empresa   = Empresa.cdg_empresa
+                     AND Parametro.cdg_parametro = "NCOPIARA" 
+                     EXCLUSIVE-LOCK NO-ERROR.
+    Parametro.valor_n = ncopiaa.
+    FIND Parametro WHERE Parametro.cdg_empresa   = Empresa.cdg_empresa
+                     AND Parametro.cdg_parametro = "NCOPIARB" 
+                     EXCLUSIVE-LOCK NO-ERROR.
+    Parametro.valor_n = ncopiab.
+    RELEASE Parametro.
+END.
+
+OUTPUT CLOSE.
+
+RUN veresult.w ( arch_log, 22 ).
+
+/*=================================================================================*/
+/*                             PROCEDIMIENTOS                                      */
+/*=================================================================================*/
+
+PROCEDURE levantar_tablas:
+
+    EMPTY TEMP-TABLE T-Cabecera.
+    EMPTY TEMP-TABLE T-Detalle.
+    EMPTY TEMP-TABLE T-Cheques.
+    EMPTY TEMP-TABLE T-Caj_header.
+    EMPTY TEMP-TABLE T-Caj_detalle.
+    EMPTY TEMP-TABLE T-Rec_detalle.
+
+    INPUT STREAM Encabezado FROM VALUE(arch_cab). 
+    REPEAT:
+
+        IMPORT STREAM Encabezado DELIMITER "|" 
+                   v-anulado         
+                   v-cdg_caja        
+                   v-fecha           
+                   v-importe         
+                   v-nro_cliente     
+                   v-nro_comprob     
+                   v-nro_transaccion 
+                   v-prf_comprob     
+                   v-tipo_mov        
+                   v-tip_comprob.
+
+        CREATE T-Cabecera.
+        ASSIGN T-Cabecera.anulado          = v-anulado         
+               T-Cabecera.cdg_caja         = v-cdg_caja        
+               T-Cabecera.fecha            = v-fecha           
+               T-Cabecera.importe          = v-importe         
+               T-Cabecera.nro_cliente      = v-nro_cliente     
+               T-Cabecera.nro_comprob      = v-nro_comprob     
+               T-Cabecera.nro_transaccion  = v-nro_transaccion 
+               T-Cabecera.prf_comprob      = v-prf_comprob     
+               T-Cabecera.tipo_mov         = v-tipo_mov        
+               T-Cabecera.tip_comprob      = v-tip_comprob.
+
+        T-Cabecera.tip_comprob = TRIM(T-Cabecera.tip_comprob).
+
+    END.
+    INPUT STREAM Encabezado CLOSE.
+
+    FILE-INFO:FILE-NAME = arch_det.
+    IF FILE-INFO:FULL-PATHNAME <> ?
+    THEN DO:
+        INPUT STREAM Detalle FROM VALUE(arch_det). 
+        REPEAT:
+
+            IMPORT STREAM Detalle DELIMITER "|"  
+                v-cambio          
+                v-cdg_cuenta_ban  
+                v-cdg_rubro       
+                v-importe         
+                v-nro_linea       
+                v-nro_transaccion 
+                v-nro_valor.
+
+            CREATE T-Detalle.
+            ASSIGN T-Detalle.cambio          = v-cambio          
+                   T-Detalle.cdg_cuenta_ban  = v-cdg_cuenta_ban  
+                   T-Detalle.cdg_rubro       = v-cdg_rubro       
+                   T-Detalle.importe         = v-importe         
+                   T-Detalle.nro_linea       = v-nro_linea       
+                   T-Detalle.nro_transaccion = v-nro_transaccion 
+                   T-Detalle.nro_valor       = v-nro_valor.
+
+        END.
+        INPUT STREAM Detalle CLOSE.
+
+        INPUT STREAM Cheques FROM VALUE(arch_val). 
+        REPEAT:
+
+            IMPORT STREAM Cheques DELIMITER "|"  
+                 v-cdg_banco       
+                 v-cdg_caja        
+                 v-fecha_emision   
+                 v-fecha_recepcion 
+                 v-importe         
+                 v-nro_cliente     
+                 v-nro_transaccion 
+                 v-numero_cheque.
+
+            CREATE T-Cheques.
+            ASSIGN T-Cheques.cdg_banco        = v-cdg_banco       
+                   T-Cheques.cdg_caja         = v-cdg_caja        
+                   T-Cheques.fecha_emision    = v-fecha_emision   
+                   T-Cheques.fecha_recepcion  = v-fecha_recepcion 
+                   T-Cheques.importe          = v-importe         
+                   T-Cheques.nro_cliente      = v-nro_cliente     
+                   T-Cheques.nro_transaccion  = v-nro_transaccion 
+                   T-Cheques.numero_cheque    = v-numero_cheque.
+
+        END.
+        INPUT STREAM Cheques CLOSE.
+
+    END.
+    ELSE DO:
+        FOR EACH T-Cabecera:
+            T-Cabecera.hay_error = "NO Se Encontro Archivo de Detalle".
+        END.
+    END.
+
+END PROCEDURE.
+
+PROCEDURE validar_tablas:
+
+    FOR EACH T-Cabecera:
+
+        FIND FIRST T-Caj_header WHERE T-Caj_header.tip_comprob     =  T-Cabecera.tip_comprob
+                                  AND T-Caj_header.prf_comprob     =  T-Cabecera.prf_comprob
+                                  AND T-Caj_header.nro_comprob     =  T-Cabecera.nro_comprob 
+                                  AND T-Caj_header.nro_transaccion <> T-Cabecera.nro_transaccion NO-ERROR.
+        IF AVAILABLE T-Caj_header 
+        THEN DO:
+             T-Cabecera.hay_error = "Comprobante Repetido en Interface".
+        END.
+        ELSE DO:
+
+            IF CAN-FIND(FIRST Caj_header WHERE Caj_header.cdg_empresa  = "M"
+                                           AND Caj_header.tip_comprob  = T-Cabecera.tip_comprob
+                                           AND Caj_header.prf_comprob  = T-Cabecera.prf_comprob
+                                           AND Caj_header.nro_comprob  = T-Cabecera.nro_comprob)
+            THEN DO:
+                T-Cabecera.hay_error = "Documento Duplicado".
+            END.
+            ELSE DO:
+                IF NOT CAN-FIND(FIRST T-Detalle OF T-Cabecera)
+                THEN DO:                      
+                    T-Cabecera.hay_error = "NO Se Encuentra Detalle".
+                END.
+                ELSE DO:
+                    FIND Cliente WHERE Cliente.cdg_cliente = STRING(T-Cabecera.nro_cliente,"999999") NO-ERROR.
+                    IF NOT AVAILABLE Cliente 
+                    THEN DO:
+                        T-Cabecera.hay_error = "NO Existe Cliente".
+                    END.
+                    ELSE DO:
+                        IF CAN-FIND(FIRST T-Detalle OF T-Cabecera 
+                                    WHERE NOT CAN-FIND(Rubro WHERE Rubro.cdg_rubro = T-Detalle.cdg_rubro))
+                        THEN DO:
+                            T-Cabecera.hay_error = "No Existe Rubro".
+                        END.
+                        ELSE DO:
+                            FOR EACH T-Detalle WHERE T-Detalle.nro_transaccion = T-Cabecera.nro_transaccion:
+                                FIND FIRST T-Caj_detalle WHERE T-Caj_detalle.nro_transaccion = T-Detalle.nro_transaccion
+                                                           AND T-Caj_detalle.cdg_rubro       = T-Detalle.cdg_rubro NO-ERROR.
+                                IF NOT AVAILABLE T-Caj_detalle 
+                                THEN DO:
+                                    CASE T-Detalle.cdg_rubro:
+                                      WHEN 1 THEN DO:
+        
+                                      END.
+                                      WHEN 2 THEN DO:
+                                            FOR EACH T-Cheques WHERE T-Cheques.nro_transaccion = T-Detalle.nro_transaccion:
+                                                FIND Valor WHERE Valor.cdg_banco     = T-Cheques.cdg_banco
+                                                             AND Valor.numero_cheque = T-Cheques.numero_cheque 
+                                                             AND Valor.cdg_empresa   = Empresa.cdg_empresa NO-ERROR.
+                                                IF AVAILABLE Valor OR T-Cheques.importe < 0
+                                                THEN DO:
+                                                    T-Cabecera.hay_error = "Valor Duplicado o Valor inferior a 0 ".
+                                                END.
+                                            END.
+                                      END.
+                                      WHEN 3 THEN DO:
+                                            /*
+                                            FIND Cuenta_bancaria WHERE Cuenta_bancaria.cdg_cuenta_ban = T-Detalle.cdg_cuenta_ban NO-ERROR.
+                                            IF NOT AVAILABLE Cuenta_bancaria
+                                            THEN DO:
+                                                T-Cabecera.hay_error = "No Existe Cta_bcaria".
+                                            END.
+                                            */
+                                      END.
+                                      OTHERWISE DO:
+                                          T-Cabecera.hay_error = "No Existe Rubro o Rubro > 3".
+                                      END.
+                                    END CASE.
+                                END.
+                                ELSE do:
+                                    T-Cabecera.hay_error = "Rubros Caja Repetidos".
+                                END.
+                            END.
+                        END.
+                    END.
+                END.
+            END.
+        END.
+
+    END.
+
+    RUN grabar_errores.
+
+END PROCEDURE.
+
+PROCEDURE grabar_errores:
+
+    /* ----------------- Graba el archivo de errores ------------------ */
+
+    OUTPUT STREAM Errores TO VALUE(arch_err) PAGE-SIZE 72. 
+    EXPORT STREAM Errores
+        "Interface: " + arch_cab.
+    EXPORT STREAM Errores
+        "Proceso: " + STRING(TODAY,"99/99/9999") + " " +  STRING(TIME,"HH:MM:SS") FORMAT "X(30)".
+
+    FOR EACH T-Cabecera WHERE T-Cabecera.hay_error <> "":
+        DISPLAY STREAM Errores
+            T-Cabecera.tip_comprob
+            T-Cabecera.prf_comprob
+            T-Cabecera.nro_comprob
+            T-Cabecera.nro_cliente
+            T-Cabecera.hay_error
+            WITH STREAM-IO WIDTH 130.
+    END.
+    OUTPUT STREAM Errores CLOSE.     
+
+    /* ----------------- Graba la consola del operador ------------------ */
+
+    PUT SKIP(1).
+
+    EXPORT 
+        "Interface: " + arch_cab.
+    EXPORT 
+        "Proceso: " + STRING(TODAY,"99/99/9999") + " " +  STRING(TIME,"HH:MM:SS") FORMAT "X(30)".
+
+    FOR EACH T-Cabecera WHERE T-Cabecera.hay_error <> "":
+        DISPLAY 
+            T-Cabecera.tip_comprob
+            T-Cabecera.prf_comprob
+            T-Cabecera.nro_comprob
+            T-Cabecera.nro_cliente
+            T-Cabecera.hay_error
+            WITH STREAM-IO WIDTH 130.
+    END.
+
+
+END PROCEDURE.
+
+
+PROCEDURE bajar_tablas:
+    
+    FOR EACH T-Caj_header:
+          IF seguir THEN IF seguir THEN MESSAGE t-caj_header.tip_comprob t-caj_header.nro_comprob VIEW-AS ALERT-BOX TITLE "comienza a bajar comprobante".
+        RUN BAJAR_T-Caj_header.
+          IF seguir THEN IF seguir THEN MESSAGE t-caj_header.tip_comprob t-caj_header.nro_comprob VIEW-AS ALERT-BOX TITLE "termino de bajar comprobante".
+    END.
+
+    IF NOT CAN-FIND(FIRST T-Cabecera WHERE T-Cabecera.hay_error <> "" 
+                             AND T-Cabecera.hay_error <> "Documento Duplicado")
+    THEN DO:
+
+        OS-COPY VALUE(arch_cab) VALUE(REPLACE(arch_cab,"cabecera","ok" + barra_dir + "cabecera")).
+        IF OS-ERROR = 0 THEN OS-DELETE VALUE(arch_cab).
+    
+        OS-COPY VALUE(arch_det) VALUE(REPLACE(arch_det,"detalle","ok" + barra_dir + "detalle")).
+        IF OS-ERROR = 0 THEN OS-DELETE VALUE(arch_det).
+        
+        OS-COPY VALUE(arch_val) VALUE(REPLACE(arch_val,"valores","ok" + barra_dir + "valores")).
+        IF OS-ERROR = 0 THEN OS-DELETE VALUE(arch_val).
+    
+        OS-COPY VALUE(arch_err) VALUE(REPLACE(arch_err,"errores","ok" + barra_dir + "errores")).
+        IF OS-ERROR = 0 THEN OS-DELETE VALUE(arch_err).
+    
+    END.
+
+END PROCEDURE.
+
+PROCEDURE crear_tablas:
+    
+    /*-------------------------------------------*/
+
+    find first cuenta.
+    /*-------------------------------------------*/
+    
+    FOR EACH T-Cabecera WHERE T-Cabecera.hay_error = "":
+
+        FIND Cliente WHERE Cliente.cdg_cliente = STRING(T-Cabecera.nro_cliente,"999999") NO-ERROR.
+           IF NOT AVAILABLE CLIENTE THEN IF seguir THEN MESSAGE "NO ENCUENTRA CLIENTE " T-Cabecera.nro_cliente VIEW-AS ALERT-BOX  MESSAGE.
+        
+        CREATE T-Caj_header.
+        ASSIGN T-Caj_header.anulado         = T-Cabecera.anulado
+               T-Caj_header.cdg_caja        = T-Cabecera.cdg_caja
+               T-Caj_header.cdg_empresa     = Empresa.cdg_empresa
+               T-Caj_header.contable        = NO
+               T-Caj_header.emitir          = NO
+               T-Caj_header.estado          = "E"
+               T-Caj_header.fecha           = T-Cabecera.fecha
+               T-Caj_header.hora            = 0
+               T-Caj_header.importe         = T-Cabecera.importe
+               T-Caj_header.ingreso         = T-Cabecera.importe
+               T-Caj_header.monto_letras    = ""
+               T-Caj_header.nro_cliente     = Cliente.nro_cliente
+               T-Caj_header.nro_comprob     = T-Cabecera.nro_comprob
+               T-Caj_header.nro_cuenta      = Cuenta.nro_cuenta
+               T-Caj_header.nro_entidad     = 1
+               T-Caj_header.nro_obra        = 1
+               T-Caj_header.nro_proveedor   = 1
+               T-Caj_header.nro_transaccion = T-Cabecera.nro_transaccion
+               T-Caj_header.nro_usuario     = 1
+               T-Caj_header.num_sucursal    = "00"
+               T-Caj_header.observacion     = ""
+               T-Caj_header.origen          = "C"
+               T-Caj_header.prf_comprob     = T-Cabecera.prf_comprob
+               T-Caj_header.tipo_mov        = T-Cabecera.tipo_mov
+               T-Caj_header.tip_comprob     = T-Cabecera.tip_comprob
+               T-Caj_header.ultima_linea    = 0.
+
+        FOR EACH T-Detalle WHERE T-Detalle.nro_transaccion = T-Cabecera.nro_transaccion:
+
+            T-Caj_header.ultima_linea     = T-Caj_header.ultima_linea + 1.
+            
+            CASE T-Detalle.cdg_rubro:
+              WHEN 1 THEN DO:
+                    CREATE T-Caj_detalle.
+                    ASSIGN T-Caj_detalle.cambio          = T-Detalle.cambio
+                           T-Caj_detalle.cdg_cuenta_ban  = T-Detalle.cdg_cuenta_ban
+                           T-Caj_detalle.cdg_rubro       = T-Detalle.cdg_rubro
+                           T-Caj_detalle.divisas         = 0
+                           T-Caj_detalle.importe         = T-Detalle.importe
+                           T-Caj_detalle.nro_cheque      = 0
+                           T-Caj_detalle.nro_entidad     = 1
+                           T-Caj_detalle.nro_linea       = T-Caj_header.ultima_linea
+                           T-Caj_detalle.nro_transaccion = T-Detalle.nro_transaccion
+                           T-Caj_detalle.nro_valor       = T-Caj_header.ultima_linea
+                           T-Caj_detalle.observacion     = ""
+                           T-Caj_detalle.tipo_mov        = T-Cabecera.tipo_mov.
+              END.
+              WHEN 2 THEN DO:
+                    FOR EACH T-Cheques WHERE T-Cheques.nro_transaccion = T-Detalle.nro_transaccion:
+
+                        FIND Valor WHERE Valor.cdg_banco     = T-Cheques.cdg_banco
+                                     AND Valor.numero_cheque = T-Cheques.numero_cheque 
+                                     AND Valor.cdg_empresa   = Empresa.cdg_empresa NO-ERROR.
+                        IF NOT AVAILABLE Valor AND T-Cheques.importe > 0
+                        THEN DO:
+                            newseq = NEXT-VALUE(proximo_valor).
+                            CREATE T-Valor.
+                            ASSIGN T-Valor.cdg_banco        = T-Cheques.cdg_banco
+                                   T-Valor.cdg_caja         = T-Cheques.cdg_caja
+                                   T-Valor.cdg_cuenta_ban   = ""
+                                   T-Valor.cdg_empresa      = Empresa.cdg_empresa
+                                   T-Valor.cdg_sucurbanco   = 1
+                                   T-Valor.dias_clearing    = 0
+                                   T-Valor.estado           = "00"
+                                   T-Valor.fecha_acredita   = T-Cheques.fecha_emision
+                                   T-Valor.fecha_deposito   = T-Cheques.fecha_emision
+                                   T-Valor.fecha_emision    = T-Cheques.fecha_emision
+                                   T-Valor.fecha_recepcion  = T-Cheques.fecha_recepcion
+                                   T-Valor.fecha_salida     = date("")
+                                   T-Valor.importe          = T-Cheques.importe
+                                   T-Valor.imp_comision     = 0
+                                   T-Valor.imp_gastos       = 0
+                                   T-Valor.imp_iva          = 0
+                                   T-Valor.nro_cliente      = Cliente.nro_cliente
+                                   T-Valor.nro_cuenta       = 0
+                                   T-Valor.nro_proveedor    = 0
+                                   T-Valor.nro_recibo       = 0
+                                   T-Valor.nro_titular-cob  = 0
+                                   T-Valor.nro_titular-pag  = 0
+                                   T-Valor.nro_transaccion  = T-Cheques.nro_transaccion
+                                   T-Valor.nro_valor        = newseq
+                                   T-Valor.numero_cheque    = T-Cheques.numero_cheque
+                                   T-Valor.num_sucursal     = ""
+                                   T-Valor.observacion      = ""
+                                   T-Valor.selectado        = NO.
+                                   T-Valor.usuario-sel      = "00".
+    
+                            CREATE T-Caj_detalle.
+                            ASSIGN T-Caj_detalle.cambio          = T-Detalle.cambio
+                                   T-Caj_detalle.cdg_cuenta_ban  = T-Detalle.cdg_cuenta_ban
+                                   T-Caj_detalle.cdg_rubro       = T-Detalle.cdg_rubro
+                                   T-Caj_detalle.divisas         = 0
+                                   T-Caj_detalle.importe         = T-Valor.importe
+                                   T-Caj_detalle.nro_cheque      = 0
+                                   T-Caj_detalle.nro_entidad     = 1
+                                   T-Caj_detalle.nro_linea       = T-Caj_header.ultima_linea 
+                                   T-Caj_detalle.nro_transaccion = T-Detalle.nro_transaccion
+                                   T-Caj_detalle.nro_valor       = newseq
+                                   T-Caj_detalle.observacion     = ""
+                                   T-Caj_detalle.tipo_mov        = T-Cabecera.tipo_mov.
+                        END.
+                    END.
+              END.
+              WHEN 3 THEN DO:
+                    FIND Cuenta_bancaria WHERE Cuenta_bancaria.cdg_cuenta_ban = T-Detalle.cdg_cuenta_ban NO-ERROR.
+                    CREATE T-Caj_detalle.
+                    ASSIGN T-Caj_detalle.cambio          = T-Detalle.cambio
+                           T-Caj_detalle.cdg_cuenta_ban  = T-Detalle.cdg_cuenta_ban
+                           T-Caj_detalle.cdg_rubro       = T-Detalle.cdg_rubro
+                           T-Caj_detalle.divisas         = 0
+                           T-Caj_detalle.importe         = T-Detalle.importe
+                           T-Caj_detalle.nro_cheque      = 0
+                           T-Caj_detalle.nro_entidad     = 1
+                           T-Caj_detalle.nro_linea       = T-Caj_header.ultima_linea
+                           T-Caj_detalle.nro_transaccion = T-Detalle.nro_transaccion
+                           T-Caj_detalle.nro_valor       = 0
+                           T-Caj_detalle.observacion     = ""
+                           T-Caj_detalle.tipo_mov        = T-Cabecera.tipo_mov.
+              END.
+            END CASE.
+        END.
+    END.
+         
+END PROCEDURE.
+
+PROCEDURE MODIFICAR_TABLAS:
+
+    newsee = CURRENT-VALUE(proxima_transaccion).
+    FOR EACH T-Caj_header WHERE T-Caj_header.nro_transaccion < newsee:
+        newseq = NEXT-VALUE(proxima_transaccion).
+        FOR EACH T-Caj_detalle OF T-Caj_header EXCLUSIVE-LOCK:
+            FOR EACH T-Valor OF T-Caj_detalle:
+                T-Valor.nro_transaccion = newseq.
+            END.
+            T-Caj_detalle.nro_transaccion = newseq.
+        END.
+        T-Caj_header.nro_transaccion = newseq.
+    END.
+
+END PROCEDURE.
+
+PROCEDURE BAJAR_T-Caj_header:
+
+    CREATE Caj_header.
+    BUFFER-COPY T-Caj_header TO Caj_header.
+    act_caj_head = ROWID(Caj_header).
+              IF seguir THEN IF seguir THEN MESSAGE t-caj_header.tip_comprob t-caj_header.nro_comprob VIEW-AS ALERT-BOX TITLE "baja detalle de comprobante".
+    RUN BAJAR_T-Caj_detalle.
+              IF seguir THEN IF seguir THEN MESSAGE t-caj_header.tip_comprob t-caj_header.nro_comprob VIEW-AS ALERT-BOX TITLE "bajo detalle. crea recibo".
+    RUN CREAR_Rec_header.
+              IF seguir THEN IF seguir THEN MESSAGE t-caj_header.tip_comprob t-caj_header.nro_comprob VIEW-AS ALERT-BOX TITLE "creo recibo. acumula caja".
+    RUN Acumcaja.p (INPUT "A").
+
+END PROCEDURE.
+
+PROCEDURE BAJAR_T-Caj_detalle:
+
+    FOR EACH T-Caj_detalle OF T-Caj_header:
+              IF seguir THEN IF seguir THEN MESSAGE t-caj_header.tip_comprob t-caj_header.nro_comprob t-caj_detalle.nro_linea VIEW-AS ALERT-BOX TITLE "baja detalle.".
+        CREATE Caj_detalle.
+        BUFFER-COPY T-Caj_detalle TO Caj_detalle. 
+              IF seguir THEN IF seguir THEN MESSAGE t-caj_header.tip_comprob t-caj_header.nro_comprob t-caj_detalle.nro_linea VIEW-AS ALERT-BOX TITLE "intenta bajar valor".
+        RUN BAJAR_T-Valor.
+    END.
+
+END PROCEDURE.
+
+PROCEDURE BAJAR_T-Valor:
+
+    FOR EACH T-Valor OF T-Caj_detalle:
+              IF seguir THEN IF seguir THEN MESSAGE t-caj_header.tip_comprob t-caj_header.nro_comprob t-caj_detalle.nro_linea VIEW-AS ALERT-BOX TITLE "hay valor.".
+        CREATE Valor.
+        BUFFER-COPY T-Valor TO Valor. 
+              IF seguir THEN IF seguir THEN MESSAGE t-caj_header.tip_comprob t-caj_header.nro_comprob t-caj_detalle.nro_linea VIEW-AS ALERT-BOX TITLE "bajo valor.".
+    END.
+
+END PROCEDURE.
+
+PROCEDURE CREAR_Rec_header:
+
+    FIND Caj_header WHERE ROWID(Caj_header) = act_caj_head.
+    
+    FIND Cliente WHERE Cliente.nro_cliente = Caj_header.nro_cliente.
+
+    /*-------------------------------------------*/
+    find first cobrador.
+    /*-------------------------------------------*/
+    FIND FIRST Domicilio OF Cliente.
+    CREATE Rec_header.
+    ASSIGN 
+           Rec_header.anulado         = NO 
+           Rec_header.cdg_condiva     = Cliente.cdg_condiva
+           Rec_header.cdg_imputacion  = 4
+           Rec_header.cdg_postal      = Domicilio.cdg_postal
+           Rec_header.cdg_provincia   = Domicilio.cdg_provincia
+           Rec_header.cdg_zonag       = Domicilio.cdg_zonag
+           Rec_header.cuit            = Cliente.cuit
+           Rec_header.direccion       = Domicilio.direccion
+           Rec_header.estado          = "E"
+           Rec_header.fecha           = Caj_header.fecha
+           Rec_header.imp_bruto       = Caj_header.importe
+           Rec_header.imp_difcambio   = 0
+           Rec_header.nro_cobrador    = cobrador.nro_cobrador
+           Rec_header.imp_neto        = Caj_header.importe
+           Rec_header.imp_pesos       = Caj_header.importe
+           Rec_header.imp_total       = Caj_header.importe 
+           Rec_header.localidad       = Domicilio.localidad
+           Rec_header.nombre          = Cliente.nom_cliente
+           Rec_header.nro_cliente     = Cliente.nro_cliente
+           Rec_header.nro_comprob     = Caj_header.nro_comprob
+           Rec_header.nro_domicilio   = Domicilio.nro_domicilio
+           Rec_header.nro_entidad     = 1
+           Rec_header.nro_moneda      = 1
+           Rec_header.cambio          = 1
+           Rec_header.nro_recibo      = NEXT-VALUE(proxima_transaccion)
+           Rec_header.nro_transaccion = Caj_header.nro_transaccion
+           Rec_header.origen          = "C"
+           Rec_header.prf_comprob     = Caj_header.prf_comprob
+           Rec_header.tipo_pago       = 2
+           Rec_header.tip_comprob     = Caj_header.tip_comprob 
+           Rec_header.nro_usuario     = Caj_header.nro_usuario
+           Rec_header.ano             = YEAR(Caj_header.fecha) 
+           Rec_header.cdg_empresa     = Caj_header.cdg_empresa
+           Rec_header.nro_usuario     = Caj_header.nro_usuario
+           Rec_header.mes             = MONTH(Caj_header.fecha).
+        
+    act_rec_head = ROWID(Rec_header).
+    RUN emitir_recibo.p (INPUT act_rec_head).
+
+END PROCEDURE.
+
+
+
+

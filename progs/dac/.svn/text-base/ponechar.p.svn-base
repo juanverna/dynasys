@@ -1,0 +1,10 @@
+for each ficha:
+  if hor_despacho <> ? then hms_despacho = STRING(hor_despacho,"HH:MM:SS").
+  if hor_salbase  <> ? then hms_salbase = STRING(hor_salbase,"HH:MM:SS").
+  if hor_arrdomi  <> ? then hms_arrdomi = STRING(hor_arrdomi,"HH:MM:SS").
+  if hor_saldomi  <> ? then hms_saldomi = STRING(hor_saldomi,"HH:MM:SS").
+  if hor_arrhosp  <> ? then hms_arrhosp = STRING(hor_arrhosp,"HH:MM:SS").
+  if hor_salhosp  <> ? then hms_salhosp = STRING(hor_salhosp,"HH:MM:SS").
+  if hor_arrbase  <> ? then hms_arrbase = STRING(hor_arrbase,"HH:MM:SS").
+  if hor_disponible  <> ? then hms_disponible = STRING(hor_disponible,"HH:MM:SS").
+  if hor_cierre  <> ? then hms_cierre = STRING(hor_cierre,"HH:MM:SS").

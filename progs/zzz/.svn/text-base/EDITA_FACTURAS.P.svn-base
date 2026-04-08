@@ -1,0 +1,6 @@
+find first fac_header where nro_comprob = 3280 and tip_comprob = "FB" 
+                            and cdg_empresa = "r" and prf_comprob = 1.
+update fac_header except leyenda with side-labels 2 column no-validate.
+for each fac_detalle of fac_header:
+ update fac_detalle except detallada.
+end. 

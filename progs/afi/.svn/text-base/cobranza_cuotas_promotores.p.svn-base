@@ -1,0 +1,288 @@
+/*=========================================================================================*/
+/*              REALIZA LA EMISION DEL LISTADO DE CARGO Y COBRADO                          */
+/*=========================================================================================*/
+
+DEFINE INPUT PARAMETER p-que_empresa      AS CHARACTER.
+DEFINE INPUT PARAMETER p-des_vendedor     LIKE Vendedor.cdg_vendedor.
+DEFINE INPUT PARAMETER p-has_vendedor     LIKE Vendedor.cdg_vendedor.
+
+DEFINE INPUT PARAMETER p-des_alta         AS DATE.
+DEFINE INPUT PARAMETER p-has_alta         AS DATE.
+
+DEFINE INPUT PARAMETER p-des_emision1     AS DATE.
+DEFINE INPUT PARAMETER p-has_emision1     AS DATE.
+
+DEFINE INPUT PARAMETER p-des_emision2     AS DATE.
+DEFINE INPUT PARAMETER p-has_emision2     AS DATE.
+
+/*=========================================================================================*/
+/*                             VARIABLES Y FRAMES                                          */
+/*=========================================================================================*/
+
+{vrshared.i "NEW"}
+{WGLISTAR.I}
+{dfvarimp.i}
+{findempresa.i}
+DEFINE VARIABLE j                         AS INTEGER.
+
+DEFINE VARIABLE s-pendiente               AS DECIMAL EXTENT 2 COLUMN-LABEL "Importe!de Cuota".
+DEFINE VARIABLE s-pagado                  AS DECIMAL EXTENT 2 COLUMN-LABEL "Importe!Abonado".
+
+DEFINE VARIABLE c-pendiente               AS DECIMAL EXTENT 2.
+DEFINE VARIABLE c-pagado                  AS DECIMAL EXTENT 2.
+
+DEFINE VARIABLE e-pendiente               AS DECIMAL EXTENT 2.
+DEFINE VARIABLE e-pagado                  AS DECIMAL EXTENT 2.
+
+DEFINE VARIABLE g-pendiente               AS DECIMAL EXTENT 2.
+DEFINE VARIABLE g-pagado                  AS DECIMAL EXTENT 2.
+
+DEFINE VARIABLE titulo_lst                AS CHARACTER FORMAT "X(40)".
+DEFINE VARIABLE titulo_det                AS CHARACTER FORMAT "X(40)".
+DEFINE VARIABLE titulo_vig                AS CHARACTER FORMAT "X(40)".
+
+DEFINE FRAME frm-titulo HEADER
+       que_empresa
+       "Cobranza de 2 cuotas por Promotor" AT 77
+       "Página:" AT 177 PAGE-NUMBER FORMAT ">>9" AT 185
+       SKIP  
+       fecha_lis       
+       titulo_det AT 77
+       hora_lis AT 177
+       SKIP
+       titulo_lst AT 77
+       SKIP
+       titulo_vig AT 77
+       SKIP(1)
+       WITH WIDTH 190 FRAME frm-titulo PAGE-TOP USE-TEXT STREAM-IO.
+
+FORM
+       Grupofam.cdg_grupofam
+       Grupofam.nom_grupofam
+       s-pendiente     [ 1 ] COLUMN-LABEL "Primera!Cuota"
+       s-pagado        [ 1 ] COLUMN-LABEL "Importe!Abonado"
+       s-pendiente     [ 2 ] COLUMN-LABEL "Segunda!Cuota"
+       s-pagado        [ 2 ] COLUMN-LABEL "Importe!Abonado"
+       WITH WIDTH 256 DOWN FRAME frm-listado STREAM-IO.
+
+/*=========================================================================================*/
+/*                           B L O Q U E   P R I N C I P A L                               */
+/*=========================================================================================*/
+
+que_empresa = "".
+DO j = 1 TO NUM-ENTRIES(p-que_empresa,","):
+     FIND Empresa WHERE Empresa.cdg_empresa = ENTRY(j,p-que_empresa,",") NO-LOCK.
+     que_empresa = que_empresa + Empresa.nombre.
+     IF j <> NUM-ENTRIES(p-que_empresa,",") THEN que_empresa = que_empresa + ",".
+END.
+
+titulo_det  = "1a. Cuota del " + 
+              STRING(p-des_emision1,"99/99/99") + 
+              " al " + 
+              STRING(p-has_emision1,"99/99/99").
+
+titulo_lst  = "2a. Cuota del " + 
+              STRING(p-des_emision2,"99/99/99") + 
+              " al " + 
+              STRING(p-has_emision2,"99/99/99").
+
+titulo_vig  = "Vigencia del " + 
+              STRING(p-des_alta,"99/99/99") + 
+              " al " + 
+              STRING(p-has_alta,"99/99/99").
+
+{dirprinfile.i}
+
+ASSIGN 
+    s-pendiente     [ 1 ] = 0
+    s-pagado        [ 1 ] = 0
+    s-pendiente     [ 2 ] = 0
+    s-pagado        [ 2 ] = 0.
+
+FOR EACH Vendedor WHERE Vendedor.cdg_vendedor <= p-has_vendedor
+                    AND Vendedor.cdg_vendedor >= p-des_vendedor
+                        BREAK BY Vendedor.cdg_vendedor:
+
+    FOR EACH Grupofam 
+        WHERE Grupofam.cdg_promotor = Vendedor.cdg_vendedor
+          AND LOOKUP(Grupofam.cdg_empresa,p-que_empresa) <> 0
+          AND CAN-DO (Usuario.lista_empresas,Grupofam.cdg_empresa)
+          AND Grupofam.fecha_alta      >= p-des_alta
+          AND Grupofam.fecha_alta      <= p-has_alta,
+              Cliente OF Grupofam
+              BREAK BY Grupofam.cdg_empresa BY Grupofam.cdg_grupofam:
+     
+           VIEW FRAME frm-titulo.
+        
+           RUN sumar_periodo ( INPUT p-des_emision1,
+                               INPUT p-has_emision1,
+                               OUTPUT s-pendiente [ 1 ],         
+                               OUTPUT s-pagado    [ 1 ]).         
+
+           RUN sumar_periodo ( INPUT p-des_emision2,
+                               INPUT p-has_emision2,
+                               OUTPUT s-pendiente [ 2 ],         
+                               OUTPUT s-pagado    [ 2 ]).         
+
+
+           DISPLAY
+                Grupofam.cdg_grupofam
+                Grupofam.nom_grupofam
+                s-pendiente     [ 1 ] 
+                s-pagado        [ 1 ] 
+                s-pendiente     [ 2 ] 
+                s-pagado        [ 2 ] 
+                WITH FRAME frm-listado.
+           DOWN WITH FRAME frm-listado.          
+    
+           ASSIGN
+                e-pendiente     [ 1 ]  =  e-pendiente     [ 1 ] + s-pendiente     [ 1 ]   
+                e-pagado        [ 1 ]  =  e-pagado        [ 1 ] + s-pagado        [ 1 ]
+                
+                e-pendiente     [ 2 ]  =  e-pendiente     [ 2 ] + s-pendiente     [ 2 ]   
+                e-pagado        [ 2 ]  =  e-pagado        [ 2 ] + s-pagado        [ 2 ].
+    
+           ASSIGN 
+                s-pendiente     [ 1 ] = 0
+                s-pagado        [ 1 ] = 0
+                s-pendiente     [ 2 ] = 0
+                s-pagado        [ 2 ] = 0.
+    
+           IF LAST-OF(Grupofam.cdg_empresa)
+           THEN DO:
+
+                UNDERLINE
+                    Grupofam.nom_grupofam
+                    s-pendiente     [ 1 ] 
+                    s-pagado        [ 1 ] 
+                    s-pendiente     [ 2 ] 
+                    s-pagado        [ 2 ] 
+                    WITH FRAME frm-listado.
+                 
+                DISPLAY
+                    "Subtotal " + Grupofam.cdg_empresa     @ Grupofam.nom_grupofam
+                    e-pendiente     [ 1 ]  @ s-pendiente     [ 1 ]
+                    e-pagado        [ 1 ]  @ s-pagado        [ 1 ]
+                    e-pendiente     [ 2 ]  @ s-pendiente     [ 2 ]
+                    e-pagado        [ 2 ]  @ s-pagado        [ 2 ]
+                    WITH FRAME frm-listado.
+                DOWN 2 WITH FRAME frm-listado.
+                
+                ASSIGN
+                     c-pendiente     [ 1 ]  =  c-pendiente     [ 1 ] + e-pendiente     [ 1 ]   
+                     c-pagado        [ 1 ]  =  c-pagado        [ 1 ] + e-pagado        [ 1 ]
+                     
+                     c-pendiente     [ 2 ]  =  c-pendiente     [ 2 ] + e-pendiente     [ 2 ]   
+                     c-pagado        [ 2 ]  =  c-pagado        [ 2 ] + e-pagado        [ 2 ].
+             
+                ASSIGN 
+                     e-pendiente     [ 1 ] = 0
+                     e-pagado        [ 1 ] = 0
+                     e-pendiente     [ 2 ] = 0
+                     e-pagado        [ 2 ] = 0.
+
+           END.
+   
+    
+    END.
+
+    UNDERLINE
+        Grupofam.cdg_grupofam
+        Grupofam.nom_grupofam
+        s-pendiente     [ 1 ] 
+        s-pagado        [ 1 ] 
+        s-pendiente     [ 2 ] 
+        s-pagado        [ 2 ] 
+        WITH FRAME frm-listado.
+     
+    DISPLAY
+        Vendedor.cdg_vendedor  @ Grupofam.cdg_grupofam
+        Vendedor.nombre        @ Grupofam.nom_grupofam
+        c-pendiente     [ 1 ]  @ s-pendiente     [ 1 ]
+        c-pagado        [ 1 ]  @ s-pagado        [ 1 ]
+        c-pendiente     [ 2 ]  @ s-pendiente     [ 2 ]
+        c-pagado        [ 2 ]  @ s-pagado        [ 2 ]
+        WITH FRAME frm-listado.
+    DOWN WITH FRAME frm-listado.
+    
+    ASSIGN
+         g-pendiente     [ 1 ]  =  g-pendiente     [ 1 ] + c-pendiente     [ 1 ]   
+         g-pagado        [ 1 ]  =  g-pagado        [ 1 ] + c-pagado        [ 1 ]
+         
+         g-pendiente     [ 2 ]  =  g-pendiente     [ 2 ] + c-pendiente     [ 2 ]   
+         g-pagado        [ 2 ]  =  g-pagado        [ 2 ] + c-pagado        [ 2 ].
+ 
+    ASSIGN 
+         c-pendiente     [ 1 ] = 0
+         c-pagado        [ 1 ] = 0
+         c-pendiente     [ 2 ] = 0
+         c-pagado        [ 2 ] = 0.
+
+    IF NOT LAST(Vendedor.cdg_vendedor) THEN PAGE.
+
+
+END.
+
+UNDERLINE
+    Grupofam.cdg_grupofam
+    Grupofam.nom_grupofam
+    s-pendiente     [ 1 ] 
+    s-pagado        [ 1 ] 
+    s-pendiente     [ 2 ] 
+    s-pagado        [ 2 ] 
+    WITH FRAME frm-listado.
+ 
+DISPLAY
+    "Total General"        @ Grupofam.nom_grupofam
+    g-pendiente     [ 1 ]  @ s-pendiente     [ 1 ]
+    g-pagado        [ 1 ]  @ s-pagado        [ 1 ]
+    g-pendiente     [ 2 ]  @ s-pendiente     [ 2 ]
+    g-pagado        [ 2 ]  @ s-pagado        [ 2 ]
+    WITH FRAME frm-listado.
+DOWN WITH FRAME frm-listado.
+
+OUTPUT CLOSE.
+
+RUN VERESULT.W ( INPUT arch_salida,
+                 INPUT 22 ).
+
+/*=========================================================================================*/
+/*                           P R O C E D I M I E N T O S                                   */
+/*=========================================================================================*/
+
+PROCEDURE sumar_periodo:
+
+
+    DEFINE INPUT PARAMETER  p-desde     AS DATE.
+    DEFINE INPUT PARAMETER  p-hasta     AS DATE.
+    
+    DEFINE OUTPUT PARAMETER cuota       AS DECIMAL.
+    DEFINE OUTPUT PARAMETER pagado      AS DECIMAL.        
+
+    cuota = 0.
+    pagado = 0.
+
+    FOR EACH Cta_cte OF Cliente 
+             WHERE Cta_cte.tip_comprob BEGINS "F"
+               AND Cta_cte.fecha_emision   >= p-desde
+               AND Cta_cte.fecha_emision   <= p-hasta:
+ 
+             cuota = cuota + Cta_cte.debito.
+             
+             FIND Cupon 
+                  WHERE Cupon.cdg_empresa = Cta_cte.cdg_empresa               
+                    AND Cupon.tip_cupon   = Cta_cte.tip_comprob
+                    AND Cupon.prf_cupon   = Cta_cte.prf_comprob
+                    AND Cupon.nro_cupon   = Cta_cte.nro_comprob 
+                        NO-LOCK NO-ERROR.
+
+             IF AVAILABLE Cupon
+             THEN DO:
+ 
+                  IF Cupon.estado = "1" 
+                     THEN pagado = pagado + Cupon.importe_cuota.
+             END.     
+        
+    END.    
+
+END PROCEDURE.

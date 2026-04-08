@@ -1,0 +1,288 @@
+&ANALYZE-SUSPEND _VERSION-NUMBER AB_v10r12
+&ANALYZE-RESUME
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CUSTOM _DEFINITIONS Include 
+/*------------------------------------------------------------------------
+    File        : 
+    Purpose     :
+
+    Syntax      :
+
+    Description :
+
+    Author(s)   :
+    Created     :
+    Notes       :
+  ----------------------------------------------------------------------*/
+/*          This .W file was created with the Progress AppBuilder.      */
+/*----------------------------------------------------------------------*/
+
+/* ***************************  Definitions  ************************** */
+
+DEFINE VAR comprest AS CHARACTER LABEL "Restricciones" FORMAT "X(90)" NO-UNDO.
+DEFINE VAR perant AS DATE LABEL "AS Ant." NO-UNDO.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-PREPROCESSOR-BLOCK 
+
+/* ********************  Preprocessor Definitions  ******************** */
+
+
+
+/* _UIB-PREPROCESSOR-BLOCK-END */
+&ANALYZE-RESUME
+
+
+/* ************************  Function Prototypes ********************** */
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _FUNCTION-FORWARD comprest Include 
+FUNCTION comprest RETURNS CHARACTER
+  ( bbnro AS INT )  FORWARD.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _FUNCTION-FORWARD eslleva Include 
+FUNCTION eslleva RETURNS LOGICAL
+  ( pnro AS INT )  FORWARD.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _FUNCTION-FORWARD hijos Include 
+FUNCTION hijos RETURNS CHARACTER
+  ( nro AS INT )  FORWARD.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _FUNCTION-FORWARD perant Include 
+FUNCTION perant RETURNS DATE
+ ( bbnro AS INT )  FORWARD.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _FUNCTION-FORWARD restcli Include 
+FUNCTION restcli RETURNS CHARACTER
+  ( bbnro AS CHAR )  FORWARD.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+/* *********************** Procedure Settings ************************ */
+
+&ANALYZE-SUSPEND _PROCEDURE-SETTINGS
+/* Settings for THIS-PROCEDURE
+   Type: Include
+   Allow: 
+   Frames: 0
+   Add Fields to: Neither
+   Other Settings: INCLUDE-ONLY
+ */
+&ANALYZE-RESUME _END-PROCEDURE-SETTINGS
+
+/* *************************  Create Window  ************************** */
+
+&ANALYZE-SUSPEND _CREATE-WINDOW
+/* DESIGN Window definition (used by the UIB) 
+  CREATE WINDOW Include ASSIGN
+         HEIGHT             = 15
+         WIDTH              = 60.
+/* END WINDOW DEFINITION */
+                                                                        */
+&ANALYZE-RESUME
+
+ 
+
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CUSTOM _MAIN-BLOCK Include 
+
+
+/* ***************************  Main Block  *************************** */
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+/* ************************  Function Implementations ***************** */
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _FUNCTION comprest Include 
+FUNCTION comprest RETURNS CHARACTER
+  ( bbnro AS INT ) :
+/*------------------------------------------------------------------------------
+  Purpose: restricciones del numero de evento corriente 
+    Notes:  
+------------------------------------------------------------------------------*/
+
+DEFINE BUFFER bb FOR evento.
+DEFINE VAR ppadre AS CHAR NO-UNDO.
+FIND bb WHERE bb.nro_evento = bbnro NO-LOCK NO-ERROR.
+IF NOT AVAILABLE bb THEN RETURN "".
+DEFINE VAR rr AS CHAR NO-UNDO.
+
+  IF bb.origen = "CONTRATO"
+      THEN do:
+        find contrato_hd where Contrato_hd.nro_contrato = bb.nro_identificacion NO-LOCK NO-ERROR.
+        rr = "".
+        FOR EACH contrato_restriccion WHERE contrato_restriccion.nro_contrato = bb.nro_identificacion AND
+          contrato_restriccion.sub_evento = bb.sub_evento NO-LOCK,
+          restriccion OF contrato_restriccion NO-LOCK BY Restriccion.nro_tipo_evento BY restriccion.prioridad BY restriccion.cdg_restriccion:
+          rr = rr + " " + restriccion.cdg_restriccion + "[" + contrato_restriccion.valor + "]".
+        END.
+        rr = rr + hijos(bb.nro_identificacion).
+        RETURN SUBSTRING(rr,2).
+   END.
+   IF bb.origen = "COBRANZA"
+   THEN DO:
+        rr = "".
+        FOR EACH cliente_restriccion WHERE cliente_restriccion.nro_cliente = bb.nro_cliente NO-LOCK,
+          restriccion OF cliente_restriccion NO-LOCK BY Restriccion.nro_tipo_evento BY restriccion.prioridad BY restriccion.cdg_restriccion:
+          rr = rr + " " + restriccion.cdg_restriccion + "[" + cliente_restriccion.valor + "]".
+        END.
+        rr = rr + hijos(bb.nro_identificacion).
+        RETURN SUBSTRING(rr,2).
+   END.
+  RETURN "".   /* Function return value. */
+
+END FUNCTION.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _FUNCTION eslleva Include 
+FUNCTION eslleva RETURNS LOGICAL
+  ( pnro AS INT ) :
+/*------------------------------------------------------------------------------
+  Purpose:  si tiene restriccion de lleva
+    Notes:  
+------------------------------------------------------------------------------*/
+DEFINE BUFFER llevento FOR evento. 
+ FIND llevento WHERE llevento.nro_evento = pnro NO-LOCK NO-ERROR.
+  IF NOT AVAILABLE llevento THEN RETURN ?.
+  FIND restriccion WHERE restriccion.cdg_restriccion BEGINS "AVISO" and
+      restriccion.nro_tipo_evento = llevento.nro_tipo_evento NO-LOCK NO-ERROR.
+  IF NOT AVAILABLE restriccion THEN RETURN ?.
+  IF llevento.origen = "CONTRATO" THEN DO:
+    FIND FIRST contrato_restriccion WHERE contrato_restriccion.nro_contrato = llevento.nro_identificacion AND
+         contrato_restriccion.sub_evento = llevento.sub_evento AND 
+         contrato_restriccion.nro_restriccion = restriccion.nro_restriccion NO-LOCK NO-ERROR.
+    IF NOT AVAILABLE contrato_restriccion THEN RETURN ?.
+    RETURN ENTRY( 3 , contrato_restriccion.valor , "|" ) = "L".
+  END.
+  RETURN ?.   /* Function return value. */
+
+END FUNCTION.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _FUNCTION hijos Include 
+FUNCTION hijos RETURNS CHARACTER
+  ( nro AS INT ) :
+/*------------------------------------------------------------------------------
+  Purpose:  
+    Notes:  
+------------------------------------------------------------------------------*/
+DEFINE VAR ss AS character NO-UNDO.
+DEFINE VAR ss1 AS character NO-UNDO.
+DEF VAR patron AS CHAR NO-UNDO.
+DEFINE BUFFER bcontrato_hd FOR contrato_hd.
+
+  ss = "".
+  ss1 = "".
+ patron = STRING(nro) + "|".
+ FOR EACH restriccion WHERE restriccion.cdg_restriccion BEGINS "BLOQ":
+     FOR EACH contrato_restriccion WHERE contrato_restriccion.nro_restriccion = restriccion.nro_restriccion AND
+         contrato_restriccion.valor BEGINS patron :
+         FIND bcontrato_hd where contrato_restriccion.nro_contrato = bcontrato_hd.nro_contrato NO-LOCK NO-ERROR.
+         IF AVAILABLE bcontrato_hd THEN
+             IF NOT bcontrato_hd.anulado AND ( bcontrato_hd.fecha_baja >= TODAY OR bcontrato_hd.fecha_baja = ? ) THEN
+         ss = ss + "," + string(contrato_restriccion.nro_contrato) + "|" + string(sic.Contrato_Restriccion.sub_evento).
+     END.
+ END.
+
+
+ patron = string(nro) + "|".
+ FOR EACH restriccion WHERE restriccion.cdg_restriccion BEGINS "dfEV":
+     FOR EACH contrato_restriccion WHERE contrato_restriccion.nro_restriccion = restriccion.nro_restriccion AND
+         contrato_restriccion.valor BEGINS patron:
+         FIND bcontrato_hd where contrato_restriccion.nro_contrato = bcontrato_hd.nro_contrato NO-LOCK NO-ERROR.
+         IF AVAILABLE bcontrato_hd THEN
+             IF NOT bcontrato_hd.anulado AND ( bcontrato_hd.fecha_baja >= TODAY OR bcontrato_hd.fecha_baja = ? ) THEN
+               ss1 = ss1 + "," + string(contrato_restriccion.nro_contrato) + "|" + string(sic.Contrato_Restriccion.sub_evento).
+     END.
+ END.
+  ss = IF ss <> "" THEN SUBSTRING(ss,2) ELSE "".
+ ss1 = IF ss1 <> "" THEN SUBSTRING(ss1,2) ELSE "".
+
+ RETURN ( IF ss = "" THEN "" ELSE " HIJOS: " + ss )  + ( IF ss1 = "" THEN "" ELSE "HIJOS dfEV: " + ss1 ).
+
+
+END FUNCTION.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _FUNCTION perant Include 
+FUNCTION perant RETURNS DATE
+ ( bbnro AS INT ) :
+/*------------------------------------------------------------------------------
+  Purpose: restricciones del numero de evento corriente 
+    Notes:  
+------------------------------------------------------------------------------*/
+
+DEFINE BUFFER bb FOR evento.
+DEFINE BUFFER bb2 FOR evento.
+FIND bb WHERE bb.nro_evento = bbnro NO-LOCK NO-ERROR.
+IF NOT AVAILABLE bb THEN RETURN ?.
+   IF bb.origen = "CONTRATO"                                                                                                                      
+       THEN do:                                                                                                                                       
+         FOR EACH bb2 WHERE bb2.nro_identificacion = bb.nro_identificacion AND                                                            
+             bb2.sub_evento = bb.sub_evento AND NOT bb2.anulado AND                                                                                   
+                      bb2.origen = bb.origen AND                                                                                              
+                      bb2.periodo < bb.periodo NO-LOCK BY bb2.periodo DESC:                                                                            
+             RETURN IF bb2.frealizado = ? THEN bb2.fasignado ELSE bb2.frealizado.                                                      
+         END.                                                                                                                                           
+    END. 
+    IF bb.origen = "COBRANZA"                                                                                                                      
+       THEN do:                                                                                                                                       
+         FOR EACH bb2 WHERE bb2.nro_cliente = bb.nro_cliente AND                                                            
+                      bb2.nro_tipo_evento = bb.nro_tipo_evento AND                                                                                      
+                      bb2.origen = bb.origen AND  NOT bb2.anulado AND                                                                                           
+                      bb2.periodo < bb.periodo NO-LOCK BY bb2.periodo DESC:
+             RETURN IF bb2.frealizado = ? THEN bb2.fasignado ELSE bb2.frealizado.                                                      
+         END.                                                                                                                                           
+    END. 
+
+END FUNCTION.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _FUNCTION restcli Include 
+FUNCTION restcli RETURNS CHARACTER
+  ( bbnro AS CHAR ) :
+/*------------------------------------------------------------------------------
+  Purpose: restricciones del numero de cliente 
+    Notes:  
+------------------------------------------------------------------------------*/
+DEFINE VAR rr AS CHAR NO-UNDO.
+DEFINE BUFFER bcli FOR cliente.
+FIND bcli WHERE bcli.cdg_cliente = bbnro NO-LOCK NO-ERROR.
+IF NOT AVAILABLE bcli THEN RETURN "".
+FOR EACH cliente_restriccion WHERE cliente_restriccion.nro_cliente = bcli.nro_cliente NO-LOCK:
+  FIND restriccion OF cliente_restriccion NO-LOCK.
+  rr = rr + " " + restriccion.cdg_restriccion + "[" + cliente_restriccion.valor + "]".
+END.
+RETURN SUBSTRING(rr,2).
+RETURN "".   /* Function return value. */
+
+END FUNCTION.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+

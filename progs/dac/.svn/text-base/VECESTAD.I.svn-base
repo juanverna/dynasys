@@ -1,0 +1,45 @@
+/*------------------------------------------------------------------------------------------*/
+/*          DEFINICION DE VARIABLES NECESARIAS PARA CALCULO DE ESTADISTICA DIARIA           */
+/*------------------------------------------------------------------------------------------*/
+
+DEFINE VARIABLE  tr                        AS INTEGER.
+
+DEFINE VARIABLE  cnt_incid                 AS INTEGER FORMAT ">>>>>9" LABEL "Total"  EXTENT 24.
+DEFINE VARIABLE  cnt_rojo                  AS INTEGER FORMAT ">>>>>9" LABEL "Rojo"   EXTENT 24.
+DEFINE VARIABLE  cnt_rojo-tarde            AS INTEGER FORMAT ">>>>>9" LABEL "> 10'"  EXTENT 24.
+DEFINE VARIABLE  cnt_rojo-muytarde         AS INTEGER FORMAT ">>>>>9" LABEL "> 15'"  EXTENT 24.
+DEFINE VARIABLE  cnt_amarillo              AS INTEGER FORMAT ">>>>>9" LABEL "Amar."  EXTENT 24.
+DEFINE VARIABLE  cnt_amarillo-tarde        AS INTEGER FORMAT ">>>>>9" LABEL "> 20'"  EXTENT 24.
+DEFINE VARIABLE  cnt_amarillo-muytarde     AS INTEGER FORMAT ">>>>>9" LABEL "> 30'"  EXTENT 24.
+DEFINE VARIABLE  cnt_celeste               AS INTEGER FORMAT ">>>>>9" LABEL "Amar."  EXTENT 24.
+DEFINE VARIABLE  cnt_celeste-tarde         AS INTEGER FORMAT ">>>>>9" LABEL "> 20'"  EXTENT 24.
+DEFINE VARIABLE  cnt_celeste-muytarde      AS INTEGER FORMAT ">>>>>9" LABEL "> 30'"  EXTENT 24.
+DEFINE VARIABLE  cnt_verdeadu              AS INTEGER FORMAT ">>>>>9" LABEL "Adulto" EXTENT 24.
+DEFINE VARIABLE  cnt_verdeadu-tarde        AS INTEGER FORMAT ">>>>>9" LABEL "> 2H."  EXTENT 24.
+DEFINE VARIABLE  cnt_verdeadu-muytarde     AS INTEGER FORMAT ">>>>>9" LABEL "> 3H."  EXTENT 24.
+DEFINE VARIABLE  cnt_verdeped              AS INTEGER FORMAT ">>>>>9" LABEL "Pediat" EXTENT 24.
+DEFINE VARIABLE  cnt_verdeped-tarde        AS INTEGER FORMAT ">>>>>9" LABEL "> 2H."  EXTENT 24.
+DEFINE VARIABLE  cnt_verdeped-muytarde     AS INTEGER FORMAT ">>>>>9" LABEL "> 3H."  EXTENT 24.
+DEFINE VARIABLE  cnt_marron                AS INTEGER FORMAT ">>>>>9" LABEL "Pediat" EXTENT 24.
+DEFINE VARIABLE  cnt_naranja               AS INTEGER FORMAT ">>>>>9" LABEL "> 2H."  EXTENT 24.
+DEFINE VARIABLE  cnt_azul                  AS INTEGER FORMAT ">>>>>9" LABEL "> 3H."  EXTENT 24.
+DEFINE VARIABLE  cnt_violeta               AS INTEGER FORMAT ">>>>>9" LABEL "> 2H."  EXTENT 24.
+
+
+DEFINE VARIABLE  tot_rojo                  AS INTEGER FORMAT ">>>>>9".
+DEFINE VARIABLE  tot_rojo-tarde            AS INTEGER FORMAT ">>>>>9".
+DEFINE VARIABLE  tot_rojo-muytarde         AS INTEGER FORMAT ">>>>>9".
+DEFINE VARIABLE  tot_amarillo              AS INTEGER FORMAT ">>>>>9".
+DEFINE VARIABLE  tot_amarillo-tarde        AS INTEGER FORMAT ">>>>>9".
+DEFINE VARIABLE  tot_amarillo-muytarde     AS INTEGER FORMAT ">>>>>9".
+DEFINE VARIABLE  tot_celeste               AS INTEGER FORMAT ">>>>>9".
+DEFINE VARIABLE  tot_celeste-tarde         AS INTEGER FORMAT ">>>>>9".
+DEFINE VARIABLE  tot_celeste-muytarde      AS INTEGER FORMAT ">>>>>9".
+DEFINE VARIABLE  tot_verdeadu              AS INTEGER FORMAT ">>>>>9".
+DEFINE VARIABLE  tot_verdeadu-tarde        AS INTEGER FORMAT ">>>>>9".
+DEFINE VARIABLE  tot_verdeadu-muytarde     AS INTEGER FORMAT ">>>>>9".
+DEFINE VARIABLE  tot_verdeped              AS INTEGER FORMAT ">>>>>9".
+DEFINE VARIABLE  tot_verdeped-tarde        AS INTEGER FORMAT ">>>>>9".
+DEFINE VARIABLE  tot_verdeped-muytarde     AS INTEGER FORMAT ">>>>>9".
+DEFINE VARIABLE  tot_azul                  AS INTEGER FORMAT ">>>>>9".
+DEFINE VARIABLE  tot_violeta               AS INTEGER FORMAT ">>>>>9".

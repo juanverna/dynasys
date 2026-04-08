@@ -1,0 +1,15 @@
+/*======================================================================================*/
+/*        REALIZA LA CONECCION (OPCIONAL) DE LA BASE DE AFILIADOS E INVOCA EL MENU      */
+/*======================================================================================*/
+
+DEFINE VARIABLE hubo_logon AS LOGICAL.
+
+SESSION:TIME-SOURCE = "despacho".
+SESSION:DATA-ENTRY-RETURN = YES.
+
+RUN conectar_auxiliares.p.
+
+RUN c-logon.w ( OUTPUT hubo_logon).
+IF hubo_logon 
+   THEN RUN valida_run.p ( INPUT "RUNORTRA", INPUT "w-orden_traslados.w").
+QUIT.

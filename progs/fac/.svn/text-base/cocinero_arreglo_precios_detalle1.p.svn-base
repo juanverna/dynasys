@@ -1,0 +1,46 @@
+DEFINE VAR vv AS DECIMAL NO-UNDO.
+DEFINE VAR vvc AS INT NO-UNDO.
+FIND articulo WHERE articulo.cdg_articulo = "23F".
+FOR EACH fac_header WHERE fecha > 01/01/2011 AND prf_comprob > 1:
+    vv = 0.
+    vvc = 0.
+FOR EACH fac_detalle OF fac_header:
+vv = vv + fac_detalle.subtotal_gral.
+vvc = vvc + 1.
+END.
+IF vvc > 1 THEN DISPLAY nro_comprob prf_comprob.
+/*IF vvc = 1 THEN DO:
+    FOR EACH fac_detalle OF fac_header:
+            subtotal_gral = fac_header.imp_total.
+            subtotal_neto = fac_header.imp_total.
+            subtotal_gral_cf = fac_header.imp_total.
+            subtotal_neto_cf = fac_header.imp_total.
+            precio = fac_header.imp_total.
+            precio_cf = fac_header.imp_total.
+    END.
+END.
+ELSE DO:
+    FOR EACH fac_detalle OF fac_header:
+    IF fac_detalle.nro_articulo = articulo.nro_articulo THEN DO:
+                subtotal_gral = 60.
+                subtotal_neto = 60.
+                subtotal_gral_cf = 60.
+                subtotal_neto_cf = 60.
+                precio = 60.
+                precio_cf = 60.
+        END.
+        ELSE DO:
+                subtotal_gral = fac_header.imp_total - 60.
+                subtotal_neto = fac_header.imp_total - 60.
+                subtotal_gral_cf = fac_header.imp_total - 60.
+                subtotal_neto_cf = fac_header.imp_total - 60.
+                precio = fac_header.imp_total - 60.
+                precio_cf = fac_header.imp_total - 60.
+        END.
+    END.
+END.
+*/
+END.
+
+
+

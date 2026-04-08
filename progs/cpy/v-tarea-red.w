@@ -1,0 +1,1293 @@
+&ANALYZE-SUSPEND _VERSION-NUMBER UIB_v8r12 GUI ADM1
+&ANALYZE-RESUME
+/* Connected Databases 
+          sic              PROGRESS
+*/
+&Scoped-define WINDOW-NAME CURRENT-WINDOW
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CUSTOM _DEFINITIONS V-table-Win 
+/*------------------------------------------------------------------------
+
+  File:
+
+  Description: from VIEWER.W - Template for SmartViewer Objects
+
+  Input Parameters:
+      <none>
+
+  Output Parameters:
+      <none>
+
+------------------------------------------------------------------------*/
+/*          This .W file was created with the Progress UIB.             */
+/*----------------------------------------------------------------------*/
+
+/* Create an unnamed pool to store all the widgets created 
+     by this procedure. This is a good default which assures
+     that this procedure's triggers and internal procedures 
+     will execute in this procedure's storage, and that proper
+     cleanup will occur on deletion of the procedure. */
+
+CREATE WIDGET-POOL.
+
+/* ***************************  Definitions  ************************** */
+
+/* Parameters Definitions ---                                           */
+
+/* Local Variable Definitions ---                                       */
+
+  DEFINE VARIABLE x-lista AS CHARACTER.
+  DEFINE VARIABLE fecha_inicial AS DATE.
+  DEFINE VARIABLE fecha_elegida AS DATE.
+
+DEFINE VAR geolat AS DECIMAL.
+DEFINE VAR geolong AS DECIMAL.
+DEFINE VAR geoX AS DECIMAL.
+DEFINE VAR geoY AS DECIMAL.
+
+DEFINE VAR h_geocli AS WIDGET-HANDLE NO-UNDO.
+{geoLibrary.i}
+DEFINE TEMP-TABLE ott LIKE internal-ttgeo.
+DEFINE VAR rowtt AS INT NO-UNDO.
+
+DEFINE VAR h_geoTT AS HANDLE.
+
+DEFINE TEMP-TABLE ttgeo NO-UNDO
+    FIELD ttind AS INT
+    FIELD ttgeolat AS DECIMAL
+    FIELD ttgeolong AS DECIMAL
+    FIELD tttipo AS INT
+    FIELD tturl AS CHARACTER
+    INDEX ind AS PRIMARY ttind.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-PREPROCESSOR-BLOCK 
+
+/* ********************  Preprocessor Definitions  ******************** */
+
+&Scoped-define PROCEDURE-TYPE SmartViewer
+&Scoped-define DB-AWARE no
+
+&Scoped-define ADM-SUPPORTED-LINKS Record-Source,Record-Target,TableIO-Target
+
+/* Name of designated FRAME-NAME and/or first browse and/or first query */
+&Scoped-define FRAME-NAME F-Main
+
+/* External Tables                                                      */
+&Scoped-define EXTERNAL-TABLES Tarea
+&Scoped-define FIRST-EXTERNAL-TABLE Tarea
+
+
+/* Need to scope the external tables to this procedure                  */
+DEFINE QUERY external_tables FOR Tarea.
+/* Standard List Definitions                                            */
+&Scoped-Define ENABLED-FIELDS Tarea.direccion Tarea.cdg_tipotarea ~
+Tarea.reportado_por Tarea.estado Tarea.cdg_recurso Tarea.prioridad ~
+Tarea.cdg_proyecto Tarea.titulo Tarea.fecha_alta Tarea.hora_alta 
+&Scoped-define ENABLED-TABLES Tarea
+&Scoped-define FIRST-ENABLED-TABLE Tarea
+&Scoped-Define ENABLED-OBJECTS RECT-1 BUTTON-11 Bresuelto 
+&Scoped-Define DISPLAYED-FIELDS Tarea.direccion Tarea.cdg_tipotarea ~
+Tarea.reportado_por Tarea.comunicarsepor Tarea.estado Tarea.cdg_recurso ~
+Tarea.prioridad Tarea.nro_tarea Tarea.cdg_proyecto Tarea.titulo ~
+Tarea.fecha_alta Tarea.hora_alta 
+&Scoped-define DISPLAYED-TABLES Tarea
+&Scoped-define FIRST-DISPLAYED-TABLE Tarea
+&Scoped-Define DISPLAYED-OBJECTS v-cdg_cliente te-1 vte-1 email cdg_cargo ~
+te-2 vte-2 te-3 vte-3 te-4 vte-4 
+
+/* Custom List Definitions                                              */
+/* ADM-CREATE-FIELDS,ADM-ASSIGN-FIELDS,List-3,List-4,List-5,List-6      */
+
+/* _UIB-PREPROCESSOR-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _XFTR "Foreign Keys" V-table-Win _INLINE
+/* Actions: ? adm/support/keyedit.w ? ? ? */
+/* STRUCTURED-DATA
+<KEY-OBJECT>
+THIS-PROCEDURE
+</KEY-OBJECT>
+<FOREIGN-KEYS>
+</FOREIGN-KEYS> 
+<EXECUTING-CODE>
+**************************
+* Set attributes related to FOREIGN KEYS
+*/
+RUN set-attribute-list (
+    'Keys-Accepted = "",
+     Keys-Supplied = ""':U).
+/**************************
+</EXECUTING-CODE> */   
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+/* ************************  Function Prototypes ********************** */
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _FUNCTION-FORWARD thandle V-table-Win 
+FUNCTION thandle RETURNS HANDLE
+  ( ppar AS CHAR )  FORWARD.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+/* ***********************  Control Definitions  ********************** */
+
+
+/* Definitions of the field level widgets                               */
+DEFINE BUTTON badmin 
+     LABEL "Admin" 
+     SIZE 8 BY 1.24.
+
+DEFINE BUTTON Bresuelto 
+     LABEL "Resuelto" 
+     SIZE 14 BY 1.14.
+
+DEFINE BUTTON BUTTON-11 
+     IMAGE-UP FILE "C:/Dynasys10/progs/img/earth_location.jpg":U
+     LABEL "b-geocli" 
+     SIZE 5 BY 1.24.
+
+DEFINE VARIABLE cdg_cargo LIKE Cliente-contacto.cdg_cargo
+     VIEW-AS COMBO-BOX INNER-LINES 5
+     LIST-ITEM-PAIRS "Item 1","Item 1"
+     DROP-DOWN-LIST
+     SIZE 25 BY 1
+     BGCOLOR 15 FGCOLOR 9  NO-UNDO.
+
+DEFINE VARIABLE te-1 AS CHARACTER FORMAT "X(256)":U 
+     VIEW-AS COMBO-BOX INNER-LINES 5
+     LIST-ITEM-PAIRS "Item 1","Item 1"
+     DROP-DOWN-LIST
+     SIZE 16 BY 1
+     BGCOLOR 15 FGCOLOR 9  NO-UNDO.
+
+DEFINE VARIABLE te-2 AS CHARACTER FORMAT "X(256)":U 
+     VIEW-AS COMBO-BOX INNER-LINES 5
+     LIST-ITEM-PAIRS "Item 1","Item 1"
+     DROP-DOWN-LIST
+     SIZE 16 BY 1
+     BGCOLOR 15 FGCOLOR 9  NO-UNDO.
+
+DEFINE VARIABLE te-3 AS CHARACTER FORMAT "X(256)":U 
+     VIEW-AS COMBO-BOX INNER-LINES 5
+     LIST-ITEM-PAIRS "Item 1","Item 1"
+     DROP-DOWN-LIST
+     SIZE 16 BY 1
+     BGCOLOR 15 FGCOLOR 9  NO-UNDO.
+
+DEFINE VARIABLE te-4 AS CHARACTER FORMAT "X(256)":U 
+     VIEW-AS COMBO-BOX INNER-LINES 5
+     LIST-ITEM-PAIRS "Item 1","Item 1"
+     DROP-DOWN-LIST
+     SIZE 16 BY 1
+     BGCOLOR 15 FGCOLOR 9  NO-UNDO.
+
+DEFINE VARIABLE email AS CHARACTER FORMAT "X(256)" 
+     LABEL "E-mail" 
+     VIEW-AS FILL-IN NATIVE 
+     SIZE 61 BY 1 TOOLTIP "Email particular"
+     BGCOLOR 15 FGCOLOR 9 .
+
+DEFINE VARIABLE v-cdg_cliente AS CHARACTER FORMAT "X(8)" 
+     LABEL "Cod" 
+     VIEW-AS FILL-IN NATIVE 
+     SIZE 15.2 BY 1
+     BGCOLOR 15 FGCOLOR 9 .
+
+DEFINE VARIABLE vte-1 AS CHARACTER FORMAT "X(256)":U 
+     VIEW-AS FILL-IN NATIVE 
+     SIZE 42 BY 1
+     BGCOLOR 15 FGCOLOR 9  NO-UNDO.
+
+DEFINE VARIABLE vte-2 AS CHARACTER FORMAT "X(256)":U 
+     VIEW-AS FILL-IN NATIVE 
+     SIZE 42 BY 1
+     BGCOLOR 15 FGCOLOR 9  NO-UNDO.
+
+DEFINE VARIABLE vte-3 AS CHARACTER FORMAT "X(256)":U 
+     VIEW-AS FILL-IN NATIVE 
+     SIZE 42 BY 1
+     BGCOLOR 15 FGCOLOR 9  NO-UNDO.
+
+DEFINE VARIABLE vte-4 AS CHARACTER FORMAT "X(256)":U 
+     VIEW-AS FILL-IN NATIVE 
+     SIZE 42 BY 1
+     BGCOLOR 15 FGCOLOR 9  NO-UNDO.
+
+DEFINE RECTANGLE RECT-1
+     EDGE-PIXELS 2 GRAPHIC-EDGE  NO-FILL   
+     SIZE 149 BY 10.24.
+
+
+/* ************************  Frame Definitions  *********************** */
+
+DEFINE FRAME F-Main
+     Tarea.direccion AT ROW 1.14 COL 13 COLON-ALIGNED WIDGET-ID 16
+          VIEW-AS FILL-IN NATIVE 
+          SIZE 100 BY 1
+          BGCOLOR 15 FGCOLOR 9 
+     Tarea.cdg_tipotarea AT ROW 2.19 COL 13 COLON-ALIGNED NO-LABEL
+          VIEW-AS COMBO-BOX INNER-LINES 12
+          LIST-ITEM-PAIRS "Item 1","Item 1"
+          DROP-DOWN-LIST
+          SIZE 30 BY 1
+          BGCOLOR 15 FGCOLOR 9 
+     Tarea.reportado_por AT ROW 3.19 COL 13 COLON-ALIGNED WIDGET-ID 34
+          LABEL "Persona"
+          VIEW-AS COMBO-BOX INNER-LINES 5
+          LIST-ITEMS "Item 1" 
+          DROP-DOWN
+          SIZE 110 BY 1 TOOLTIP "Quien es el que esta reportando el hecho"
+          BGCOLOR 15 FGCOLOR 9 
+     v-cdg_cliente AT ROW 3.24 COL 129.4 COLON-ALIGNED WIDGET-ID 2
+     te-1 AT ROW 4.29 COL 13 COLON-ALIGNED NO-LABEL WIDGET-ID 54
+     vte-1 AT ROW 4.29 COL 29.6 COLON-ALIGNED NO-LABEL WIDGET-ID 4
+     email AT ROW 4.33 COL 85 COLON-ALIGNED WIDGET-ID 52
+     BUTTON-11 AT ROW 4.81 COL 6 WIDGET-ID 46
+     cdg_cargo AT ROW 5.29 COL 85 COLON-ALIGNED HELP
+          "Relación de la persona con el cliente" WIDGET-ID 50
+          BGCOLOR 15 FGCOLOR 9 
+     te-2 AT ROW 5.33 COL 13 COLON-ALIGNED NO-LABEL WIDGET-ID 56
+     vte-2 AT ROW 5.33 COL 29.6 COLON-ALIGNED NO-LABEL WIDGET-ID 12
+     badmin AT ROW 6.19 COL 4 WIDGET-ID 6
+     Tarea.comunicarsepor AT ROW 6.24 COL 85 COLON-ALIGNED WIDGET-ID 14
+          LABEL "Contactarse"
+          VIEW-AS COMBO-BOX 
+          LIST-ITEM-PAIRS "Telefono","T",
+                     "Fax","F",
+                     "Email","E",
+                     "No Aplica","N"
+          DROP-DOWN-LIST
+          SIZE 25 BY 1 TOOLTIP "Comunicar y contactarse preferentemente por"
+          BGCOLOR 15 FGCOLOR 9 
+     te-3 AT ROW 6.38 COL 13 COLON-ALIGNED NO-LABEL WIDGET-ID 58
+     vte-3 AT ROW 6.38 COL 29.8 COLON-ALIGNED NO-LABEL WIDGET-ID 60
+     Tarea.estado AT ROW 6.48 COL 132 COLON-ALIGNED HELP
+          ""
+          LABEL "Estado" FORMAT "X(1)"
+          VIEW-AS COMBO-BOX SORT INNER-LINES 5
+          LIST-ITEM-PAIRS "Abierto","A",
+                     "Resuelto","R",
+                     "Descartado","D",
+                     "Escalado","Q",
+                     "Espera Info","T"
+          DROP-DOWN-LIST
+          SIZE 14 BY 1
+          BGCOLOR 15 FGCOLOR 9 
+     te-4 AT ROW 7.38 COL 13 COLON-ALIGNED NO-LABEL WIDGET-ID 10
+     vte-4 AT ROW 7.38 COL 29.6 COLON-ALIGNED NO-LABEL WIDGET-ID 62
+     Tarea.cdg_recurso AT ROW 7.43 COL 85 COLON-ALIGNED WIDGET-ID 44
+          LABEL "Se Encarga"
+          VIEW-AS COMBO-BOX INNER-LINES 5
+          LIST-ITEM-PAIRS "Item 1","Item 1"
+          DROP-DOWN-LIST
+          SIZE 25 BY 1
+          BGCOLOR 15 FGCOLOR 9 
+     Tarea.prioridad AT ROW 7.48 COL 132 COLON-ALIGNED WIDGET-ID 8
+          LABEL "PR"
+          VIEW-AS COMBO-BOX INNER-LINES 5
+          LIST-ITEM-PAIRS "Normal",0,
+                     "Urgente",1
+          DROP-DOWN-LIST
+          SIZE 14 BY 1 TOOLTIP "Prioridad asignada a la tarea"
+          BGCOLOR 15 FGCOLOR 9 
+     Bresuelto AT ROW 8.57 COL 134 WIDGET-ID 64
+     Tarea.nro_tarea AT ROW 8.62 COL 9 COLON-ALIGNED
+          LABEL "Número"
+          VIEW-AS FILL-IN NATIVE 
+          SIZE 14 BY 1
+          BGCOLOR 15 FGCOLOR 9 
+    WITH 1 DOWN NO-BOX KEEP-TAB-ORDER OVERLAY 
+         SIDE-LABELS NO-UNDERLINE THREE-D 
+         AT COL 1 ROW 1 SCROLLABLE .
+
+/* DEFINE FRAME statement is approaching 4K Bytes.  Breaking it up   */
+DEFINE FRAME F-Main
+     Tarea.cdg_proyecto AT ROW 8.62 COL 34.2 COLON-ALIGNED WIDGET-ID 28
+          LABEL "Proyecto"
+          VIEW-AS COMBO-BOX INNER-LINES 5
+          LIST-ITEM-PAIRS "Item 1","Item 1"
+          DROP-DOWN-LIST
+          SIZE 19 BY 1
+          BGCOLOR 15 FGCOLOR 9 
+     Tarea.titulo AT ROW 9.81 COL 9 COLON-ALIGNED
+          VIEW-AS FILL-IN NATIVE 
+          SIZE 136 BY 1
+          BGCOLOR 15 FGCOLOR 9 
+     Tarea.fecha_alta AT ROW 8.76 COL 84 COLON-ALIGNED WIDGET-ID 38
+           VIEW-AS TEXT 
+          SIZE 15.8 BY .62
+     Tarea.hora_alta AT ROW 8.76 COL 103.6 COLON-ALIGNED WIDGET-ID 40
+          LABEL ":"
+           VIEW-AS TEXT 
+          SIZE 11 BY .62
+     RECT-1 AT ROW 1 COL 1
+    WITH 1 DOWN NO-BOX KEEP-TAB-ORDER OVERLAY 
+         SIDE-LABELS NO-UNDERLINE THREE-D 
+         AT COL 1 ROW 1 SCROLLABLE .
+
+
+/* *********************** Procedure Settings ************************ */
+
+&ANALYZE-SUSPEND _PROCEDURE-SETTINGS
+/* Settings for THIS-PROCEDURE
+   Type: SmartViewer
+   External Tables: sic.Tarea
+   Allow: Basic,DB-Fields
+   Frames: 1
+   Add Fields to: EXTERNAL-TABLES
+   Other Settings: PERSISTENT-ONLY COMPILE
+ */
+
+/* This procedure should always be RUN PERSISTENT.  Report the error,  */
+/* then cleanup and return.                                            */
+IF NOT THIS-PROCEDURE:PERSISTENT THEN DO:
+  MESSAGE "{&FILE-NAME} should only be RUN PERSISTENT.":U
+          VIEW-AS ALERT-BOX ERROR BUTTONS OK.
+  RETURN.
+END.
+
+&ANALYZE-RESUME _END-PROCEDURE-SETTINGS
+
+/* *************************  Create Window  ************************** */
+
+&ANALYZE-SUSPEND _CREATE-WINDOW
+/* DESIGN Window definition (used by the UIB) 
+  CREATE WINDOW V-table-Win ASSIGN
+         HEIGHT             = 10.38
+         WIDTH              = 149.
+/* END WINDOW DEFINITION */
+                                                                        */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CUSTOM _INCLUDED-LIB V-table-Win 
+/* ************************* Included-Libraries *********************** */
+
+{src/adm/method/viewer.i}
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+
+
+/* ***********  Runtime Attributes and AppBuilder Settings  *********** */
+
+&ANALYZE-SUSPEND _RUN-TIME-ATTRIBUTES
+/* SETTINGS FOR WINDOW V-table-Win
+  VISIBLE,,RUN-PERSISTENT                                               */
+/* SETTINGS FOR FRAME F-Main
+   NOT-VISIBLE FRAME-NAME Size-to-Fit                                   */
+ASSIGN 
+       FRAME F-Main:SCROLLABLE       = FALSE
+       FRAME F-Main:HIDDEN           = TRUE.
+
+/* SETTINGS FOR BUTTON badmin IN FRAME F-Main
+   NO-ENABLE                                                            */
+/* SETTINGS FOR COMBO-BOX cdg_cargo IN FRAME F-Main
+   NO-ENABLE LIKE = sic.Cliente-contacto. EXP-SIZE                      */
+/* SETTINGS FOR COMBO-BOX Tarea.cdg_proyecto IN FRAME F-Main
+   EXP-LABEL                                                            */
+/* SETTINGS FOR COMBO-BOX Tarea.cdg_recurso IN FRAME F-Main
+   EXP-LABEL                                                            */
+/* SETTINGS FOR COMBO-BOX Tarea.comunicarsepor IN FRAME F-Main
+   NO-ENABLE EXP-LABEL                                                  */
+/* SETTINGS FOR FILL-IN email IN FRAME F-Main
+   NO-ENABLE                                                            */
+/* SETTINGS FOR COMBO-BOX Tarea.estado IN FRAME F-Main
+   EXP-LABEL EXP-FORMAT EXP-HELP                                        */
+/* SETTINGS FOR FILL-IN Tarea.hora_alta IN FRAME F-Main
+   EXP-LABEL                                                            */
+/* SETTINGS FOR FILL-IN Tarea.nro_tarea IN FRAME F-Main
+   NO-ENABLE EXP-LABEL                                                  */
+/* SETTINGS FOR COMBO-BOX Tarea.prioridad IN FRAME F-Main
+   EXP-LABEL                                                            */
+/* SETTINGS FOR COMBO-BOX Tarea.reportado_por IN FRAME F-Main
+   EXP-LABEL                                                            */
+/* SETTINGS FOR COMBO-BOX te-1 IN FRAME F-Main
+   NO-ENABLE                                                            */
+/* SETTINGS FOR COMBO-BOX te-2 IN FRAME F-Main
+   NO-ENABLE                                                            */
+/* SETTINGS FOR COMBO-BOX te-3 IN FRAME F-Main
+   NO-ENABLE                                                            */
+/* SETTINGS FOR COMBO-BOX te-4 IN FRAME F-Main
+   NO-ENABLE                                                            */
+/* SETTINGS FOR FILL-IN v-cdg_cliente IN FRAME F-Main
+   NO-ENABLE                                                            */
+/* SETTINGS FOR FILL-IN vte-1 IN FRAME F-Main
+   NO-ENABLE                                                            */
+/* SETTINGS FOR FILL-IN vte-2 IN FRAME F-Main
+   NO-ENABLE                                                            */
+/* SETTINGS FOR FILL-IN vte-3 IN FRAME F-Main
+   NO-ENABLE                                                            */
+/* SETTINGS FOR FILL-IN vte-4 IN FRAME F-Main
+   NO-ENABLE                                                            */
+/* _RUN-TIME-ATTRIBUTES-END */
+&ANALYZE-RESUME
+
+
+/* Setting information for Queries and Browse Widgets fields            */
+
+&ANALYZE-SUSPEND _QUERY-BLOCK FRAME F-Main
+/* Query rebuild information for FRAME F-Main
+     _Options          = "NO-LOCK"
+     _Query            is NOT OPENED
+*/  /* FRAME F-Main */
+&ANALYZE-RESUME
+
+ 
+
+
+
+/* ************************  Control Triggers  ************************ */
+
+&Scoped-define SELF-NAME badmin
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL badmin V-table-Win
+ON CHOOSE OF badmin IN FRAME F-Main /* Admin */
+DO:
+  DEFINE BUFFER badminis FOR cliente.
+  IF v-cdg_cliente:SCREEN-VALUE <> "" THEN DO:
+      FIND cliente WHERE cliente.cdg_cliente = v-cdg_cliente:SCREEN-VALUE NO-LOCK NO-ERROR.
+      IF AVAILABLE cliente THEN DO:
+          FIND badminis WHERE badminis.nro_cliente = cliente.nro_administrador NO-LOCK NO-ERROR.
+          IF AVAILABLE badminis THEN
+          RUN w-zoom_administraciones.w ( INPUT ROWID(badminis) ).
+      END.
+  END.
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME Bresuelto
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL Bresuelto V-table-Win
+ON CHOOSE OF Bresuelto IN FRAME F-Main /* Resuelto */
+DO:
+  DEFINE VAR h_resol AS HANDLE.
+  RUN d-tarearesol.w PERSISTENT SET h_resol.
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME BUTTON-11
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL BUTTON-11 V-table-Win
+ON CHOOSE OF BUTTON-11 IN FRAME F-Main /* b-geocli */
+DO:
+    DEFINE VARIABLE oldnf AS CHAR NO-UNDO.
+
+    IF geolat = 0 THEN DO:
+        RUN geocod.
+    END.
+    IF geolat = 0 THEN DO:
+        MESSAGE "Geocodificacion incorrecta, especifique".
+        RETURN NO-APPLY.
+    END.
+
+    EMPTY TEMP-TABLE ttgeo.
+    
+    oldnf = SESSION:NUMERIC-FORMAT.
+    SESSION:NUMERIC-FORMAT = "AMERICAN".
+    CREATE ttgeo.
+    ASSIGN ttgeo.ttgeolat = geolat
+        ttgeo.ttgeolong = geolong
+        tttipo = 1 
+        tturl = "Direccion:" + tarea.direccion:SCREEN-VALUE .
+    SESSION:NUMERIC-FORMAT=oldnf.
+
+    IF NOT VALID-HANDLE( h_geoTT ) THEN DO:
+      RUN w-geoTT.w PERSISTENT SET h_geoTT.
+      IF VALID-HANDLE( h_geoTT ) THEN
+          RUN dispatch IN h_geoTT ( INPUT 'initialize':U ) .
+    END.    
+    IF VALID-HANDLE( h_geoTT ) THEN
+      DYNAMIC-FUNCTION( "mostrar"  IN h_geoTT,  INPUT TABLE ttgeo ).
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME Tarea.cdg_tipotarea
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL Tarea.cdg_tipotarea V-table-Win
+ON VALUE-CHANGED OF Tarea.cdg_tipotarea IN FRAME F-Main /* Tipo!Problema */
+DO:
+  RUN cambia_template (tarea.cdg_tipotarea:INPUT-VALUE).
+  RUN inicia_recursos.
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME Tarea.direccion
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL Tarea.direccion V-table-Win
+ON LEAVE OF Tarea.direccion IN FRAME F-Main /* Direccion */
+DO:
+  IF tarea.direccion:MODIFIED AND tarea.direccion:INPUT-VALUE <> "" THEN
+   RUN geocod.
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL Tarea.direccion V-table-Win
+ON MOUSE-MENU-CLICK OF Tarea.direccion IN FRAME F-Main /* Direccion */
+DO:
+    RUN d-buscacliente_super.w (INPUT tarea.direccion:SCREEN-VALUE,INPUT-OUTPUT v-cdg_cliente).
+    IF v-cdg_cliente <> "" THEN DO:
+        FIND cliente WHERE cliente.cdg_cliente = v-cdg_cliente.
+        RUN poner_cliente.
+    END.
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME email
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL email V-table-Win
+ON LEAVE OF email IN FRAME F-Main /* E-mail */
+DO:
+  IF {&SELF-NAME}:INPUT-VALUE <> "" THEN do:
+      IF num-entries({&SELF-NAME}:INPUT-VALUE,"@") <> 2 THEN DO:
+          RUN ponmensj.p ( INPUT "EMAIL01" ).
+          RETURN NO-APPLY.
+      END.
+      IF NUM-ENTRIES( entry( 2 , {&SELF-NAME}:INPUT-VALUE , "@" ) , ".") < 2 THEN DO:
+          RUN ponmensj.p (INPUT "EMAIL02").
+          RETURN NO-APPLY.
+      END.
+  END.
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME v-cdg_cliente
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL v-cdg_cliente V-table-Win
+ON LEAVE OF v-cdg_cliente IN FRAME F-Main /* Cod */
+DO:
+    IF v-cdg_cliente:SCREEN-VALUE IN FRAME {&FRAME-NAME} <> ""
+    THEN DO:
+        FIND cliente WHERE cliente.cdg_cliente = INPUT FRAME {&FRAME-NAME} v-cdg_cliente NO-LOCK NO-ERROR.
+        IF NOT AVAILABLE cliente 
+        THEN DO:
+            RUN PONMENSJ.P ( 'IREF002' ).
+            RETURN NO-APPLY.
+        END.
+        RUN poner_cliente.
+    END.  
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL v-cdg_cliente V-table-Win
+ON MOUSE-SELECT-DBLCLICK OF v-cdg_cliente IN FRAME F-Main /* Cod */
+OR MOUSE-MENU-DOWN OF v-cdg_cliente IN FRAME {&FRAME-NAME}
+DO:
+    DEFINE VAR rid_tabla AS ROWID.
+    ASSIGN v-cdg_cliente.
+    FIND cliente WHERE cliente.cdg_cliente = v-cdg_cliente NO-LOCK NO-ERROR.
+    rid_tabla = IF AVAILABLE cliente THEN ROWID( cliente ) ELSE ?.
+
+    RUN selclien.p ( INPUT-OUTPUT rid_tabla, INPUT YES ).
+    IF rid_tabla <> ?
+    THEN DO:
+        FIND cliente WHERE ROWID(cliente) = rid_tabla NO-LOCK.
+        RUN poner_cliente.
+    END.  
+    RETURN NO-APPLY.  
+   
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL v-cdg_cliente V-table-Win
+ON RETURN OF v-cdg_cliente IN FRAME F-Main /* Cod */
+DO:
+    IF v-cdg_cliente:SCREEN-VALUE IN FRAME {&FRAME-NAME} <> ""
+    THEN DO:
+        
+        FIND cliente WHERE cliente.cdg_cliente = INPUT FRAME {&FRAME-NAME} v-cdg_cliente NO-LOCK NO-ERROR.
+        IF NOT AVAILABLE cliente 
+        THEN DO:
+            RUN PONMENSJ.P ( 'IREF002' ).
+            RETURN NO-APPLY.
+        END.
+        RUN poner_cliente.
+    END.          
+
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&UNDEFINE SELF-NAME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CUSTOM _MAIN-BLOCK V-table-Win 
+
+
+/* ***************************  Main Block  *************************** */
+
+  &IF DEFINED(UIB_IS_RUNNING) <> 0 &THEN          
+    RUN dispatch IN THIS-PROCEDURE ('initialize':U).        
+  &ENDIF         
+  
+  /************************ INTERNAL PROCEDURES ********************/
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+/* **********************  Internal Procedures  *********************** */
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE adm-row-available V-table-Win  _ADM-ROW-AVAILABLE
+PROCEDURE adm-row-available :
+/*------------------------------------------------------------------------------
+  Purpose:     Dispatched to this procedure when the Record-
+               Source has a new row available.  This procedure
+               tries to get the new row (or foriegn keys) from
+               the Record-Source and process it.
+  Parameters:  <none>
+------------------------------------------------------------------------------*/
+
+  /* Define variables needed by this internal procedure.             */
+  {src/adm/template/row-head.i}
+
+  /* Create a list of all the tables that we need to get.            */
+  {src/adm/template/row-list.i "Tarea"}
+
+  /* Get the record ROWID's from the RECORD-SOURCE.                  */
+  {src/adm/template/row-get.i}
+
+  /* FIND each record specified by the RECORD-SOURCE.                */
+  {src/adm/template/row-find.i "Tarea"}
+
+  /* Process the newly available records (i.e. display fields,
+     open queries, and/or pass records on to any RECORD-TARGETS).    */
+  {src/adm/template/row-end.i}
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE cambia_template V-table-Win 
+PROCEDURE cambia_template :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+DEFINE INPUT PARAMETER ppar LIKE tarea.cdg_tipotarea.
+DEFINE VAR i AS INT NO-UNDO.
+DEFINE VAR hproc AS HANDLE NO-UNDO.
+DEFINE VAR hcproc AS CHAR NO-UNDO.
+    RUN get-link-handle IN adm-broker-hdl
+        ( INPUT THIS-PROCEDURE,
+          INPUT "CONTAINER-source",
+          OUTPUT hcproc ).
+      /* Code placed here will execute PRIOR to standard behavior. */
+    hproc = WIDGET-HANDLE(hcproc).
+    IF VALID-HANDLE(hProc) THEN DO:
+        RUN template IN hproc (ppar).
+    END.
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE damecliente V-table-Win 
+PROCEDURE damecliente :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+DEFINE OUTPUT PARAMETER p AS ROWID.
+p = IF AVAILABLE cliente THEN ROWID(cliente) ELSE ?.
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE disable_UI V-table-Win  _DEFAULT-DISABLE
+PROCEDURE disable_UI :
+/*------------------------------------------------------------------------------
+  Purpose:     DISABLE the User Interface
+  Parameters:  <none>
+  Notes:       Here we clean-up the user-interface by deleting
+               dynamic widgets we have created and/or hide 
+               frames.  This procedure is usually called when
+               we are ready to "clean-up" after running.
+------------------------------------------------------------------------------*/
+  /* Hide all frames. */
+  HIDE FRAME F-Main.
+  IF THIS-PROCEDURE:PERSISTENT THEN DELETE PROCEDURE THIS-PROCEDURE.
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE geocod V-table-Win 
+PROCEDURE geocod :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+DEFINE VAR oldnf AS CHAR NO-UNDO.
+   DEFINE VAR i AS INT NO-UNDO.
+   DEFINE VAR v-extra AS CHAR NO-UNDO.
+   IF tarea.direccion:input-value  IN FRAME {&FRAME-NAME} = "" THEN DO:
+       MESSAGE "Ingrese direccion".
+       RETURN NO-APPLY.
+   END.
+   RUN w-geoOPT.w ( toxAL(tarea.direccion:INPUT-VALUE, OUTPUT v-extra )
+                         , OUTPUT TABLE ott,
+             OUTPUT rowtt).
+        IF rowtt = ? THEN DO:
+            MESSAGE "La dirección indicada no es correcta" SKIP
+                    "Verifique la Direccion, alturas, Localidad y Provincia" VIEW-AS ALERT-BOX ERROR.
+            RETURN NO-apply.
+        END.
+        oldnf = SESSION:NUMERIC-FORMAT.
+        SESSION:NUMERIC-FORMAT = "AMERICAN".
+        FIND ott WHERE ott.pid = rowtt.
+        geolat= decimal(entry(2, ott.coordinates)).
+        geolong = decimal(entry(1, ott.coordinates)).
+        SESSION:NUMERIC-FORMAT = oldnf.
+        tarea.direccion:SCREEN-VALUE = upper(entry(1 , ott.xal ) + " " + v-extra).
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE habilitar_campos V-table-Win 
+PROCEDURE habilitar_campos :
+DEF INPUT PARAM YY AS LOGICAL NO-UNDO.
+DO WITH FRAME {&FRAME-NAME}:
+    te-1:SENSITIVE = yy.
+    te-2:SENSITIVE = yy.
+    te-3:SENSITIVE = yy.
+    te-4:SENSITIVE = yy.
+    vte-1:SENSITIVE = yy.
+    vte-2:SENSITIVE = yy.
+    vte-3:SENSITIVE = yy.
+    vte-4:SENSITIVE = yy.
+    cdg_cargo:SENSITIVE = yy.
+END.
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE inicia_combos V-table-Win 
+PROCEDURE inicia_combos :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+  DEFINE VARIABLE ok AS LOGICAL.
+  DEFINE VARIABLE lista AS CHARACTER.
+
+  DO WITH FRAME {&FRAME-NAME}:
+     {levantacombo.i &TABLA=Cargo_persona &NOMBRE=dsc_cargo &CODIGO=cdg_cargo &OBJETO=cdg_cargo}.
+     &SCOPED-DEFINE  CONDICION tipo_dato.Tipo="T"
+     {levantacombo.i &TABLA=tipo_dato &NOMBRE=descripcion &CODIGO=cdg_tipo_dato &OBJETO=te-1  }.
+     {levantacombo.i &TABLA=tipo_dato &NOMBRE=descripcion &CODIGO=cdg_tipo_dato &OBJETO=te-2  }.
+     {levantacombo.i &TABLA=tipo_dato &NOMBRE=descripcion &CODIGO=cdg_tipo_dato &OBJETO=te-3  }.
+     {levantacombo.i &TABLA=tipo_dato &NOMBRE=descripcion &CODIGO=cdg_tipo_dato &OBJETO=te-4  }.
+     
+  END.          
+
+  RUN inicia_proyectos.
+  RUN inicia_tipotareas.
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE inicia_contacto V-table-Win 
+PROCEDURE inicia_contacto :
+/*------------------------------------------------------------------------------
+  Purpose:  si el campo viene con datos lo formatea ya que es un cliente   
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+DEFINE VAR lista AS CHAR NO-UNDO.
+DEFINE VAR auxcargo AS CHAR NO-UNDO.
+DEFINE VAR preferido AS CHAR NO-UNDO.
+DEFINE BUFFER administracion FOR cliente.
+lista = "".
+
+IF cliente.nro_cliente <> cliente.nro_administra AND cliente.nro_administra <> 0 THEN DO:
+  badmin:SENSITIVE IN FRAME {&FRAME-NAME}= TRUE.
+  FIND administracion WHERE administracion.nro_cliente = cliente.nro_administra NO-LOCK. 
+  FIND FIRST domicilio OF administracion NO-LOCK.
+  FOR EACH Cliente-contacto OF Domicilio  NO-LOCK,
+      each Persona OF Cliente-contacto NO-LOCK :
+     FIND FIRST cargo_persona NO-LOCK NO-ERROR.
+     auxcargo = IF NOT AVAILABLE cargo_persona THEN "" ELSE " [" + Cargo_persona.cdg_cargo + "]".
+    lista = lista + ",ADM-" + persona.nombre + auxcargo.
+  END.
+END.
+preferido = "".
+FIND FIRST domicilio OF cliente NO-LOCK.
+FOR EACH Cliente-contacto OF Domicilio  NO-LOCK,
+  each Persona OF Cliente-contacto NO-LOCK :
+    FIND FIRST cargo_persona NO-LOCK NO-ERROR.
+     auxcargo = IF NOT AVAILABLE cargo_persona THEN "" ELSE " [" + Cargo_persona.cdg_cargo + "]".
+    lista = lista + ",CLI-" + persona.nombre + auxcargo.
+    IF  can-do(Cliente-contacto.canal-email,"*") THEN preferido = "CLI-" + persona.nombre + auxcargo.
+END.
+
+lista = IF num-entries(lista) > 1 THEN SUBSTRING(lista,2) ELSE lista.
+tarea.reportado_por:LIST-ITEMS = lista.
+IF preferido = "" THEN preferido = ENTRY(1,lista).
+reportado_por:SCREEN-VALUE = preferido.
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE inicia_proyectos V-table-Win 
+PROCEDURE inicia_proyectos :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+
+  x-lista = "[Indique Proyecto],*".
+  FOR EACH Proyecto BY Proyecto.cdg_proyecto:
+    x-lista = x-lista +  "," + Proyecto.dsc_proyecto + "," + Proyecto.cdg_proyecto.
+  END.
+  Tarea.cdg_proyecto:LIST-ITEM-PAIRS IN FRAME {&FRAME-NAME} = SUBSTRING(x-lista,1).
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE inicia_recursos V-table-Win 
+PROCEDURE inicia_recursos :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+DEF VAR i AS INT NO-UNDO.
+DEF VAR mm AS LOGICAL NO-UNDO.
+DEFINE VARIABLE x-recurso AS CHARACTER.
+
+x-recurso = Tarea.cdg_recurso:SCREEN-VALUE IN FRAME {&FRAME-NAME}.
+x-lista = "[Indique Recurso],*".
+FIND tipo_tarea WHERE tipo_tarea.cdg_tipotarea = tarea.cdg_tipotarea:SCREEN-VALUE IN FRAME {&FRAME-NAME} NO-LOCK NO-ERROR.
+IF AVAILABLE tipo_tarea THEN DO:
+  FOR EACH Recurso BY Recurso.cdg_recurso :
+    mm = FALSE.
+    DO i = 1 TO num-entries(tipo_tarea.habilidades):
+        IF CAN-DO(recurso.habilidades, entry(i,tipo_tarea.habilidades )) THEN DO:
+           mm = TRUE.
+           LEAVE.
+        END.
+    END. 
+    IF mm THEN
+        x-lista = x-lista +  "," + Recurso.nom_recurso + "," + Recurso.cdg_recurso.
+  END.
+END.
+Tarea.cdg_recurso:LIST-ITEM-PAIRS IN FRAME {&FRAME-NAME} = SUBSTRING(x-lista,1).
+tarea.cdg_recurso:SCREEN-VALUE IN FRAME {&FRAME-NAME} = x-recurso. 
+
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE inicia_tipotareas V-table-Win 
+PROCEDURE inicia_tipotareas :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+
+  x-lista = "[Indique Tipo de Tarea],".
+  FOR EACH Tipo_tarea NO-LOCK BY Tipo_tarea.cdg_tipotarea:
+    x-lista = x-lista +  "," + Tipo_tarea.dsc_tipotarea + "," + Tipo_tarea.cdg_tipotarea.
+  END.
+  Tarea.cdg_tipotarea:LIST-ITEM-PAIRS IN FRAME {&FRAME-NAME} = SUBSTRING(x-lista,1).
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE local-add-record V-table-Win 
+PROCEDURE local-add-record :
+/*------------------------------------------------------------------------------
+  Purpose:     Override standard ADM method
+  Notes:       
+------------------------------------------------------------------------------*/
+
+  /* Code placed here will execute PRIOR to standard behavior. */
+  tarea.fecha_alta:SCREEN-VALUE IN FRAME {&FRAME-NAME} = string(TODAY).
+  tarea.hora_alta:SCREEN-VALUE IN FRAME {&FRAME-NAME} = string(TIME,"HH:MM").
+  v-cdg_cliente:SCREEN-VALUE = "".
+  tarea.reportado_por:LIST-ITEMS IN FRAME {&FRAME-NAME} = "".
+  /* Dispatch standard ADM method.                             */
+  RUN dispatch IN THIS-PROCEDURE ( INPUT 'add-record':U ) .
+
+  /* Code placed here will execute AFTER standard behavior.    */
+
+
+  Tarea.cdg_tipotarea:SCREEN-VALUE IN FRAME {&FRAME-NAME} = " ".
+
+/*   DEFINE VARIABLE x-browse AS CHARACTER.       */
+/*   DEFINE VARIABLE h-browse AS HANDLE.          */
+/*   DEFINE VARIABLE x-valor  AS CHARACTER.       */
+/*                                                */
+/*   RUN get-link-handle IN adm-broker-hdl        */
+/*     ( INPUT THIS-PROCEDURE /* HANDLE */,       */
+/*       INPUT "RECORD-SOURCE":U /* CHARACTER */, */
+/*       OUTPUT x-browse /* CHARACTER */).        */
+
+/*   h-browse = WIDGET-HANDLE(x-browse).                                   */
+/*   IF VALID-HANDLE(h-browse)                                             */
+/*   THEN DO:                                                              */
+/*       RUN valor_proyecto IN h-browse ( OUTPUT x-valor ).                */
+/*       Tarea.cdg_proyecto:SCREEN-VALUE IN FRAME {&FRAME-NAME} = x-valor. */
+/*                                                                         */
+/*       RUN valor_recurso IN h-browse ( OUTPUT x-valor ).                 */
+/*       Tarea.cdg_recurso:SCREEN-VALUE IN FRAME {&FRAME-NAME} = x-valor.  */
+/*                                                                         */
+/*   END.                                                                  */
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE local-assign-statement V-table-Win 
+PROCEDURE local-assign-statement :
+/*------------------------------------------------------------------------------
+  Purpose:     Override standard ADM method
+  Notes:       
+------------------------------------------------------------------------------*/
+
+  /* Code placed here will execute PRIOR to standard behavior. */
+
+  IF Tarea.cdg_proyecto:INPUT-VALUE IN FRAME {&FRAME-NAME} = ""
+  THEN DO:
+      MESSAGE "No indicó el proyecto al que se refiere la tarea"
+          VIEW-AS ALERT-BOX ERROR TITLE "TARE001".
+      RETURN ERROR.
+  END.
+
+  IF Tarea.cdg_tipotarea:INPUT-VALUE IN FRAME {&FRAME-NAME} = ""
+  THEN DO:
+      MESSAGE "No indicó el tipo de tarea al que se refiere la tarea"
+          VIEW-AS ALERT-BOX ERROR TITLE "TARE002".
+      RETURN ERROR.
+  END.
+
+  IF Tarea.cdg_recurso:INPUT-VALUE IN FRAME {&FRAME-NAME} = ""
+  THEN DO:
+      MESSAGE "No indicó el recurso al que se refiere la tarea"
+          VIEW-AS ALERT-BOX ERROR TITLE "TARE003".
+      RETURN ERROR.
+  END.
+
+  /* Dispatch standard ADM method.                             */
+  RUN dispatch IN THIS-PROCEDURE ( INPUT 'assign-statement':U ) .
+
+  ASSIGN tarea.geolat = geolat
+         tarea.geolong = geolong
+         tarea.nro_cliente = IF AVAILABLE cliente THEN cliente.nro_cliente ELSE 0.
+  IF tarea.geolat <> 0 THEN DO:
+     tarea.geoX = X(cliente.geolat,cliente.geolong).
+     tarea.geoY = Y(cliente.geolat,cliente.geolong).
+ END.
+
+  /* Code placed here will execute AFTER standard behavior.    */
+  
+ IF NEW Tarea
+  THEN DO:
+
+      DEFINE VARIABLE hora AS INTEGER.
+
+      ASSIGN Tarea.nro_tarea  = NEXT-VALUE(proxima_tarea)
+             Tarea.estado     = "A".
+
+      RUN completar_auditoria.p ( OUTPUT Tarea.cdg_usuario,
+                                  OUTPUT Tarea.fecha_alta,
+                                  OUTPUT hora,
+                                  OUTPUT Tarea.pc_name ).
+      Tarea.hora_alta  = STRING(hora,"HH:MM:SS").
+
+  END.
+
+
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE local-disable-fields V-table-Win 
+PROCEDURE local-disable-fields :
+/*------------------------------------------------------------------------------
+  Purpose:     Override standard ADM method
+  Notes:       
+------------------------------------------------------------------------------*/
+
+  /* Code placed here will execute PRIOR to standard behavior. */
+
+  /* Dispatch standard ADM method.                             */
+  RUN dispatch IN THIS-PROCEDURE ( INPUT 'disable-fields':U ) .
+
+  /* Code placed here will execute AFTER standard behavior.    */
+
+/*   Tarea.descripcion:FGCOLOR IN FRAME {&FRAME-NAME} = 7. */
+/*   Tarea.accion:FGCOLOR IN FRAME {&FRAME-NAME} = 7.      */
+  v-cdg_cliente:SENSITIVE IN FRAME {&FRAME-NAME} = FALSE.
+  badmin:SENSITIVE = FALSE.
+  RUN habilitar_campos(FALSE).
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE local-display-fields V-table-Win 
+PROCEDURE local-display-fields :
+/*------------------------------------------------------------------------------
+  Purpose:     Override standard ADM method
+  Notes:       
+------------------------------------------------------------------------------*/
+DEFINE VAR i AS INT NO-UNDO.
+DEFINE VAR aux AS CHAR NO-UNDO.
+DEFINE VAR auxtel LIKE tarea.telefonos NO-UNDO.
+
+  /* Dispatch standard ADM method.                             */
+  RUN dispatch IN THIS-PROCEDURE ( INPUT 'display-fields':U ) .
+
+bresuelto:SENSITIVE IN FRAME {&FRAME-NAME}= tarea.fecha_resuelto <> ?.
+  IF tarea.nro_cliente <> 0 THEN DO:
+      FIND cliente OF tarea NO-LOCK NO-ERROR.
+      IF AVAILABLE cliente THEN DO:
+          geolat = cliente.geolat.
+          geolong = cliente.geolong.
+          v-cdg_cliente:SCREEN-VALUE IN FRAME {&FRAME-NAME}= cliente.cdg_cliente.
+          IF cliente.nro_cliente <> cliente.nro_admin THEN
+              badmin:SENSITIVE IN FRAME {&FRAME-NAME} = TRUE.
+          RUN inicia_contacto.  /*busca ls contactos disponibles*/
+      END.
+  END.
+  auxtel = tarea.telefonos.
+  IF INDEX(tarea.telefonos,"!") = 0 THEN DO:
+        RUN getparametro_c.p ("CDG-TE1",OUTPUT aux).
+        auxtel = replace(aux + "!" + auxtel,"|","%").
+  END.
+
+  DO i = 1 TO 4:
+     IF i <= NUM-ENTRIES(auxtel,"|") THEN DO:
+          thandle("te-" + STRING(i,"9")):SCREEN-VALUE = entry(1,ENTRY(i,auxtel,"|"),"!").
+          thandle("vte-" + STRING(i,"9")):SCREEN-VALUE = entry(2,ENTRY(i,auxtel,"|"),"!").
+     END.
+     ELSE DO:
+          RUN getparametro_c.p ("CDG-TE" + STRING(i,"9"),OUTPUT aux).
+          thandle("te-" + STRING(i,"9")):SCREEN-VALUE = aux.
+          thandle("vte-" + STRING(i,"9")):SCREEN-VALUE = "".
+          
+     END.
+  END.   
+  /*puede depender de otros datos*/
+  RUN cambia_template (tarea.cdg_tipotarea).
+  RUN inicia_recursos.
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE local-enable-fields V-table-Win 
+PROCEDURE local-enable-fields :
+/*------------------------------------------------------------------------------
+  Purpose:     Override standard ADM method
+  Notes:       
+------------------------------------------------------------------------------*/
+
+  /* Code placed here will execute PRIOR to standard behavior. */
+
+  /* Dispatch standard ADM method.                             */
+  RUN dispatch IN THIS-PROCEDURE ( INPUT 'enable-fields':U ) .
+
+  /* Code placed here will execute AFTER standard behavior.    */
+
+/*   Tarea.descripcion:FGCOLOR IN FRAME {&FRAME-NAME} = 9. */
+/*   Tarea.accion:FGCOLOR IN FRAME {&FRAME-NAME} = 9.      */
+  v-cdg_cliente:SENSITIVE IN FRAME {&FRAME-NAME} = TRUE.
+  RUN habilitar_campos(TRUE).
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE local-initialize V-table-Win 
+PROCEDURE local-initialize :
+/*------------------------------------------------------------------------------
+  Purpose:     Override standard ADM method
+  Notes:       
+------------------------------------------------------------------------------*/
+
+  /* Code placed here will execute PRIOR to standard behavior. */
+
+    RUN inicia_combos.
+
+  /* Dispatch standard ADM method.                             */
+  RUN dispatch IN THIS-PROCEDURE ( INPUT 'initialize':U ) .
+
+  /* Code placed here will execute AFTER standard behavior.    */
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE poner_cliente V-table-Win 
+PROCEDURE poner_cliente :
+/*------------------------------------------------------------------------------
+  Purpose:  Pone los valores extraidos del cliente seleccionado.   
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+DEFINE VAR lista AS CHAR NO-UNDO.
+DEFINE BUFFER administracion FOR cliente.
+    DEFINE VAR preferido AS CHAR NO-UNDO.
+DEFINE VAR auxcargo AS CHAR NO-UNDO.
+Tarea.direccion:SCREEN-VALUE IN FRAME {&FRAME-NAME} = cliente.direccion.
+Tarea.direccion:SCREEN-VALUE = cliente.direccion. 
+v-cdg_cliente:SCREEN-VALUE = cliente.cdg_cliente.
+/*buscando los contactos del cliente */
+RUN inicia_contacto.
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE refrescar_proyectos V-table-Win 
+PROCEDURE refrescar_proyectos :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+
+  DEFINE INPUT PARAMETER p-lista AS CHARACTER.
+
+  Tarea.cdg_proyecto:LIST-ITEM-PAIRS IN FRAME {&FRAME-NAME} = p-lista.
+/*
+  x-proyecto = Tarea.cdg_proyecto:SCREEN-VALUE IN FRAME {&FRAME-NAME}.
+  RUN inicia_proyectos.
+  Tarea.cdg_proyecto:SCREEN-VALUE IN FRAME {&FRAME-NAME} = x-proyecto.
+*/
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE send-records V-table-Win  _ADM-SEND-RECORDS
+PROCEDURE send-records :
+/*------------------------------------------------------------------------------
+  Purpose:     Send record ROWID's for all tables used by
+               this file.
+  Parameters:  see template/snd-head.i
+------------------------------------------------------------------------------*/
+
+  /* Define variables needed by this internal procedure.               */
+  {src/adm/template/snd-head.i}
+
+  /* For each requested table, put it's ROWID in the output list.      */
+  {src/adm/template/snd-list.i "Tarea"}
+
+  /* Deal with any unexpected table requests before closing.           */
+  {src/adm/template/snd-end.i}
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE state-changed V-table-Win 
+PROCEDURE state-changed :
+/* -----------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+-------------------------------------------------------------*/
+  DEFINE INPUT PARAMETER p-issuer-hdl AS HANDLE    NO-UNDO.
+  DEFINE INPUT PARAMETER p-state      AS CHARACTER NO-UNDO.
+
+  CASE p-state:
+      /* Object instance CASEs can go here to replace standard behavior
+         or add new cases. */
+      {src/adm/template/vstates.i}
+  END CASE.
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+/* ************************  Function Implementations ***************** */
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _FUNCTION thandle V-table-Win 
+FUNCTION thandle RETURNS HANDLE
+  ( ppar AS CHAR ) :
+/*------------------------------------------------------------------------------
+  Purpose:  
+    Notes:  
+------------------------------------------------------------------------------*/
+
+CASE ppar:
+    WHEN "te-1" THEN RETURN te-1:HANDLE IN FRAME {&FRAME-NAME}.
+    WHEN "te-2" THEN RETURN te-2:HANDLE IN FRAME {&FRAME-NAME}.
+    WHEN "te-3" THEN RETURN te-3:HANDLE IN FRAME {&FRAME-NAME}.
+    WHEN "te-4" THEN RETURN te-4:HANDLE IN FRAME {&FRAME-NAME}.
+    WHEN "vte-1" THEN RETURN vte-1:HANDLE IN FRAME {&FRAME-NAME}.
+    WHEN "vte-2" THEN RETURN vte-2:HANDLE IN FRAME {&FRAME-NAME}.
+    WHEN "vte-3" THEN RETURN vte-3:HANDLE IN FRAME {&FRAME-NAME}.
+    WHEN "vte-4" THEN RETURN vte-4:HANDLE IN FRAME {&FRAME-NAME}.
+
+    OTHERWISE do: RETURN ?. END.
+END CASE.
+
+
+  RETURN ?.   /* Function return value. */
+
+END FUNCTION.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+

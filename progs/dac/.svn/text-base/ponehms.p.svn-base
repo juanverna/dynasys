@@ -1,0 +1,21 @@
+def var n as integer.
+
+FOR EACH FICHA EXCLUSIVE-LOCK:
+
+ {PONEHMS.I "alta "}
+ {PONEHMS.I "arrbase "} 
+ {PONEHMS.I "arrdomi "}
+ {PONEHMS.I "arrhosp "}
+ {PONEHMS.I "cierre "}
+ {PONEHMS.I "despacho "} 
+ {PONEHMS.I "disponible "} 
+ {PONEHMS.I "llamado "}
+ {PONEHMS.I "salbase "}
+ {PONEHMS.I "saldomi "}
+ {PONEHMS.I "salhosp "}
+ 
+ n = n + 1.
+ PAUSE 0.
+ DISPLAY n.
+ 
+END. 

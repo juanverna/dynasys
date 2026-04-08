@@ -1,0 +1,1799 @@
+K 25
+svn:wc:ra_dav:version-url
+V 35
+/svn/Paulista/!svn/ver/37/progs/inv
+END
+v-set_empresa.w
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/Paulista/!svn/ver/1/progs/inv/v-set_empresa.w
+END
+b-articulo_precio_inv.w
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/Paulista/!svn/ver/1/progs/inv/b-articulo_precio_inv.w
+END
+w-lsgenerar_reposicion.w
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/Paulista/!svn/ver/1/progs/inv/w-lsgenerar_reposicion.w
+END
+hldepo3.i
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/svn/Paulista/!svn/ver/1/progs/inv/hldepo3.i
+END
+q-articulo.w
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/1/progs/inv/q-articulo.w
+END
+lsarticulosxventa.p
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/Paulista/!svn/ver/1/progs/inv/lsarticulosxventa.p
+END
+imprimir_vale_inventario.p
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/Paulista/!svn/ver/1/progs/inv/imprimir_vale_inventario.p
+END
+c-generar_articulos.w
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/Paulista/!svn/ver/1/progs/inv/c-generar_articulos.w
+END
+seldpare.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/inv/seldpare.p
+END
+selfimpos.p
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/Paulista/!svn/ver/1/progs/inv/selfimpos.p
+END
+v-articulo_documental.w
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/Paulista/!svn/ver/50/progs/inv/v-articulo_documental.w
+END
+d-seleccionar_deposito_destino.w
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/Paulista/!svn/ver/1/progs/inv/d-seleccionar_deposito_destino.w
+END
+b-familiarticulos.w
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/Paulista/!svn/ver/1/progs/inv/b-familiarticulos.w
+END
+lssbdinv.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/inv/lssbdinv.p
+END
+b-cuenta_y_orden.w
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/Paulista/!svn/ver/1/progs/inv/b-cuenta_y_orden.w
+END
+lspermisos_articulos.p
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/Paulista/!svn/ver/1/progs/inv/lspermisos_articulos.p
+END
+w-lsexistencias_articulo.w
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/Paulista/!svn/ver/1/progs/inv/w-lsexistencias_articulo.w
+END
+selprodu.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/inv/selprodu.p
+END
+emitir_vale_inventario.p
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/Paulista/!svn/ver/1/progs/inv/emitir_vale_inventario.p
+END
+selregistrable.p
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/inv/selregistrable.p
+END
+w-rlconsuart.w
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/Paulista/!svn/ver/1/progs/inv/w-rlconsuart.w
+END
+b-articulo_precio.w
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/Paulista/!svn/ver/53/progs/inv/b-articulo_precio.w
+END
+prpds001.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/inv/prpds001.p
+END
+c-abmclasearticulo.wrx
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/Paulista/!svn/ver/1/progs/inv/c-abmclasearticulo.wrx
+END
+v-otros_datosarticulo.w
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/Paulista/!svn/ver/1/progs/inv/v-otros_datosarticulo.w
+END
+lsmovimientos_articulo_partida.p
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/Paulista/!svn/ver/1/progs/inv/lsmovimientos_articulo_partida.p
+END
+recorrer_clasificacion_articulos.p
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/Paulista/!svn/ver/1/progs/inv/recorrer_clasificacion_articulos.p
+END
+w-rlexsten.w
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/1/progs/inv/w-rlexsten.w
+END
+borrar_ccstocks.p
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/inv/borrar_ccstocks.p
+END
+v-nom_artic.w
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/1/progs/inv/v-nom_artic.w
+END
+v-id-articulo.w
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/Paulista/!svn/ver/1/progs/inv/v-id-articulo.w
+END
+vlb-familia_impositiva.p
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/Paulista/!svn/ver/1/progs/inv/vlb-familia_impositiva.p
+END
+w-consulta_movstock.w
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/Paulista/!svn/ver/1/progs/inv/w-consulta_movstock.w
+END
+w-consulta_articulos.w
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/Paulista/!svn/ver/1/progs/inv/w-consulta_articulos.w
+END
+w-lsnecesidad_compra.w
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/Paulista/!svn/ver/1/progs/inv/w-lsnecesidad_compra.w
+END
+recorre.p
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/svn/Paulista/!svn/ver/1/progs/inv/recorre.p
+END
+w-reqtransferir.w
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/inv/w-reqtransferir.w
+END
+b-movimientos_stock.w
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/Paulista/!svn/ver/1/progs/inv/b-movimientos_stock.w
+END
+w-rlarticonexistp.w
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/Paulista/!svn/ver/1/progs/inv/w-rlarticonexistp.w
+END
+consistir_superior.p
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/Paulista/!svn/ver/1/progs/inv/consistir_superior.p
+END
+w-rlimputacion_articulos.w
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/Paulista/!svn/ver/1/progs/inv/w-rlimputacion_articulos.w
+END
+d-seleccionar_partida-deposito.w
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/Paulista/!svn/ver/1/progs/inv/d-seleccionar_partida-deposito.w
+END
+v-tipofamilia.w
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/Paulista/!svn/ver/1/progs/inv/v-tipofamilia.w
+END
+v-nom_deposito.w
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/inv/v-nom_deposito.w
+END
+vlb-famarticulos.p
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/Paulista/!svn/ver/1/progs/inv/vlb-famarticulos.p
+END
+d-seleccionar_tipoarticulo.w
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/Paulista/!svn/ver/1/progs/inv/d-seleccionar_tipoarticulo.w
+END
+v-articulo_especificacion.w
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/Paulista/!svn/ver/1/progs/inv/v-articulo_especificacion.w
+END
+w-articulos.w
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/Paulista/!svn/ver/53/progs/inv/w-articulos.w
+END
+w-marcas.w
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/inv/w-marcas.w
+END
+v-rng-deposito.w
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/inv/v-rng-deposito.w
+END
+vlb-partidas.p
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/Paulista/!svn/ver/1/progs/inv/vlb-partidas.p
+END
+calcular_vale_inventario.p
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/Paulista/!svn/ver/1/progs/inv/calcular_vale_inventario.p
+END
+q-deposito.w
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/1/progs/inv/q-deposito.w
+END
+calcular_stock_real.p
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/Paulista/!svn/ver/1/progs/inv/calcular_stock_real.p
+END
+w-lsasientos_inventario.w
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/Paulista/!svn/ver/1/progs/inv/w-lsasientos_inventario.w
+END
+w-rlsbdinv.w
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/1/progs/inv/w-rlsbdinv.w
+END
+vlb-marcacom.p
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/Paulista/!svn/ver/1/progs/inv/vlb-marcacom.p
+END
+v-rng-famarticulo.w
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/Paulista/!svn/ver/1/progs/inv/v-rng-famarticulo.w
+END
+v-id-familia_articulo.w
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/Paulista/!svn/ver/1/progs/inv/v-id-familia_articulo.w
+END
+b-asignar_existencias.w
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/Paulista/!svn/ver/1/progs/inv/b-asignar_existencias.w
+END
+b-tipo_atributo.w
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/inv/b-tipo_atributo.w
+END
+b-articulo_deposito.w
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/Paulista/!svn/ver/1/progs/inv/b-articulo_deposito.w
+END
+d-selvale_inventario.w
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/Paulista/!svn/ver/1/progs/inv/d-selvale_inventario.w
+END
+b-alias_cliente.w
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/inv/b-alias_cliente.w
+END
+acumular_movimiento_stock.p
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/Paulista/!svn/ver/1/progs/inv/acumular_movimiento_stock.p
+END
+b-hd-valeinv.w
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/Paulista/!svn/ver/1/progs/inv/b-hd-valeinv.w
+END
+d-seleccionar_nodo_destino.w
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/Paulista/!svn/ver/1/progs/inv/d-seleccionar_nodo_destino.w
+END
+sumacomp.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/inv/sumacomp.p
+END
+calcstck.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/inv/calcstck.p
+END
+d-crear_partida.w
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/inv/d-crear_partida.w
+END
+vlb-depositos.p
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/Paulista/!svn/ver/1/progs/inv/vlb-depositos.p
+END
+lsconsuartdet.p
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/Paulista/!svn/ver/1/progs/inv/lsconsuartdet.p
+END
+selfrtibr.p
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/Paulista/!svn/ver/1/progs/inv/selfrtibr.p
+END
+w-rlasientos_inventario.w
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/Paulista/!svn/ver/1/progs/inv/w-rlasientos_inventario.w
+END
+v-tipo_atributo.w
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/inv/v-tipo_atributo.w
+END
+cmberqpe.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/inv/cmberqpe.p
+END
+d-generar_articulos.w
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/Paulista/!svn/ver/1/progs/inv/d-generar_articulos.w
+END
+v-modo_movimientos.w
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/Paulista/!svn/ver/1/progs/inv/v-modo_movimientos.w
+END
+v-articulo_deposito.w
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/Paulista/!svn/ver/1/progs/inv/v-articulo_deposito.w
+END
+v-id-sector.w
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/1/progs/inv/v-id-sector.w
+END
+v-alias_cliente.w
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/inv/v-alias_cliente.w
+END
+selcodatributos.p
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/inv/selcodatributos.p
+END
+dfmodomovs.i
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/1/progs/inv/dfmodomovs.i
+END
+v-rng-tipocuenta.w
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/Paulista/!svn/ver/1/progs/inv/v-rng-tipocuenta.w
+END
+selarticC.p
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/Paulista/!svn/ver/1/progs/inv/selarticC.p
+END
+b-req_a_preparar.w
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/Paulista/!svn/ver/1/progs/inv/b-req_a_preparar.w
+END
+validar_lista_empresas.p
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/Paulista/!svn/ver/1/progs/inv/validar_lista_empresas.p
+END
+vlb-tipofamilia.p
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/inv/vlb-tipofamilia.p
+END
+v-req_a_trans-alma.w
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/Paulista/!svn/ver/1/progs/inv/v-req_a_trans-alma.w
+END
+lsexistencias_articulo.p
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/Paulista/!svn/ver/1/progs/inv/lsexistencias_articulo.p
+END
+validar_rango_fechas.p
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/Paulista/!svn/ver/1/progs/inv/validar_rango_fechas.p
+END
+jarvius.p
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/svn/Paulista/!svn/ver/1/progs/inv/jarvius.p
+END
+b-familia_cuenta.w
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/Paulista/!svn/ver/1/progs/inv/b-familia_cuenta.w
+END
+v-id-deposito.w
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/Paulista/!svn/ver/1/progs/inv/v-id-deposito.w
+END
+c-prueba_articulos.w
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/Paulista/!svn/ver/1/progs/inv/c-prueba_articulos.w
+END
+b-marcas.w
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/inv/b-marcas.w
+END
+lsarticulosxcompra.p
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/Paulista/!svn/ver/1/progs/inv/lsarticulosxcompra.p
+END
+w-jarvius.w
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/Paulista/!svn/ver/1/progs/inv/w-jarvius.w
+END
+SELFCMER.P
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/inv/SELFCMER.P
+END
+v-que-listado.w
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/Paulista/!svn/ver/1/progs/inv/v-que-listado.w
+END
+d-selarticulosxclase.w
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/Paulista/!svn/ver/1/progs/inv/d-selarticulosxclase.w
+END
+w-deposito.w
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/1/progs/inv/w-deposito.w
+END
+w-rlexsdep.w
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/1/progs/inv/w-rlexsdep.w
+END
+selmotiv.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/inv/selmotiv.p
+END
+c-busartic.w
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/1/progs/inv/c-busartic.w
+END
+w-rlconsuartdet.w
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/inv/w-rlconsuartdet.w
+END
+selartic.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/inv/selartic.p
+END
+w-lsactualizar_parametros.w
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/Paulista/!svn/ver/1/progs/inv/w-lsactualizar_parametros.w
+END
+prprc001.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/inv/prprc001.p
+END
+b-provs-artic-ocm.w
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/Paulista/!svn/ver/1/progs/inv/b-provs-artic-ocm.w
+END
+c-vale_inventario.w
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/Paulista/!svn/ver/1/progs/inv/c-vale_inventario.w
+END
+lsnecesidad_compra.p
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/Paulista/!svn/ver/1/progs/inv/lsnecesidad_compra.p
+END
+b-articulo_atributo.w
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/Paulista/!svn/ver/1/progs/inv/b-articulo_atributo.w
+END
+emitir_remadp.p
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/Paulista/!svn/ver/1/progs/inv/emitir_remadp.p
+END
+calculavaleinv.i
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/inv/calculavaleinv.i
+END
+drelarticulo.i
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/Paulista/!svn/ver/1/progs/inv/drelarticulo.i
+END
+pega_descripciones.p
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/Paulista/!svn/ver/1/progs/inv/pega_descripciones.p
+END
+w-tipoarticulo.w
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/inv/w-tipoarticulo.w
+END
+v-envase.w
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/inv/v-envase.w
+END
+b-articulos.w
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/1/progs/inv/b-articulos.w
+END
+lsimputacion_articulos.p
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/Paulista/!svn/ver/1/progs/inv/lsimputacion_articulos.p
+END
+validar_vigencia_baja.p
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/Paulista/!svn/ver/1/progs/inv/validar_vigencia_baja.p
+END
+v-articulo_atributo.w
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/Paulista/!svn/ver/1/progs/inv/v-articulo_atributo.w
+END
+prval001.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/inv/prval001.p
+END
+v-que_articulo.w
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/inv/v-que_articulo.w
+END
+w-cuenta_y_orden.w
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/Paulista/!svn/ver/1/progs/inv/w-cuenta_y_orden.w
+END
+v-lst_atributos_articulo.w
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/Paulista/!svn/ver/1/progs/inv/v-lst_atributos_articulo.w
+END
+v-cyorden.w
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/Paulista/!svn/ver/1/progs/inv/v-cyorden.w
+END
+v-par-jarvius.w
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/Paulista/!svn/ver/1/progs/inv/v-par-jarvius.w
+END
+dfmodoexist.i
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/1/progs/inv/dfmodoexist.i
+END
+pruvale.p
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/svn/Paulista/!svn/ver/1/progs/inv/pruvale.p
+END
+w-reqalmacen.w
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/Paulista/!svn/ver/1/progs/inv/w-reqalmacen.w
+END
+w-lsnecesidad_reposicion.w
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/Paulista/!svn/ver/1/progs/inv/w-lsnecesidad_reposicion.w
+END
+findarticulo.p
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/Paulista/!svn/ver/1/progs/inv/findarticulo.p
+END
+w-rlinventario.w
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/inv/w-rlinventario.w
+END
+listar.i
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/svn/Paulista/!svn/ver/1/progs/inv/listar.i
+END
+validar_vigencia.p
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/Paulista/!svn/ver/1/progs/inv/validar_vigencia.p
+END
+w-prepara_envios.w
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/Paulista/!svn/ver/1/progs/inv/w-prepara_envios.w
+END
+v-tipoarticulo.w
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/inv/v-tipoarticulo.w
+END
+lsvenpar.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/inv/lsvenpar.p
+END
+hbwartic.i
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/inv/hbwartic.i
+END
+v-articulo.w
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/37/progs/inv/v-articulo.w
+END
+d-ver_imputacion_valeinv.w
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/Paulista/!svn/ver/1/progs/inv/d-ver_imputacion_valeinv.w
+END
+c-generar_depositos.w
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/Paulista/!svn/ver/1/progs/inv/c-generar_depositos.w
+END
+w-familia_impositivas.w
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/Paulista/!svn/ver/1/progs/inv/w-familia_impositivas.w
+END
+vlb-marca.p
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/Paulista/!svn/ver/1/progs/inv/vlb-marca.p
+END
+impartic.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/inv/impartic.p
+END
+selenvases.p
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/1/progs/inv/selenvases.p
+END
+prtra001.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/inv/prtra001.p
+END
+opqryart.i
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/inv/opqryart.i
+END
+tgarticu.i
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/inv/tgarticu.i
+END
+vrankart.i
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/inv/vrankart.i
+END
+b-unidades.w
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/1/progs/inv/b-unidades.w
+END
+lsexistencias_deposito.p
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/Paulista/!svn/ver/1/progs/inv/lsexistencias_deposito.p
+END
+v-remanente.w
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/1/progs/inv/v-remanente.w
+END
+selfamar.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/inv/selfamar.p
+END
+selfrtsus.p
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/Paulista/!svn/ver/1/progs/inv/selfrtsus.p
+END
+lsmaestro_articulos.p
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/Paulista/!svn/ver/1/progs/inv/lsmaestro_articulos.p
+END
+v-id-clasearticulo.w
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/Paulista/!svn/ver/1/progs/inv/v-id-clasearticulo.w
+END
+lisajinf.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/inv/lisajinf.p
+END
+d-cambia_fecha_vale.w
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/Paulista/!svn/ver/1/progs/inv/d-cambia_fecha_vale.w
+END
+c-abmclasearticulo.w
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/Paulista/!svn/ver/1/progs/inv/c-abmclasearticulo.w
+END
+prval002.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/inv/prval002.p
+END
+w-areas.w
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/svn/Paulista/!svn/ver/1/progs/inv/w-areas.w
+END
+lsetifco.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/inv/lsetifco.p
+END
+v-proveedor-concurso.w
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/Paulista/!svn/ver/1/progs/inv/v-proveedor-concurso.w
+END
+w-lsmaestro_articulos.w
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/Paulista/!svn/ver/1/progs/inv/w-lsmaestro_articulos.w
+END
+prdsp001.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/inv/prdsp001.p
+END
+v-articulo_precio_inv.w
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/Paulista/!svn/ver/1/progs/inv/v-articulo_precio_inv.w
+END
+lsclasificacion_articulos.p
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/Paulista/!svn/ver/1/progs/inv/lsclasificacion_articulos.p
+END
+lsinventario.p
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/Paulista/!svn/ver/1/progs/inv/lsinventario.p
+END
+w-registrable.w
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/Paulista/!svn/ver/1/progs/inv/w-registrable.w
+END
+seldepos.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/inv/seldepos.p
+END
+v-unidad.w
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/inv/v-unidad.w
+END
+emitir_remproveed.p
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/Paulista/!svn/ver/1/progs/inv/emitir_remproveed.p
+END
+pruindice.p
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/Paulista/!svn/ver/1/progs/inv/pruindice.p
+END
+recorrer_clasificacion_depositos.p
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/Paulista/!svn/ver/1/progs/inv/recorrer_clasificacion_depositos.p
+END
+v-esp-deposito.w
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/inv/v-esp-deposito.w
+END
+primlote.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/inv/primlote.p
+END
+b-familia_impositiva.w
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/Paulista/!svn/ver/1/progs/inv/b-familia_impositiva.w
+END
+selheader.p
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/Paulista/!svn/ver/1/progs/inv/selheader.p
+END
+lsconsuart.p
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/1/progs/inv/lsconsuart.p
+END
+v-marca.w
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/svn/Paulista/!svn/ver/1/progs/inv/v-marca.w
+END
+v-partida.w
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/Paulista/!svn/ver/1/progs/inv/v-partida.w
+END
+w-genera_envios.w
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/inv/w-genera_envios.w
+END
+srwvalehd.p
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/Paulista/!svn/ver/1/progs/inv/srwvalehd.p
+END
+v-familiarticulos.w
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/Paulista/!svn/ver/1/progs/inv/v-familiarticulos.w
+END
+seltipofamilia.p
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/inv/seltipofamilia.p
+END
+w-rlvenpar.w
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/1/progs/inv/w-rlvenpar.w
+END
+lisccart.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/inv/lisccart.p
+END
+b-det-tran.w
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/1/progs/inv/b-det-tran.w
+END
+v-familia_cuenta.w
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/Paulista/!svn/ver/1/progs/inv/v-familia_cuenta.w
+END
+d-selcalse_depositos.w
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/Paulista/!svn/ver/1/progs/inv/d-selcalse_depositos.w
+END
+crea_partida.p
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/Paulista/!svn/ver/1/progs/inv/crea_partida.p
+END
+w-rlmovart.w
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/1/progs/inv/w-rlmovart.w
+END
+lshojrecuen.p
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/1/progs/inv/lshojrecuen.p
+END
+b-tipofamilia.w
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/Paulista/!svn/ver/1/progs/inv/b-tipofamilia.w
+END
+w-rlnecrep.w
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/1/progs/inv/w-rlnecrep.w
+END
+fecorigen.i
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/Paulista/!svn/ver/1/progs/inv/fecorigen.i
+END
+tgpartidas.i
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/1/progs/inv/tgpartidas.i
+END
+b-articulo_especificacion.w
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/Paulista/!svn/ver/1/progs/inv/b-articulo_especificacion.w
+END
+rcrclase.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/inv/rcrclase.p
+END
+w-recuento.w
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/1/progs/inv/w-recuento.w
+END
+validar_codigo.i
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/inv/validar_codigo.i
+END
+v-deposito.w
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/1/progs/inv/v-deposito.w
+END
+selregistrable-solicitud.p
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/Paulista/!svn/ver/1/progs/inv/selregistrable-solicitud.p
+END
+selunida.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/inv/selunida.p
+END
+d-simulador_permisos.w
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/Paulista/!svn/ver/1/progs/inv/d-simulador_permisos.w
+END
+q-rqs.w
+K 25
+svn:wc:ra_dav:version-url
+V 42
+/svn/Paulista/!svn/ver/1/progs/inv/q-rqs.w
+END
+v-registrable.w
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/Paulista/!svn/ver/1/progs/inv/v-registrable.w
+END
+v-area.w
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/svn/Paulista/!svn/ver/1/progs/inv/v-area.w
+END
+runabmclasedep.p
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/inv/runabmclasedep.p
+END
+v-articulo-concurso.w
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/Paulista/!svn/ver/1/progs/inv/v-articulo-concurso.w
+END
+tgbwpade.i
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/inv/tgbwpade.i
+END
+search_articulos.p
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/Paulista/!svn/ver/1/progs/inv/search_articulos.p
+END
+b-historia_registrable.w
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/Paulista/!svn/ver/1/progs/inv/b-historia_registrable.w
+END
+b-movimientos_x_deposito.w
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/Paulista/!svn/ver/1/progs/inv/b-movimientos_x_deposito.w
+END
+selfganan.p
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/Paulista/!svn/ver/1/progs/inv/selfganan.p
+END
+w-familiarticulos.w
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/Paulista/!svn/ver/1/progs/inv/w-familiarticulos.w
+END
+lsarticonexistpart.p
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/Paulista/!svn/ver/1/progs/inv/lsarticonexistpart.p
+END
+c-abmclasedeposito.w
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/Paulista/!svn/ver/1/progs/inv/c-abmclasedeposito.w
+END
+calcstckn.p
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/Paulista/!svn/ver/1/progs/inv/calcstckn.p
+END
+b-det-alma.w
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/1/progs/inv/b-det-alma.w
+END
+lsarticonexist.p
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/inv/lsarticonexist.p
+END
+lsgenerar_reposicion.p
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/Paulista/!svn/ver/1/progs/inv/lsgenerar_reposicion.p
+END
+prvsa001.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/inv/prvsa001.p
+END
+anutradp.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/inv/anutradp.p
+END
+prtra501.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/inv/prtra501.p
+END
+seldeprp.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/inv/seldeprp.p
+END
+b-partida_deposito.w
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/Paulista/!svn/ver/1/progs/inv/b-partida_deposito.w
+END
+selartiventas.p
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/Paulista/!svn/ver/1/progs/inv/selartiventas.p
+END
+selsectr.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/inv/selsectr.p
+END
+w-lsmovimientos_articulo.w
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/Paulista/!svn/ver/1/progs/inv/w-lsmovimientos_articulo.w
+END
+seldeped.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/inv/seldeped.p
+END
+lsetiart.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/inv/lsetiart.p
+END
+selarticompras.p
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/inv/selarticompras.p
+END
+b-envases.w
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/Paulista/!svn/ver/1/progs/inv/b-envases.w
+END
+LSARTICONEXISTP.p
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/inv/LSARTICONEXISTP.p
+END
+regenera_stock.p
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/inv/regenera_stock.p
+END
+b-articulos-compras.w
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/Paulista/!svn/ver/1/progs/inv/b-articulos-compras.w
+END
+corqstra.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/inv/corqstra.p
+END
+referir_tiempos.p
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/inv/referir_tiempos.p
+END
+q-sector-envios.w
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/inv/q-sector-envios.w
+END
+v-par-asninventario.w
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/Paulista/!svn/ver/1/progs/inv/v-par-asninventario.w
+END
+vlb-unidades.p
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/Paulista/!svn/ver/1/progs/inv/vlb-unidades.p
+END
+vlb-registrable.p
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/inv/vlb-registrable.p
+END
+rftiempo.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/inv/rftiempo.p
+END
+d-detalle_valeinv.w
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/Paulista/!svn/ver/1/progs/inv/d-detalle_valeinv.w
+END
+vlb-articulos.p
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/16/progs/inv/vlb-articulos.p
+END
+b-p-tran.w
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/inv/b-p-tran.w
+END
+w-tipofamilias.w
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/inv/w-tipofamilias.w
+END
+d-buscar_articulosC.w
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/Paulista/!svn/ver/1/progs/inv/d-buscar_articulosC.w
+END
+w-rlasninv.w
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/1/progs/inv/w-rlasninv.w
+END
+d-selclase_articulos.w
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/Paulista/!svn/ver/1/progs/inv/d-selclase_articulos.w
+END
+validar_codigo_articulo.p
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/Paulista/!svn/ver/1/progs/inv/validar_codigo_articulo.p
+END
+w-rlexspar.w
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/1/progs/inv/w-rlexspar.w
+END
+b-deposito.w
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/1/progs/inv/b-deposito.w
+END
+v-familia_impositiva.w
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/Paulista/!svn/ver/1/progs/inv/v-familia_impositiva.w
+END
+simulador_permisos.p
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/Paulista/!svn/ver/1/progs/inv/simulador_permisos.p
+END
+b-fcomerciales.w
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/inv/b-fcomerciales.w
+END
+validar_lista_sectores.p
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/Paulista/!svn/ver/1/progs/inv/validar_lista_sectores.p
+END
+ciemvstk.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/inv/ciemvstk.p
+END
+calctrdp.i
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/inv/calctrdp.i
+END
+selartiproduccion.p
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/Paulista/!svn/ver/1/progs/inv/selartiproduccion.p
+END
+q-arti-depo.w
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/1/progs/inv/q-arti-depo.w
+END
+calcular_stock.p
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/inv/calcular_stock.p
+END
+w-lsmovimientos_articulo_partida.w
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/Paulista/!svn/ver/1/progs/inv/w-lsmovimientos_articulo_partida.w
+END
+b-movimientos_x_partida.w
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/Paulista/!svn/ver/1/progs/inv/b-movimientos_x_partida.w
+END
+b-partidas.w
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/1/progs/inv/b-partidas.w
+END
+emitir_transferencia.p
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/Paulista/!svn/ver/1/progs/inv/emitir_transferencia.p
+END
+b-area.w
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/svn/Paulista/!svn/ver/1/progs/inv/b-area.w
+END
+selfrtiva.p
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/Paulista/!svn/ver/1/progs/inv/selfrtiva.p
+END
+runabmclaseart.p
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/inv/runabmclaseart.p
+END
+b-tipo_articulo.w
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/inv/b-tipo_articulo.w
+END
+selartistock.p
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/Paulista/!svn/ver/1/progs/inv/selartistock.p
+END
+v-gen_requis.w
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/Paulista/!svn/ver/1/progs/inv/v-gen_requis.w
+END
+vlb-areas.p
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/Paulista/!svn/ver/1/progs/inv/vlb-areas.p
+END
+b-registrables.w
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/inv/b-registrables.w
+END
+v-fcomercial.w
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/Paulista/!svn/ver/1/progs/inv/v-fcomercial.w
+END
+w-envases.w
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/Paulista/!svn/ver/1/progs/inv/w-envases.w
+END
+vlb-envases.p
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/1/progs/inv/vlb-envases.p
+END
+borrar_existencias.p
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/Paulista/!svn/ver/1/progs/inv/borrar_existencias.p
+END
+w-atributos.w
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/1/progs/inv/w-atributos.w
+END
+anular_vale_inventario.p
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/Paulista/!svn/ver/1/progs/inv/anular_vale_inventario.p
+END
+w-rlarticulosxfamilia.w
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/Paulista/!svn/ver/1/progs/inv/w-rlarticulosxfamilia.w
+END
+d-editar_arbolito.w
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/Paulista/!svn/ver/1/progs/inv/d-editar_arbolito.w
+END
+d-buscar_articulos.w
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/Paulista/!svn/ver/1/progs/inv/d-buscar_articulos.w
+END
+b-p-alma.w
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/inv/b-p-alma.w
+END
+seltpart.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/inv/seltpart.p
+END
+replica_estructura.p
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/Paulista/!svn/ver/1/progs/inv/replica_estructura.p
+END
+fnverificatributos.i
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/Paulista/!svn/ver/51/progs/inv/fnverificatributos.i
+END
+w-rlarticulosxcuenta.w
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/Paulista/!svn/ver/1/progs/inv/w-rlarticulosxcuenta.w
+END
+w-unidades.w
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/1/progs/inv/w-unidades.w
+END
+lsmovimientos_articulo.p
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/Paulista/!svn/ver/1/progs/inv/lsmovimientos_articulo.p
+END
+v-rng-tipoarticulo.w
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/Paulista/!svn/ver/1/progs/inv/v-rng-tipoarticulo.w
+END
+b-movimientos_x_depypartida.w
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/Paulista/!svn/ver/1/progs/inv/b-movimientos_x_depypartida.w
+END
+lsarticu.i
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/inv/lsarticu.i
+END
+lsclasificacion_depositos.p
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/Paulista/!svn/ver/1/progs/inv/lsclasificacion_depositos.p
+END
+v-rng-articulo.w
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/inv/v-rng-articulo.w
+END

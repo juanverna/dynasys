@@ -1,0 +1,16 @@
+      tot_fichas @  cnt_incid
+      {discolor.i "rojo             "}
+      {discolor.i "rojo-tarde       "}
+      {discolor.i "rojo-muytarde    "}
+      {discolor.i "amarillo         "}
+      {discolor.i "amarillo-tarde   "}
+      {discolor.i "amarillo-muytarde"}
+      {discolor.i "celeste         "}
+      {discolor.i "celeste-tarde   "}
+      {discolor.i "celeste-muytarde"}
+      {discolor.i "verdeadu         "}
+      {discolor.i "verdeadu-tarde   "}
+      {discolor.i "verdeadu-muytarde"}
+      {discolor.i "verdeped         "}
+      {discolor.i "verdeped-tarde   "}
+      {discolor.i "verdeped-muytarde"}

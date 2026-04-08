@@ -1,0 +1,545 @@
+&ANALYZE-SUSPEND _VERSION-NUMBER UIB_v9r12
+&ANALYZE-RESUME
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CUSTOM _DEFINITIONS Procedure 
+/*------------------------------------------------------------------------
+    File        : .p
+    Purpose     : convers iones a xml.
+
+     (fvergniaud@dynasys.com.ar)                                                                               
+  ----------------------------------------------------------------------*/
+
+DEFINE STREAM salida.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-PREPROCESSOR-BLOCK 
+
+/* ********************  Preprocessor Definitions  ******************** */
+
+&Scoped-define PROCEDURE-TYPE Procedure
+&Scoped-define DB-AWARE no
+
+
+
+/* _UIB-PREPROCESSOR-BLOCK-END */
+&ANALYZE-RESUME
+
+
+/* ************************  Function Prototypes ********************** */
+
+&IF DEFINED(EXCLUDE-aUnicode) = 0 &THEN
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _FUNCTION-FORWARD aUnicode Procedure 
+FUNCTION aUnicode returns character
+  ( ipcString as char )  FORWARD.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ENDIF
+
+&IF DEFINED(EXCLUDE-getBufferValue) = 0 &THEN
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _FUNCTION-FORWARD getBufferValue Procedure 
+FUNCTION getBufferValue RETURNS CHARACTER
+  ( phField AS HANDLE, piIndex AS INTEGER )  FORWARD.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ENDIF
+
+&IF DEFINED(EXCLUDE-Xtemp) = 0 &THEN
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _FUNCTION-FORWARD Xtemp Procedure 
+FUNCTION Xtemp RETURNS CHARACTER
+  ( direct AS CHAR )  FORWARD.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ENDIF
+
+
+/* *********************** Procedure Settings ************************ */
+
+&ANALYZE-SUSPEND _PROCEDURE-SETTINGS
+/* Settings for THIS-PROCEDURE
+   Type: Procedure
+   Allow: 
+   Frames: 0
+   Add Fields to: Neither
+   Other Settings: CODE-ONLY COMPILE
+ */
+&ANALYZE-RESUME _END-PROCEDURE-SETTINGS
+
+/* *************************  Create Window  ************************** */
+
+&ANALYZE-SUSPEND _CREATE-WINDOW
+/* DESIGN Window definition (used by the UIB) 
+  CREATE WINDOW Procedure ASSIGN
+         HEIGHT             = 27.33
+         WIDTH              = 160.
+/* END WINDOW DEFINITION */
+                                                                        */
+&ANALYZE-RESUME
+
+ 
+
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CUSTOM _MAIN-BLOCK Procedure 
+
+
+/* ***************************  Main Block  *************************** */
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+/* **********************  Internal Procedures  *********************** */
+
+&IF DEFINED(EXCLUDE-exportToXmlDset) = 0 &THEN
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE exportToXmlDset Procedure 
+PROCEDURE exportToXmlDset :
+/*------------------------------------------------------------------------------
+  Convierte una lista de temp-table a xml file en disk     
+------------------------------------------------------------------------------*/
+    DEFINE INPUT PARAMETER dsetname     AS CHAR NO-UNDO.
+    DEFINE INPUT PARAMETER listTables   AS char NO-UNDO.
+    DEFINE INPUT PARAMETER pcFileName   AS CHARACTER NO-UNDO.
+
+    DEFINE VARIABLE hQUERY              AS HANDLE    NO-UNDO.
+    DEFINE VARIABLE htable              as HANDLE    NO-UNDO.
+    DEFINE VARIABLE hBuffer             AS HANDLE    NO-UNDO.
+    DEFINE VARIABLE hField              AS HANDLE    NO-UNDO.
+    DEFINE VARIABLE cValue              AS CHARACTER NO-UNDO.
+    DEFINE VARIABLE IField              AS INTEGER   NO-UNDO.
+    DEFINE VARIABLE ITables             AS INTEGER   NO-UNDO.
+
+    DEFINE VARIABLE cType               AS CHARACTER NO-UNDO.
+        
+    DEFINE VARIABLE i AS INTEGER NO-UNDO.
+    DEFINE VARIABLE ni AS INTEGER NO-UNDO.
+    DEFINE VARIABLE nx AS INTEGER NO-UNDO.
+    DEFINE VARIABLE tstr AS CHARACTER NO-UNDO.
+    DEFINE VARIABLE tag AS CHARACTER NO-UNDO.
+
+    DEFINE VARIABLE cField AS CHARACTER NO-UNDO.
+
+OUTPUT STREAM salida TO value(pcFileName).
+
+PUT stream  salida unformatted   '<?xml version="1.0"?>' SKIP
+                                 '<' dsetname ' xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">' SKIP
+                                 '<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="" xmlns:prodata="urn:schemas-progress-com:xml-prodata:0001">' SKIP
+                                 '<xsd:element name="' dsetname '" prodata:proDataSet="true">' SKIP
+                                 '<xsd:complexType>' SKIP
+                                 '<xsd:sequence>' SKIP.
+
+REPEAT ITables = 1 TO NUM-ENTRIES(listTables):
+   htable = WIDGET-HANDLE(ENTRY(Itables,listTables)). 
+   PUT stream  salida unformatted  '<xsd:element name="' hTable:NAME '" minOccurs="0" maxOccurs="unbounded">' SKIP
+                                   '<xsd:complexType>' SKIP
+                                   '<xsd:sequence>' SKIP .
+
+    hBuffer = hTable:DEFAULT-BUFFER-HANDLE.
+    CREATE QUERY hQUERY.
+    hQUERY:SET-BUFFERS(hBuffer).
+    hQUERY:QUERY-PREPARE('for each ':U + hTable:name + ' no-lock':U).
+    hQUERY:QUERY-OPEN.
+    hQUERY:GET-FIRST.
+
+    REPEAT IField = 1 TO hBuffer:NUM-FIELDS:
+         hField = hBuffer:BUFFER-FIELD(IField).
+
+         CASE STRING(hField:DATA-TYPE):
+            WHEN 'logical' THEN
+                ASSIGN
+                    cType = 'boolean'.
+            WHEN 'decimal' THEN 
+                ASSIGN
+                    cType = 'decimal'.
+                
+            WHEN 'integer' THEN
+                ASSIGN
+                    cType = 'int'.
+    
+            WHEN 'date' THEN
+                ASSIGN 
+                    cType = 'date'.
+    
+            OTHERWISE DO:
+                ASSIGN
+                    cType = 'string'.
+            END.
+        end CASE.
+
+        PUT stream salida unformatted '<xsd:element name="' hField:NAME '" type="xsd:' ctype '" nillable="true"/>' SKIP.
+    END.
+    PUT stream salida unformatted '</xsd:sequence>' SKIP
+                                  '</xsd:complexType>' SKIP
+                                  '</xsd:element>' SKIP.
+
+    hQUERY:QUERY-CLOSE.
+END.
+
+PUT stream salida unformatted '</xsd:sequence>' SKIP
+                              '</xsd:complexType>' SKIP.
+
+/* los indices no son necesarios en el contexto actual*/
+/*
+/* index */
+REPEAT ITables = 1 TO NUM-ENTRIES(listTables):
+   htable = WIDGET-HANDLE(ENTRY(Itables,listTables)). 
+   PUT stream  salida unformatted  '<xsd:element name="' hTable:NAME '" minOccurs="0" maxOccurs="unbounded">' SKIP
+                                   '<xsd:complexType>' SKIP
+                                   '<xsd:sequence>' SKIP .
+
+    hBuffer = hTable:DEFAULT-BUFFER-HANDLE.
+    CREATE QUERY hQUERY.
+    hQUERY:SET-BUFFERS(hBuffer).
+    hQUERY:QUERY-PREPARE('for each ':U + hTable:name + ' no-lock':U).
+    hQUERY:QUERY-OPEN.
+    hQUERY:GET-FIRST.
+
+    do ni = 1 to 200:
+      if hBuffer:index-information(ni) = ? then leave.
+      assign tstr = hBuffer:index-information(ni).
+      if entry(1, tstr) = "default" then leave.
+      put STREAM salida unformatted '<xsd:unique>' skip
+                                    '<xsd:unique name="' entry(1, tstr) '"'
+                                    (IF entry(3, tstr) = "1" THEN 'prodata:primaryIndex="true"' ELSE "") '>' SKIP
+                                    '<xsd:selector xpath=".//' htable:NAME '"/>' SKIP.
+
+      do nx = 5 to num-entries(tstr) by 2:
+        tag = "0".
+        tag = entry(nx + 1, tstr) no-error.
+        put STREAM salida UNFORMATTED '<xsd:field xpath="' entry(nx, tstr) '"/>' SKIP.
+/*        put unformatted '  INDEX-FIELD "':u entry(nx, str) '" ' (if tag = "0" then 'ASCENDING ':u else 'DESCENDING ':u) skip.*/
+      end.
+      put STREAM salida unformatted '</xsd:unique>' skip.
+    end. 
+    
+    hQUERY:QUERY-CLOSE.
+END.
+*/
+
+PUT stream salida unformatted '</xsd:element>' SKIP
+                              '</xsd:schema>'  SKIP .
+
+REPEAT ITables = 1 TO NUM-ENTRIES(listTables):
+    htable = WIDGET-HANDLE(ENTRY(Itables,listTables)). 
+    hBuffer = hTable:DEFAULT-BUFFER-HANDLE.
+    CREATE QUERY hQUERY.
+    hQUERY:SET-BUFFERS(hBuffer).
+    hQUERY:QUERY-PREPARE('for each ':U + hTable:name + ' no-lock':U).
+    hQUERY:QUERY-OPEN.
+    hQUERY:GET-FIRST.
+
+    DO WHILE NOT hQUERY:QUERY-OFF-END:
+        PUT stream salida unformatted  '<' hTable:name '>' SKIP .
+        REPEAT IField = 1 TO hBuffer:NUM-FIELDS:
+            hField = hBuffer:BUFFER-FIELD(IField).
+
+            cValue = getBufferValue(hField, i).
+            cField = hField:name.
+            IF cValue <> "" THEN
+                 PUT STREAM salida UNFORMATTED '<' cfield '>' trim(cvalue) '</' cfield '>' SKIP .
+            ELSE DO:
+                    IF STRING(hField:DATA-TYPE) = "date" THEN
+                      PUT STREAM salida UNFORMATTED '<' cfield ' xsi:nil="true"/>' SKIP .
+                    ELSE 
+                      PUT STREAM salida UNFORMATTED '<' cfield '/>' SKIP .
+                 END.
+        END. /* field block */
+
+        
+        PUT stream salida unformatted  '</' hTable:name '>' SKIP.
+        hQUERY:GET-NEXT.  
+    END.
+
+    
+    hQUERY:QUERY-CLOSE.
+    
+END.
+PUT stream salida unformatted  '</' dsetname '>' SKIP.
+    
+OUTPUT STREAM salida close.
+  
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ENDIF
+
+&IF DEFINED(EXCLUDE-exportToXmlTT) = 0 &THEN
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE exportToXmlTT Procedure 
+PROCEDURE exportToXmlTT :
+/*------------------------------------------------------------------------------
+  Convert temp-table to xml file on disk     
+------------------------------------------------------------------------------*/
+    DEFINE INPUT PARAMETER phTable     AS HANDLE    NO-UNDO.
+    DEFINE INPUT PARAMETER pcFileName  AS CHARACTER NO-UNDO.
+
+    DEFINE VARIABLE hQUERY              AS HANDLE    NO-UNDO.
+    DEFINE VARIABLE hBuffer             AS HANDLE    NO-UNDO.
+    DEFINE VARIABLE hField              AS HANDLE    NO-UNDO.
+    DEFINE VARIABLE cValue              AS CHARACTER NO-UNDO.
+    DEFINE VARIABLE IField              AS INTEGER   NO-UNDO.
+
+    DEFINE VARIABLE cType               AS CHARACTER NO-UNDO.
+
+
+    DEFINE VARIABLE i AS INTEGER NO-UNDO.
+    DEFINE VARIABLE cField AS CHARACTER NO-UNDO.
+
+OUTPUT STREAM salida TO value(pcFileName).
+
+PUT stream  salida unformatted   '<?xml version="1.0"?>' SKIP
+                                 '<' phTable:NAME ' xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">' SKIP
+                                 '<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="" xmlns:prodata="urn:schemas-progress-com:xml-prodata:0001">' SKIP
+                                 '<xsd:element name="' phTable:NAME '" prodata:proTempTable="true">' SKIP
+                                 '<xsd:complexType>' SKIP
+                                 '<xsd:sequence>' SKIP
+                                 '<xsd:element name="' phTable:NAME 'Row" minOccurs="0" maxOccurs="unbounded">' SKIP
+                                 '<xsd:complexType>' SKIP
+                                 '<xsd:sequence>' SKIP .
+
+    hBuffer = phTable:DEFAULT-BUFFER-HANDLE.
+
+    CREATE QUERY hQUERY.
+    hQUERY:SET-BUFFERS(hBuffer).
+    hQUERY:QUERY-PREPARE('for each ':U + phTable:name + ' no-lock':U).
+    hQUERY:QUERY-OPEN.
+    hQUERY:GET-FIRST.
+
+    REPEAT IField = 1 TO hBuffer:NUM-FIELDS:
+        hField = hBuffer:BUFFER-FIELD(IField).
+
+                CASE STRING(hField:DATA-TYPE):
+                    WHEN 'logical' THEN
+                        ASSIGN
+                            cType = 'boolean'.
+                    WHEN 'decimal' THEN 
+                        ASSIGN
+                            cType = 'decimal'.
+                        
+                    WHEN 'integer' THEN
+                        ASSIGN
+                            cType = 'int'.
+
+                    WHEN 'date' THEN
+                        ASSIGN 
+                            cType = 'date'.
+
+                    OTHERWISE DO:
+                        ASSIGN
+                            cType = 'string'.
+                    END.
+                end CASE.
+
+                PUT stream salida unformatted '<xsd:element name="' hField:NAME '" type="xsd:' ctype '" nillable="true"/>' SKIP.
+    END.
+    PUT stream salida unformatted '</xsd:sequence>' SKIP
+                                  '</xsd:complexType>' SKIP
+                                  '</xsd:element>' SKIP
+                                  '</xsd:sequence>' SKIP
+                                  '</xsd:complexType>' SKIP.
+
+      /* indice de la tabla ???????
+      PUT stream unformatted salida
+       '<xsd:unique name="cdg_cliente" prodata:primaryIndex="true">
+        <xsd:selector xpath=".//ttclienteRow"/>
+        <xsd:field xpath="cdg_cliente"/>
+      </xsd:unique>
+      <xsd:unique name="nro_cliente">
+        <xsd:selector xpath=".//ttclienteRow"/>
+        <xsd:field xpath="nro_cliente"/>
+      </xsd:unique>
+      */
+    PUT stream salida unformatted '</xsd:element>' SKIP
+                                  '</xsd:schema>'  SKIP .
+
+
+    DO WHILE NOT hQUERY:QUERY-OFF-END:
+        PUT stream salida unformatted  '<' phTable:name 'Row>' SKIP .
+        REPEAT IField = 1 TO hBuffer:NUM-FIELDS:
+
+            hField = hBuffer:BUFFER-FIELD(IField).
+                    cValue = getBufferValue(hField, i).
+                    cField = hField:name.
+                    IF cValue <> "" THEN
+                        PUT STREAM salida UNFORMATTED '<' cfield '>' trim(cvalue) '</' cfield '>' SKIP .
+                    ELSE DO:
+                        IF STRING(hField:DATA-TYPE) = "date" THEN
+                           PUT STREAM salida UNFORMATTED '<' cfield ' xsi:nil="true"/>' SKIP .
+                        ELSE 
+                           PUT STREAM salida UNFORMATTED '<' cfield '/>' SKIP .
+                    END.
+        END. /* field block */
+
+        
+        PUT stream salida unformatted  '</' phTable:name 'Row>' SKIP.
+        hQUERY:GET-NEXT.  
+    END.
+
+    
+    hQUERY:QUERY-CLOSE.
+    
+    PUT stream salida unformatted  '</' phTable:NAME '>' SKIP.
+
+    OUTPUT STREAM salida close.
+  
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ENDIF
+
+&IF DEFINED(EXCLUDE-fullPath) = 0 &THEN
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE fullPath Procedure 
+PROCEDURE fullPath :
+/*------------------------------------------------------------------------------
+Locate the full pathname of a file, potentially using a suffix
+------------------------------------------------------------------------------*/
+  DEFINE INPUT  PARAMETER pcFileName AS CHARACTER  NO-UNDO.
+  DEFINE INPUT  PARAMETER pcSuffix   AS CHARACTER  NO-UNDO.
+  DEFINE OUTPUT PARAMETER pcFullPath AS CHARACTER  NO-UNDO.
+  
+  FILE-INFO:FILE-NAME = pcFileName.
+  IF FILE-INFO:FULL-PATHNAME = ? THEN
+    FILE-INFO:FILE-NAME = pcFileName + pcSuffix.
+  pcFullPath = FILE-INFO:FULL-PATHNAME.
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ENDIF
+
+/* ************************  Function Implementations ***************** */
+
+&IF DEFINED(EXCLUDE-aUnicode) = 0 &THEN
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _FUNCTION aUnicode Procedure 
+FUNCTION aUnicode returns character
+  ( ipcString as char ) :
+/*------------------------------------------------------------------------------
+  Convert a characterstring into UNICODE
+------------------------------------------------------------------------------*/
+
+    def var iChar   as int  no-undo.
+    def var cString as char no-undo case-sensitive.
+
+    if ipcString = '' then
+        return ipcString.
+
+
+    cString = ipcString.
+
+    cString = ipcString.
+    cString = REPLACE(cString,CHR(13) + CHR(10)," ").
+    cString = REPLACE(cString,CHR(160) ,"á").
+    cString = REPLACE(cString,CHR(131) ,"è").
+    cString = REPLACE(cString,CHR(161) ,"í").
+    cString = REPLACE(cString,CHR(162) ,"ó").
+    cString = REPLACE(cString,CHR(163) ,"ú").
+    cString = REPLACE(cString,CHR(13) ," ").
+    cString = REPLACE(cString,CHR(10) ," ").
+    cString = REPLACE(cString,CHR(8) ,"        ").
+
+    repeat iChar = 128 to 128 + 63:
+        if index(cString, chr(iChar))      > 0 then
+            cString = replace(cString, chr(iChar),      chr(194) + chr(iChar)).
+        if index(cString, chr(iChar + 64)) > 0 then
+            cString = replace(cString, chr(iChar + 64), chr(195) + chr(iChar)).
+    end.
+
+    return cString.
+
+end function.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ENDIF
+
+&IF DEFINED(EXCLUDE-getBufferValue) = 0 &THEN
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _FUNCTION getBufferValue Procedure 
+FUNCTION getBufferValue RETURNS CHARACTER
+  ( phField AS HANDLE, piIndex AS INTEGER ) :
+/*------------------------------------------------------------------------------
+   Returns a buffer value int the XML format required by CR  
+------------------------------------------------------------------------------*/
+    DEFINE VARIABLE cValue AS CHARACTER  NO-UNDO.
+    DEFINE VARIABLE dValue AS DATE       NO-UNDO.
+
+    IF phField:BUFFER-VALUE(piIndex) <> ? THEN
+    DO:
+      CASE  phField:DATA-TYPE:
+        WHEN 'character':U THEN 
+        DO:
+          cValue = aUnicode(phField:BUFFER-VALUE(piIndex)).
+        END.
+        WHEN 'decimal':U THEN 
+        DO:
+          cValue = STRING(phField:BUFFER-VALUE(piIndex),phField:FORMAT).
+
+          IF INDEX(cValue, ',':U) > 0 THEN
+            cValue = REPLACE(cValue, ',':U, '.':U).
+        END.                    
+        WHEN 'integer':U THEN 
+          cValue = STRING(phField:BUFFER-VALUE(piIndex)).
+        WHEN 'logical':U THEN
+          cValue = TRIM(STRING(phField:BUFFER-VALUE(piIndex), 'true/false':U)).
+        WHEN 'date':U THEN  
+        ASSIGN
+          dValue = phField:BUFFER-VALUE(piIndex)
+          cValue = STRING(YEAR(dValue), '9999':U) + '-' + 
+                 STRING(MONTH(dValue), '99':U) + '-' +
+                 STRING(DAY(dValue), '99':U).
+        OTHERWISE
+          cValue = aUnicode( phField:BUFFER-VALUE(piIndex) ).
+      END CASE.
+    END.
+
+    RETURN cValue.
+END FUNCTION.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ENDIF
+
+&IF DEFINED(EXCLUDE-Xtemp) = 0 &THEN
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _FUNCTION Xtemp Procedure 
+FUNCTION Xtemp RETURNS CHARACTER
+  ( direct AS CHAR ) :
+/*------------------------------------------------------------------------------
+  Purpose: retorna el fullpath de  archivo temporal  
+    Notes:  
+------------------------------------------------------------------------------*/
+DEF VAR xfile AS CHAR NO-UNDO.
+DEF VAR seed AS CHAR NO-UNDO.
+IF direct = "" THEN direct = SESSION:TEMP-DIRECTORY.
+/*para 10    seed = GUID(GENERATE-UUID).*/
+seed = USERID("sic").
+xfile = SUBST('&1/cr-' + seed + ".xml" , direct) . 
+xfile = REPLACE(xfile,"/","\").
+  RETURN xfile.   /* Function return value. */
+
+END FUNCTION.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ENDIF
+

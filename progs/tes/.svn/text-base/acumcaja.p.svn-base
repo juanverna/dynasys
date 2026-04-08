@@ -1,0 +1,86 @@
+/*=================================================================================*/
+/*                      ACUMULA UN MOVIMIENTO DE CAJA                              */
+/*=================================================================================*/
+
+DEFINE INPUT PARAMETER ope AS CHARACTER.
+
+{VPERSINM.I}
+{VRSHARED.I}
+
+FIND Caj_header WHERE ROWID(Caj_header) = act_caj_head.
+FIND Caja OF Caj_header.
+
+DO TRANSACTION:
+
+    FOR EACH Caj_detalle OF Caj_header:
+    
+        FIND Acumulado_caja OF Caja
+             WHERE Acumulado_caja.ano          = YEAR(Caj_header.fecha)
+               AND Acumulado_caja.mes          = MONTH(Caj_header.fecha) 
+               AND Acumulado_caja.cdg_rubro    = Caj_detalle.cdg_rubro
+                   EXCLUSIVE-LOCK NO-ERROR.
+    
+        IF NOT AVAILABLE Acumulado_caja
+        THEN DO:
+           CREATE Acumulado_caja.
+           ASSIGN Acumulado_caja.cdg_caja     = Caja.cdg_caja
+                  Acumulado_caja.ano          = YEAR(Caj_header.fecha)
+                  Acumulado_caja.mes          = MONTH(Caj_header.fecha)
+                  Acumulado_caja.cdg_rubro    = Caj_detalle.cdg_rubro.
+        END.
+    
+        IF ope = "A"
+        THEN DO:
+           IF Caj_detalle.tipo_mov = "E" 
+              THEN Acumulado_caja.tot_egreso  = Acumulado_caja.tot_egreso + 
+                                                Caj_detalle.importe.
+              ELSE Acumulado_caja.tot_ingreso = Acumulado_caja.tot_ingreso + 
+                                                Caj_detalle.importe.
+        END.                            
+        ELSE DO:                               
+           IF Caj_detalle.tipo_mov = "E" 
+              THEN Acumulado_caja.tot_egreso  = Acumulado_caja.tot_egreso - 
+                                                Caj_detalle.importe.
+              ELSE Acumulado_caja.tot_ingreso = Acumulado_caja.tot_ingreso - 
+                                                Caj_detalle.importe.
+        END.
+    
+    END.
+
+    FIND Acumulado_caja OF Caja
+         WHERE Acumulado_caja.ano          = YEAR(Caj_header.fecha)
+           AND Acumulado_caja.mes          = MONTH(Caj_header.fecha) 
+           AND Acumulado_caja.cdg_rubro    = 0
+               EXCLUSIVE-LOCK NO-ERROR.
+
+    IF NOT AVAILABLE Acumulado_caja
+    THEN DO:
+       CREATE Acumulado_caja.
+       ASSIGN Acumulado_caja.cdg_caja     = Caja.cdg_caja
+              Acumulado_caja.ano          = YEAR(Caj_header.fecha)
+              Acumulado_caja.mes          = MONTH(Caj_header.fecha)
+              Acumulado_caja.cdg_rubro    = 0.
+    END.
+
+    IF ope = "A"
+    THEN DO:
+       IF Caj_header.tipo_mov = "E" 
+          THEN Acumulado_caja.tot_egreso  = Acumulado_caja.tot_egreso + 
+                                            Caj_header.importe.
+          ELSE Acumulado_caja.tot_ingreso = Acumulado_caja.tot_ingreso + 
+                                            Caj_header.importe.
+    END.                            
+    ELSE DO:                               
+       IF Caj_header.tipo_mov = "E" 
+          THEN Acumulado_caja.tot_egreso  = Acumulado_caja.tot_egreso - 
+                                            Caj_header.importe.
+          ELSE Acumulado_caja.tot_ingreso = Acumulado_caja.tot_ingreso - 
+                                            Caj_header.importe.
+    END.
+
+    RELEASE Acumulado_caja.
+
+END.
+   
+RETURN.
+ 

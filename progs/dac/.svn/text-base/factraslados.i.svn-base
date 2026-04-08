@@ -1,0 +1,358 @@
+
+    ASSIGN
+        v-kilomtot    = 0
+        v-tarifa      = 0
+        v-tarifakm    = 0
+        v-inocturno   = 0
+        v-ikilomet    = 0
+        v-kilomet     = 0
+        v-ikilomad    = 0
+        v-kilomad     = 0
+        v-iespera     = 0
+        v-espera      = 0
+        v-iferiado    = 0
+        v-ioxigeno    = 0
+        v-itotklm     = 0
+        v-itotal      = 0
+        v-targen      = NO.
+
+    FIND Localidad   OF Ficha NO-LOCK NO-ERROR.
+    v-domicilio = Ficha.calle_emr + " " + Ficha.nropta_emr + "-" + Localidad.dsc_localidad.
+
+    FIND Localidad-dst WHERE Localidad-dst.cdg_localidad = Ficha.cdg_localidad-dst NO-LOCK NO-ERROR.
+    v-kilomtot = MAXIMUM(Localidad.kilometros,Localidad-dst.kilometros).
+
+    v-telefono =  Ficha.prefijotel_emr + "-" + Ficha.telefono_emr.
+
+    /* ------------------------------------------------------------------------ */
+    /* Levanta la tarifa del cliente, si no la encuentra, toma la del cliente 0 */
+    /* ------------------------------------------------------------------------ */
+
+    FIND Cliente-motivo 
+         WHERE Cliente-motivo.cdg_cliente   = Ficha.cdg_cliente
+           AND Cliente-motivo.cdg_motivo    = Ficha.cdg_motivo 
+               NO-LOCK NO-ERROR.
+
+    IF NOT AVAILABLE Cliente-motivo 
+    THEN DO:
+        FIND Cliente-motivo 
+             WHERE Cliente-motivo.cdg_cliente   = 0
+               AND Cliente-motivo.cdg_motivo    = Ficha.cdg_motivo 
+                   NO-LOCK NO-ERROR.
+        IF NOT AVAILABLE Cliente-motivo
+        THEN DO:
+             MESSAGE "Ficha Nro:" STRING(Ficha.num_ficha) SKIP
+                     "Tipo Tras:" Ficha.cdg_motivo SKIP
+                     VIEW-AS ALERT-BOX ERROR TITLE "No existe la tarifa".
+        END.           
+    END.
+
+
+    /* ------------------------------------------------------------------------ */
+    /*  Determina si es un traslado nocturno o no y si se trata de un feriado   */
+    /*  En consecuencia asigna el indice para la tabla de decision de tarifa.   */
+    /*                                                                          */
+    /*                                                                          */
+    /*                               Laborable      Feriado                     */
+    /*                                                                          */
+    /*                   Diurno         DL             DF                       */
+    /*                                                                          */
+    /*                   Nocturno       NL             NF                       */
+    /*                                                                          */
+    /*                                                                          */
+    /* ------------------------------------------------------------------------ */
+
+    v-dia = nom_dia [ WEEKDAY(Ficha.fch_alta) ].
+    
+    indice_tarifa = "".
+    
+    IF Ficha.hor_alta  < 20 * 3600 AND /* 20:00 horas */
+       Ficha.hor_alta >= 08 * 3600     /* 08:00 horas */
+       THEN es_diurno = "D".
+       ELSE es_diurno = "N".
+
+    CASE WEEKDAY(Ficha.fch_alta):
+
+         WHEN 1  /* Domingo */
+         THEN DO:
+              es_feriado = "F".
+         END.
+            
+         WHEN 7 /* Sabado  */
+         THEN DO:
+
+              CASE Cliente-motivo.modo_sabado:
+
+                   WHEN "N"
+                   THEN DO:
+                        es_feriado = "L".
+                   END.
+
+                   WHEN "C"
+                   THEN DO:
+                        es_feriado = "F".
+                   END.
+
+                   WHEN ""
+                   THEN DO:
+                        IF Ficha.hor_alta > 13 * 3600 /* Después de las 13 horas */
+                           THEN es_feriado = "F".
+                           ELSE es_feriado = "L".
+                   END.
+
+              
+              END CASE.
+         END.
+
+         OTHERWISE 
+         DO:
+            IF /*CAN-FIND(Feriado WHERE Ficha.fch_alta = Feriado.fch_feriado) */ FALSE
+               THEN es_feriado = "F".
+               ELSE es_feriado = "L".
+         END.
+
+    END CASE.
+
+    indice_tarifa = es_diurno + es_feriado.
+
+    /* ------------------------------------------------------------------------ */
+    /* Levanta la tarifa del cliente, para esa localidad en especial. Ssi no la */
+    /* encuentra, toma la del cliente en base a las distancias de localidades   */
+    /* ------------------------------------------------------------------------ */
+
+    IF Localidad.cdg_zona < Localidad-dst.cdg_zona 
+    THEN DO:
+         v-cod_zona1 = Localidad.cdg_zona.
+         v-cod_zona2 = Localidad-dst.cdg_zona.
+    END.
+    ELSE DO:
+         v-cod_zona2 = Localidad.cdg_zona.
+         v-cod_zona1 = Localidad-dst.cdg_zona.
+    END.
+
+    FIND FIRST Cliente-zona
+         WHERE Cliente-zona.cdg_cliente = Ficha.cdg_cliente
+           AND Cliente-zona.cdg_zona1   = v-cod_zona1
+           AND Cliente-zona.cdg_zona2   = v-cod_zona2 
+           AND Cliente-zona.cdg_motivo  = Ficha.cdg_motivo
+               NO-LOCK NO-ERROR.
+       
+    IF AVAILABLE Cliente-zona
+    THEN DO:
+
+        CASE indice_tarifa:
+
+             WHEN "DL" 
+             THEN DO:
+                v-kilomad   = 0.
+                v-tarifakm  = 0.
+                v-ikilomad  = 0.
+       
+                v-kilomet   = 0.
+                v-tarifa    = Cliente-zona.tarifa.
+                v-ikilomet  = v-tarifa.
+             END.
+
+             WHEN "NL" 
+             THEN DO:
+                v-kilomad   = 0.
+                v-tarifakm  = 0.
+                v-ikilomad  = 0.
+       
+                v-kilomet   = 0.
+                v-tarifa    = Cliente-zona.tar-nocturno.
+                v-ikilomet  = v-tarifa.
+             END.
+
+             WHEN "DF" 
+             THEN DO:
+                v-kilomad   = 0.
+                v-tarifakm  = 0.
+                v-ikilomad  = 0.
+       
+                v-kilomet   = 0.
+                v-tarifa    = Cliente-zona.tar-feriado.
+                v-ikilomet  = v-tarifa.
+             END.
+
+             WHEN "NF" 
+             THEN DO:
+                v-kilomad   = 0.
+                v-tarifakm  = 0.
+                v-ikilomad  = 0.
+       
+                v-kilomet   = 0.
+                v-tarifa    = Cliente-zona.tar-ferynoc.
+                v-ikilomet  = v-tarifa.
+             END.
+
+        END CASE.
+        
+        ASSIGN 
+            indice_tarifa = indice_tarifa + "*"
+            v-itotklm = v-ikilomet
+            v-itotal = v-itotklm.
+
+        FIND Zona     WHERE Zona.cdg_zona     = v-cod_zona1 NO-LOCK.
+        FIND Zona-dst WHERE Zona-dst.cdg_zona = v-cod_zona2 NO-LOCK.
+
+        ASSIGN
+             v-localidad      = Zona.descripcion
+             v-localidad-dst  = Zona-dst.descripcion.
+        
+    END.
+    ELSE DO:
+
+        ASSIGN
+            v-localidad      = Localidad.dsc_localidad
+            v-localidad-dst  = Localidad-dst.dsc_localidad
+            v-cod_zona1      = Localidad.cdg_localidad
+            v-cod_zona2      = Localidad-dst.cdg_localidad.
+
+        /* ------------------------------------------------------------------------ */
+        /* Para ese cliente-motivo, busca en la escala de kilometraje. Si se supera */
+        /* aplica el valor por kilometro unitario, restando la escala si corrde.    */
+        /* ------------------------------------------------------------------------ */
+    
+        FIND FIRST Cliente-kilometros OF Cliente-motivo
+             WHERE Cliente-kilometros.kilometros >= v-kilomtot
+                   NO-LOCK NO-ERROR.
+        
+        IF AVAILABLE Cliente-kilometros
+        THEN DO:
+
+             v-kilomad   = 0.
+             v-tarifakm  = 0.
+             v-ikilomad  = 0.
+             v-kilomet   = Cliente-kilometros.kilometros.
+             CASE indice_tarifa:
+        
+                  WHEN "DL" THEN v-tarifa    = Cliente-kilometros.tarifa.
+                  WHEN "NL" THEN v-tarifa    = Cliente-kilometros.tar-nocturno.
+                  WHEN "DF" THEN v-tarifa    = Cliente-kilometros.tar-feriado.
+                  WHEN "NF" THEN v-tarifa    = Cliente-kilometros.tar-ferynoc.
+        
+             END CASE.
+             v-ikilomet  = v-tarifa.
+    
+        END.
+        ELSE DO:
+             IF Cliente-motivo.restaescala_sino
+             THEN DO:
+                  FIND LAST  Cliente-kilometros OF Cliente-motivo
+                       WHERE Cliente-kilometros.kilometros <= v-kilomtot
+                             NO-LOCK.
+    
+                  v-kilomad  = v-kilomtot - Cliente-kilometros.kilometros.
+                  v-tarifakm = Cliente-motivo.kilometro_adicional.
+                  v-ikilomad = ROUND( v-kilomad * v-tarifakm , 2 ).
+                  v-kilomet   = Cliente-kilometros.kilometros.
+                  CASE indice_tarifa:
+               
+                         WHEN "DL" THEN v-tarifa    = Cliente-kilometros.tarifa.
+                         WHEN "NL" THEN v-tarifa    = Cliente-kilometros.tar-nocturno.
+                         WHEN "DF" THEN v-tarifa    = Cliente-kilometros.tar-feriado.
+                         WHEN "NF" THEN v-tarifa    = Cliente-kilometros.tar-ferynoc.
+                         OTHERWISE MESSAGE "Indice de Tarifa INCORRECTO=" indice_tarifa
+                                   VIEW-AS ALERT-BOX MESSAGE.               
+                  END CASE.
+                  v-ikilomet  = v-tarifa.
+    
+             END.
+             ELSE DO:
+                  v-kilomad   = v-kilomtot.
+                  v-tarifakm  = Cliente-motivo.kilometro_adicional.
+                  v-ikilomad  = ROUND( v-kilomad * v-tarifakm , 2 ).
+    
+                  v-kilomet   = 0.
+                  v-tarifa    = 0.
+                  v-ikilomet  = 0.
+    
+             END.
+        END.           
+    
+        /* ------------------------------------------------------------------------ */
+        /*                       Halla el total por kilometraje                     */
+        /* ------------------------------------------------------------------------ */
+        
+        v-itotklm = v-ikilomet + v-ikilomad.
+    
+        /* ------------------------------------------------------------------------ */
+        /* Calcula adicional por tiempo de espera. Calcula para las dos posibles,   */
+        /* esto es, en el domicilio de origen y en el de destino hasta que queda    */
+        /* el móvil disponible.                                                     */
+        /* ------------------------------------------------------------------------ */
+    
+        IF Ficha.hor_saldomi <> ? AND
+           Ficha.hor_arrdomi <> ?
+        THEN DO:
+            IF Ficha.hor_saldomi >= Ficha.hor_arrdomi
+               THEN v-tiempo = Ficha.hor_saldomi  - Ficha.hor_arrdomi.
+               ELSE v-tiempo = Ficha.hor_saldomi  - Ficha.hor_arrdomi + 86400.
+         
+            c-espera1 = STRING(v-tiempo,"HH:MM:SS").
+            v-tiempo = v-tiempo / 60.
+            v-espera1 = FRACCIONAR( v-tiempo,
+                                    Cliente-motivo.fraccion_espera,
+                                    Cliente-motivo.espera_sincargo).
+            v-iespera1 = DECIMAL( v-espera1 ) / 60.0 * Cliente-motivo.tarifa_espera.
+            c-espera1 = STRING(v-espera1 * 60,"HH:MM:SS").
+
+        END.    
+        ELSE DO:
+             ASSIGN
+                v-espera1 = 0.
+                v-iespera1 = 0. 
+        END.
+
+        IF Ficha.hor_disponible <> ? AND
+           Ficha.hor_arrhosp <> ?   
+        THEN DO:
+            IF Ficha.hor_disponible >= Ficha.hor_arrhosp
+               THEN v-tiempo = Ficha.hor_disponible - Ficha.hor_arrhosp.
+               ELSE v-tiempo = Ficha.hor_disponible - Ficha.hor_arrhosp + 86400.
+
+            c-espera2 = STRING(v-tiempo,"HH:MM:SS").
+            v-tiempo = v-tiempo / 60.
+            v-espera2 = FRACCIONAR( v-tiempo,
+                                    Cliente-motivo.fraccion_espera,
+                                    Cliente-motivo.espera_sincargo).
+            v-iespera2 = DECIMAL( v-espera2 ) / 60.0 * Cliente-motivo.tarifa_espera.
+            c-espera2 = STRING(v-espera2 * 60 ,"HH:MM:SS").
+
+        END.
+        ELSE DO:
+             ASSIGN
+                v-espera2 = 0.
+                v-iespera2 = 0. 
+        END.
+
+        ASSIGN
+            v-espera  = v-espera1  + v-espera2
+            v-iespera = v-iespera1 + v-iespera2.
+
+        /* ------------------------------------------------------------------------ */
+        /*                Calcula adicional por uso de O2                           */
+        /* ------------------------------------------------------------------------ */
+    
+        IF Ficha.con_oxigeno
+           THEN v-ioxigeno = v-itotklm * Cliente-motivo.prc_oxigeno / 100.
+           ELSE v-ioxigeno = 0.
+    
+        /* ------------------------------------------------------------------------ */
+        /*         Calcula el descuento por regreso si corresponde                  */
+        /* ------------------------------------------------------------------------ */
+    
+        IF Cliente-motivo.prc_regreso <> 0 AND Ficha.es_regreso
+           THEN v-itotklm = v-itotklm * ( 1 - Cliente-motivo.prc_regreso / 100 ).
+
+        /* ------------------------------------------------------------------------ */
+        /*      Halla el importe total del traslado sumando basico y adicionales    */
+        /* ------------------------------------------------------------------------ */
+        
+        v-itotal = v-itotklm + 
+                   v-iespera + 
+                   v-ioxigeno.
+    
+    END.
+

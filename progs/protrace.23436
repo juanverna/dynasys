@@ -1,0 +1,123 @@
+=====================================================
+PROGRESS stack trace as of Wed Oct 21 18:53:40 2020
+=====================================================
+Startup parameters:
+-pf C:\Progress102\OpenEdge\startup.pf,-cpinternal ISO8859-1,-cpstream ISO8859-1,-cpcoll Spanish9,-cpcase Basic,-d dmy,-numsep 46,-numdec 44,(end .pf),-p xxmf.p,-db c:\bases\dynasys102,-ld sic,-T c:\temp,-basekey INI,-ininame c:\dynasys10\procs\dynasys10.ini,-s 200,-inp 8192,-nb 150,-debugalert
+
+Exception code: E0000003 
+Fault address:  7558C5AF 01:0000B5AF C:\Windows\syswow64\KERNELBASE.dll
+
+Registers:
+EAX:0018E1C4
+EBX:00000002
+ECX:00317C50
+EDX:00000000
+ESI:005B58E4
+EDI:00000002
+CS:EIP:0023:7558C5AF
+SS:ESP:002B:0018E1C4  EBP:0018E214
+DS:002B  ES:002B  FS:0053  GS:002B
+Flags:00200246
+
+Call Stack:
+Address   Frame
+7558C5AF  00000000  RaiseException+58
+10491764  00000000  dbut_utIsDir+1264
+
+
+** ABL Stack Trace **
+
+--> c:\temp\p78431_testfacelectronica.cmp (c:\temp\p78431_testfacelectronica.cmp) at line 7
+    adecomm/_runcode.p (adecomm/_runcode.r) at line 659
+    adecomm/_pwrun.p (adecomm/_pwrun.r) at line 938
+    adecomm/_pwcomp.p (adecomm/_pwcomp.r) at line 324
+    adeuib/_uibmain.p (adeuib/_uibmain.r) at line 17274
+    _ab.p (C:\Progress102\OpenEdge\gui\_ab.r) at line 394
+    _RunTool adedesk/_desktop.p (adedesk/_desktop.r) at line 1635
+    USER-INTERFACE-TRIGGER adedesk/_desktop.p (adedesk/_desktop.r) at line 2146
+    adedesk/_desktop.p (adedesk/_desktop.r) at line 2834
+    _desk.p (C:\Progress102\OpenEdge\gui\_desk.r) at line 430
+
+** Persistent procedures/Classes **
+
+Handle  File Name
+003144  adeuib/_semain.r
+002389  .\bas\p-updsav.r
+002387  .\bas\v-parametro.r
+002385  C:\Progress102\OpenEdge\gui\adm\objects\folder.r
+002378  .\bas\b-parametros.r
+002344  adeuib/_semain.r
+002214  C:\Progress102\OpenEdge\gui\adm\objects\broker.r
+001992  C:\Progress102\OpenEdge\gui\adm2\containr.r
+001990  C:\Progress102\OpenEdge\gui\adm2\visual.r
+001985  C:\Progress102\OpenEdge\gui\adm2\smart.r
+001982  .\bas\Winfunc.r
+001981  .\bas\Windows.r
+001830  adecomm/as-utils.r
+001781  adecomm/_palette.r
+001780  protools/_protool.r
+001144  adecomm/_winmenu.r
+001143  adeshar/_mlmgr.r
+001020  adeuib/_abfuncs.r
+
+//=====================================================
+PROGRESS stack trace as of Wed Oct 21 18:53:41 2020
+//=====================================================
+Exception code: E0000003 
+Fault address:  7558C5AF 01:0000B5AF C:\Windows\syswow64\KERNELBASE.dll
+
+Registers:
+EAX:0018E1C4
+EBX:00000002
+ECX:00317C50
+EDX:00000000
+ESI:005B58E4
+EDI:00000002
+CS:EIP:0023:7558C5AF
+SS:ESP:002B:0018E230  EBP:0018E214
+DS:002B  ES:002B  FS:0053  GS:002B
+Flags:00200246
+
+Call Stack:
+Address   Frame
+7558C5AF  0018E238  RaiseException+58
+10021E94  0018E26C  0001:00020E94 C:\Progress102\OpenEdge\bin\prow32.dll
+10023933  0018E338  0001:00022933 C:\Progress102\OpenEdge\bin\prow32.dll
+7768E0C3  0018E350  RtlFreeHeap+7E
+5745A25D  0018E374  0001:0000925D C:\Windows\AppPatch\AcXtrnal.DLL
+76A614BD  0018E388  HeapFree+14
+74CDC1A6  0018E39C  NotifyShims+12FC
+74C97629  0018E3D8  0001:00006629 C:\Windows\AppPatch\AcLayers.DLL
+74CD6BE9  0018E3E8  0001:00045BE9 C:\Windows\AppPatch\AcLayers.DLL
+5B67337E  0018E64C  0001:0002237E C:\Windows\AppPatch\AcGenral.DLL
+102B2766  0018E668  pam_get_item+AD786
+102B4B92  0018E6A0  pam_get_item+AFBB2
+1021A140  0018E6C0  pam_get_item+15160
+10212EFF  0018E6C8  pam_get_item+DF1F
+10212F1A  0018E6E0  pam_get_item+DF3A
+10510C2B  0018E708  dbut_firstByte+481FB
+73365D53  004C4152  DPA_Merge+D58
+D1FED1C2  004C4156  0000:00000000 
+F0AF0FF8  004C415A  0000:00000000 
+517834A1  004C415E  0000:00000000 
+06148D00  004C4162  0000:00000000 
+5177F4A1  004C4166  0000:00000000 
+24548900  004C416A  0000:00000000 
+EBF00320  004C416E  0000:00000000 
+04F8832E  004C4172  0000:00000000 
+C58B3175  004C4176  0000:00000000 
+F6BF0F99  004C417A  0000:00000000 
+0303E283  004C417E  0000:00000000 
+34158BC2  004C4182  0000:00000000 
+C1005178  004C4186  0000:00000000 
+F8C102FE  004C418A  0000:00000000 
+F0AF0F02  004C418E  0000:00000000 
+8B16048D  004C4192  0000:00000000 
+5177F415  004C4196  0000:00000000 
+24448900  004C419A  0000:00000000 
+89F20320  004C419E  0000:00000000 
+8B1C2474  004C41A2  0000:00000000 
+802C2474  004C41A6  0000:00000000 
+5177E53D  004C41AA  0000:00000000 
+850F0300  004C41AE  0000:00000000 
+

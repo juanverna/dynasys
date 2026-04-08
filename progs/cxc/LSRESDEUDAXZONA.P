@@ -1,0 +1,135 @@
+/*=================================================================================*/
+/*                    VENCIMIENTOS PENDIENTES POR VENDEDOR                         */
+/*=================================================================================*/
+
+DEFINE INPUT PARAMETER ver_por       AS  INTEGER.
+DEFINE INPUT PARAMETER v-consolidado AS LOGICAL.
+DEFINE INPUT PARAMETER des_codigo    LIKE Cobrador.cdg_cobrador.
+DEFINE INPUT PARAMETER des_nombre    LIKE Cobrador.nom_cobrador.
+DEFINE INPUT PARAMETER has_codigo    LIKE Cobrador.cdg_cobrador.
+DEFINE INPUT PARAMETER has_nombre    LIKE Cobrador.nom_cobrador.
+DEFINE INPUT PARAMETER des_fecha     AS DATE.
+DEFINE INPUT PARAMETER has_fecha     AS DATE.
+DEFINE INPUT PARAMETER des_zonag     LIKE Zona_geografica.cdg_zonag.
+DEFINE INPUT PARAMETER has_zonag     LIKE Zona_geografica.cdg_zonag.
+DEFINE INPUT PARAMETER que_moneda    AS ROWID.
+
+{VPERSINM.I}
+{VRSHARED.I}
+
+DEFINE VARIABLE ant_zonag   LIKE Zona_geografica.cdg_zonag.
+
+DEFINE VARIABLE tot_vendr   AS DECIMAL FORMAT "->,>>>,>>9.99".
+DEFINE VARIABLE tot_saldo   AS DECIMAL FORMAT "->,>>>,>>9.99".
+DEFINE VARIABLE saldo       AS DECIMAL FORMAT "->,>>>,>>9.99" LABEL "Tot. Deuda".
+DEFINE VARIABLE t-credito   AS DECIMAL.
+DEFINE VARIABLE t-debito    AS DECIMAL.
+
+DEFINE VARIABLE por_cod AS INTEGER INITIAL 1.
+DEFINE VARIABLE por_nom AS INTEGER INITIAL 0.
+
+DEFINE VARIABLE fecha_lis AS DATE.
+DEFINE VARIABLE hora_lis  AS CHARACTER.
+DEFINE VARIABLE ultimo    AS LOGICAL.
+DEFINE VARIABLE tit_cobrador AS CHARACTER FORMAT "X(60)".
+DEFINE VARIABLE que_empresa LIKE Empresa.nombre.
+DEFINE VARIABLE desc_moneda LIKE Moneda.descripcion.
+
+{WGLISTAR.I}
+
+/*=================================================================================*/
+/*                          B L O Q U E   P R I N C I P A L                        */
+/*=================================================================================*/
+
+{SETIMPRE.I}
+
+RUN LISTAR_TODO.
+RETURN.
+
+/*=================================================================================*/
+/*                          P R O C E D I M I E N T O S                            */
+/*=================================================================================*/
+
+PROCEDURE LISTAR_TODO:
+
+  FIND Moneda 1.
+  desc_moneda = "en " + Moneda.descripcion.
+  IF v-consolidado THEN desc_moneda = desc_moneda + "- Consolidados".
+
+  que_empresa = Empresa.nombre.
+
+  fecha_lis = TODAY.
+  hora_lis = STRING(TIME,"HH:MM:SS").
+  OUTPUT TO VALUE (dire_tmp + "lspencobsalxzona.txt") PAGED PAGE-SIZE 50.
+ 
+  {OPQRYCOB.I}
+  
+  GET FIRST qry_cobrador.
+  DO WHILE AVAILABLE Cobrador:
+     RUN LISTAR.
+     GET NEXT qry_cobrador.
+  END.   
+
+  /*
+  DISPLAY "=============" @ saldo WITH FRAME frm-listado.
+  DOWN WITH FRAME frm-listado.
+  DISPLAY "TOTAL GRAL." @ Cta_cte.credito
+          tot_saldo     @ saldo 
+     WITH FRAME frm-listado.
+  DOWN WITH FRAME frm-listado.
+  DISPLAY "=============" @ saldo WITH FRAME frm-listado.
+  DOWN WITH FRAME frm-listado.
+  */
+    
+  OUTPUT CLOSE.
+
+END PROCEDURE.  
+
+PROCEDURE LISTAR:
+
+  tit_cobrador = STRING(Cobrador.cdg_cobrador) + "-" + Cobrador.nom_cobrador +
+                 " " + des_zonag + " <-> " + has_zonag.
+
+  ASSIGN t-debito  = 0
+         t-credito = 0
+         tot_saldo = 0.
+
+  ant_zonag = "".
+
+
+  OPEN QUERY q_clientes 
+       FOR EACH Cliente NO-LOCK OF Cobrador,
+           FIRST Domicilio NO-LOCK OF Cliente 
+                 WHERE Domicilio.cdg_zonag <= has_zonag
+                   AND Domicilio.cdg_zonag >= des_zonag
+                       BY Domicilio.cdg_zonag 
+                       BY Cliente.nom_cliente.
+
+
+  GET FIRST q_clientes.       
+  DO WHILE AVAILABLE Cliente:
+
+     IF CAN-FIND (FIRST Cta_cte OF Cliente 
+                  WHERE Cta_cte.nro_moneda = Moneda.nro_moneda
+                    AND Cta_cte.credito <> Cta_cte.debito
+                    AND Cta_cte.fecha_vencimiento <= has_fecha
+                    AND Cta_cte.cdg_empresa = Empresa.cdg_empresa OR v-consolidado)
+        THEN IF v-consolidado
+                THEN RUN IMPFICHACONS.P (INPUT ROWID(Cliente), 
+                                         INPUT ROWID(Moneda), 
+                                         INPUT des_fecha,
+                                         INPUT has_fecha).
+                ELSE RUN IMPFICHA.P (INPUT ROWID(Cliente), 
+                                     INPUT ROWID(Moneda), 
+                                     INPUT des_fecha,
+                                     INPUT has_fecha).
+
+     GET NEXT q_clientes.
+
+  END.   
+  PAGE.
+
+END PROCEDURE.
+
+{CODIMPRE.I}
+ 

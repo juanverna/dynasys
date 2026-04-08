@@ -1,0 +1,16 @@
+/*==========================================================================================*/
+/*                        BORRA E INICIALIZA TODAS LAS FICHAS                               */
+/*==========================================================================================*/
+
+FOR EACH Ficha EXCLUSIVE-LOCK:
+    DELETE Ficha.
+END.
+
+FOR EACH Memo-Ficha EXCLUSIVE-LOCK:
+    DELETE Memo-Ficha.
+END.
+
+CURRENT-VALUE(proxima_ficha) = 300000.
+
+CREATE Ficha.
+    

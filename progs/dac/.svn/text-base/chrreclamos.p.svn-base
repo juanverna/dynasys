@@ -1,0 +1,34 @@
+/*======================================================================================*/
+/*        REALIZA LA CONECCION (OPCIONAL) DE LA BASE DE AFILIADOS E INVOCA EL MENU      */
+/*======================================================================================*/
+
+DEFINE VARIABLE hubo_logon AS LOGICAL.
+
+SESSION:TIME-SOURCE = "despacho".
+SESSION:DATA-ENTRY-RETURN = YES.
+PROPATH=".," + 
+        ".\fuentes\crr," + 
+        "D:\DLC83A\gui," + 
+        "D:\DLC83A," + 
+        "D:\DLC83A\bin," + 
+        "D:\DLC83A\PROBUILD\EUCAPP\EUC.PL," + 
+        "D:\DLC83A\PROBUILD\EUCAPP," + 
+        ".\FUENTES," + 
+        ".\OBJETOS," + 
+        ".\IMAGENES".
+
+IF NOT CONNECTED('padron')
+THEN DO:
+      MESSAGE "No pudo conectarse la base de datos de Reclamos. No estarán disponibles"
+              "las funciones de Afiliados, Agenda Telefónica y Registro de Novedades."
+              VIEW-AS ALERT-BOX WARNING TITLE "Base Auxiliar NO Conectada".
+END.                 
+ELSE DO:
+      RUN charlog.w ( OUTPUT hubo_logon).
+      IF hubo_logon THEN RUN altarecl.w. 
+END.
+quit.
+
+
+
+        

@@ -1,0 +1,11 @@
+DEFINE BUFFER bevento FOR evento.
+FIND tipo_evento WHERE cdg_tipo_evento = "CO".
+FOR EACH evento WHERE evento.nro_tipo_evento = 10:
+    FIND bevento WHERE bevento.nro_evento = evento.refevento AND bevento.nro_tipo_evento = tipo_evento.nro_tipo_evento NO-ERROR.
+    IF NOT AVAILABLE bevento THEN NEXT.
+    DISPLAY evento.nro_evento.
+    FOR EACH recurso_agenda OF evento:
+    DELETE recurso_agenda.
+    END.
+    DELETE evento.
+END.

@@ -1,0 +1,41 @@
+DEFINE VARIABLE que_dia    AS CHARACTER.
+DEFINE VARIABLE que_hora   AS CHARACTER.
+DEFINE VARIABLE hoy        AS DATE.
+DEFINE VARIABLE dir_salida AS CHARACTER.
+
+DEFINE STREAM Detalle.
+
+hoy = TODAY.
+
+que_dia = STRING(YEAR(hoy),"9999") + STRING(MONTH(hoy),"99") + STRING(DAY(hoy),"99").  
+que_hora = STRING(TIME,"HH:MM:SS").
+que_hora = SUBSTRING(que_hora,1,2) + SUBSTRING(que_hora,4,2) + SUBSTRING(que_hora,7,2).
+
+OS-CREATE-DIR VALUE("c:\interfaces\"  + que_dia).
+OS-CREATE-DIR VALUE("c:\interfaces\"  + que_dia + "\" + que_hora).
+
+dir_salida = "c:\interfaces\"  + que_dia + "\" + que_hora.
+
+OUTPUT TO VALUE(dir_salida + "\fichas.txt").
+OUTPUT STREAM Detalle TO VALUE(dir_salida + "\memos.txt").
+
+FOR EACH Ficha WHERE Ficha.fch_alta = hoy:
+    EXPORT Ficha.
+    FOR EACH Memo-ficha OF Ficha:
+        EXPORT STREAM Detalle Memo-ficha.
+    END.
+END.
+OUTPUT CLOSE.    
+OUTPUT STREAM Detalle CLOSE.
+
+OUTPUT TO VALUE(dir_salida + "\traslados.txt").
+OUTPUT STREAM Detalle TO VALUE(dir_salida + "\puntos.txt").
+
+FOR EACH Traslado-hd WHERE Traslado-hd.fch_alta = hoy:
+    EXPORT Traslado-hd.
+    FOR EACH Traslado-dt OF Traslado-hd:
+        EXPORT STREAM Detalle Traslado-dt.
+    END.
+END.
+OUTPUT CLOSE.    
+OUTPUT STREAM Detalle CLOSE.

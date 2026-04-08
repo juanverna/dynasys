@@ -1,0 +1,149 @@
+/*============================================================================================*/
+/*                           IMPRESION DE FICHAS DE DESPACHO                                  */
+/*============================================================================================*/
+
+DEFINE INPUT PARAMETER rid_ficha AS ROWID.
+
+DEFINE VARIABLE archivo   AS CHARACTER.
+DEFINE VARIABLE P_PRINTED AS LOGICAL.
+DEFINE VARIABLE tono      AS CHARACTER EXTENT 10 
+       INITIAL ["S/A","ROJO","AMARILLO","VERDE","AZUL","NEGRO","NARANJA","LILA","MARRON"].
+DEFINE VARIABLE que_tono  AS CHARACTER.
+
+DEFINE VARIABLE rydespac  AS CHARACTER LABEL "Despacho" INITIAL "__________________".
+DEFINE VARIABLE rysalbas  AS CHARACTER LABEL "Salida Base" INITIAL "__________________".
+DEFINE VARIABLE ryarrdom  AS CHARACTER LABEL "Arribo Domicilio" INITIAL "__________________".
+DEFINE VARIABLE rysaldom  AS CHARACTER LABEL "Salida Domicilio" INITIAL "__________________".
+DEFINE VARIABLE ryarrhsp  AS CHARACTER LABEL "Arribo Hospital" INITIAL "__________________".
+DEFINE VARIABLE rysalhsp  AS CHARACTER LABEL "Salida Hospital" INITIAL "__________________".
+DEFINE VARIABLE ryarrbas  AS CHARACTER LABEL "Arribo Base" INITIAL "__________________".
+DEFINE VARIABLE rymovdsp  AS CHARACTER LABEL "Disponible" INITIAL "__________________".
+DEFINE VARIABLE rytangod  AS CHARACTER LABEL "T.Delta" INITIAL "__________________".
+
+
+FORM
+      "FICHA DE DESPACHO NUMERO "  Ficha.num_ficha NO-LABEL SPACE(3) 
+      que_tono NO-LABEL
+      Ficha.fch_alta LABEL "RECIBIDO"  COLON 65
+      Ficha.hms_alta LABEL "A las"     COLON 65
+      SKIP(2)      
+      Ficha.calle_emr     COLON 15
+      Ficha.nropta_emr 
+      Ficha.piso_emr 
+      Ficha.depto_emr 
+      SKIP(1)
+      Ficha.monoblk_emr  FORMAT "X(3)" COLON 15
+      Ficha.barrio_emr 
+      SKIP(1)
+      Ficha.entre1_emr    COLON 15
+      Ficha.entre2_emr 
+      SKIP(1)
+      Localidad.dsc_localidad LABEL "Localidad" COLON 15
+      SKIP(1)
+      Ficha.observacion    COLON 15 LABEL "Ref."
+      SKIP(1)      
+      Ficha.prefijotel_emr LABEL "Tel."  COLON 15
+      Ficha.telefono_emr NO-LABEL
+      Ficha.edad_pac 
+      Ficha.sexo_pac 
+      SKIP(1)
+      Motivo.dsc_motivo   COLON 15 LABEL "Motivo"
+      SKIP
+      Ficha.casa_emr      NO-LABEL AT 17 FORMAT "X(62)"
+      SKIP(1)
+      Cliente.nom_cliente LABEL "Socio de" COLON 15
+      SKIP(1)      
+      Ficha.nombre_pac    COLON 15
+      SKIP(1)
+      Ficha.nroafi_pac    COLON 15
+      Ficha.imp_coseguro  LABEL "Importe Coseguro"
+      SKIP
+      "==========================================================================="
+      SKIP(1)
+      rydespac  COLON 17  SPACE(2)     "INSTITUCION:___________________________________"
+      SKIP(1)
+      rysalbas  COLON 17  SPACE(2)     "  UTI:_______    PISO:_______   GUARDIA:_______"
+      SKIP(1)
+      ryarrdom  COLON 17  SPACE(2)     "F/Dom:_______   F/Tra:_______   F/Hosp.:_______"
+      SKIP(1)
+      rysaldom  COLON 17  SPACE(2)     "Rechaza Internacion:____________"
+      SKIP(1)
+      ryarrhsp  COLON 17  SPACE(2)     "Queda Domic.____________ Rech.Asist.:__________"
+      SKIP(1)
+      rysalhsp  COLON 17  SPACE(2)     "Falso LLamado:__________     Anulado:__________"
+      SKIP(1)
+      ryarrbas  COLON 17  SPACE(2)     "DEMORA EN EL DESPACHO:"
+      SKIP(1)
+      rymovdsp  COLON 17  SPACE(2)     "Por dotacion:__________      F/Movil:__________"
+      SKIP(1)
+      rytangod  COLON 17  SPACE(2)     "Otros:___________________  Diag.:______________"
+      SKIP
+      "==========================================================================="
+      SKIP(1)
+      " Base:___   Movil:_____   Medico:________    Enf.:________  Chofer:________" 
+      SKIP(1)
+      " Receptor:______   Despachador:______" Ficha.linea LABEL "Linea Nro." 
+      SKIP(2)
+      " _________________________________           OBSERVACIONES AL DORSO--->>>" 
+      SKIP
+      "            FIRMA"
+      WITH FRAME frm-ficha SIDE-LABELS STREAM-IO.
+      
+FIND Ficha WHERE ROWID(Ficha) = rid_ficha NO-LOCK.
+FIND Motivo OF Ficha NO-LOCK NO-ERROR.
+FIND Localidad OF Ficha NO-LOCK NO-ERROR.
+FIND Cliente OF Ficha NO-LOCK NO-ERROR.
+que_tono = TONO [ INTEGER(Ficha.cdg_tipoemr) + 1 ].
+
+archivo = ".\TEMPDSP\FD" + STRING(Ficha.num_ficha,"999999"). 
+
+OUTPUT TO VALUE(archivo) PAGED.
+
+DISPLAY       
+      Ficha.num_ficha
+      que_tono
+      Ficha.fch_alta
+      Ficha.hms_alta 
+      Ficha.calle_emr
+      Ficha.nropta_emr 
+      Ficha.piso_emr 
+      Ficha.depto_emr 
+      Ficha.casa_emr
+      Ficha.monoblk_emr 
+      Ficha.barrio_emr 
+      Ficha.entre1_emr
+      Ficha.entre2_emr 
+      Localidad.dsc_localidad WHEN AVAILABLE Localidad
+      Ficha.observacion
+      Ficha.prefijotel_emr
+      Ficha.telefono_emr
+      Ficha.edad_pac 
+      Ficha.sexo_pac 
+      Motivo.dsc_motivo WHEN AVAILABLE Motivo
+      Ficha.nombre_pac
+      Cliente.nom_cliente WHEN AVAILABLE Cliente
+      Ficha.nroafi_pac
+      Ficha.sino_coseguro 
+      Ficha.imp_coseguro
+      Ficha.linea 
+      rydespac
+      rysalbas
+      ryarrdom
+      rysaldom
+      ryarrhsp
+      rysalhsp
+      ryarrbas
+      rymovdsp
+      rytangod
+      SKIP(2)
+      WITH FRAME frm-ficha.      
+ 
+OUTPUT CLOSE.      
+
+RUN _osprint.p ( INPUT  CURRENT-WINDOW:HANDLE,
+                 INPUT  archivo,
+                 INPUT  10,
+                 INPUT  0,
+                 INPUT  56,
+                 INPUT  0,
+                 OUTPUT  p_Printed ).

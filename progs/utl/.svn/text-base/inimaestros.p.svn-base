@@ -1,0 +1,8 @@
+DEFINE VARIABLE que_borro AS CHARACTER FORMAT "X(40)".
+
+DEFINE FRAME l
+       que_borro WITH FONT 8 USE-TEXT NO-LABEL DOWN FRAME l.
+
+PAUSE 0.
+       
+{CREMAestro.I}

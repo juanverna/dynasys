@@ -1,0 +1,196 @@
+FUNCTION bubble RETURNS CHAR (INPUT aa AS CHAR):
+    DEFINE VAR i AS INT.
+    DEFINE VAR flg AS LOGICAL.
+    DEFINE VAR bb AS CHAR.
+
+    flg = FALSE.
+    DO WHILE NUM-ENTRIES(aa) > 1:
+        flg = FALSE.
+        REPEAT i = 2 TO NUM-ENTRIES(aa):
+            IF int(ENTRY( i ,aa)) < int(ENTRY(i - 1,aa)) THEN DO:
+                bb = ENTRY(i - 1,aa).
+                ENTRY(i - 1,aa) = ENTRY(i,aa).
+                ENTRY(i,aa) = bb.
+                flg = TRUE.
+            END.
+        END.
+    IF NOT flg THEN LEAVE.
+    END.
+    RETURN aa.
+END FUNCTION.
+
+/*genera el xml para los avisos*/
+DEFINE VAR esdia AS CHAR EXTENT 7 INITIAL [ "Domingo","Lunes","Martes","Miercoles","Jueves","Viernes","Sabado"].
+DEFINE VAR esmes AS CHAR EXTENT 12 INITIAL [ "Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre" ].
+    DEF VAR ReportePath AS CHAR NO-UNDO.
+    DEF VAR cFullPath AS CHAR NO-UNDO.
+    DEF VAR XFullPath AS CHAR NO-UNDO.
+
+DEFINE BUFFER bevento FOR evento.
+
+DEFINE TEMP-TABLE aimp
+    FIELD c_nro_tipo_evento LIKE tipo_evento.nro_tipo_evento COLUMN-LABEL "Tipo!Evento"
+    FIELD nro_evento AS INT LABEL "EVENTO"
+    FIELD recurso LIKE evento.recurso 
+    FIELD turno LIKE evento.turno
+    FIELD aviso_evento AS INT LABEL "AVISO EVENTO"
+    FIELD aviso_fasignado AS DATE LABEL "REPARTIR"
+    FIELD aviso_recurso AS CHAR LABEL "RECURSO"
+    FIELD tipoespecial AS CHAR LABEL "ESPECIAL".
+
+DEFINE TEMP-TABLE lstevento
+    FIELD ind AS INT
+    FIELD pagrupados AS CHAR FORMAT "X(40)"
+    FIELD direccion LIKE cliente.direccion
+    FIELD dia AS CHAR FORMAT "X(40)"
+    FIELD turno AS CHAR FORMAT "x(40)"
+    FIELD aviso_evento AS INT
+    FIELD aviso_recurso AS CHAR
+    FIELD aviso_fasignado AS DATE
+    FIELD especial AS CHAR
+    INDEX  ind IS PRIMARY ind.
+
+DEFINE TEMP-TABLE baimp
+    FIELD direccion AS CHAR
+    FIELD nro_cli LIKE evento.nro_cliente
+    FIELD dias AS CHAR
+    FIELD periodo AS DATE
+    FIELD pagrupados AS CHAR
+    FIELD cant AS INT
+    FIELD turno AS CHAR
+    FIELD especial AS CHAR
+    FIELD aviso_evento AS INT
+    FIELD aviso_fasignado AS DATE
+    FIELD aviso_recurso AS CHAR.
+    
+{crystal_dyna.p}
+{impresoras.i}
+
+DEFINE INPUT PARAMETER TABLE FOR aimp.
+DEFINE INPUT PARAMETER pcant AS INT.
+
+DEFINE VAR i AS INT NO-UNDO.
+DEFINE VAR k AS INT NO-UNDO.
+DEFINE VAR ccant AS INT NO-UNDO.
+DEFINE DATASET dset FOR lstevento.
+DEFINE VAR c_nrote AS INT NO-UNDO.
+DEF VAR cprinter AS CHAR.
+
+
+FOR EACH aimp BY aimp.aviso_fasignado BY aimp.aviso_recurso:
+    c_nrote = aimp.c_nro_tipo_evento.
+    FIND evento WHERE evento.nro_evento = aimp.nro_evento.
+    IF NOT evento.fasignado<>? OR evento.anulado THEN NEXT.
+    FIND cliente OF evento NO-LOCK.
+    FIND cliente_otros_datos OF cliente NO-LOCK NO-ERROR.
+    IF evento.origen = "CONTRATO" THEN do:
+        FIND contrato_hd WHERE contrato_hd.nro_contrato = evento.nro_identificacion.
+        FIND restriccion WHERE restriccion.nro_tipo_evento = evento.nro_tipo_evento and
+                 restriccion.cdg_restriccion BEGINS "AVISO" NO-LOCK NO-ERROR.
+        IF AVAILABLE restriccion THEN
+          FIND FIRST contrato_restriccion WHERE contrato_restriccion.nro_contrato = evento.nro_identificacion AND
+                     contrato_restriccion.nro_restriccion = restriccion.nro_restriccion NO-LOCK NO-ERROR.
+        IF pcant = ? THEN DO:
+            ccant = IF AVAILABLE contrato_restriccion  THEN int(ENTRY(1,contrato_restriccion.valor,"|")) ELSE 0.
+        END.
+        ELSE ccant = pcant.
+        FIND baimp WHERE baimp.nro_cli = evento.nro_cliente NO-ERROR.
+        IF NOT AVAILABLE baimp  THEN DO:
+            CREATE baimp.
+            ASSIGN baimp.direccion = cliente.direccion
+                   baimp.nro_cli = cliente.nro_cliente
+                   baimp.periodo = DATE( MONTH( evento.fasignado ), 1 , YEAR( evento.fasignado ))
+                   baimp.cant = ccant
+                   baimp.turno = substring(evento.turno,1,1)
+                   baimp.pagrupados = STRING(evento.nro_evento)
+                   baimp.aviso_recurso = aimp.aviso_recurso
+                   baimp.aviso_fasignado = aimp.aviso_fasignado
+                   baimp.aviso_evento = aimp.aviso_evento
+                   baimp.dias = STRING (day(evento.fasignado)).
+                   baimp.especial = IF AVAILABLE contrato_restriccion THEN ENTRY(4,contrato_restriccion.valor,"|") ELSE "".
+
+        END.
+        /*busco todos los otros eventos a realizarse del mismo tipo*/
+        FOR EACH bevento WHERE bevento.nro_cli = evento.nro_cliente and
+            bevento.periodo = evento.periodo AND
+            bevento.nro_tipo_evento = evento.nro_tipo_evento AND
+            bevento.nro_identificacion = evento.nro_identificacion AND
+            bevento.origen = evento.origen AND
+            RECID(evento) <> RECID(bevento) AND
+            NOT anulado AND
+            bevento.fasignado<>? AND
+            NOT bevento.frealizado<>?:
+            IF LOOKUP(STRING(bevento.nro_evento), baimp.pagrupados ) = 0 THEN DO:
+                baimp.pagrupados = baimp.pagrupados + "," + STRING(bevento.nro_evento). 
+            END.
+            IF LOOKUP(STRING(DAY(bevento.fasignado)),baimp.dias) = 0 THEN
+               baimp.dias = baimp.dias + "," + STRING (day(bevento.fasignado)). 
+            baimp.turno = IF baimp.turno = substring(bevento.turno,1,1) THEN baimp.turno ELSE baimp.turno + "," + substring(bevento.turno,1,1).
+        END.
+    END.
+    ELSE DO:
+        CREATE baimp.
+        ASSIGN baimp.direccion = cliente.direccion
+                   baimp.nro_cli = cliente.nro_cliente
+                   baimp.periodo = DATE( MONTH( evento.fasignado ), 1 , YEAR( evento.fasignado ))
+                   baimp.cant = IF pcant = ? THEN 1 ELSE pcant
+                   baimp.turno = substring(evento.turno,1,1)
+                   baimp.pagrupados = STRING(evento.nro_evento)
+                   baimp.aviso_recurso = aimp.aviso_recurso
+                   baimp.aviso_fasignado = aimp.aviso_fasignado
+                   baimp.aviso_evento = aimp.aviso_evento
+                   baimp.dias = STRING (day(evento.fasignado)).
+                   baimp.especial =  "".
+    END.
+END.
+
+/*generando XML*/
+k = 0.
+FOR EACH baimp:
+    DO i = 1 TO baimp.cant:
+        CREATE lstevento.
+        ASSIGN lstevento.direccion = baimp.direccion
+            lstevento.aviso_recurso = baimp.aviso_recurso
+            lstevento.aviso_fasignado = baimp.aviso_fasignado
+            lstevento.aviso_evento = baimp.aviso_evento
+            lstevento.especial = baimp.especial
+               lstevento.ind = k 
+               k = k + 1
+               lstevento.pagrupados = baimp.pagrupados.
+               IF num-entries( baimp.dias ) = 1 THEN 
+                     lstevento.dia = esdia[ WEEKDAY ( baimp.periodo + int( baimp.dias ) - 1 ) ] + " " + baimp.dias + " de " + esmes[ MONTH( baimp.periodo )] + " " + string(YEAR( baimp.periodo )).
+                   ELSE
+                     lstevento.dia = "Los días " + replace(bubble(baimp.dias),","," y ") +  " de " + esmes[MONTH(baimp.periodo)] + " " + string(YEAR(baimp.periodo)) .
+               lstevento.turno = IF baimp.turno = "M" THEN "mañana" ELSE IF baimp.turno = "T" THEN "tarde" ELSE "mañana y tarde".   
+    END.
+END.
+
+xfile = TempFile("") + STRING(c_nrote) + ".xml".
+
+
+DATASET dset:WRITE-XML ("FILE", xfile, TRUE,?,"",YES,YES).
+ReportePath = "aviso_" + string( c_nrote ) .
+RUN fullPath (ReportePath, '.rpt':U, OUTPUT cFullPath).
+
+IF cFullPath = ? 
+THEN DO:
+  MESSAGE "No se encuentra el archivo de impresion " ReportePath SKIP
+          "para el tipo de evento seleccionado" VIEW-AS ALERT-BOX ERROR.
+    RETURN NO-apply.
+END.
+
+CREATE "CrystalRuntime.Application" chApplication.
+chReport = chApplication:OpenReport(cFullPath, {&crOpenReportByTempCopy}).
+cPrinter = getPrinterDefinition( impreport(2) ). /*si esta cableado*/
+chReport:SelectPrinter(ENTRY(2, cPrinter), ENTRY(1, cPrinter), ENTRY(3, cPrinter)).
+chReport:DiscardSavedData(). /*eliminando lo previamente grabado*/
+RUN fullpath ( INPUT xfile, INPUT "", OUTPUT xFullPath ).
+chReport:Database:Tables:item(1):setTableLocation(xFullPath, '', '').
+
+RUN crearReporte(chReport,"rpt", /*ViewReport*/ TRUE , /*PrinterName*/ "",
+                 /*exportToDisk*/ FALSE, INPUT-OUTPUT exportFileName ).        
+RELEASE OBJECT chReport. 
+chReport = ?.
+RELEASE OBJECT chApplication.
+chApplication = ?.
+

@@ -1,0 +1,38 @@
+
+{geolibrary.i}
+DEFINE VAR direccion AS CHAR NO-UNDO INITIAL "11 de setiembre 3568 piso 1".
+    DEFINE VAR v-altura AS CHAR NO-UNDO.
+    DEFINE VAR v-direccion AS CHAR NO-UNDO.
+    DEFINE VAR v-extra AS CHAR NO-UNDO.
+    DEFINE VAR i AS INT NO-UNDO.
+    /*{debug.i}*/
+    REPEAT: 
+        direccion = REPLACE(direccion,"  "," ").
+        IF INDEX(direccion,"  ") = 0 THEN LEAVE.
+    END.
+    i = INDEX(direccion," ").
+    v-direccion = substring(direccion,1 , i - 1).
+    direccion = SUBSTRING(direccion, i + 1).
+    DO i = 1 TO LENGTH(direccion):
+        IF INDEX("123456789",substring(direccion,i,1)) <> 0 THEN LEAVE.
+    END.
+    IF i <> LENGTH(direccion) AND i <> 1 THEN DO:
+        v-direccion = v-direccion + " " + SUBSTRING(direccion,1,i).
+        direccion = SUBSTRING(direccion, i + 1 ).
+    END.
+    i = INDEX(direccion," ").
+    IF i = 0 THEN do:
+        v-altura = direccion.
+        v-extra = "".
+    END.
+    ELSE DO:
+        i = LENGTH(direccion).
+        v-altura = substring(direccion, 1 , i ).
+        v-extra = SUBSTRING(direccion, i + 1 ).
+    END.
+        
+    
+        v-altura = entry(num-entries(direccion," "), direccion , " " ).
+        IF index("123456789",substring(v-altura,1,1)) = 0 THEN v-altura = "".
+        v-direccion = substring(direccion,1, index(direccion,v-altura) - 1).
+        DISPLAY v-direccion v-altura v-extra.

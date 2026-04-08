@@ -1,0 +1,7 @@
+EXIT.
+DEFINE BUFFER bevento FOR evento.
+FOR EACH evento WHERE evento.refevento <> 0 AND nro_tipo_evento = 10 AND evento.fasignado >= 12/01/2011 AND NOT anulado ,
+first bevento WHERE bevento.nro_evento = evento.refevento AND bevento.nro_tipo_evento = 1:
+FOR EACH recurso_agenda OF evento: DELETE recurso_agenda. END.
+evento.fasignado = ?.
+END.

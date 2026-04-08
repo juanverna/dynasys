@@ -1,0 +1,6 @@
+  /*====================================================================================*/
+  /*        VALIDA LA EJECUCION DEL PROGRAMA DE MANTENIMIENTO DE BASES                  */
+  /*====================================================================================*/
+
+  RUN valida_run.p ( INPUT "RECLAMOS", INPUT "w-reclamos.w").
+  

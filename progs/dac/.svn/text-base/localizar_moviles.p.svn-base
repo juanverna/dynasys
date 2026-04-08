@@ -1,0 +1,2 @@
+  MESSAGE "Opción GPS Remota NO INSTALADA ..."
+          VIEW-AS ALERT-BOX MESSAGE TITLE "Opción No Disponible".

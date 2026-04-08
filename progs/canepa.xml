@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<tt xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <ttRow>
+    <cdg_empresa>P</cdg_empresa>
+    <cdg_parametro>AFCACHE0003</cdg_parametro>
+    <descripcion>AFIP WS archivo de cache PATH</descripcion>
+    <valor_n>0</valor_n>
+    <valor_c/>
+    <valor_d>0.0000</valor_d>
+    <valor_l>true</valor_l>
+    <tipo>N</tipo>
+    <observacion/>
+    <cdg_sigla-sic/>
+  </ttRow>
+</tt>

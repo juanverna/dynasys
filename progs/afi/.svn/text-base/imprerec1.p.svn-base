@@ -1,0 +1,99 @@
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+FUNCTION formulario RETURNS CHARACTER
+  ( INPUT rid_fac_header AS ROWID ) :
+/*------------------------------------------------------------------------------
+  Purpose:  retorna el formulario a utilizar
+    Notes:  La cantidad de copias no es un parametro ya que el formulario 
+            define univocamente la cantidad de copias no es un dato separado
+            es la definicion del mismo formulario
+            
+------------------------------------------------------------------------------*/
+DEFINE VARIABLE que_formulario      AS CHARACTER.
+DEFINE VARIABLE x-formulario        AS CHARACTER.
+DEFINE VARIABLE j                   AS INTEGER.
+{parlocales.i}
+/*=================================================================================*/
+/*                         INICIALIZACION DE LA EMISION                            */
+/*=================================================================================*/
+
+FIND fac_header WHERE ROWID(fac_header) = rid_fac_header EXCLUSIVE-LOCK.
+IF SUBSTRING(fac_header.tip_comprob,1,1) <> "F" THEN RETURN "-".
+
+FIND Punto-venta 
+    WHERE Punto-venta.cdg_empresa = fac_header.cdg_empresa
+      AND Punto-venta.cdg_puntovta = fac_header.prf_comprob
+          NO-LOCK.
+
+que_formulario = "CUP" + string(fac_header.prf_comprob,"9999").
+
+RETURN que_formulario.   /* Function return value. */
+
+END FUNCTION.
+
+
+{FINdempresa.i}
+{crystal_dyna.p}
+{impresoras.i}
+DEFINE INPUT PARAMETER rfac AS ROWID.
+DEFINE BUFFER bfac_header FOR fac_header.
+DEFINE VARIABLE chStatus   AS COM-HANDLE NO-UNDO.
+DEFINE VARIABLE chParamDefs   AS COM-HANDLE NO-UNDO.
+DEFINE VARIABLE chParamDef   AS COM-HANDLE NO-UNDO.
+DEFINE VARIABLE cFullPath     AS CHARACTER NO-UNDO. 
+DEFINE VARIABLE xFullPath     AS CHARACTER NO-UNDO. 
+
+DEFINE VARIABLE ReportePath AS CHARACTER NO-UNDO.
+DEFINE VARIABLE ERROR_nro        AS INT NO-UNDO.   
+DEF VAR cprinter AS CHAR NO-UNDO.
+CREATE "CrystalRuntime.Application" chApplication.
+FIND bfac_header WHERE ROWID(bfac_header) = rfac NO-LOCK.
+   ReportePath = "AFI/" + formulario( ROWID(bfac_header) ).
+   RUN AFI/CUP000.p    ( 
+                        INPUT bfac_header.tip_comprob,
+                        INPUT bfac_header.prf_comprob,
+                        INPUT bfac_header.nro_comprob,
+                        INPUT bfac_header.nro_comprob,
+                        INPUT empresa.cdg_empresa,
+                        INPUT FALSE,
+                        OUTPUT xfile
+                       ).
+
+    /*a Imprimir*/
+    RUN fullPath (ReportePath, '.rpt':U, OUTPUT cFullPath).
+    IF cFullPath = ? 
+    THEN DO:
+        RETURN.
+        RUN mensajepar.p (INPUT cfullPath, INPUT "CREP000").
+        RETURN ERROR.
+    END.
+
+    RUN fullpath(xfile,"",OUTPUT xfile).
+    chReport = chApplication:OpenReport(cFullPath, {&crOpenReportByTempCopy}).
+    IF chReport:HasSavedData THEN
+        chReport:DiscardSavedData().
+    chReport:Database:Tables:item(1):setTableLocation(xfile, '', '').
+    
+    cPrinter = getPrinterDefinition( impreport(1) ).  /*si esta cableado hay que poner segun el tipo en que impresora default*/
+    chReport:SelectPrinter(ENTRY(2, cPrinter), ENTRY(1, cPrinter), ENTRY(3, cPrinter)).
+    chReport:DisplayProgressDialog = FALSE.
+    chReport:PaperSize = 11. /*A5 ver definiciones en cristal_dyna*/ 
+    chReport:PaperOrientation = {&crLandScape}.
+    CHstatus = chReport:PrintingStatus.
+    chReport:PrintOut(FALSE).
+    IF chStatus:PROGRESS = 4 THEN DO:
+            MESSAGE "Ha fallado la impresion recibo " bfac_header.prf_comprob bfac_header.nro_comprob VIEW-AS ALERT-BOX ERROR.
+    END.
+    DO WHILE chStatus:PROGRESS = 2: END. 
+RELEASE OBJECT chReport. 
+RELEASE OBJECT chStatus. 
+RELEASE OBJECT chApplication.
+chApplication = ?.
+chReport = ?. 
+chStatus = ?.                   
+
+
+

@@ -1,0 +1,102 @@
+/* 
+ * This sample extracts data from a Progress database
+ * and graphs the information using the Automation Objects
+ * from the Excel server in Office 95/97.
+ * You must connect to a sports database before running this.
+ * This sample program leaves Excel open.  You should close it manually
+ * when the program completes.
+ */
+DEF TEMP-TABLE ttReprt no-undo
+FIELD ttValr AS CHAR
+FIELD ttRango AS CHAR
+FIELD ttOper AS CHAR
+FIELD ttSheet AS INT
+FIELD ttOrden as int
+index xorden ttorden ascending.
+
+DEFINE INPUT PARAMETER ipcTemplate AS CHAR.
+DEFINE INPUT PARAMETER TABLE FOR ttReprt.
+
+
+DEFINE VARIABLE chExcelApplication      AS COM-HANDLE.
+DEFINE VARIABLE chWorkbook              AS COM-HANDLE.
+DEFINE VARIABLE chWorksheet             AS COM-HANDLE.
+
+define var ppass as char no-undo initial "".
+
+def var cDirctr as char no-undo.
+/*get-key-value section "Instalacion" key "Directorio" value cDirctr. */
+cDirctr = "c:\desa\sic\r3.1\prl\".
+/* create a new Excel Application object */
+CREATE "Excel.Application" chExcelApplication.
+
+/* launch Excel so it is visible to the user */
+chExcelApplication:Visible = TRUE.
+
+/* create a new Workbook */
+chWorkbook = chExcelApplication:Workbooks:Add(cDirctr + ipcTemplate).
+
+def var cColmn as char no-undo.
+def var iFil as int no-undo.
+
+
+find first ttReprt no-lock no-error.
+if not available ttReprt then return.
+
+for each ttReprt no-lock:
+ /* get the active Worksheet */
+ case ttOper:
+  when "Valor" then do:
+   chWorkSheet = chExcelApplication:Sheets:Item(ttSheet).
+   assign chWorkSheet:Range(ttRango):Value = ttValr.
+  end.
+
+  when "ColorFondo" then do:
+   chWorkSheet = chExcelApplication:Sheets:Item(ttSheet).
+   assign chWorkSheet:Range(ttRango):Interior:ColorIndex = int(ttValr).
+  end.
+
+  when "Copy-Insert" then do:
+   no-return-value chWorkSheet:Range(ttRango):EntireRow:Copy.
+   no-return-value chWorkSheet:Range(ttRango):EntireRow:Insert.
+  end.
+
+  when "Column-Copy-Insert" then do:
+   no-return-value chWorkSheet:Range(ttRango):EntireColumn:Copy.
+   no-return-value chWorkSheet:Range(ttRango):EntireColumn:Insert.
+  end.
+
+  when "Delete" then do:
+   no-return-value chWorkSheet:Range(ttRango):EntireRow:Delete.
+  end.
+  
+  when "Quit" then do:
+   no-return-value chExcelApplication:quit.
+  end.
+
+  when "Calculate" then do:
+   no-return-value chWorkSheet:Calculate.
+  end.
+
+  when "SaveAs" then do:
+   no-return-value chWorkbook:SaveAs( ttValr ,/*fileformat*/,/*password*/ ,ppass, false /*ReadOnly*/ , false /*backup*/, false /*agregar a la lista de recientemente utilizados*/,,).
+/*expresión.SaveAs(Filename, FileFormat, Password, WriteResPassword, ReadOnlyRecommended, CreateBackup,
+                      AddToMru, TextCodePage, TextVisualLayout)*/
+  end.
+  when "Protect" then do:
+   no-return-value chWorkSheet:Protect(ppass).
+/*expresión.Protect(Password, DrawingObjects, Contents, Scenarios, UserInterfaceOnly)*/
+  end.
+
+  when "Password" then do:
+   ppass = ttValr.
+  end.
+ end case.
+
+end.
+
+/* release com-handles */
+RELEASE OBJECT chExcelApplication.      
+RELEASE OBJECT chWorkbook.
+RELEASE OBJECT chWorksheet.
+

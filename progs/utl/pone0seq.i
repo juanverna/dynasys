@@ -1,0 +1,1 @@
+CURRENT-VALUE({1}) = 0.

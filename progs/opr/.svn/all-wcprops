@@ -1,0 +1,2037 @@
+K 26
+svn:wc:ra_dav:activity-url
+V 23
+/svn/Paulista/!svn/act/
+K 25
+svn:wc:ra_dav:version-url
+V 35
+/svn/Paulista/!svn/ver/51/progs/opr
+END
+analisisdef.p
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/Paulista/!svn/ver/53/progs/opr/analisisdef.p
+END
+plan2.w
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/svn/Paulista/!svn/ver/53/progs/opr/plan2.w
+END
+v-czona.w
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/svn/Paulista/!svn/ver/1/progs/opr/v-czona.w
+END
+w-contr_activos.w
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/Paulista/!svn/ver/46/progs/opr/w-contr_activos.w
+END
+w-geoeventos.w
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/Paulista/!svn/ver/52/progs/opr/w-geoeventos.w
+END
+v-agenda_recurso.w
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/Paulista/!svn/ver/52/progs/opr/v-agenda_recurso.w
+END
+w-cliente_manual.w
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/Paulista/!svn/ver/25/progs/opr/w-cliente_manual.w
+END
+eval-fechac.p
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/1/progs/opr/eval-fechac.p
+END
+cocinero_ajuste_precios.p
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/Paulista/!svn/ver/51/progs/opr/cocinero_ajuste_precios.p
+END
+v-confc.w
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/svn/Paulista/!svn/ver/1/progs/opr/v-confc.w
+END
+Cocinero_duraciones_rdur_aplicar.p
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/Paulista/!svn/ver/47/progs/opr/Cocinero_duraciones_rdur_aplicar.p
+END
+v-diafijo_cli.w
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/Paulista/!svn/ver/1/progs/opr/v-diafijo_cli.w
+END
+Cocinero_duraciones_comparadas.p
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/Paulista/!svn/ver/1/progs/opr/Cocinero_duraciones_comparadas.p
+END
+v-capacidad.wrx
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/Paulista/!svn/ver/1/progs/opr/v-capacidad.wrx
+END
+Aviso_8.rpt
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/11/progs/opr/Aviso_8.rpt
+END
+Fernando de Certificado Provisorio de Tanques MEDIA HOJA.rpt
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/Paulista/!svn/ver/1/progs/opr/Fernando%20de%20Certificado%20Provisorio%20de%20Tanques%20MEDIA%20HOJA.rpt
+END
+cocinero_ordenH1.p
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/Paulista/!svn/ver/25/progs/opr/cocinero_ordenH1.p
+END
+eval-diasEVdif.p
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/opr/eval-diasEVdif.p
+END
+cocinero_reimpresion_recibos.p
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/Paulista/!svn/ver/50/progs/opr/cocinero_reimpresion_recibos.p
+END
+v-cturno.w
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/opr/v-cturno.w
+END
+b-evento_sinrealizarEV.w
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/Paulista/!svn/ver/7/progs/opr/b-evento_sinrealizarEV.w
+END
+cert-prov.rpt
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/Paulista/!svn/ver/44/progs/opr/cert-prov.rpt
+END
+cocinero_recursos_de contratos.p
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/Paulista/!svn/ver/46/progs/opr/cocinero_recursos_de%20contratos.p
+END
+w-agenda_recurso.w
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/Paulista/!svn/ver/47/progs/opr/w-agenda_recurso.w
+END
+d-padrehijo.w
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/7/progs/opr/d-padrehijo.w
+END
+cocinero-migra.p
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/opr/cocinero-migra.p
+END
+listar_contr_activos.rpt
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/Paulista/!svn/ver/1/progs/opr/listar_contr_activos.rpt
+END
+ServerSocket.cls
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/opr/ServerSocket.cls
+END
+w-recepotoper.w
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/53/progs/opr/w-recepotoper.w
+END
+certif_3.rpt
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/51/progs/opr/certif_3.rpt
+END
+v-evento1.wrx
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/Paulista/!svn/ver/53/progs/opr/v-evento1.wrx
+END
+cocinero_administradores_restricciones.p
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/Paulista/!svn/ver/52/progs/opr/cocinero_administradores_restricciones.p
+END
+Cocinero_eventos_con_lleva2.p
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/Paulista/!svn/ver/1/progs/opr/Cocinero_eventos_con_lleva2.p
+END
+Orden_3 Ficha 2.rpt
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/Paulista/!svn/ver/11/progs/opr/Orden_3%20Ficha%202.rpt
+END
+cocinero_verifica_evento_avisos.p
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/Paulista/!svn/ver/52/progs/opr/cocinero_verifica_evento_avisos.p
+END
+v-avisos.w
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/Paulista/!svn/ver/52/progs/opr/v-avisos.w
+END
+cocinero_asigna_canales.w
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/Paulista/!svn/ver/1/progs/opr/cocinero_asigna_canales.w
+END
+d-zoom-eventoED.w
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/opr/d-zoom-eventoED.w
+END
+traza-borrado2.p
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/50/progs/opr/traza-borrado2.p
+END
+definit_3ECemail.rpt
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/Paulista/!svn/ver/50/progs/opr/definit_3ECemail.rpt
+END
+usorecursos.p
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/Paulista/!svn/ver/50/progs/opr/usorecursos.p
+END
+b-eventos_analisis.w
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/Paulista/!svn/ver/51/progs/opr/b-eventos_analisis.w
+END
+altabajacontratos_tipo.rpt
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/Paulista/!svn/ver/1/progs/opr/altabajacontratos_tipo.rpt
+END
+cocinero_gen_evento_avisos.p
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/Paulista/!svn/ver/1/progs/opr/cocinero_gen_evento_avisos.p
+END
+w-agenda_recursoAAA.w
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/Paulista/!svn/ver/54/progs/opr/w-agenda_recursoAAA.w
+END
+nogeo.htm
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/svn/Paulista/!svn/ver/1/progs/opr/nogeo.htm
+END
+v-diasSEdif.w
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/1/progs/opr/v-diasSEdif.w
+END
+f-restric.w
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/Paulista/!svn/ver/1/progs/opr/f-restric.w
+END
+w-presentacion_certificados_MCBA.w
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/Paulista/!svn/ver/32/progs/opr/w-presentacion_certificados_MCBA.w
+END
+cocinero_administradores_cobranzas.p
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/Paulista/!svn/ver/1/progs/opr/cocinero_administradores_cobranzas.p
+END
+usorecursos1.p
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/Paulista/!svn/ver/50/progs/opr/usorecursos1.p
+END
+w-analizado.w
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/1/progs/opr/w-analizado.w
+END
+v-analisis_protocolo.w
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/Paulista/!svn/ver/52/progs/opr/v-analisis_protocolo.w
+END
+v-diafijo.w
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/Paulista/!svn/ver/1/progs/opr/v-diafijo.w
+END
+b-eventos_recursos1.w
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/Paulista/!svn/ver/54/progs/opr/b-eventos_recursos1.w
+END
+w-lsaltabajacontrato.w
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/Paulista/!svn/ver/1/progs/opr/w-lsaltabajacontrato.w
+END
+presup_11.rpt
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/Paulista/!svn/ver/52/progs/opr/presup_11.rpt
+END
+d-contrato_restriccion.w
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/Paulista/!svn/ver/52/progs/opr/d-contrato_restriccion.w
+END
+Thumbs.db
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/22/progs/opr/Thumbs.db
+END
+gen_evento_protocolo.p
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/Paulista/!svn/ver/52/progs/opr/gen_evento_protocolo.p
+END
+v-agenda_recursoAA.w
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/Paulista/!svn/ver/54/progs/opr/v-agenda_recursoAA.w
+END
+cocinero_impresion_recibos_que_no_salieron.p
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/Paulista/!svn/ver/33/progs/opr/cocinero_impresion_recibos_que_no_salieron.p
+END
+genera_evento_entrega_fac.p
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/Paulista/!svn/ver/45/progs/opr/genera_evento_entrega_fac.p
+END
+v-capacidad.w
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/1/progs/opr/v-capacidad.w
+END
+v-diasEVdif.w
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/1/progs/opr/v-diasEVdif.w
+END
+cocinero_pone _duracion_90_a_contratos.p
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/Paulista/!svn/ver/46/progs/opr/cocinero_pone%20_duracion_90_a_contratos.p
+END
+w-prfvta.w
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/opr/w-prfvta.w
+END
+b-eventocli.w
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/Paulista/!svn/ver/52/progs/opr/b-eventocli.w
+END
+resultados.i
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/1/progs/opr/resultados.i
+END
+v-diasSEdif.wrx
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/Paulista/!svn/ver/1/progs/opr/v-diasSEdif.wrx
+END
+w-balanceo.w
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/1/progs/opr/w-balanceo.w
+END
+definit_3Entrega.rpt
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/Paulista/!svn/ver/51/progs/opr/definit_3Entrega.rpt
+END
+Definit_1email.rpt
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/Paulista/!svn/ver/50/progs/opr/Definit_1email.rpt
+END
+impcertif.p
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/53/progs/opr/impcertif.p
+END
+v-coper.w
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/svn/Paulista/!svn/ver/1/progs/opr/v-coper.w
+END
+ClientSocketHandler.p
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/Paulista/!svn/ver/1/progs/opr/ClientSocketHandler.p
+END
+cocinero_listado_recibos.p
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/Paulista/!svn/ver/1/progs/opr/cocinero_listado_recibos.p
+END
+eval-diasdif.p
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/Paulista/!svn/ver/1/progs/opr/eval-diasdif.p
+END
+fechado.p
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/svn/Paulista/!svn/ver/1/progs/opr/fechado.p
+END
+cocinero_cambia_cdg_recursoxnro_empleado.p
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/Paulista/!svn/ver/1/progs/opr/cocinero_cambia_cdg_recursoxnro_empleado.p
+END
+traza-borrado3.p
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/50/progs/opr/traza-borrado3.p
+END
+v-evento1.w
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/53/progs/opr/v-evento1.w
+END
+contrato_restriccion.p
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/Paulista/!svn/ver/46/progs/opr/contrato_restriccion.p
+END
+Orden_3.rpt
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/53/progs/opr/Orden_3.rpt
+END
+v-emailrl.w
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/50/progs/opr/v-emailrl.w
+END
+eeval-rango.p
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/1/progs/opr/eeval-rango.p
+END
+Certif_1N2.rpt
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/Paulista/!svn/ver/52/progs/opr/Certif_1N2.rpt
+END
+contrato_pares_impares.p
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/Paulista/!svn/ver/51/progs/opr/contrato_pares_impares.p
+END
+w-agenda_recurso_detdia.w
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/Paulista/!svn/ver/7/progs/opr/w-agenda_recurso_detdia.w
+END
+Aviso_1.rpt
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/53/progs/opr/Aviso_1.rpt
+END
+traza-borrado.p
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/52/progs/opr/traza-borrado.p
+END
+w-avisos_eventos_AV.w
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/Paulista/!svn/ver/37/progs/opr/w-avisos_eventos_AV.w
+END
+d-filtroevento.w
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/opr/d-filtroevento.w
+END
+listaconf.i
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/Paulista/!svn/ver/1/progs/opr/listaconf.i
+END
+cocinero_imprime_recibos_pendientes_OT_complemento.p
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/Paulista/!svn/ver/1/progs/opr/cocinero_imprime_recibos_pendientes_OT_complemento.p
+END
+Certif_1N3email.rpt
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/Paulista/!svn/ver/54/progs/opr/Certif_1N3email.rpt
+END
+ServerSocketHandler.p
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/Paulista/!svn/ver/1/progs/opr/ServerSocketHandler.p
+END
+v-certi.w
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/svn/Paulista/!svn/ver/1/progs/opr/v-certi.w
+END
+v-libro.w
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/52/progs/opr/v-libro.w
+END
+printorden.p
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/37/progs/opr/printorden.p
+END
+v-cdoper.w
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/opr/v-cdoper.w
+END
+f-restric1.w
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/1/progs/opr/f-restric1.w
+END
+Cocinero_eventos_con_lleva.p
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/Paulista/!svn/ver/52/progs/opr/Cocinero_eventos_con_lleva.p
+END
+d-presu.w
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/50/progs/opr/d-presu.w
+END
+v-csemdias_cli.w
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/33/progs/opr/v-csemdias_cli.w
+END
+w-bloquecamino.w
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/54/progs/opr/w-bloquecamino.w
+END
+eval-rango.p
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/1/progs/opr/eval-rango.p
+END
+eeval-diafijo.p
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/Paulista/!svn/ver/1/progs/opr/eeval-diafijo.p
+END
+printavisos2.p
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/Paulista/!svn/ver/37/progs/opr/printavisos2.p
+END
+v-durac.w
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/svn/Paulista/!svn/ver/1/progs/opr/v-durac.w
+END
+b-recurso.w
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/47/progs/opr/b-recurso.w
+END
+altabajacontrato.p
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/Paulista/!svn/ver/46/progs/opr/altabajacontrato.p
+END
+contrato-opr2.p
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/52/progs/opr/contrato-opr2.p
+END
+w-evento.w
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/Paulista/!svn/ver/47/progs/opr/w-evento.w
+END
+selrestric.p
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/1/progs/opr/selrestric.p
+END
+w-reminder.w
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/7/progs/opr/w-reminder.w
+END
+v-turno.w
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/svn/Paulista/!svn/ver/1/progs/opr/v-turno.w
+END
+b-tipo_evento.w
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/Paulista/!svn/ver/1/progs/opr/b-tipo_evento.w
+END
+cocinero_va_a_imprimirrecibo.p
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/Paulista/!svn/ver/1/progs/opr/cocinero_va_a_imprimirrecibo.p
+END
+Orden_18.rpt
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/44/progs/opr/Orden_18.rpt
+END
+d-tarearesol.w
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/Paulista/!svn/ver/1/progs/opr/d-tarearesol.w
+END
+presentacion_certificados_MCBA.p
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/Paulista/!svn/ver/53/progs/opr/presentacion_certificados_MCBA.p
+END
+impredef.p
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/Paulista/!svn/ver/53/progs/opr/impredef.p
+END
+traza-borrado4.p
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/50/progs/opr/traza-borrado4.p
+END
+w-print_analisis_eventos.w
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/Paulista/!svn/ver/52/progs/opr/w-print_analisis_eventos.w
+END
+w-restriccion.w
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/Paulista/!svn/ver/1/progs/opr/w-restriccion.w
+END
+p.p
+K 25
+svn:wc:ra_dav:version-url
+V 39
+/svn/Paulista/!svn/ver/14/progs/opr/p.p
+END
+cocinero_asignaEVSIGUE a AVISOS.p
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/Paulista/!svn/ver/54/progs/opr/cocinero_asignaEVSIGUE%20a%20AVISOS.p
+END
+v-confcD.w
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/opr/v-confcD.w
+END
+v-anagua.w
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/opr/v-anagua.w
+END
+presup_3.rpt
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/52/progs/opr/presup_3.rpt
+END
+aplica_duraciones_promedios2.p
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/Paulista/!svn/ver/1/progs/opr/aplica_duraciones_promedios2.p
+END
+w-geodia.wrx
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/1/progs/opr/w-geodia.wrx
+END
+v-recurso_habilidad.w
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/Paulista/!svn/ver/52/progs/opr/v-recurso_habilidad.w
+END
+eval-csemdias.p
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/Paulista/!svn/ver/1/progs/opr/eval-csemdias.p
+END
+contrato_restr.rpt
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/Paulista/!svn/ver/1/progs/opr/contrato_restr.rpt
+END
+Certif_1REMI.rpt
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/54/progs/opr/Certif_1REMI.rpt
+END
+cocinero_bloques_rotos.p
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/Paulista/!svn/ver/1/progs/opr/cocinero_bloques_rotos.p
+END
+definit_3email.rpt
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/Paulista/!svn/ver/50/progs/opr/definit_3email.rpt
+END
+Certif_1N3emailREMI.rpt
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/Paulista/!svn/ver/54/progs/opr/Certif_1N3emailREMI.rpt
+END
+v-crangosemdias.w
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/Paulista/!svn/ver/37/progs/opr/v-crangosemdias.w
+END
+gen_datos_clientes.p
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/Paulista/!svn/ver/51/progs/opr/gen_datos_clientes.p
+END
+d-recursos.w
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/1/progs/opr/d-recursos.w
+END
+ANAGUA.xml
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/opr/ANAGUA.xml
+END
+b-eventos_recursos.w
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/Paulista/!svn/ver/52/progs/opr/b-eventos_recursos.w
+END
+v-durac_cli.w
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/1/progs/opr/v-durac_cli.w
+END
+cocinero_poner_restriccion_aLT.p
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/Paulista/!svn/ver/1/progs/opr/cocinero_poner_restriccion_aLT.p
+END
+crea_analisis_ANAGUA.p
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/Paulista/!svn/ver/1/progs/opr/crea_analisis_ANAGUA.p
+END
+definit_3.rpt
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/Paulista/!svn/ver/51/progs/opr/definit_3.rpt
+END
+regenera_agenda_recursos.p
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/Paulista/!svn/ver/37/progs/opr/regenera_agenda_recursos.p
+END
+cocinero_auditor_ordenes_recibos.p
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/Paulista/!svn/ver/1/progs/opr/cocinero_auditor_ordenes_recibos.p
+END
+w-analisis_protocolo.w
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/Paulista/!svn/ver/1/progs/opr/w-analisis_protocolo.w
+END
+cobranza-opr2.p
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/Paulista/!svn/ver/1/progs/opr/cobranza-opr2.p
+END
+aviso-opr.p
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/52/progs/opr/aviso-opr.p
+END
+cocinero_poner_restriccion_anagua.p
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/Paulista/!svn/ver/1/progs/opr/cocinero_poner_restriccion_anagua.p
+END
+stavisado.i
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/Paulista/!svn/ver/7/progs/opr/stavisado.i
+END
+b-evento.w
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/Paulista/!svn/ver/52/progs/opr/b-evento.w
+END
+cocinero_vecinos.p
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/Paulista/!svn/ver/1/progs/opr/cocinero_vecinos.p
+END
+contrato-opr.p
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/Paulista/!svn/ver/52/progs/opr/contrato-opr.p
+END
+w-agenda_recurso_det.w
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/Paulista/!svn/ver/52/progs/opr/w-agenda_recurso_det.w
+END
+GeoLibrary.I
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/23/progs/opr/GeoLibrary.I
+END
+cocinero_restriccion_duplicado.p
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/Paulista/!svn/ver/51/progs/opr/cocinero_restriccion_duplicado.p
+END
+crea_evento_protocolo.p
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/Paulista/!svn/ver/1/progs/opr/crea_evento_protocolo.p
+END
+f-restric_cli.w
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/Paulista/!svn/ver/1/progs/opr/f-restric_cli.w
+END
+v-restriccion.w
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/52/progs/opr/v-restriccion.w
+END
+v-restcli1.w
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/1/progs/opr/v-restcli1.w
+END
+Orden_4.rpt
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/39/progs/opr/Orden_4.rpt
+END
+Certif_1.rpt
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/53/progs/opr/Certif_1.rpt
+END
+Certif_1N3.rpt
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/Paulista/!svn/ver/54/progs/opr/Certif_1N3.rpt
+END
+w-presentacion_anaagua_MCBA.w
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/Paulista/!svn/ver/50/progs/opr/w-presentacion_anaagua_MCBA.w
+END
+Orden_8.rpt
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/26/progs/opr/Orden_8.rpt
+END
+w-contrato_restriccion.w
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/Paulista/!svn/ver/1/progs/opr/w-contrato_restriccion.w
+END
+ClientSocket.cls
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/opr/ClientSocket.cls
+END
+v-crango_cli.w
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/Paulista/!svn/ver/1/progs/opr/v-crango_cli.w
+END
+w-eventossinasig.w
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/Paulista/!svn/ver/7/progs/opr/w-eventossinasig.w
+END
+v-analisis.w
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/1/progs/opr/v-analisis.w
+END
+debug.i
+K 25
+svn:wc:ra_dav:version-url
+V 42
+/svn/Paulista/!svn/ver/1/progs/opr/debug.i
+END
+cocinero_chequea_lleva.p
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/Paulista/!svn/ver/54/progs/opr/cocinero_chequea_lleva.p
+END
+cocinero_adm_ajuste_precios.p
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/Paulista/!svn/ver/51/progs/opr/cocinero_adm_ajuste_precios.p
+END
+info_por_prf.p
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/Paulista/!svn/ver/1/progs/opr/info_por_prf.p
+END
+v-fechac.w
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/opr/v-fechac.w
+END
+enproc.p
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/svn/Paulista/!svn/ver/1/progs/opr/enproc.p
+END
+aa.rpt
+K 25
+svn:wc:ra_dav:version-url
+V 41
+/svn/Paulista/!svn/ver/1/progs/opr/aa.rpt
+END
+info_por_prf.w
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/Paulista/!svn/ver/1/progs/opr/info_por_prf.w
+END
+v-no-enc.w
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/Paulista/!svn/ver/51/progs/opr/v-no-enc.w
+END
+cocinero_avisos_lleva_no_enviados.p
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/Paulista/!svn/ver/46/progs/opr/cocinero_avisos_lleva_no_enviados.p
+END
+cocinero_regenera_agenda_recursos.p
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/Paulista/!svn/ver/1/progs/opr/cocinero_regenera_agenda_recursos.p
+END
+Cocinero_verifica_avisos.p
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/Paulista/!svn/ver/1/progs/opr/Cocinero_verifica_avisos.p
+END
+w-recepotoperEV.w
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/Paulista/!svn/ver/11/progs/opr/w-recepotoperEV.w
+END
+eval-rangoC.p
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/1/progs/opr/eval-rangoC.p
+END
+cocinero_asigna_entregado_avisos.p
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/Paulista/!svn/ver/1/progs/opr/cocinero_asigna_entregado_avisos.p
+END
+w-geodia.w
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/opr/w-geodia.w
+END
+w-geoeventos.wrx
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/52/progs/opr/w-geoeventos.wrx
+END
+w-agendadiaria.w
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/53/progs/opr/w-agendadiaria.w
+END
+eval-crono.p
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/1/progs/opr/eval-crono.p
+END
+v-agenda_dia.w
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/Paulista/!svn/ver/1/progs/opr/v-agenda_dia.w
+END
+b-evento_evento.w
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/Paulista/!svn/ver/52/progs/opr/b-evento_evento.w
+END
+analisisagua.rpt
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/50/progs/opr/analisisagua.rpt
+END
+eval-crangosemdiasC.p
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/Paulista/!svn/ver/37/progs/opr/eval-crangosemdiasC.p
+END
+d-traza.w
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/50/progs/opr/d-traza.w
+END
+traza.i
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/svn/Paulista/!svn/ver/52/progs/opr/traza.i
+END
+w-certificados.w
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/53/progs/opr/w-certificados.w
+END
+vo-eventos.w
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/1/progs/opr/vo-eventos.w
+END
+Orden_11.rpt
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/26/progs/opr/Orden_11.rpt
+END
+d-cliente_restriccion.w
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/Paulista/!svn/ver/52/progs/opr/d-cliente_restriccion.w
+END
+pp.p
+K 25
+svn:wc:ra_dav:version-url
+V 40
+/svn/Paulista/!svn/ver/54/progs/opr/pp.p
+END
+v-certiLT.w
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/34/progs/opr/v-certiLT.w
+END
+traza.p
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/svn/Paulista/!svn/ver/53/progs/opr/traza.p
+END
+Orden_19.rpt
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/39/progs/opr/Orden_19.rpt
+END
+v-restcli1_cli.w
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/opr/v-restcli1_cli.w
+END
+d-evento.w
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/Paulista/!svn/ver/37/progs/opr/d-evento.w
+END
+Aviso_36.rpt
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/11/progs/opr/Aviso_36.rpt
+END
+cocinero_arreglo_lleva.p
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/Paulista/!svn/ver/54/progs/opr/cocinero_arreglo_lleva.p
+END
+cocinero_asigna_durac.p
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/Paulista/!svn/ver/52/progs/opr/cocinero_asigna_durac.p
+END
+altabajacontratos.rpt
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/Paulista/!svn/ver/1/progs/opr/altabajacontratos.rpt
+END
+v-BloqueC.w
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/Paulista/!svn/ver/1/progs/opr/v-BloqueC.w
+END
+Facturacion.doc
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/Paulista/!svn/ver/1/progs/opr/Facturacion.doc
+END
+borra.p
+K 25
+svn:wc:ra_dav:version-url
+V 42
+/svn/Paulista/!svn/ver/1/progs/opr/borra.p
+END
+presup_4.rpt
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/52/progs/opr/presup_4.rpt
+END
+cocinero_imprime_recibos_pendientes_OT.p
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/Paulista/!svn/ver/26/progs/opr/cocinero_imprime_recibos_pendientes_OT.p
+END
+v-certificados.w
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/53/progs/opr/v-certificados.w
+END
+certif_1prov.rpt
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/54/progs/opr/certif_1prov.rpt
+END
+v-diasdif.w
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/Paulista/!svn/ver/1/progs/opr/v-diasdif.w
+END
+Certif_1N3REMI.rpt
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/Paulista/!svn/ver/54/progs/opr/Certif_1N3REMI.rpt
+END
+v-diasEVdif.wrx
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/Paulista/!svn/ver/1/progs/opr/v-diasEVdif.wrx
+END
+v-cronopag.w
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/1/progs/opr/v-cronopag.w
+END
+definit_3EC.rpt
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/53/progs/opr/definit_3EC.rpt
+END
+v-crango.w
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/opr/v-crango.w
+END
+duplicados.p
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/50/progs/opr/duplicados.p
+END
+b-evento_sinrealizar.w
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/Paulista/!svn/ver/44/progs/opr/b-evento_sinrealizar.w
+END
+cocinero_contratos_sin_duracion.p
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/Paulista/!svn/ver/52/progs/opr/cocinero_contratos_sin_duracion.p
+END
+b-clientesmanual.w
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/Paulista/!svn/ver/25/progs/opr/b-clientesmanual.w
+END
+crea_aviso_evento.p
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/Paulista/!svn/ver/53/progs/opr/crea_aviso_evento.p
+END
+v-csemdias.w
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/1/progs/opr/v-csemdias.w
+END
+MRP.doc
+K 25
+svn:wc:ra_dav:version-url
+V 42
+/svn/Paulista/!svn/ver/1/progs/opr/MRP.doc
+END
+tablasTT-opr.i
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/Paulista/!svn/ver/13/progs/opr/tablasTT-opr.i
+END
+restricciones.i
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/52/progs/opr/restricciones.i
+END
+Fernando de Certificado Definitivo de Tanques MEDIA HOJA.rpt
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/Paulista/!svn/ver/7/progs/opr/Fernando%20de%20Certificado%20Definitivo%20de%20Tanques%20MEDIA%20HOJA.rpt
+END
+b-restcliente.w
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/Paulista/!svn/ver/1/progs/opr/b-restcliente.w
+END
+Tarea_J.rpt
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/50/progs/opr/Tarea_J.rpt
+END
+w-rvalor.w
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/opr/w-rvalor.w
+END
+d-eventocli.w
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/1/progs/opr/d-eventocli.w
+END
+v-diasdif.wrx
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/1/progs/opr/v-diasdif.wrx
+END
+Aviso_11.rpt
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/11/progs/opr/Aviso_11.rpt
+END
+b-analisis.w
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/1/progs/opr/b-analisis.w
+END
+eval-diafijo.p
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/Paulista/!svn/ver/1/progs/opr/eval-diafijo.p
+END
+b-eventosr.w
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/1/progs/opr/b-eventosr.w
+END
+w-analisis_protocolo-control.w
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/Paulista/!svn/ver/22/progs/opr/w-analisis_protocolo-control.w
+END
+Orden_1.rpt
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/26/progs/opr/Orden_1.rpt
+END
+desasignareventosnorealizados.p
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/Paulista/!svn/ver/36/progs/opr/desasignareventosnorealizados.p
+END
+cocinero_graba_hora_realizado.p
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/Paulista/!svn/ver/1/progs/opr/cocinero_graba_hora_realizado.p
+END
+cocinero_ordenH.p
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/Paulista/!svn/ver/25/progs/opr/cocinero_ordenH.p
+END
+cocinero_chequea_lleva1.p
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/Paulista/!svn/ver/54/progs/opr/cocinero_chequea_lleva1.p
+END
+b-tipo_restric.w.w
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/Paulista/!svn/ver/1/progs/opr/b-tipo_restric.w.w
+END
+logomcba.bmp
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/14/progs/opr/logomcba.bmp
+END
+b-canal.w
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/svn/Paulista/!svn/ver/1/progs/opr/b-canal.w
+END
+w-tipo_evento.w
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/53/progs/opr/w-tipo_evento.w
+END
+MathLibrary.I
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/1/progs/opr/MathLibrary.I
+END
+cocinero_precio_contratos_arreglo.p
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/Paulista/!svn/ver/52/progs/opr/cocinero_precio_contratos_arreglo.p
+END
+Aviso_3.rpt
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/11/progs/opr/Aviso_3.rpt
+END
+v-evento.w
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/Paulista/!svn/ver/53/progs/opr/v-evento.w
+END
+cocinero_regenera_agenda_recursos2.p
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/Paulista/!svn/ver/7/progs/opr/cocinero_regenera_agenda_recursos2.p
+END
+Certif_1N3-old.rpt
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/Paulista/!svn/ver/54/progs/opr/Certif_1N3-old.rpt
+END
+eval-csemdiasC.p
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/opr/eval-csemdiasC.p
+END
+v-agenda_dia.wrx
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/opr/v-agenda_dia.wrx
+END
+v-durac.wrx
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/Paulista/!svn/ver/1/progs/opr/v-durac.wrx
+END
+certif_1 Emergencia.rpt
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/Paulista/!svn/ver/54/progs/opr/certif_1%20Emergencia.rpt
+END
+GOBIERNO DE LA CIUDAD DE BUENOS AIRES.doc
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/Paulista/!svn/ver/16/progs/opr/GOBIERNO%20DE%20LA%20CIUDAD%20DE%20BUENOS%20AIRES.doc
+END
+pruebaeval.p
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/37/progs/opr/pruebaeval.p
+END
+w-vecinosEV.wrx
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/52/progs/opr/w-vecinosEV.wrx
+END
+v-canal.w
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/13/progs/opr/v-canal.w
+END
+cocinero_vuela_sabados.p
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/Paulista/!svn/ver/1/progs/opr/cocinero_vuela_sabados.p
+END
+w-reminder.wrx
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/Paulista/!svn/ver/1/progs/opr/w-reminder.wrx
+END
+cocinero_administradores_vigentes_restricciones1.p
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/Paulista/!svn/ver/39/progs/opr/cocinero_administradores_vigentes_restricciones1.p
+END
+plan2.wrx
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/53/progs/opr/plan2.wrx
+END
+w-agenda_eventos.w
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/Paulista/!svn/ver/1/progs/opr/w-agenda_eventos.w
+END
+w-geoTT.w
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/svn/Paulista/!svn/ver/1/progs/opr/w-geoTT.w
+END
+w-diaoper.w
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/Paulista/!svn/ver/3/progs/opr/w-diaoper.w
+END
+cocinero_arregla_horario_atencion.p
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/Paulista/!svn/ver/33/progs/opr/cocinero_arregla_horario_atencion.p
+END
+v-agenda_recurso.wrx
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/Paulista/!svn/ver/52/progs/opr/v-agenda_recurso.wrx
+END
+Aviso_1 old.rpt
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/Paulista/!svn/ver/54/progs/opr/Aviso_1%20old.rpt
+END
+cocinero_contratos_rige_desde.p
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/Paulista/!svn/ver/46/progs/opr/cocinero_contratos_rige_desde.p
+END
+w-cambiorecurso.w
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/Paulista/!svn/ver/46/progs/opr/w-cambiorecurso.w
+END
+w-ordent_eventos.w
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/Paulista/!svn/ver/53/progs/opr/w-ordent_eventos.w
+END
+Socket.cls
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/opr/Socket.cls
+END
+Orden_3 Ficha 1.rpt
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/Paulista/!svn/ver/11/progs/opr/Orden_3%20Ficha%201.rpt
+END
+w-vecinosEV.w
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/Paulista/!svn/ver/52/progs/opr/w-vecinosEV.w
+END
+w-recepot.w
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/11/progs/opr/w-recepot.w
+END
+Orden_12.rpt
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/26/progs/opr/Orden_12.rpt
+END
+v-cdnada.w
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/opr/v-cdnada.w
+END
+b-certificados.w
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/53/progs/opr/b-certificados.w
+END
+Certif_1emailREMI.rpt
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/Paulista/!svn/ver/54/progs/opr/Certif_1emailREMI.rpt
+END
+definit_3-PROPIOEC.rpt
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/Paulista/!svn/ver/50/progs/opr/definit_3-PROPIOEC.rpt
+END
+b-analisis_protocolo_control.w
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/Paulista/!svn/ver/53/progs/opr/b-analisis_protocolo_control.w
+END
+b-analisis_protocolo.w
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/Paulista/!svn/ver/53/progs/opr/b-analisis_protocolo.w
+END
+definit_30.rpt
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/Paulista/!svn/ver/7/progs/opr/definit_30.rpt
+END
+l.p
+K 25
+svn:wc:ra_dav:version-url
+V 38
+/svn/Paulista/!svn/ver/1/progs/opr/l.p
+END
+envio-opr2.p
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/52/progs/opr/envio-opr2.p
+END
+analisisagua.p
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/Paulista/!svn/ver/53/progs/opr/analisisagua.p
+END
+b-eventos_recursosAAA.w
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/Paulista/!svn/ver/54/progs/opr/b-eventos_recursosAAA.w
+END
+b-evento_sinasignar.w
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/Paulista/!svn/ver/1/progs/opr/b-evento_sinasignar.w
+END
+presup_1.rpt
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/52/progs/opr/presup_1.rpt
+END
+v-tipo_evento.w
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/53/progs/opr/v-tipo_evento.w
+END
+w-geoTT.wrx
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/Paulista/!svn/ver/1/progs/opr/w-geoTT.wrx
+END
+Definit_1.rpt
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/Paulista/!svn/ver/50/progs/opr/Definit_1.rpt
+END
+w-geoOPT.w
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/Paulista/!svn/ver/23/progs/opr/w-geoOPT.w
+END
+v-cdBloque.w
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/1/progs/opr/v-cdBloque.w
+END
+d-zoom-evento.w
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/Paulista/!svn/ver/1/progs/opr/d-zoom-evento.w
+END
+certif_3-PROPIO.rpt
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/Paulista/!svn/ver/50/progs/opr/certif_3-PROPIO.rpt
+END
+v-cdoper_cli.w
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/Paulista/!svn/ver/1/progs/opr/v-cdoper_cli.w
+END
+b-contr_de_restric.w
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/Paulista/!svn/ver/1/progs/opr/b-contr_de_restric.w
+END
+definit_3-PROPIO.rpt
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/Paulista/!svn/ver/53/progs/opr/definit_3-PROPIO.rpt
+END
+contrato_a_mirar.p
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/Paulista/!svn/ver/46/progs/opr/contrato_a_mirar.p
+END
+v-no-adm.w
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/Paulista/!svn/ver/51/progs/opr/v-no-adm.w
+END
+v-corte.w
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/svn/Paulista/!svn/ver/1/progs/opr/v-corte.w
+END
+Nuevo Documento de texto.txt
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/Paulista/!svn/ver/1/progs/opr/Nuevo%20Documento%20de%20texto.txt
+END
+b-restcont.w
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/1/progs/opr/b-restcont.w
+END
+cocinero_regenera_evento_LT.p
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/Paulista/!svn/ver/24/progs/opr/cocinero_regenera_evento_LT.p
+END
+v-analisis_protocolo-control.w
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/Paulista/!svn/ver/18/progs/opr/v-analisis_protocolo-control.w
+END
+cocinero_conteo_analisis.p
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/Paulista/!svn/ver/25/progs/opr/cocinero_conteo_analisis.p
+END
+eval-diafijoC.p
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/Paulista/!svn/ver/1/progs/opr/eval-diafijoC.p
+END
+geocodificar_maestro_clientes.p
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/Paulista/!svn/ver/1/progs/opr/geocodificar_maestro_clientes.p
+END
+w-asignar.w
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/52/progs/opr/w-asignar.w
+END
+genera_tareas_Tanques.p
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/Paulista/!svn/ver/52/progs/opr/genera_tareas_Tanques.p
+END
+gen_evento_protocoloH.p
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/Paulista/!svn/ver/52/progs/opr/gen_evento_protocoloH.p
+END
+cocinero_aviso_aviso.p
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/Paulista/!svn/ver/50/progs/opr/cocinero_aviso_aviso.p
+END
+w-capacidad.w
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/1/progs/opr/w-capacidad.w
+END
+q-evento.w
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/opr/q-evento.w
+END
+v-horac.w
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/svn/Paulista/!svn/ver/1/progs/opr/v-horac.w
+END
+d-editorstr.w
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/1/progs/opr/d-editorstr.w
+END
+Cocinero_eventos_con_lleva1.p
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/Paulista/!svn/ver/1/progs/opr/Cocinero_eventos_con_lleva1.p
+END
+cocinero_administradores_vigentes_restricciones.p
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/Paulista/!svn/ver/46/progs/opr/cocinero_administradores_vigentes_restricciones.p
+END
+b-restriccion.w
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/52/progs/opr/b-restriccion.w
+END
+Certif_1email.rpt
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/Paulista/!svn/ver/54/progs/opr/Certif_1email.rpt
+END
+v-envfac.w
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/opr/v-envfac.w
+END
+cocinero_carga_restricciones_clientes.p
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/Paulista/!svn/ver/52/progs/opr/cocinero_carga_restricciones_clientes.p
+END
+eval-diasSEdif.p
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/44/progs/opr/eval-diasSEdif.p
+END
+Certif_1N.rpt
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/Paulista/!svn/ver/52/progs/opr/Certif_1N.rpt
+END

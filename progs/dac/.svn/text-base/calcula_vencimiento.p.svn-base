@@ -1,0 +1,21 @@
+/*===========================================================================================*/
+/*                    CALCULA LA HORA DE VENCIMIENTO DE UN DESPACHO                          */
+/*===========================================================================================*/
+
+    DEFINE INPUT PARAMETER rid_ficha AS ROWID.
+
+
+    FIND Ficha WHERE ROWID(Ficha) = rid_ficha EXCLUSIVE-LOCK.
+    FIND Tipcolor OF Ficha NO-LOCK.
+    Ficha.fch_vence = Ficha.fch_alta.
+    Ficha.hor_vence = Ficha.hor_alta + Tipcolor.hor_cobertura * 60.
+    IF Ficha.hor_vence >= 86400
+    THEN DO:
+         Ficha.hor_vence = Ficha.hor_vence - 86400.
+         Ficha.fch_vence = Ficha.fch_vence + 1.
+    END.     
+    Ficha.hms_vence = STRING(Ficha.hor_vence,"HH:MM:SS").
+    Ficha.key_vence = STRING(YEAR(Ficha.fch_vence),"9999") +
+                      STRING(MONTH(Ficha.fch_vence),"99") + 
+                      STRING(DAY(Ficha.fch_vence),"99") +
+                      STRING(Ficha.hor_vence,"HH:MM:SS").

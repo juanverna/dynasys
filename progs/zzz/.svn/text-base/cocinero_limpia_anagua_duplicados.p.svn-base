@@ -1,0 +1,32 @@
+DEFINE VAR rr AS ROWID.
+OUTPUT TO c:\anagua3.d.
+FIND restriccion WHERE restriccion.nro_tipo_evento = 3 AND
+    restriccion.cdg_restriccion BEGINS "ANAGUA".
+ FOR EACH evento WHERE evento.nro_tipo_evento = 3:
+         FOR EACH contrato_hd WHERE contrato_hd.nro_contrato = evento.nro_identificacion:
+
+                  FIND FIRST contrato_restriccion WHERE contrato_restriccion.nro_contrato = contrato_hd.nro_contrato AND
+                          contrato_restriccion.nro_restriccion = restriccion.nro_restriccion NO-ERROR.
+                IF AVAILABLE contrato_restriccion THEN rr = ROWID(contrato_restriccion).
+                  
+                  FOR each contrato_restriccion WHERE contrato_restriccion.nro_contrato = contrato_hd.nro_contrato and
+                         ROWID(contrato_restriccion) <> rr AND 
+                          contrato_restriccion.nro_restriccion = restriccion.nro_restriccion:
+EXPORT contrato_restriccion.
+DELETE contrato_restriccion.
+                  END.          
+
+                  /*
+                  IF AVAILABLE contrato_restriccion THEN DO:
+                      contrato_restriccion.valor = "0".
+                  END.
+                  ELSE DO:
+                      CREATE contrato_restriccion.
+                      ASSIGN contrato_restriccion.nro_contrato = contrato_hd.nro_contrato
+                          contrato_restriccion.sub_evento = 1
+                          contrato_restriccion.nro_restriccion = restriccion.nro_restriccion.
+                      contrato_restriccion.valor = "0".
+                  END.*/
+         END.
+ END.
+

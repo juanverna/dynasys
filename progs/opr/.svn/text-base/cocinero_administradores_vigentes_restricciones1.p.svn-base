@@ -1,0 +1,15 @@
+DEFINE BUFFER administracion FOR cliente.
+DEFINE VAR lista AS CHAR FORMAT "X(70)".
+DEFINE VAR totdeuda AS DECIMAL.
+FOR EACH cliente BREAK BY cliente.nro_admin:
+IF LAST-OF(cliente.nro_admin) THEN DO:
+    FIND administracion WHERE administracion.nro_cliente = cliente.nro_admin.
+    RUN deuda_administracion-corte.p ( administracion.nro_cliente, TODAY , OUTPUT totdeuda ).
+    IF totdeuda = 0 THEN NEXT.
+    lista = "".
+    FOR EACH cliente_restriccion WHERE cliente_restriccion.nro_cliente = administracion.nro_cliente, restriccion OF cliente_restriccion:
+     lista = lista + restriccion.cdg_restriccion + "[" + cliente_restriccion.valor + "] ".
+    END.
+    DISPLAY administracion.nom_cliente lista.
+END.
+END.

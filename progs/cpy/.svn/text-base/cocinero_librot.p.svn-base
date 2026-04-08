@@ -1,0 +1,25 @@
+FIND restriccion no-lock WHERE restriccion.cdg_restriccion = "LIBROT".
+/*FOR EACH evento WHERE evento.frealizado = ? AND evento.nro_tipo_evento = 3 AND 
+NOT evento.anulado:
+find cliente_restriccion WHERE cliente_restriccion.nro_cliente = evento.nro_cliente AND
+cliente_restriccion.nro_restriccion = restriccion.nro_restriccion NO-LOCK NO-ERROR.
+IF NOT AVAILABLE cliente_restriccion THEN DO:
+    CREATE cliente_restriccion.
+ASSIGN cliente_restriccion.nro_cliente = evento.nro_cliente
+       cliente_restriccion.nro_restriccion = restriccion.nro_restriccion
+cliente_restriccion.valor = "N".
+END.
+END. */
+FOR EACH cliente_restriccion OF restriccion, cliente OF cliente_restriccion:
+
+DISPLAY cliente.cdg_cliente.
+
+
+
+
+
+
+
+
+
+

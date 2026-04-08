@@ -1,0 +1,113 @@
+=====================================================
+PROGRESS stack trace as of Tue Jul 25 15:42:18 2017
+=====================================================
+Startup parameters:
+-pf C:\Progress102\OpenEdge\startup.pf,-cpinternal ISO8859-1,-cpstream ISO8859-1,-cpcoll Spanish9,-cpcase Basic,-d dmy,-numsep 46,-numdec 44,(end .pf),-p largar.p,-db c:\bases\dynasys102,-ld sic,-T c:\temp,-basekey INI,-ininame c:\dynasys10\procs\dynasys10.ini,-s 200,-inp 8192,-nb 150,-l 4000,-bibufs 25,-q,-rr
+
+Exception code: C0000005 ACCESS_VIOLATION
+Fault address:  10485384 01:00484384 C:\Progress102\OpenEdge\bin\prow32.dll
+
+Registers:
+EAX:0018F65C
+EBX:0018F704
+ECX:00000306
+EDX:00000000
+ESI:021682E2
+EDI:021682E2
+CS:EIP:0023:10485384
+SS:ESP:002B:0018F40C  EBP:0018F794
+DS:002B  ES:002B  FS:0053  GS:002B
+Flags:00210206
+
+Call Stack:
+Address   Frame
+10485384  00000000  dbut_term+84
+
+
+** ABL Stack Trace **
+
+--> traer_documento c-pos_cliente.w (.\PAU\c-pos_cliente.r) at line 4065
+    c-pos_cliente.w (.\PAU\c-pos_cliente.r) at line 2324
+    USER-INTERFACE-TRIGGER b-comprobantes1.w (.\fac\b-comprobantes1.r) at line 3351
+    w-tareas-red.w (.\cpy\w-tareas-red.r) at line -1
+    USER-INTERFACE-TRIGGER w-dynasys.w (.\bas\w-dynasys.r) at line 5977
+    w-dynasys.w (.\bas\w-dynasys.r) at line 6508
+    rundynasys-noquit.p (.\bas\rundynasys-noquit.r) at line 104
+
+** Persistent procedures/Classes **
+
+Handle  File Name
+008629  .\fac\b-comprobantes1.r
+008627  .\fac\v-dsc_cliente.r
+008539  .\PAU\q-domicilio.r
+008528  .\bas\p-updspa.r
+008524  .\fac\b-cliente_contacto.r
+008522  .\fac\v-cliente_contacto_sindir.r
+008520  .\PAU\vo-administraciones.r
+008509  .\bas\p-updspa.r
+008498  .\bas\p-updspa.r
+008496  .\opr\v-canal.r
+008492  .\opr\b-canal.r
+008490  .\PAU\v-administrador.r
+008485  .\PAU\b-administracion.r
+008482  C:\Progress102\OpenEdge\gui\adm\objects\folder.r
+008478  .\PAU\w-administraciones.r
+008081  .\opr\v-evento.r
+008073  .\bas\p-soloedita.r
+008069  .\opr\b-eventocli.r
+008064  .\bas\p-excel.r
+008062  .\fac\v-dsc_cliente.r
+007963  .\PAU\q-cliente_otros_datos.r
+007952  .\bas\p-updspa.r
+007950  .\PAU\v-otros_datos1.r
+007948  .\fac\v-dsc_cliente.r
+007937  .\bas\p-updspa.r
+007935  .\PAU\vo-cliente.r
+007924  .\bas\p-updspa.r
+007922  .\opr\v-canal.r
+007920  .\PAU\v-consorcios.r
+007916  .\opr\b-canal.r
+007911  .\PAU\b.r
+007908  C:\Progress102\OpenEdge\gui\adm\objects\folder.r
+007904  .\PAU\w-consorcios-cli.r
+007523  .\cpy\v-temp_tareaF.r
+001615  .\cpy\v-temp_tareaF.r
+001266  .\bas\p-soloedita.r
+001261  .\cpy\v-tarea-red11.r
+001256  .\cpy\v-tarea-red2.r
+001255  .\PAU\q-cliente.r
+001247  .\bas\p-soloedita.r
+001242  .\cpy\v-tarea-redsolotel.r
+001231  .\cpy\b-tareas-red.r
+001227  C:\Progress102\OpenEdge\gui\adm\objects\folder.r
+001224  C:\Progress102\OpenEdge\gui\adm\objects\broker.r
+001039  .\bas\pure4gltv.r
+001021  .\bas\sfavoritos.r
+001013  C:\Progress102\OpenEdge\gui\adm2\containr.r
+001011  C:\Progress102\OpenEdge\gui\adm2\visual.r
+001006  C:\Progress102\OpenEdge\gui\adm2\smart.r
+001002  .\bas\Winfunc.r
+001001  .\bas\Windows.r
+
+//=====================================================
+PROGRESS stack trace as of Tue Jul 25 15:42:18 2017
+//=====================================================
+Exception code: C0000005 ACCESS_VIOLATION
+Fault address:  10485384 01:00484384 C:\Progress102\OpenEdge\bin\prow32.dll
+
+Registers:
+EAX:0018F65C
+EBX:0018F704
+ECX:00000306
+EDX:00000000
+ESI:021682E2
+EDI:021682E2
+CS:EIP:0023:10485384
+SS:ESP:002B:0018F79C  EBP:0018F794
+DS:002B  ES:002B  FS:0053  GS:002B
+Flags:00210206
+
+Call Stack:
+Address   Frame
+10485384  0018F798  dbut_term+84
+

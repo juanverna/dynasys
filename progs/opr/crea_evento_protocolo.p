@@ -1,0 +1,45 @@
+    /*crea la tabla de datos evento_protocolo asociada al analisis*/
+    DEFINE VAR ldato AS LONGCHAR.
+    DEFINE VAR retok AS LOGICAL.
+    {resultados.i}
+  
+    retOK = TEMP-TABLE resultados:READ-XML("File", 
+                       "c:\dynasys10\progs\opr\ANAGUA.xml", 
+                       "EMPTY", 
+                       ?, 
+                       ?, 
+                       ?, 
+                       ?).
+    retOK = TEMP-TABLE resultados:WRITE-XML("longchar", 
+                                    ldato,
+                                    FALSE, 
+                                    ?, 
+                                    ?, 
+                                    YES, 
+                                    YES). 
+
+    FIND restriccion WHERE restriccion.cdg_restriccion = "ANAGUA" NO-LOCK.
+    FOR EACH evento WHERE evento.nro_tipo_evento = 3 AND frealizado <> ? and
+        evento.origen = "CONTRATO" AND evento.sub_evento = 1 NO-LOCK:
+        FIND FIRST contrato_restriccion WHERE contrato_restriccion.nro_contrato = evento.nro_identificacion and
+                   contrato_restriccion.nro_restriccion = restriccion.nro_restriccion NO-LOCK NO-ERROR.
+        IF NOT AVAILABLE contrato_restriccion THEN NEXT.
+        FIND evento_protocolo OF evento NO-ERROR.
+        IF AVAILABLE evento_protocolo THEN NEXT.
+        CREATE evento_protocolo.
+
+        ASSIGN 
+            evento_protocolo.Analizo = ""
+            evento_protocolo.datos = IF STRING(contrato_restriccion.valor) = "0" THEN ldato ELSE ""
+            evento_protocolo.estado = "N"
+            evento_protocolo.nro_tipo_evento = 3
+            evento_protocolo.extrajo ="PAULISTA"
+            evento_protocolo.fecha_analisis = ? 
+            evento_protocolo.fecha_entrega = ?
+            evento_protocolo.Fecha_toma = evento.frealizado 
+            evento_protocolo.Laboratorio = STRING(contrato_restriccion.valor)
+            evento_protocolo.nro_evento = evento.nro_evento
+            evento_protocolo.nro_protocolo = NEXT-VALUE(proximo_procedimiento).
+    END.
+
+

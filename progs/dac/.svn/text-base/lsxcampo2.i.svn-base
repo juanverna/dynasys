@@ -1,0 +1,304 @@
+/*===================================================================================*/
+/*  Emite el listado de servicios prestados agrupados por algun campo codificado     */
+/*===================================================================================*/
+
+DEFINE INPUT PARAMETER p-des_{&TABLA}    LIKE {&TABLA}.{&CODIGO-TABLA} LABEL "{&TABLA}".
+DEFINE INPUT PARAMETER p-has_{&TABLA}    LIKE {&TABLA}.{&CODIGO-TABLA} LABEL "{&TABLA}".
+DEFINE INPUT PARAMETER p-des_fecha       AS DATE LABEL "De Fecha".
+DEFINE INPUT PARAMETER p-has_fecha       AS DATE LABEL "A Fecha".
+DEFINE INPUT PARAMETER p-lista_empresas  AS CHARACTER.
+
+DEFINE VARIABLE tr  AS INTEGER.
+DEFINE VARIABLE ctr AS CHARACTER LABEL "T.Resp.".
+
+DEFINE VARIABLE chr_{&TABLA} LIKE {&TABLA}.{&NOMBRE-TABLA}.
+
+{defvarcolores.i}
+
+DEFINE VARIABLE  hms_despacho     AS CHARACTER COLUMN-LABEL "Hora!Dspcho.".
+DEFINE VARIABLE  hms_salbase      AS CHARACTER COLUMN-LABEL "Salida!de Base".
+DEFINE VARIABLE  hms_demsalbas    AS CHARACTER COLUMN-LABEL "Demora!Sal.Base".
+DEFINE VARIABLE  hms_arrdom       AS CHARACTER COLUMN-LABEL "Arribo!Domic.".
+DEFINE VARIABLE  hms_disponible   AS CHARACTER COLUMN-LABEL "Hora!Dispble.". 
+DEFINE VARIABLE  hms_tieocup      AS CHARACTER COLUMN-LABEL "Tiempo!Ocupac.".
+DEFINE VARIABLE  hms_tieres       AS CHARACTER COLUMN-LABEL "Tiempo!Respta.".
+
+DEFINE VARIABLE  v-domicilio      AS CHARACTER FORMAT "X(40)" COLUMN-LABEL "Domicilio".
+
+DEFINE VARIABLE tot_fichas   AS INTEGER.
+DEFINE VARIABLE tre_fichas   AS INTEGER.
+
+DEF VAR chofer AS CHAR LABEL "Chofer" FORMAT "X(20)".
+DEF VAR medico AS CHAR LABEL "Médico" FORMAT "X(20)".
+DEF VAR enferm AS CHAR LABEL "Enfer." FORMAT "X(20)".
+
+DEFINE STREAM Numeros.
+
+DEFINE FRAME frm-titulo HEADER
+    que_empresa 
+    "{&TITULO-LST}" AT {&POS-TITULO} 
+    "Pagina:" AT {&POS-PAGINA} PAGE-NUMBER FORMAT ">9" AT {&POS-NUMERO}
+    SKIP
+    "Empresas:"
+    p-lista_empresas FORMAT "X(20)"
+    p-des_fecha AT {&POS-TITULO}
+    "al"
+    p-has_fecha
+    fecha_lis AT {&POS-PAGINA}
+    SKIP
+    chr_{&TABLA} AT {&POS-TITULO}
+    hora_lis AT {&POS-PAGINA}
+    SKIP(1)
+    WITH WIDTH {&ANCHO-FRAME} FRAME frm-titulo TOP-ONLY PAGE-TOP STREAM-IO.
+
+FORM
+    Ficha.{&CODIGO-FICHA} COLUMN-LABEL "{&LABEL-CODIGO}"
+    /*
+    chofer
+    enferm
+    medico
+    */
+    Ficha.fch_alta   COLUMN-LABEL "Fecha!Alta"
+    Ficha.num_ficha  COLUMN-LABEL "Número!Ficha"
+    Ficha.cdg_tipoemr VIEW-AS FILL-IN
+    Ficha.hms_alta COLUMN-LABEL "Hora de!Alta"
+    hms_despacho
+    hms_salbase
+    hms_demsalbas
+    hms_arrdom
+    hms_disponible
+    hms_tieocup
+    hms_tieres
+    Ficha.cdg_movil       COLUMN-LABEL "Mov"
+    Ficha.cdg_proveedor   COLUMN-LABEL "(M)"
+    Ficha.cdg_destino     COLUMN-LABEL "Dst"
+    Ficha.cdg_cliente     COLUMN-LABEL "(W)"
+    v-domicilio COLUMN-LABEL "Domicilio"
+    WITH WIDTH {&ANCHO-FRAME} DOWN CENTERED FRAME frm-listado USE-TEXT STREAM-IO.
+
+ASSIGN chr_{&TABLA} = "Rango de " + STRING(p-des_{&TABLA}) + " a " + STRING(p-has_{&TABLA}).
+
+lista_empresas = p-lista_empresas.
+{setvarimpre.i}
+{drsalida.i "65"} /* Direcciona la salida de impresión */
+OUTPUT STREAM Numeros TO ".\tempdsp\numeros.txt".
+
+FOR EACH Ficha 
+    WHERE Ficha.fch_alta <= p-has_fecha 
+      AND Ficha.fch_alta >= p-des_fecha
+      AND Ficha.{&CODIGO-FICHA} >= p-des_{&TABLA}
+      AND Ficha.{&CODIGO-FICHA} <= p-has_{&TABLA}
+      AND LOOKUP(Ficha.cdg_empresa,p-lista_empresas) <> 0 
+      AND Ficha.cdg_destino <> "A" NO-LOCK 
+      BREAK BY Ficha.{&CODIGO-FICHA}
+            BY Ficha.fch_alta
+            BY Ficha.hms_despacho
+                        WITH FRAME f-datos:
+
+    EXPORT STREAM Numeros Ficha.num_ficha.
+
+    VIEW FRAME frm-titulo.
+
+    hms_despacho      = STRING(Ficha.hor_despacho,"HH:MM:SS").
+    hms_salbase       = STRING(Ficha.hor_salbase,"HH:MM:SS").
+    hms_demsalbas     = IF Ficha.hor_salbase > Ficha.hor_despacho 
+                           THEN STRING(Ficha.hor_salbase - Ficha.hor_despacho,"HH:MM:SS")
+                           ELSE STRING(86400 + Ficha.hor_salbase - Ficha.hor_despacho,"HH:MM:SS").
+    hms_arrdom        = STRING(Ficha.hor_arrdom,"HH:MM:SS").
+    hms_disponible    = STRING(Ficha.hor_disponible,"HH:MM:SS").
+    hms_tieocup       = IF Ficha.hor_disponible > Ficha.hor_arrdom
+                           THEN STRING(Ficha.hor_disponible - Ficha.hor_arrdom,"HH:MM:SS")
+                           ELSE STRING(86400 + Ficha.hor_disponible - Ficha.hor_arrdom,"HH:MM:SS").
+    hms_tieres        = IF Ficha.hor_arrdom > Ficha.hor_alta
+                           THEN STRING(Ficha.hor_arrdom - Ficha.hor_alta,"HH:MM:SS")
+                           ELSE STRING(86400 + Ficha.hor_arrdom - Ficha.hor_alta,"HH:MM:SS").
+
+    tre_fichas = tre_fichas + 1.
+
+    FIND Localidad OF Ficha NO-LOCK.
+    
+    FIND Empleado WHERE nro_legajo = leg_medico NO-LOCK NO-ERROR.
+    
+    IF AVAILABLE Empleado THEN DO:
+        medico = nom_persona.
+    END.
+    ELSE DO:
+        medico = "?".
+    END.
+    
+    FIND Empleado WHERE nro_legajo = leg_enfermero NO-LOCK NO-ERROR.
+    
+    IF AVAILABLE Empleado THEN DO:
+        enferm = nom_persona.
+    END.
+    ELSE DO:
+        enferm = "?".
+    END.
+    
+    FIND Empleado WHERE nro_legajo = leg_chofer NO-LOCK NO-ERROR.
+    
+    IF AVAILABLE Empleado THEN DO:
+        chofer = nom_persona.
+    END.
+    ELSE DO:
+        chofer = "?".
+    END.
+    
+    v-domicilio  = Ficha.calle_emr + " " + Ficha.nropta_emr + "-" + Localidad.dsc_localidad.
+
+    FIND {&TABLA} WHERE {&TABLA}.{&CODIGO-TABLA} = Ficha.{&CODIGO-FICHA} NO-LOCK.
+    DISPLAY Ficha.{&CODIGO-FICHA}    WHEN FIRST-OF(Ficha.{&CODIGO-FICHA})
+            /*
+            chofer
+            enferm
+            medico
+            */
+            Ficha.fch_alta   WHEN FIRST-OF(Ficha.fch_alta)
+            Ficha.cdg_tipoemr VIEW-AS FILL-IN
+            Ficha.num_ficha 
+            Ficha.hms_alta 
+            hms_despacho
+            hms_salbase
+            hms_demsalbas
+            hms_arrdom
+            hms_disponible
+            hms_tieocup
+            hms_tieres
+            Ficha.cdg_movil 
+            Ficha.cdg_proveedor 
+            Ficha.cdg_destino 
+            Ficha.cdg_cliente 
+            v-domicilio
+            WITH FRAME frm-listado.
+            
+    DOWN WITH FRAME frm-listado.        
+
+    IF LAST-OF(Ficha.{&CODIGO-FICHA})
+    THEN DO:
+            UNDERLINE
+                  Ficha.{&CODIGO-FICHA}
+                  /*{&TABLA}.{&NOMBRE-TABLA}
+                  chofer
+                  medico
+                  enferm */
+                  Ficha.fch_alta
+                  Ficha.cdg_tipoemr
+                  Ficha.num_ficha 
+                  Ficha.hms_alta 
+                  hms_despacho
+                  hms_salbase
+                  hms_demsalbas
+                  hms_arrdom
+                  hms_disponible
+                  hms_tieocup
+                  hms_tieres
+                  Ficha.cdg_movil 
+                  Ficha.cdg_proveedor 
+                  Ficha.cdg_destino 
+                  Ficha.cdg_cliente 
+                  v-domicilio
+                  WITH FRAME frm-listado.
+            
+            DISPLAY
+                  tre_fichas @ Ficha.num_ficha
+                  "TOTAL"    @  Ficha.fch_alta
+                  WITH FRAME frm-listado.
+            
+            UNDERLINE
+                  Ficha.{&CODIGO-FICHA}
+                  /*{&TABLA}.{&NOMBRE-TABLA}
+                  chofer
+                  medico
+                  enferm */
+                  Ficha.fch_alta
+                  Ficha.cdg_tipoemr
+                  Ficha.num_ficha 
+                  Ficha.hms_alta 
+                  hms_despacho
+                  hms_salbase
+                  hms_demsalbas
+                  hms_arrdom
+                  hms_disponible
+                  hms_tieocup
+                  hms_tieres
+                  Ficha.cdg_movil 
+                  Ficha.cdg_proveedor 
+                  Ficha.cdg_destino 
+                  Ficha.cdg_cliente 
+                  v-domicilio
+                  WITH FRAME frm-listado.
+        
+           DOWN WITH FRAME frm-listado.        
+           
+           tot_fichas = tot_fichas + tre_fichas.
+           tre_fichas = 0.
+
+   END.       
+
+END.            
+
+UNDERLINE
+      Ficha.{&CODIGO-FICHA}
+      /*
+      chofer
+      medico
+      enferm
+      */
+      Ficha.fch_alta
+      Ficha.cdg_tipoemr
+      Ficha.num_ficha 
+      Ficha.hms_alta 
+      hms_despacho
+      hms_salbase
+      hms_demsalbas
+      hms_arrdom
+      hms_disponible
+      hms_tieocup
+      hms_tieres
+      Ficha.cdg_movil 
+      Ficha.cdg_proveedor 
+      Ficha.cdg_destino 
+      Ficha.cdg_cliente 
+      v-domicilio
+      WITH FRAME frm-listado.
+
+DISPLAY
+      tot_fichas @ Ficha.num_ficha
+      "TOTAL"    @  Ficha.fch_alta
+      WITH FRAME frm-listado.
+
+UNDERLINE
+      Ficha.{&CODIGO-FICHA}
+      /*
+      chofer
+      medico
+      enferm
+      */
+      Ficha.fch_alta
+      Ficha.cdg_tipoemr
+      Ficha.num_ficha 
+      Ficha.hms_alta 
+      hms_despacho
+      hms_salbase
+      hms_demsalbas
+      hms_arrdom
+      hms_disponible
+      hms_tieocup
+      hms_tieres
+      Ficha.cdg_movil 
+      Ficha.cdg_proveedor 
+      Ficha.cdg_destino 
+      Ficha.cdg_cliente 
+      v-domicilio
+      WITH FRAME frm-listado.
+
+DOWN WITH FRAME frm-listado.        
+   
+OUTPUT CLOSE.
+OUTPUT STREAM Numeros CLOSE.
+
+   /* Visualiza en pantalla el archivo de salida */
+
+RUN veresult.w ( INPUT  arch_salida ,  /* Archivo */
+                 INPUT 8 ).            /* FONT a utilizar por default */               
+            

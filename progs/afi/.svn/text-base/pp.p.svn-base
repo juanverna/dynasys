@@ -1,0 +1,21 @@
+OUTPUT TO "CLIPBOARD".
+DEFINE VAR fanal AS DATE.
+DEFINE VAR fperiodo1 AS DATE NO-UNDO.
+{tiempo.i}
+DEFINE BUFFER bevento FOR evento.
+fperiodo1 = ultimodia(sumarmeses(TODAY,2)).
+FIND tipo_evento WHERE tipo_evento.cdg_tipo_evento = "CO" NO-LOCK.
+fanal = resta_dia_habil(TODAY,2,"23456").
+FOR EACH evento NO-LOCK WHERE evento.nro_tipo_evento = tipo_evento.nro_tipo_evento AND
+( evento.fasignado = ? OR ( evento.fasignado >= fanal and evento.fasignado <= fperiodo1 )) AND NOT anulado:
+FIND cliente OF evento NO-LOCK.
+/*FIND tarea OF cliente WHERE tarea.cdg_tipotarea = "C" AND tarea.estado = "A" NO-ERROR.
+IF AVAILABLE tarea THEN DELETE tarea.*/
+
+FOR EACH bevento OF tipo_evento WHERE bevento.nro_cliente = evento.nro_cliente AND ROWID(bevento) <> ROWID(evento) AND NOT bevento.anulado AND 
+( bevento.fasignado = ? OR ( bevento.fasignado >= fanal and bevento.fasignado <= fperiodo1 )):
+PAUSE 0.
+put bevento.nro_evento SKIP.
+DOWN.
+end.
+END.

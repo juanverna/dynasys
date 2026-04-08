@@ -1,0 +1,8 @@
+FOR EACH Empresa WHERE cdg_empresa = "R":
+   DELETE Empresa.
+END.
+FOR EACH Empresa WHERE cdg_empresa = "H":
+   DELETE Empresa.
+END.
+
+QUIT.

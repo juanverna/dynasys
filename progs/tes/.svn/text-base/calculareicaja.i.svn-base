@@ -1,0 +1,31 @@
+PROCEDURE CALCULAR_EI:
+
+   DEFINE OUTPUT PARAMETER tot_egresogr AS DECIMAL.
+   DEFINE OUTPUT PARAMETER tot_ingresong AS DECIMAL.
+
+   tot_egresogr = 0.
+   tot_ingresong = 0.
+
+   /* Busca por Acumulado_caja hasta el mes anterior a la fecha 
+   FOR EACH Acumulado_caja OF Caja
+       WHERE Acumulado_caja.mes <  MONTH(des_fecha)
+         AND Acumulado_caja.ano <= YEAR(des_fecha):
+                             
+      tot_egresogr = tot_egresogr + Acumulado_caja.tot_egreso.
+      tot_ingresong = tot_ingresong + Acumulado_caja.tot_ingreso.
+      
+   END. */
+
+   /* Busca por Caj_header desde principio de mes a la fecha */
+   FOR EACH Caj_header OF Caja
+       WHERE Caj_header.fecha <  des_fecha
+         AND (consolidado OR Caj_header.cdg_empresa = Empresa.cdg_empresa )
+         AND Caj_header.estado <> "A":
+
+      IF Caj_header.tipo_mov = "E" 
+         THEN tot_egresogr = tot_egresogr + Caj_header.importe.
+         ELSE tot_ingresong = tot_ingresong + Caj_header.importe.
+
+   END.
+   
+END PROCEDURE.

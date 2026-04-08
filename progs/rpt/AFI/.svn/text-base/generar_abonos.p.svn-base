@@ -1,0 +1,410 @@
+/*=========================================================================================*/
+/*              REALIZA LA EMISION FACTURAS MENSUALES DE SERVICIO                          */
+/*=========================================================================================*/
+
+
+DEFINE INPUT PARAMETER p-des_punto        AS INTEGER.  
+DEFINE INPUT PARAMETER p-has_punto        AS INTEGER.  
+DEFINE INPUT PARAMETER p-des_fecha        AS DATE.               
+DEFINE INPUT PARAMETER p-has_fecha        AS DATE.
+DEFINE INPUT PARAMETER p-mes_imputa       AS INTEGER.
+DEFINE INPUT PARAMETER p-ano_imputa       AS INTEGER.
+DEFINE INPUT PARAMETER p-fecha_emision    AS DATE.
+DEFINE INPUT PARAMETER p-generar_facturas  AS LOGICAL.
+DEFINE INPUT PARAMETER codigo_empresa LIKE empresa.cdg_empresa NO-UNDO.
+DEFINE INPUT PARAMETER uusuario LIKE usuario.cdg_usuario NO-UNDO.
+DEFINE OUTPUT PARAMETER xfile AS CHAR NO-UNDO.
+DEFINE VAR que_empresa AS CHAR.
+DEFINE VAR vtanque AS char NO-UNDO.
+DEFINE VAR v-listaArticulo AS CHAR NO-UNDO.
+
+/*=========================================================================================*/
+/*                              TABLAS TEMPORALES                                          */
+/*=========================================================================================*/
+
+DEFINE TEMP-TABLE T-Fac_header               NO-UNDO LIKE Fac_header.
+DEFINE TEMP-TABLE T-Fac_detalle              NO-UNDO LIKE Fac_detalle.
+DEFINE TEMP-TABLE T-Registrable-factura      NO-UNDO LIKE Registrable-factura.
+DEFINE TEMP-TABLE T-Sub_header_vta           NO-UNDO LIKE Sub_header_vta.
+DEFINE TEMP-TABLE T-Sub_detalle_vta          NO-UNDO LIKE Sub_detalle_vta.
+DEFINE TEMP-TABLE T-Fac_header-bon           NO-UNDO LIKE Fac_header-bon.
+DEFINE TEMP-TABLE T-Fac_detalle-bon          NO-UNDO LIKE Fac_detalle-bon.
+DEFINE TEMP-TABLE T-Fac_header_impuesto      NO-UNDO LIKE Fac_header_impuesto.
+DEFINE TEMP-TABLE T-Fac_detalle_impuesto     NO-UNDO LIKE Fac_detalle_impuesto.
+
+DEFINE BUFFER administrador FOR cliente.
+/*=========================================================================================*/
+/*                                      VARIABLES                                          */
+/*=========================================================================================*/
+
+{parlocales.i}
+{nommeses.i}
+
+DEFINE VARIABLE v-reemplazos              AS CHARACTER FORMAT "X(40)" NO-UNDO.
+DEFINE VARIABLE v-cdg_factura               AS CHARACTER.
+
+DEFINE VARIABLE cotiza_dolar              AS DECIMAL NO-UNDO.
+DEFINE VARIABLE saldo_cc_anterior         AS DECIMAL NO-UNDO FORMAT "->>>,>>>,>>9.99".
+DEFINE VARIABLE v-importe_factura         AS DECIMAL NO-UNDO FORMAT "->>>,>>>,>>9.99".
+DEFINE VARIABLE x-tasa_iva                AS DECIMAL NO-UNDO.
+
+DEFINE VARIABLE g-pesos                   AS DECIMAL FORMAT "->>>,>>>,>>9.99" NO-UNDO.
+DEFINE VARIABLE g-_facturaes                 AS INTEGER FORMAT ">>>>9" NO-UNDO.
+
+DEFINE VARIABLE v-proxima_transaccion     AS INTEGER    NO-UNDO.
+DEFINE VARIABLE v-transcurridos           AS INTEGER    NO-UNDO.
+DEFINE VARIABLE v-ciclo_facturacion       AS INTEGER    NO-UNDO.
+DEFINE VARIABLE j-reemplazo               AS INTEGER    NO-UNDO.
+
+DEFINE BUFFER B-Contrato_hd FOR Contrato_hd.
+
+DEFINE TEMP-TABLE listado
+    FIELD cdg_cliente       LIKE Cliente.cdg_cliente  
+    FIELD nom_cliente       LIKE Cliente.nom_cliente 
+    FIELD DIR_cliente       LIKE cliente.direccion
+    FIELD cdg_administrador LIKE administrador.cdg_cliente
+    FIELD nom_administrador LIKE administrador.nom_cliente
+    FIELD ListaArticulos    AS CHAR FORMAT "X(20)"
+    FIELD prf_contrato      LIKE Contrato_hd.prf_contrato
+    FIELD num_contrato      LIKE Contrato_hd.num_contrato
+    FIELD importe_factura   LIKE v-importe_factura
+    FIELD saldo_cc_anterior LIKE saldo_cc_anterior
+    FIELD rige_desde        LIKE Contrato_hd.rige_desde 
+    FIELD rige_hasta        LIKE Contrato_hd.rige_hasta
+    FIELD primer_ano        LIKE Contrato_hd.primer_ano
+    FIELD primer_mes        LIKE Contrato_hd.primer_mes
+    FIELD resto_periodos    LIKE Contrato_hd.resto_periodos
+    FIELD tip_contrato      LIKE contrato_hd.tip_contrato
+    FIELD cuit              LIKE Contrato_hd.cuit.
+
+DEFINE DATASET dset FOR listado.
+
+/*=========================================================================================*/
+/*                           B L O Q U E   P R I N C I P A L                               */
+/*=========================================================================================*/
+FIND empresa WHERE empresa.cdg_empresa = codigo_empresa.
+que_empresa = Empresa.nombre.
+FIND usuario WHERE usuario.cdg_usuario = uusuario.
+
+RUN getparametroAPP.p (  INPUT  "DFMONEDA",
+                      OUTPUT v-valor_c,
+                      OUTPUT v-valor_d,
+                      OUTPUT v-valor_l,
+                      OUTPUT v-valor_n,
+                      OUTPUT v-observacion,
+                      INPUT empresa.cdg_empresa,
+                      INPUT usuario.cdg_usuario ).
+FIND Moneda WHERE Moneda.cdg_moneda = v-valor_c NO-LOCK.
+
+RUN getparametroAPP.p (  INPUT  "DFDEPOSI",
+                      OUTPUT v-valor_c,
+                      OUTPUT v-valor_d,
+                      OUTPUT v-valor_l,
+                      OUTPUT v-valor_n,
+                      OUTPUT v-observacion, 
+                      INPUT empresa.cdg_empresa,
+                      INPUT usuario.cdg_usuario).
+
+FIND Deposito WHERE Deposito.cdg_deposito = v-valor_c NO-LOCK.
+
+
+FIND Entidad WHERE Entidad.cdg_entidad = Empresa.cdg_empresa NO-LOCK.
+
+/*RUN carparam.p.*/
+    FOR EACH Contrato_hd 
+        WHERE contrato_hd.estado = "A" AND ( Contrato_hd.rige_desde <= p-has_fecha  
+          AND Contrato_hd.rige_hasta >= p-des_fecha )
+          AND ( Contrato_hd.primer_ano * 100 + Contrato_hd.primer_mes <= p-ano_imputa * 100 + p-mes_imputa )
+          AND ( Contrato_hd.resto_periodos > 0  or Contrato_hd.cant_periodos = 0 ) 
+          AND Contrato_hd.prf_contrato <= p-has_punto 
+          AND Contrato_hd.prf_contrato >= p-des_punto 
+          NO-LOCK,
+              FIRST Cliente OF Contrato_hd NO-LOCK ,
+              FIRST administrador WHERE administrador.nro_cliente = cliente.nro_administrador NO-LOCK
+                                BREAK BY administrador.nom_cliente
+                                      BY cliente.direccion
+                                      BY Contrato_hd.num_contrato :
+        FIND Condicion_impos OF Contrato_hd NO-LOCK.
+        v-ciclo_facturacion = INTEGER(Contrato_hd.modo_facturacion).
+        FIND punto-venta WHERE Punto-venta.cdg_puntovta = Contrato_hd.prf_contrato NO-LOCK NO-ERROR.
+        IF NOT punto-venta.habilitado THEN do:
+            MESSAGE "Cliente " cliente.cdg_cliente "-" Cliente.nom_cliente SKIP " Contrato " contrato_hd.prf_contrato "-" contrato_hd.num_contrato skip
+                "Punto de venta no habilitado, verifique".
+                NEXT.
+        END.
+        IF contrato_hd.fecha_baja <> ? AND contrato_hd.fecha_baja <= p-has_fecha THEN NEXT.
+
+        v-transcurridos = ( p-ano_imputa - Contrato_hd.primer_ano ) * 12 + 
+                          ( p-mes_imputa - Contrato_hd.primer_mes ).
+
+        IF v-transcurridos MOD v-ciclo_facturacion = 0
+        THEN DO:
+        
+            IF NOT CAN-FIND(FIRST   Cta_cte OF Cliente 
+                              WHERE Cta_cte.ano = p-ano_imputa
+                                AND Cta_cte.mes = p-mes_imputa
+                                AND Cta_cte.nro_contrato = Contrato_hd.nro_contrato
+                                AND Cta_cte.cdg_imputacion = Contrato_hd.cdg_imputacion)
+            THEN DO:                      
+    
+
+                RUN generar_facturacion ( OUTPUT v-importe_factura, OUTPUT v-listaArticulo ). 
+    
+                
+                CREATE listado.
+                ASSIGN listado.cdg_cliente          = cliente.cdg_cliente             
+                       listado.nom_cliente          = cliente.nom_cliente       
+                       listado.DIR_cliente          = cliente.direccion    
+                       listado.cdg_administrador    = administrador.cdg_cliente 
+                       listado.nom_administrador    = administrador.nom_cliente
+                       listado.num_contrato         = contrato_hd.num_contrato      
+                       listado.prf_contrato         = contrato_hd.prf_contrato      
+                       listado.saldo_cc_anterior    = saldo_cc_anterior 
+                       listado.rige_desde           = contrato_hd.rige_desde        
+                       listado.rige_hasta           = contrato_hd.rige_hasta        
+                       listado.primer_ano           = contrato_hd.primer_ano        
+                       listado.primer_mes           = contrato_hd.primer_mes        
+                       listado.resto_periodos       = IF p-generar_facturas THEN contrato_hd.resto_periodos ELSE ( IF Contrato_hd.cant_periodos > 0 AND contrato_hd.resto_periodos > 0 THEN contrato_hd.resto_periodos - 1 ELSE 0 )  
+                       listado.cuit                 = cliente.cuit
+                       listado.ListaArticulos       = v-listaarticulo
+                       listado.importe_factura    = v-importe_factura.              
+                
+
+
+
+                /*
+                IF saldo_cc_anterior + v-importe_factura >= 0
+                THEN DO:
+                */
+                     g-_facturaes = g-_facturaes + 1.
+                     g-pesos   = g-pesos + v-importe_factura.
+                /*
+                END.
+                */
+    
+            END.
+        END.
+    END.       
+
+    xfile = SUBST('&1/cr-' + userid("sic") + ".xml" , SESSION:TEMP-DIRECTORY).
+    xfile = REPLACE(xfile,"/","\").
+    DATASET dset:WRITE-XML ("FILE", xfile, FALSE,
+                                     ?,"",YES,YES).
+                                   
+/*A fin de tener las definiciones solamente grabo la estructura y con eso desarrollo el reporte*/
+/*
+dataset dset:WRITE-XMLSCHEMA("FILE",'AFI/cr-generar_abonos.xsd',
+                                     yes,?,no).
+*/
+
+/*=========================================================================================*/
+/*                           P R O C E D I M I E N T O S                                   */
+/*=========================================================================================*/
+
+PROCEDURE generar_facturacion:
+
+    /*----------------------------------------------------------------*/
+    /* PARAMETRO DE SALIDA: IMPORTE DE LA FACTURA DEL CONTRATO        */
+    /*----------------------------------------------------------------*/
+
+    DEFINE OUTPUT PARAMETER p-importe_factura LIKE Fac_header.imp_total.
+    DEFINE OUTPUT PARAMETER lista AS CHAR.
+
+    /*----------------------------------------------------------------*/
+    /*                        PROCESO                                 */
+    /*----------------------------------------------------------------*/
+    
+    FIND FIRST Domicilio OF Cliente NO-LOCK.
+    FIND Vendedor OF Contrato_hd NO-LOCK.
+    FIND Condicion_venta OF Contrato_hd NO-LOCK.
+    lista = "".
+    CREATE  T-Fac_header.
+    ASSIGN  T-Fac_header.prf_comprob        = Contrato_hd.prf_contrato
+            T-fac_header.cdg_comprobante    = IF Contrato_hd.prf_contrato = 1  THEN "FACTUCLI" ELSE "FACTUCLM" 
+            T-fac_header.tip_comprob        = IF T-fac_header.cdg_comprobante = "FACTUCLI" THEN "F" + Condicion_impos.tipo_factura ELSE "FC" 
+            T-Fac_header.cdg_empresa        = Empresa.cdg_empresa
+            T-Fac_header.nro_usuario        = Usuario.nro_usuario 
+            T-Fac_header.fecha              = p-fecha_emision 
+            T-Fac_header.fecha_iva          = p-fecha_emision 
+            T-Fac_header.mes                = p-mes_imputa
+            T-Fac_header.ano                = p-ano_imputa 
+            T-Fac_header.nro_factura        = 0
+            T-Fac_header.nro_comprob        = T-Fac_header.nro_factura 
+            T-Fac_header.nro_moneda         = Moneda.nro_moneda 
+            T-Fac_header.cambio             = Moneda.cambio  
+            T-Fac_header.cdg_imputacion     = Contrato_hd.cdg_imputacion  
+            T-Fac_header.origen             = "A"            
+            T-Fac_header.num_sucursal       = ""
+            T-Fac_header.nro_cliente        = Cliente.nro_cliente
+            T-Fac_header.nro_contrato       = Contrato_hd.nro_contrato
+            T-Fac_header.nro_domicilio      = Domicilio.nro_domicilio
+            T-Fac_header.cdg_provincia      = Domicilio.cdg_provincia
+            T-Fac_header.nombre             = Cliente.nom_cliente
+            T-Fac_header.cdg_condiva        = Cliente.cdg_condiva
+            T-Fac_header.cuit               = Cliente.cuit
+            T-Fac_header.direccion          = Domicilio.direccion
+            T-Fac_header.localidad          = Domicilio.localidad
+            T-Fac_header.nro_vendedor       = Vendedor.nro_vendedor
+            T-Fac_header.nro_deposito       = Deposito.nro_deposito
+            T-Fac_header.cdg_lista          = Cliente.dfl_lista
+            T-Fac_header.ultima_linea       = 1
+            T-Fac_header.cta_cte            = YES
+            T-Fac_header.estado             = "E"
+            T-Fac_header.nro_cndventa       = Condicion_venta.nro_cndventa
+            T-Fac_header.imp_total          = 0
+            T-Fac_header.codigo_cliente     = cliente.cdg_cliente
+            T-Fac_header.texto_iva = condicion_impos.texto_iva
+            T-Fac_header.texto_condicion_venta = condicion_venta.texto
+            T-Fac_header.direccion_administrador = administrador.direccion
+            T-Fac_header.nom_Administrador = administrador.nom_cliente
+            T-Fac_header.cdg_administrador = administrador.cdg_cliente
+            t-Fac_header.nro_administrador = administrador.nro_cliente
+            T-fac_header.mostrar_admin = administrador.mostrar_admin .
+        IF ( Contrato_hd.cant_periodos - Contrato_hd.resto_periodos = 0 OR Contrato_hd.cant_periodos = 0 ) AND t-Fac_header.estado_2_impresion <> "OT" and
+            t-Fac_header.estado_2_impresion <> "I" THEN
+            t-Fac_header.estado_2_impresion = "OT".
+
+            
+       FOR EACH Contrato_dt OF Contrato_hd NO-LOCK, 
+             FIRST Articulo OF Contrato_dt NO-LOCK, 
+                   FIRST Familia_impositiva OF Articulo NO-LOCK:
+        FOR EACH Impuesto_condicion OF  Familia_impositiva 
+           WHERE Impuesto_condicion.cdg_condiva = T-Fac_header.cdg_condiva
+             AND Impuesto_condicion.cdg_empresa = T-Fac_header.cdg_empresa 
+             AND Impuesto_condicion.fch_desde <= T-Fac_header.fecha_iva
+             AND Impuesto_condicion.fch_hasta >= T-Fac_header.fecha_iva
+             AND CAN-DO(Impuesto_condicion.lista_provincias,T-Fac_header.cdg_provincia) NO-LOCK, 
+                 Impuesto OF Impuesto_condicion NO-LOCK:
+                  
+              FIND FIRST  Cliente_excencion OF Cliente 
+                  WHERE Cliente_excencion.cdg_empresa  = T-Fac_header.cdg_empresa
+                    AND Cliente_excencion.cdg_impuesto = Impuesto_condicion.cdg_impuesto
+                    AND Cliente_excencion.fch_desde <= T-Fac_header.fecha_iva
+                    AND Cliente_excencion.fch_hasta >= T-Fac_header.fecha_iva 
+                        NO-LOCK NO-ERROR.
+    
+              IF NOT AVAILABLE Cliente_excencion
+                 THEN x-tasa_iva = Impuesto_condicion.tasa.
+                 ELSE x-tasa_iva = Impuesto_condicion.tasa * ( 1 - Cliente_excencion.prc_excencion  / 100.0 ).
+        END.
+        IF contrato_dt.solocuota1 AND Contrato_hd.cant_periodos > 0 AND Contrato_hd.cant_periodos = Contrato_hd.resto_periodos THEN DO:
+            CREATE T-Fac_detalle.
+            ASSIGN T-Fac_detalle.a_granel           = NO 
+                   T-Fac_detalle.cantidad           = Contrato_dt.cantidad
+                   T-Fac_detalle.costo              = contrato_dt.precio
+                   T-Fac_detalle.detallada          = IF contrato_dt.detallada = ""  THEN Articulo.descripcion ELSE contrato_dt.detallada
+                   T-Fac_detalle.granel             = 0
+                   T-Fac_detalle.nro_articulo       = Articulo.nro_articulo
+                   T-Fac_detalle.nro_entidad        = 0
+                   T-Fac_detalle.nro_factura        = T-Fac_header.nro_factura
+                   T-Fac_detalle.nro_linea          = T-Fac_header.ultima_linea
+                   T-Fac_detalle.nro_obra           = 0
+                   T-Fac_detalle.nro_partida        = 0 
+                   T-Fac_detalle.ver_codigo         = NO
+                   T-Fac_detalle.ver_unidades       = NO
+                   T-Fac_header.ultima_linea        = T-Fac_header.ultima_linea + 1
+                   T-Fac_detalle.precio             = contrato_dt.precio.
+        END.
+        ELSE do:
+            IF contrato_dt.solocuota1 THEN NEXT.
+            CREATE T-Fac_detalle.
+            ASSIGN T-Fac_detalle.a_granel           = NO 
+                   T-Fac_detalle.cantidad           = Contrato_dt.cantidad
+                   T-Fac_detalle.costo              = contrato_dt.precio
+                   T-Fac_detalle.detallada          = IF contrato_dt.detallada = ""  THEN Articulo.descripcion ELSE contrato_dt.detallada
+                   T-Fac_detalle.granel             = 0
+                   T-Fac_detalle.nro_articulo       = Articulo.nro_articulo
+                   T-Fac_detalle.nro_entidad        = 0
+                   T-Fac_detalle.nro_factura        = T-Fac_header.nro_factura
+                   T-Fac_detalle.nro_linea          = T-Fac_header.ultima_linea
+                   T-Fac_detalle.nro_obra           = 0
+                   T-Fac_detalle.nro_partida        = 0 
+                   T-Fac_detalle.ver_codigo         = NO
+                   T-Fac_detalle.ver_unidades       = NO
+                   T-Fac_header.ultima_linea        = T-Fac_header.ultima_linea + 1
+                   T-Fac_detalle.precio             = contrato_dt.precio
+                   T-Fac_detalle.precio             = IF Contrato_hd.cant_periodos = 0 THEN T-Fac_detalle.precio ELSE T-Fac_detalle.precio / Contrato_hd.cant_periodos .
+        END.
+        
+        vtanque = "".
+        FIND Cliente_otros_datos OF cliente NO-ERROR.
+        IF AVAILABLE  Cliente_otros_datos THEN vtanque = STRING(  Cliente_otros_datos.Tanques ).
+        T-Fac_detalle.detallada = REPLACE(T-Fac_detalle.detallada,"&DESC", trim(articulo.descripcion) ).
+        T-Fac_detalle.detallada = REPLACE(T-Fac_detalle.detallada,"&DETALLADA", trim(articulo.detallada) ).
+        T-Fac_detalle.detallada = REPLACE(T-Fac_detalle.detallada,"&TANQUES", vtanque ).
+        T-Fac_detalle.detallada = REPLACE(T-Fac_detalle.detallada,"&TANQUE", vtanque ).
+        T-Fac_detalle.detallada = REPLACE(T-Fac_detalle.detallada,"&MES",nom_mes [ p-mes_imputa ] ).
+        T-Fac_detalle.detallada = REPLACE(T-Fac_detalle.detallada,"&ANO",string( p-ano_imputa ,"9999" )).
+        IF Contrato_hd.cant_periodos - Contrato_hd.resto_periodos < 0 THEN DO:
+            MESSAGE "Revise contrato " contrato_hd.nro_contrato " la cantidad de periodos y los facturados tienen problemas" VIEW-AS ALERT-BOX ERROR.
+        END.
+        ELSE T-Fac_detalle.detallada = REPLACE(T-Fac_detalle.detallada,"&CUOTA", string(Contrato_hd.cant_periodos - Contrato_hd.resto_periodos + 1, ">9") ).
+        T-Fac_detalle.detallada = REPLACE(T-Fac_detalle.detallada,"&DECUOTA",string(Contrato_hd.cant_periodos,">9" )).
+        IF LOOKUP(Articulo.cdg_tipoart , substring(lista, 2 ) ," " ) = 0 THEN
+                         ASSIGN lista = lista + " " +  Articulo.cdg_tipoart.
+    END.
+
+    IF p-generar_facturas
+          THEN DO:
+              FIND B-Contrato_hd WHERE ROWID(B-Contrato_hd) = ROWID(Contrato_hd) EXCLUSIVE-LOCK.
+              ASSIGN B-Contrato_hd.ultimo_ano     = p-ano_imputa
+                     B-Contrato_hd.ultimo_mes     = p-mes_imputa.
+              IF B-Contrato_hd.cant_periodos > 0 AND  B-Contrato_hd.resto_periodos > 0
+                  THEN B-Contrato_hd.resto_periodos = B-Contrato_hd.resto_periodos - 1.
+              RELEASE B-Contrato_hd.
+    END.
+
+
+    RUN calcular_comprobante_cliente.p (
+                             INPUT-OUTPUT TABLE T-Fac_header,
+                             INPUT-OUTPUT TABLE T-Fac_detalle,
+                             INPUT-OUTPUT TABLE T-Sub_header_vta,
+                             INPUT-OUTPUT TABLE T-Sub_detalle_vta,
+                             INPUT-OUTPUT TABLE T-Fac_header-bon,
+                             INPUT-OUTPUT TABLE T-Fac_detalle-bon,
+                             INPUT-OUTPUT TABLE T-Fac_header_impuesto,
+                             INPUT-OUTPUT TABLE T-Fac_detalle_impuesto).
+
+    FIND FIRST T-Fac_header.
+    p-importe_factura = T-Fac_header.imp_total.
+    IF t-fac_header.tip_comprob = "FB" OR t-fac_header.tip_comprob = "CB" THEN DO:
+        FOR EACH t-fac_detalle OF fac_header:
+        t-fac_detalle.subtotal_gral_cf = ROUND(t-fac_detalle.subtotal_gral_cf,0).
+        END.
+    END.
+
+    IF p-generar_facturas
+    THEN DO:
+
+        RUN emitir_comprobante_cliente.p ( 
+                              INPUT-OUTPUT TABLE T-Fac_header,
+                              INPUT-OUTPUT TABLE T-Fac_detalle,
+                              INPUT-OUTPUT TABLE T-Registrable-factura,
+                              INPUT-OUTPUT TABLE T-Sub_header_vta,
+                              INPUT-OUTPUT TABLE T-Sub_detalle_vta,
+                              INPUT-OUTPUT TABLE T-Fac_header-bon,
+                              INPUT-OUTPUT TABLE T-Fac_detalle-bon,
+                              INPUT-OUTPUT TABLE T-Fac_header_impuesto,
+                              INPUT-OUTPUT TABLE T-Fac_detalle_impuesto).
+        FIND FIRST T-Fac_header.
+
+    END.
+    lista = SUBSTRING(lista ,  2).
+
+    RUN borrar_tablas_temporales.
+
+END PROCEDURE.
+
+PROCEDURE borrar_tablas_temporales:
+
+   EMPTY TEMP-TABLE T-Fac_header.
+   EMPTY TEMP-TABLE T-Fac_detalle.
+   EMPTY TEMP-TABLE T-Fac_header-bon.
+   EMPTY TEMP-TABLE T-Fac_detalle-bon.
+   EMPTY TEMP-TABLE T-Sub_detalle_vta.
+   EMPTY TEMP-TABLE T-Sub_header_vta.
+   EMPTY TEMP-TABLE T-Fac_header_impuesto.
+   EMPTY TEMP-TABLE T-Fac_detalle_impuesto.
+       
+END PROCEDURE.
+

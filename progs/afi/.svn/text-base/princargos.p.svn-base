@@ -1,0 +1,298 @@
+/*=========================================================================================*/
+/*                               IMPRESION DE CARGOS POR COBRADOR                          */
+/*=========================================================================================*/
+/*
+DEFINE VARIABLE p-que_empresa             AS CHARACTER.
+DEFINE VARIABLE p-des_cobrador            LIKE Cobrador.cdg_cobrador INITIAL "001".
+DEFINE VARIABLE p-has_cobrador            LIKE Cobrador.cdg_cobrador INITIAL "001".
+DEFINE VARIABLE p-des_fecha               AS DATE INITIAL "11/01/2000".
+DEFINE VARIABLE p-has_fecha               AS DATE INITIAL "11/01/2000".
+DEFINE VARIABLE p-id_lote                 AS CHARACTER.
+*/
+
+DEFINE INPUT PARAMETER p-que_empresa      AS CHARACTER.
+DEFINE INPUT PARAMETER p-des_cobrador     LIKE Cobrador.cdg_cobrador.
+DEFINE INPUT PARAMETER p-has_cobrador     LIKE Cobrador.cdg_cobrador.
+DEFINE INPUT PARAMETER p-des_fecha        AS DATE.
+DEFINE INPUT PARAMETER p-has_fecha        AS DATE.
+DEFINE INPUT PARAMETER p-id_lote          AS CHARACTER.
+
+/*=========================================================================================*/
+/*                               IMPRESION DE CARGOS POR COBRADOR                          */
+/*=========================================================================================*/
+
+{defvarcomision.i}
+{nommeses.i}
+
+DEFINE VARIABLE TextColor                 AS CHARACTER INITIAL "BLACK".
+DEFINE VARIABLE bg-color                  AS CHARACTER INITIAL "BLACK".
+DEFINE VARIABLE gradiente                 AS LOGICAL INITIAL NO.
+DEFINE VARIABLE i                         AS INTEGER INITIAL 10.
+DEFINE VARIABLE ncopia                    AS INTEGER.
+DEFINE VARIABLE v-vigencia                AS CHARACTER.
+DEFINE VARIABLE letras                    AS CHARACTER.
+DEFINE VARIABLE renglones                 AS CHARACTER.
+DEFINE VARIABLE monto_letras1             AS CHARACTER.
+DEFINE VARIABLE monto_letras2             AS CHARACTER.
+
+DEFINE VARIABLE linea0                    AS INTEGER.
+DEFINE VARIABLE chr_linea                 AS CHARACTER.
+
+DEFINE STREAM Formulario.
+
+/*=========================================================================================*/
+/*                           B L O Q U E   P R I N C I P A L                               */
+/*=========================================================================================*/
+
+v-vigencia  = "Emision del " + 
+              STRING(p-des_fecha,"99/99/99") + 
+              " al " + 
+              STRING(p-has_fecha,"99/99/99").
+
+FOR EACH Cobrador NO-LOCK 
+    WHERE Cobrador.cdg_cobrador >= p-des_cobrador
+      AND Cobrador.cdg_cobrador <= p-has_cobrador:
+
+    RUN imprimir_cargo.
+END.
+
+/*=================================================================================*/
+/*                                PROCEDIMIENTOS                                   */
+/*=================================================================================*/
+
+PROCEDURE imprimir_cargo:
+
+    SESSION:NUMERIC-FORMAT = "AMERICAN".        /* Para el comando AT, para que no ponga "," */
+    OUTPUT STREAM Formulario TO "./prl/princargos.xpr" CONVERT TARGET "iso8859-1".
+
+    RUN inicia_formulario.
+
+    ncopia = 1.
+    PUT STREAM Formulario CONTROL "<AT=0,0><#1>".    
+    RUN forma.
+
+    ncopia = 2.
+    PUT STREAM Formulario CONTROL "<AT=140,0><#1>".    
+    RUN forma.
+    
+    OUTPUT STREAM Formulario CLOSE.
+
+    FILE-INFO:File-NAME = "./prl/princargos.xpr".
+    RUN printFile( FILE-INFO:FULL-PATHNAME).
+  
+END PROCEDURE.
+
+PROCEDURE inicia_formulario:
+
+/*  PUT STREAM Formulario CONTROL '<PREVIEW=70>' /*=ZoomToWidth>'*/. */
+/*  PUT STREAM Formulario CONTROL '<TOOLBAR=!PRINT>'.  */
+    
+    PUT STREAM Formulario CONTROL "<OPORTRAIT><Title=Impresion de cargos por cobrador><UNITS=mm><|2>".
+    PUT STREAM Formulario CONTROL "<FORMAT=A4>".
+
+END PROCEDURE.
+
+PROCEDURE forma:
+
+    PUT STREAM Formulario UNFORMATTED "<=#1><BGCOLOR=WHITE><AT=+28,+10><FROM><AT=+120,+190><FILLRECT)>". 
+
+    PUT STREAM Formulario UNFORMATTED "<=#1><BGCOLOR=LTGRAY><AT=+15,+10><FROM><AT=+12,+190><FILLRECT)>". 
+    RUN escribir ( INPUT "18,60", INPUT "DETALLE DE CUPONES ENTREGADOS", 14, YES).
+
+    PUT STREAM Formulario UNFORMATTED "<=#1><AT=+73,+10><FROM><AT=+8,+190><RECT>". 
+    RUN escribir ( INPUT "75,30", INPUT "TOTALES GENERALES", 10, YES).
+
+    RUN escribir ( INPUT "30,35",  INPUT "Cobrador:<B>" + Cobrador.cdg_cobrador + "</B>", INPUT 10, INPUT NO). 
+    RUN escribir ( INPUT "30,115", INPUT v-vigencia, INPUT 10, INPUT NO). 
+        
+    RUN escribir ( INPUT "38,80",  INPUT "Importes", 10, YES).
+    RUN escribir ( INPUT "38,109", INPUT "Cupones", 10, YES).
+    RUN escribir ( INPUT "38,159", INPUT "Facturas", 10, YES).
+        
+    g-cargopesos    = 0.
+    g-cargocupones  = 0.
+    g-areaspesos    = 0.
+    g-areascupones  = 0.
+    g-cargofacturas = 0.
+
+    t-cargopesos    = 0.
+    t-cargocupones  = 0.
+    t-areaspesos    = 0.
+    t-areascupones  = 0.
+    t-cargofacturas = 0.
+
+    linea0 = 45.
+    FOR EACH Cupon OF Cobrador 
+         WHERE Cupon.fecha_emision  >= p-des_fecha
+           AND Cupon.fecha_emision  <= p-has_fecha
+           AND ( Cupon.id_lote       =  p-id_lote OR p-id_lote = "*" )
+               NO-LOCK BREAK BY Cupon.cdg_empresa:
+    
+         t-cargocupones = t-cargocupones + 1.
+         t-cargopesos   = t-cargopesos   + Cupon.importe_cuota.
+
+         IF LOOKUP(Cupon.tip_comprob,"FA,FB") <> 0
+         THEN DO:
+              t-cargofacturas = t-cargofacturas + 1.
+              t-areascupones  = t-areascupones  + 1.
+              t-areaspesos    = t-areaspesos    + Cupon.importe_cuota.
+         END.
+
+         IF FIRST(Cupon.cdg_empresa)
+         THEN DO:
+              RUN escribir ( INPUT "30,65",  INPUT "Período:", INPUT 10, INPUT NO). 
+              RUN escribir ( INPUT "30,78",  INPUT "</B>" + STRING(Cupon.mes,"99") + "/" + STRING(Cupon.ano,"9999") + "</B>" , INPUT 10, INPUT NO).
+         END.
+
+         IF LAST-OF(Cupon.cdg_empresa)
+         THEN DO:
+
+             chr_linea = TRIM(STRING(linea0,">>9")).
+             RUN escribir ( INPUT chr_linea + ",48",  INPUT Cupon.cdg_empresa, INPUT 10, INPUT NO). 
+
+             RUN escribenumero ( INPUT chr_linea + ",78",  INPUT STRING(t-cargopesos,"ZZZ,ZZ9.99-"), INPUT 10, INPUT NO). 
+             RUN escribenumero ( INPUT chr_linea + ",112", INPUT STRING(t-cargocupones,"ZZZ,ZZ9"), INPUT 10, INPUT NO). 
+             RUN escribenumero ( INPUT chr_linea + ",162", INPUT STRING(t-cargofacturas,"ZZZ,ZZ9"), INPUT 10, INPUT NO). 
+
+             g-cargopesos    = g-cargopesos    + t-cargopesos.
+             g-cargocupones  = g-cargocupones  + t-cargocupones.
+             g-areaspesos    = g-areaspesos    + t-areaspesos.
+             g-areascupones  = g-areascupones  + t-areascupones.
+             g-cargofacturas = g-cargofacturas + t-cargofacturas.
+
+             t-cargopesos    = 0.
+             t-cargocupones  = 0.
+             t-areaspesos    = 0.
+             t-areascupones  = 0.
+             t-cargofacturas = 0.
+             
+             linea0 = linea0 + 5.
+         END.
+
+    END.
+
+    RUN escribenumero ( INPUT "75,78",  INPUT STRING(g-cargopesos,"ZZZ,ZZ9.99-"), INPUT 10, INPUT NO). 
+    RUN escribenumero ( INPUT "75,112", INPUT STRING(g-cargocupones,"ZZZ,ZZ9"), INPUT 10, INPUT NO). 
+    RUN escribenumero ( INPUT "75,162", INPUT STRING(g-cargofacturas,"ZZZ,ZZ9"), INPUT 10, INPUT NO). 
+
+    IF ncopia = 1
+    THEN DO:
+        RUN toletras.p ( INPUT g-cargopesos, OUTPUT letras ).
+        RUN renglons.p ( INPUT letras,
+                         INPUT 75,
+                         OUTPUT renglones,
+                         INPUT "@").
+    
+        monto_letras1 = ENTRY(1,renglones,"@").
+        IF NUM-ENTRIES(renglones,"@") = 2 
+           THEN monto_letras2 = ENTRY(2,renglones,"@").
+           ELSE monto_letras2 = "".
+    
+        monto_letras1 = monto_letras1 + FILL("*",75 - LENGTH(monto_letras1)).
+        monto_letras2 = monto_letras2 + FILL("*",130 - LENGTH(monto_letras2)).
+        
+        RUN escribir ( INPUT "85,70", 
+                       INPUT "Morón, Provincia de Buenos Aires, a los " + 
+                             STRING(DAY(p-des_fecha),">9") + 
+                             " días del mes de " + nom_mes [ MONTH(p-des_fecha) ] + " de " + STRING(YEAR(p-des_fecha),"9999") + ".",
+                       INPUT 10, 
+                       INPUT NO).
+    
+        RUN escribir ( INPUT "95,20", INPUT "El día ______________________________ pagaré sin protesto (ART. 50 - D. LEY 5965/63) " + 
+                                              " a UCREM S.R.L.",
+                       INPUT 10, 
+                       INPUT NO).
+    
+        RUN escribir ( INPUT "100,20", INPUT "la cantidad de pesos " + monto_letras1,
+                       INPUT 10, 
+                       INPUT NO).
+    
+        RUN escribir ( INPUT "105,20", INPUT monto_letras2,
+                       INPUT 10, 
+                       INPUT NO).
+    
+        RUN escribir ( INPUT "110,20", INPUT "por igual valor recibido en RECIBOS DE COBRANZA a mi entera satisfacción, pagaderos" + 
+                                             " en moneda de curso", 
+                       INPUT 10, 
+                       INPUT NO).
+    
+        RUN escribir ( INPUT "115,20", INPUT "legal en la República Argentina.", 
+                       INPUT 10, 
+                       INPUT NO).
+    
+    
+        RUN escribir ( INPUT "125,20", INPUT "ACLARACION:________________________________", 
+                       INPUT 10, 
+                       INPUT NO).
+    
+        RUN escribir ( INPUT "133,20", INPUT "DOMICILIO: __________________________________", 
+                       INPUT 10, 
+                       INPUT NO).
+    
+        RUN escribir ( INPUT "141,20", INPUT "LOCALIDAD: _________________________________", 
+                       INPUT 10, 
+                       INPUT NO).
+    
+        RUN escribir ( INPUT "137,120", INPUT "_____________________________________", 
+                       INPUT 10, 
+                       INPUT NO).
+
+    END.
+
+END PROCEDURE.
+
+PROCEDURE escribir:
+
+    DEFINE INPUT PARAMETER posicion AS CHARACTER.
+    DEFINE INPUT PARAMETER texto    AS CHARACTER.
+    DEFINE INPUT PARAMETER puntos   AS CHARACTER.
+    DEFINE INPUT PARAMETER negrita  AS LOGICAL.
+    
+    DEFINE VARIABLE linea           AS CHARACTER.
+
+    DEFINE VARIABLE i-linea         AS INTEGER.
+    DEFINE VARIABLE i-columna       AS INTEGER.
+
+    i-linea   = INTEGER(ENTRY(1,posicion,",")).
+    i-columna = INTEGER(ENTRY(2,posicion,",")).
+
+    linea = '<FGCOLOR=' + textColor + '><=#1><AT=+' + TRIM(STRING(i-linea,">>9")) + ',+' + TRIM(STRING(i-columna,">>9")) + '><FArial><P' + puntos + '>'.
+
+    IF negrita THEN linea = linea + '<B>'.
+    linea = linea + texto.
+    IF negrita THEN linea = linea + '</B>'.
+
+    PUT STREAM Formulario UNFORMATTED linea.
+
+END PROCEDURE.
+
+PROCEDURE escribenumero:
+
+    DEFINE INPUT PARAMETER posicion AS CHARACTER.
+    DEFINE INPUT PARAMETER texto    AS CHARACTER.
+    DEFINE INPUT PARAMETER puntos   AS CHARACTER.
+    DEFINE INPUT PARAMETER negrita  AS LOGICAL.
+    
+    DEFINE VARIABLE linea           AS CHARACTER.
+
+    DEFINE VARIABLE i-linea         AS INTEGER.
+    DEFINE VARIABLE i-columna       AS INTEGER.
+
+    i-linea   = INTEGER(ENTRY(1,posicion,",")).
+    i-columna = INTEGER(ENTRY(2,posicion,",")).
+
+    linea = '<FGCOLOR=' + textColor + '><=#1><AT=+' + TRIM(STRING(i-linea,">>9")) + ',+' + TRIM(STRING(i-columna,">>9")) + '><Flineprinter><P' + puntos + '>'.
+
+    IF negrita THEN linea = linea + '<B>'.
+    linea = linea + texto.
+    IF negrita THEN linea = linea + '</B>'.
+
+    PUT STREAM Formulario UNFORMATTED linea.
+
+END PROCEDURE.
+
+PROCEDURE printFile EXTERNAL "xPrint.dll" :
+
+    DEFINE INPUT PARAMETER a AS CHARACTER.
+
+END PROCEDURE.

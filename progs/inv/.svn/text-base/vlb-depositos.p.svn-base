@@ -1,0 +1,43 @@
+/*=========================================================================================*/
+/*                      VALIDACION DE BAJAS DE depositoES                              */
+/*=========================================================================================*/
+
+DEFINE INPUT  PARAMETER rid_deposito AS ROWID.
+DEFINE OUTPUT PARAMETER hay_error  AS LOGICAL.
+
+FIND Deposito WHERE ROWID(Deposito) = rid_deposito NO-LOCK.
+RUN VALIDAR_BAJA.
+
+RETURN.
+
+PROCEDURE VALIDAR_BAJA:
+
+  hay_error = YES.
+
+  IF CAN-FIND(FIRST Acumulado_stock WHERE Acumulado_stock.nro_deposito = Deposito.nro_deposito) OR
+     CAN-FIND(FIRST Ajusteinv_hd WHERE Ajusteinv_hd.nro_deposito = Deposito.nro_deposito) OR
+     CAN-FIND(FIRST Articulo-deposito WHERE Articulo-deposito.nro_deposito = Deposito.nro_deposito) OR
+     CAN-FIND(FIRST Cct_envases WHERE Cct_envases.nro_deposito = Deposito.nro_deposito) OR
+     CAN-FIND(FIRST Cct_stock WHERE Cct_stock.nro_deposito = Deposito.nro_deposito) OR
+     CAN-FIND(FIRST Deposito-ubicacion WHERE Deposito-ubicacion.nro_deposito = Deposito.nro_deposito) OR
+     CAN-FIND(FIRST Emb_header_prv WHERE Emb_header_prv.nro_deposito = Deposito.nro_deposito) OR
+     CAN-FIND(FIRST Fac_header WHERE Fac_header.nro_deposito = Deposito.nro_deposito) OR
+     CAN-FIND(FIRST Fac_header_prv WHERE Fac_header_prv.nro_deposito = Deposito.nro_deposito) OR
+     CAN-FIND(FIRST Oci_header WHERE Oci_header.nro_deposito = Deposito.nro_deposito) OR
+     CAN-FIND(FIRST Ocm_header WHERE Ocm_header.nro_deposito = Deposito.nro_deposito) OR
+     CAN-FIND(FIRST Partida-deposito WHERE Partida-deposito.nro_deposito = Deposito.nro_deposito) OR
+     CAN-FIND(FIRST Ped_header WHERE Ped_header.nro_deposito = Deposito.nro_deposito) OR
+     CAN-FIND(FIRST Rem_detalle_prv WHERE Rem_detalle_prv.nro_deposito = Deposito.nro_deposito) OR
+     CAN-FIND(FIRST Rem_header WHERE Rem_header.nro_deposito = Deposito.nro_deposito) OR
+     CAN-FIND(FIRST Rem_header_prv WHERE Rem_header_prv.nro_deposito = Deposito.nro_deposito) OR
+     CAN-FIND(FIRST Rqs_header WHERE Rqs_header.nro_deposito = Deposito.nro_deposito) OR
+     CAN-FIND(FIRST Sector-deposito WHERE Sector-deposito.nro_deposito = Deposito.nro_deposito) OR
+     CAN-FIND(FIRST Transdep_dt WHERE Transdep_dt.nro_deposito = Deposito.nro_deposito) OR
+     CAN-FIND(FIRST Transdep_hd WHERE Transdep_hd.nro_deposito = Deposito.nro_deposito) OR
+     CAN-FIND(FIRST Valeinv_dt WHERE Valeinv_dt.nro_deposito = Deposito.nro_deposito) 
+     THEN RETURN.
+
+  hay_error = NO.
+
+END PROCEDURE.
+

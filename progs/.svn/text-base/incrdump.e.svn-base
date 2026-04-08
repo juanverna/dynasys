@@ -1,0 +1,4 @@
+WARNING: The .df contains at least one new definition of an unique
+index that has been created as inactive.  Remember to use
+"proutil -C idxbuild" to activate this index.
+

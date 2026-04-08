@@ -1,0 +1,11 @@
+/*=======================================================================================================*/
+/*                 COPIA LOS DATOS DE DEFINICION DE UN MENU DE UNA EMPRESA A OTRA                        */
+/*=======================================================================================================*/
+
+DEFINE VARIABLE v-cdg_empresa LIKE Empresa.cdg_empresa INITIAL "N".
+DEFINE BUFFER B-Menu FOR Menu.
+
+FOR EACH Menu WHERE Menu.cdg_empresa = "C":
+    CREATE B-Menu.
+    BUFFER-COPY Menu TO B-Menu ASSIGN B-Menu.cdg_empresa = v-cdg_empresa.
+END.    

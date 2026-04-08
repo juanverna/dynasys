@@ -1,0 +1,34 @@
+/*=================================================================================*/
+/*               LEE LAS DEFINICIONES DE LOS PUNTOS DE VENTA                       */
+/*=================================================================================*/
+
+/*
+DEFINE INPUT PARAMETER  que_comprobante AS CHARACTER.
+DEFINE OUTPUT PARAMETER punto_venta     AS INTEGER.
+*/
+
+DEFINE VARIABLE num_version   AS CHARACTER.
+
+GET-KEY-VALUE SECTION "Dac" KEY "V-ersion" VALUE num_version.
+
+IF num_version = ? 
+THEN DO:
+
+     MESSAGE "No se ha definido el valor del número de versión. "
+             "Edite el archivo PROGRESS.INI y agregue lo siguiente:" SKIP(1)
+             "[DAC]" SKIP
+             "Version=x.x.x" SKIP(1)
+             "donde x.x.x es el número de versión correspondiente a la instalación"
+             "en su puesto de trabajo."
+             VIEW-AS ALERT-BOX ERROR TITLE "ERROR DE INSTALACION".
+
+END.
+ELSE DO:
+
+     UPDATE SPACE(4) num_version BGCOLOR 15 LABEL "Valor Actual"
+            WITH FRAME frm-punto SIDE-LABELS THREE-D FGCOLOR 0 BGCOLOR 8 FONT 4
+                 VIEW-AS DIALOG-BOX TITLE "Indique Versión".
+     PUT-KEY-VALUE SECTION "Dac" KEY "Version" /*que_comprobante*/ VALUE num_version.
+
+END.                 
+

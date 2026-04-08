@@ -1,0 +1,22 @@
+/*
+ *
+ * NAME: proword.wbt
+ * Progress Word Break Source File 
+ *
+ */
+
+version = 9
+codepage = ISO8859-1
+wordrules-name = basic
+type = 2
+
+/* Special word break rules table */
+word_attr = 
+{
+     '.',	BEFORE_DIGIT,	/* part of a word only if followed by a digit */
+     ',',	BEFORE_DIGIT,
+     '-',	BEFORE_DIGIT,
+     ''',	IGNORE,		/* completely ignore it */
+     'z',	LETTER,
+     'Z',	LETTER
+};

@@ -1,0 +1,56 @@
+/*=====================================================================================*/
+/*            GENERA LAS FICHAS DE DESPACHO PARA UN TRASLADO EN PARTICULAR             */
+/*=====================================================================================*/
+
+  DEFINE VARIABLE conservar_zona_movil AS LOGICAL.
+  DEFINE VARIABLE sino                 AS LOGICAL.
+
+  sino = NO.
+  
+  MESSAGE "Este proceso cambia las ZONAS DE DESPACHO de los regresos de todas las fichas"
+          "ABIERTAS en base a lo definido en el archivo de parámetros. Indique si desea"
+          "proseguir seleccionando el botón respectivo."
+          VIEW-AS ALERT-BOX QUESTION BUTTONS YES-NO TITLE "Confirmación" SET sino.
+
+  IF sino
+  THEN DO:
+
+    DO TRANSACTION:
+
+        FIND Parametro "MODOREGR" NO-LOCK NO-ERROR.
+        IF NOT AVAILABLE Parametro 
+           THEN conservar_zona_movil = YES.
+           ELSE IF Parametro.valor_l
+                THEN conservar_zona_movil = YES.
+                ELSE conservar_zona_movil = NO.
+      
+        FOR EACH Ficha WHERE Ficha.abierta AND Ficha.es_regreso EXCLUSIVE-LOCK:
+            
+            IF conservar_zona_movil
+               THEN RUN asignar_zona_origen.
+               ELSE RUN asignar_zona_destino.
+      
+        END.
+
+    END.
+
+  END.
+
+/*=====================================================================================*/
+/*                           P R O C E D I M I E N T O S                               */
+/*=====================================================================================*/
+
+ PROCEDURE asignar_zona_origen:
+ 
+   FIND Localidad WHERE Localidad.cdg_localidad = Ficha.cdg_localidad NO-LOCK.
+   Ficha.cdg_zona = Localidad.cdg_zona.
+
+ END PROCEDURE.
+
+ PROCEDURE asignar_zona_destino:
+
+   FIND Localidad WHERE Localidad.cdg_localidad = Ficha.cdg_localidad-dst NO-LOCK.
+   Ficha.cdg_zona = Localidad.cdg_zona.
+
+ END PROCEDURE.
+

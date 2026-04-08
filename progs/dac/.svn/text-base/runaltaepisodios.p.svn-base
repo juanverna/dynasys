@@ -1,0 +1,6 @@
+  /*====================================================================================*/
+  /*        VALIDA LA EJECUCION DEL PROGRAMA DE MANTENIMIENTO DE CLIENTES               */
+  /*====================================================================================*/
+
+  RUN valida_run.p ( INPUT "ALTAEPIS", INPUT "w-altaepisodios.w").
+  

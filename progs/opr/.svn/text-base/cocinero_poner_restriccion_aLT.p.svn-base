@@ -1,0 +1,47 @@
+    
+    DEFINE VAR k AS INT NO-UNDO.
+    FIND restriccion WHERE restriccion.nro_tipo_evento = 3 AND
+        restriccion.cdg_restriccion BEGINS "AVISO".
+    FOR EACH contrato_hd WHERE contrato_hd.nro_tipo_evento = 3:
+
+    
+        FIND cliente OF contrato_hd.
+        FIND cliente_otros_datos OF cliente NO-ERROR.
+        DO k = 1 TO contrato_hd.numero_eventos:
+
+            FIND contrato_restriccion WHERE contrato_restriccion.nro_contrato = contrato_hd.nro_contrato and
+                    contrato_restriccion.sub_evento = k AND 
+                    contrato_restriccion.nro_restriccion = restriccion.nro_restriccion NO-LOCK NO-ERROR.
+                
+            IF AVAILABLE contrato_restriccion THEN NEXT.
+            CREATE contrato_restriccion.
+            ASSIGN contrato_restriccion.nro_contrato = contrato_hd.nro_contrato
+                contrato_restriccion.sub_evento = k
+                contrato_restriccion.nro_restriccion = restriccion.nro_restriccion.
+            contrato_restriccion.valor = "2|2|E|" + IF AVAILABLE cliente_otros_datos THEN cliente_otros_datos.acceso ELSE "".
+        END.
+   END.
+
+
+   FIND restriccion WHERE restriccion.nro_tipo_evento = 3 AND
+       restriccion.cdg_restriccion BEGINS "ANAGUA".
+   FOR EACH contrato_hd WHERE contrato_hd.nro_tipo_evento = 3:
+
+
+       FIND cliente OF contrato_hd.
+       FIND cliente_otros_datos OF cliente NO-ERROR.
+       DO k = 1 TO contrato_hd.numero_eventos:
+
+           FIND contrato_restriccion WHERE contrato_restriccion.nro_contrato = contrato_hd.nro_contrato and
+                   contrato_restriccion.sub_evento = k AND 
+                   contrato_restriccion.nro_restriccion = restriccion.nro_restriccion NO-LOCK NO-ERROR.
+
+           IF AVAILABLE contrato_restriccion THEN NEXT.
+           CREATE contrato_restriccion.
+           ASSIGN contrato_restriccion.nro_contrato = contrato_hd.nro_contrato
+               contrato_restriccion.sub_evento = k
+               contrato_restriccion.nro_restriccion = restriccion.nro_restriccion.
+           contrato_restriccion.valor = "0".
+       END.
+  END.
+

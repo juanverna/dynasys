@@ -1,0 +1,187 @@
+/*=========================================================================================*/
+/*              REALIZA LA EMISION DEL LISTADO DE CUPONES POR COBRADOR                     */
+/*=========================================================================================*/
+
+DEFINE INPUT PARAMETER p-que_empresa      AS CHARACTER.
+DEFINE INPUT PARAMETER p-des_cobrador     LIKE Cobrador.cdg_cobrador.
+DEFINE INPUT PARAMETER p-has_cobrador     LIKE Cobrador.cdg_cobrador.
+
+DEFINE INPUT PARAMETER p-des_fecha        AS DATE.
+DEFINE INPUT PARAMETER p-has_fecha        AS DATE.
+DEFINE INPUT PARAMETER p-que_estados      AS CHARACTER.
+
+{vrshared.i "NEW"}
+{WGLISTAR.I}
+
+DEFINE VARIABLE j                         AS INTEGER.
+DEFINE VARIABLE fecha_lis                 AS DATE.     
+DEFINE VARIABLE hora_lis                  AS CHARACTER.
+DEFINE VARIABLE titulo_lis                AS CHARACTER FORMAT "X(40)".
+DEFINE VARIABLE titulo_det                AS CHARACTER FORMAT "X(40)".
+DEFINE VARIABLE que_empresa               LIKE Empresa.nombre.
+
+DEFINE VARIABLE que_archivo               AS CHARACTER.
+DEFINE VARIABLE p_printed                 AS LOGICAL.
+
+DEFINE VARIABLE pto_venta-org             LIKE Rec_header.prf_comprob.
+DEFINE VARIABLE cotiza_dolar              AS DECIMAL.
+DEFINE VARIABLE codigo_dolar              LIKE Moneda.cdg_moneda.
+DEFINE VARIABLE v-tip_comprob             LIKE Rec_header.tip_comprob FORMAT "X(3)".
+DEFINE VARIABLE prox_docum                LIKE Parametro.cdg_parametro.
+
+DEFINE VARIABLE v-tipo_compbte            LIKE Grupofam.tipo_compbte FORMAT "X(2)".
+
+DEFINE VARIABLE g-pesos                   AS DECIMAL FORMAT ">,>>>,>>9.99".
+DEFINE VARIABLE g-cupones                 AS INTEGER FORMAT ">>>>9".
+DEFINE VARIABLE a-pesos                   AS DECIMAL FORMAT ">,>>>,>>9.99".
+DEFINE VARIABLE a-cupones                 AS INTEGER FORMAT ">>>>9".
+DEFINE VARIABLE t-pesos                   AS DECIMAL FORMAT ">,>>>,>>9.99".
+DEFINE VARIABLE t-cupones                 AS INTEGER FORMAT ">>>>9".
+
+DEFINE FRAME frm-titulo HEADER
+       que_empresa
+       "Cupones por Cobrador" AT 37
+       "Página:" AT 115 PAGE-NUMBER FORMAT ">>9" AT 123
+       SKIP  
+       fecha_lis       
+       titulo_lis AT 37
+       hora_lis AT 115
+       SKIP
+       titulo_det AT 37  
+       SKIP(1)
+       WITH WIDTH 135 FRAME frm-titulo PAGE-TOP USE-TEXT STREAM-IO.
+    
+FORM
+       Cupon.cdg_empresa  COLUMN-LABEL "Cod!Emp" FORMAT "X(3)"
+       Cupon.tip_comprob  COLUMN-LABEL "Tip!Comp"
+       Cupon.prf_comprob 
+       Cupon.nro_comprob 
+       Cliente.cdg_cliente 
+       Cliente.nom_cliente 
+       Domicilio.telefono         COLUMN-LABEL "Número!Teléfono"
+       Cupon.cdg_zonag 
+       Cupon.fecha_emision 
+       Cupon.mes_imputa 
+       Cupon.importe_cuota FORMAT "->>>,>>9.99"
+       Cupon.estado
+       WITH WIDTH 235 DOWN FRAME frm-listado USE-TEXT STREAM-IO .
+
+FORM
+       t-cupones LABEL "Total Cupones"  
+       t-pesos   LABEL "Total Pesos"
+       WITH WIDTH 235 DOWN FRAME frm-resumen USE-TEXT STREAM-IO SIDE-LABELS .
+
+/*=========================================================================================*/
+/*                           B L O Q U E   P R I N C I P A L                               */
+/*=========================================================================================*/
+
+que_empresa = "".
+DO j = 1 TO NUM-ENTRIES(p-que_empresa,","):
+     FIND Empresa WHERE Empresa.cdg_empresa = ENTRY(j,p-que_empresa,",") NO-LOCK.
+     que_empresa = que_empresa + Empresa.nombre.
+     IF j <> NUM-ENTRIES(p-que_empresa,",") THEN que_empresa = que_empresa + ",".
+END.
+
+/*{DIRPRINFILE.I}*/
+
+fecha_lis = TODAY.
+hora_lis = STRING(TIME,"HH:MM:SS").
+titulo_lis  = "Emision del " + STRING(p-des_fecha,"99/99/99") + 
+              " al " + 
+              STRING(p-has_fecha,"99/99/99").
+
+que_archivo = "C:\SIC-TEMP\cuporcob.txt".
+
+t-cupones = 0.
+t-pesos   = 0.
+
+OUTPUT TO VALUE(que_archivo) PAGE-SIZE 72.
+
+FOR EACH Cobrador NO-LOCK
+    WHERE Cobrador.cdg_cobrador >= p-des_cobrador
+      AND Cobrador.cdg_cobrador <= p-has_cobrador 
+          WITH FRAME frm-listado :
+
+        VIEW FRAME frm-titulo.
+
+        titulo_det = Cobrador.cdg_cobrador + " - " + Cobrador.nom_cobrador.
+    
+        FOR EACH Cupon OF Cobrador 
+            WHERE LOOKUP(Cupon.cdg_empresa,p-que_empresa,",") <> 0
+              /*
+              AND LOOKUP(Cupon.,p-lista_comptes,"|") <> 0
+              */
+
+              AND Cupon.fecha_emision   >= p-des_fecha
+              AND Cupon.fecha_emision   <= p-has_fecha
+              AND LOOKUP(Cupon.estado,p-que_estados,",") <> 0 NO-LOCK,
+                  FIRST Cliente OF Cupon NO-LOCK
+                 BREAK BY Cupon.cdg_empresa BY Cupon.cdg_zona BY Cliente.cdg_cliente
+                  WITH FRAME A STREAM-IO FONT 2 USE-TEXT WIDTH 132:
+        
+            VIEW FRAME frm-titulo.
+            
+            FIND FIRST Domicilio OF Cliente NO-LOCK NO-ERROR.
+            
+            DISPLAY
+                Cupon.cdg_empresa 
+                Cupon.tip_comprob 
+                Cupon.prf_comprob 
+                Cupon.nro_comprob 
+                Cliente.cdg_cliente 
+                Cliente.nom_cliente 
+                Domicilio.telefono
+                Cupon.cdg_zonag 
+                Cupon.fecha_emision 
+                Cupon.mes_imputa 
+                Cupon.importe_cuota
+                Cupon.estado
+                WITH FRAME frm-listado USE-TEXT STREAM-IO DOWN.
+                
+            DOWN WITH FRAME frm-listado.
+            
+            t-pesos   = t-pesos + Cupon.importe_cuota.
+            t-cupones = t-cupones + 1.
+        
+        END.
+
+    
+        UNDERLINE
+            Cupon.cdg_empresa 
+            Cupon.tip_comprob 
+            Cupon.prf_comprob 
+            Cupon.nro_comprob 
+            Cliente.cdg_cliente 
+            Cliente.nom_cliente 
+            Domicilio.telefono
+            Cupon.cdg_zonag 
+            Cupon.fecha_emision 
+            Cupon.mes_imputa 
+            Cupon.importe_cuota
+            Cupon.estado
+            WITH FRAME frm-listado.
+        DOWN WITH FRAME frm-listado.          
+      
+        DISPLAY "Total " + Cobrador.cdg_cobrador
+                                          @ Cliente.nom_cliente
+                                t-cupones @ Cupon.cdg_zonag
+                                  t-pesos @ Cupon.importe_cuota
+                                  WITH FRAME frm-listado.
+        DOWN WITH FRAME frm-listado.          
+        
+        t-cupones = 0.
+        t-pesos   = 0.
+
+        PAGE.
+
+END.
+
+OUTPUT CLOSE.
+
+RUN VERESULT.W ( INPUT "c:\sic-temp\cuporcob.txt",
+                 INPUT 2 ).
+
+/*=========================================================================================*/
+/*                           P R O C E D I M I E N T O S                                   */
+/*=========================================================================================*/
+

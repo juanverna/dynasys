@@ -1,0 +1,1881 @@
+K 26
+svn:wc:ra_dav:activity-url
+V 23
+/svn/Paulista/!svn/act/
+K 25
+svn:wc:ra_dav:version-url
+V 35
+/svn/Paulista/!svn/ver/20/progs/cxp
+END
+retener_suss.p
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/Paulista/!svn/ver/1/progs/cxp/retener_suss.p
+END
+lsmaepro.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/cxp/lsmaepro.p
+END
+w-excencion_retenciones.w
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/Paulista/!svn/ver/1/progs/cxp/w-excencion_retenciones.w
+END
+v-familia_retiva.w
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/Paulista/!svn/ver/1/progs/cxp/v-familia_retiva.w
+END
+b-familia_regimen_retsuss.w
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/Paulista/!svn/ver/1/progs/cxp/b-familia_regimen_retsuss.w
+END
+c-generar_lote_pagos.w
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/Paulista/!svn/ver/1/progs/cxp/c-generar_lote_pagos.w
+END
+d-ver_certificado_ibrutos.w
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/Paulista/!svn/ver/1/progs/cxp/d-ver_certificado_ibrutos.w
+END
+b-opg_pendientes.w
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/Paulista/!svn/ver/1/progs/cxp/b-opg_pendientes.w
+END
+b-familia_regimen.w
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/Paulista/!svn/ver/1/progs/cxp/b-familia_regimen.w
+END
+w-lspagos_xproveedor.w
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/Paulista/!svn/ver/1/progs/cxp/w-lspagos_xproveedor.w
+END
+w-retencioniva.w
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/cxp/w-retencioniva.w
+END
+prcpi501.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/cxp/prcpi501.p
+END
+lsopgpendientes.p
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/cxp/lsopgpendientes.p
+END
+b-rangoretencioniva.w
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/Paulista/!svn/ver/1/progs/cxp/b-rangoretencioniva.w
+END
+v-rangoretencionsuss.w
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/Paulista/!svn/ver/1/progs/cxp/v-rangoretencionsuss.w
+END
+w-familia_retsuss.w
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/Paulista/!svn/ver/1/progs/cxp/w-familia_retsuss.w
+END
+clretiva.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/cxp/clretiva.p
+END
+prctfiva.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/cxp/prctfiva.p
+END
+d-bonificaciones_facprov.w
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/Paulista/!svn/ver/1/progs/cxp/d-bonificaciones_facprov.w
+END
+emitir_certifiva.p
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/Paulista/!svn/ver/1/progs/cxp/emitir_certifiva.p
+END
+b-liberacion_pagos.w
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/Paulista/!svn/ver/1/progs/cxp/b-liberacion_pagos.w
+END
+v-rangoretencioniva.w
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/Paulista/!svn/ver/1/progs/cxp/v-rangoretencioniva.w
+END
+w-familia_retiva.w
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/Paulista/!svn/ver/1/progs/cxp/w-familia_retiva.w
+END
+pagosporactividad.i
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/Paulista/!svn/ver/1/progs/cxp/pagosporactividad.i
+END
+b-articulo_proveedor.w
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/Paulista/!svn/ver/1/progs/cxp/b-articulo_proveedor.w
+END
+b-familia_retibr.w
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/Paulista/!svn/ver/1/progs/cxp/b-familia_retibr.w
+END
+v-retencioniva.w
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/cxp/v-retencioniva.w
+END
+calcopag.i
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/cxp/calcopag.i
+END
+anular_opago.p
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/Paulista/!svn/ver/1/progs/cxp/anular_opago.p
+END
+acumriva.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/cxp/acumriva.p
+END
+retener_ibrutos.p
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/cxp/retener_ibrutos.p
+END
+retener_ibr_monto.p
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/Paulista/!svn/ver/1/progs/cxp/retener_ibr_monto.p
+END
+v-acumulado_pagos.w
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/Paulista/!svn/ver/1/progs/cxp/v-acumulado_pagos.w
+END
+w-rlivacompras.w
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/cxp/w-rlivacompras.w
+END
+seltpact.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/cxp/seltpact.p
+END
+v-proveedor_jurisdiccion.w
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/Paulista/!svn/ver/1/progs/cxp/v-proveedor_jurisdiccion.w
+END
+listar_certificados_ibrutos.p
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/Paulista/!svn/ver/1/progs/cxp/listar_certificados_ibrutos.p
+END
+v-fechas_cont.w
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/Paulista/!svn/ver/1/progs/cxp/v-fechas_cont.w
+END
+b-opendientes_proveedor.w
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/Paulista/!svn/ver/1/progs/cxp/b-opendientes_proveedor.w
+END
+d-regenerar_subdiario_proveedor.w
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/Paulista/!svn/ver/1/progs/cxp/d-regenerar_subdiario_proveedor.w
+END
+d-ver_imputacion_comprobante_proveedor.w
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/Paulista/!svn/ver/1/progs/cxp/d-ver_imputacion_comprobante_proveedor.w
+END
+v-proveedor-old.w
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/cxp/v-proveedor-old.w
+END
+d-buscar_proveedor.w
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/Paulista/!svn/ver/1/progs/cxp/d-buscar_proveedor.w
+END
+prrtgan000.p
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/1/progs/cxp/prrtgan000.p
+END
+c-calzaccpv.w
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/1/progs/cxp/c-calzaccpv.w
+END
+lssaldos_xtiproveedor.p
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/Paulista/!svn/ver/1/progs/cxp/lssaldos_xtiproveedor.p
+END
+v-excencion_retiva.w
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/Paulista/!svn/ver/1/progs/cxp/v-excencion_retiva.w
+END
+calrtibr.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/cxp/calrtibr.p
+END
+sellistacompras.p
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/cxp/sellistacompras.p
+END
+b-excencion_gananacias.w
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/Paulista/!svn/ver/1/progs/cxp/b-excencion_gananacias.w
+END
+d-programaccprov.p
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/Paulista/!svn/ver/1/progs/cxp/d-programaccprov.p
+END
+b-domicilios_prv.w
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/Paulista/!svn/ver/1/progs/cxp/b-domicilios_prv.w
+END
+w-lsmaestro_de_proveedores.w
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/Paulista/!svn/ver/1/progs/cxp/w-lsmaestro_de_proveedores.w
+END
+d-nominar_facprov.w
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/Paulista/!svn/ver/1/progs/cxp/d-nominar_facprov.w
+END
+v-tipopersoneria.w
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/Paulista/!svn/ver/1/progs/cxp/v-tipopersoneria.w
+END
+w-consulta_retiva.w
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/Paulista/!svn/ver/1/progs/cxp/w-consulta_retiva.w
+END
+d-sel_facprov_ambigua.w
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/Paulista/!svn/ver/1/progs/cxp/d-sel_facprov_ambigua.w
+END
+generar_ordenes_de_pago.p
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/Paulista/!svn/ver/1/progs/cxp/generar_ordenes_de_pago.p
+END
+opagodoc.i
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/cxp/opagodoc.i
+END
+w-consulta_retibrutos.w
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/Paulista/!svn/ver/1/progs/cxp/w-consulta_retibrutos.w
+END
+selrtibr.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/cxp/selrtibr.p
+END
+w-retenciongan.w
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/cxp/w-retenciongan.w
+END
+v-rng-provincia.w
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/cxp/v-rng-provincia.w
+END
+b-valores_caja_cxp.w
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/Paulista/!svn/ver/1/progs/cxp/b-valores_caja_cxp.w
+END
+d-cambia_moneda_facprovs.w
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/Paulista/!svn/ver/1/progs/cxp/d-cambia_moneda_facprovs.w
+END
+d-editaccprov-all.p
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/Paulista/!svn/ver/1/progs/cxp/d-editaccprov-all.p
+END
+d-editaccprov.w
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/Paulista/!svn/ver/1/progs/cxp/d-editaccprov.w
+END
+b-rango_retgan.w
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/cxp/b-rango_retgan.w
+END
+lsfacpago.p
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/Paulista/!svn/ver/1/progs/cxp/lsfacpago.p
+END
+RTIBRUMN.P
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/cxp/RTIBRUMN.P
+END
+lsivacompras.p
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/Paulista/!svn/ver/1/progs/cxp/lsivacompras.p
+END
+prctfgan.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/cxp/prctfgan.p
+END
+lsmaepra.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/cxp/lsmaepra.p
+END
+imprimir_comprobante_proveedor.p
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/Paulista/!svn/ver/1/progs/cxp/imprimir_comprobante_proveedor.p
+END
+impficpp.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/cxp/impficpp.p
+END
+emitir_certifgan.p
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/Paulista/!svn/ver/1/progs/cxp/emitir_certifgan.p
+END
+w-lsimputacion_pagos.w
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/Paulista/!svn/ver/1/progs/cxp/w-lsimputacion_pagos.w
+END
+w-lsanticuacion_salprov.w
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/Paulista/!svn/ver/1/progs/cxp/w-lsanticuacion_salprov.w
+END
+propg016.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/cxp/propg016.p
+END
+b-participacion_societaria.w
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/Paulista/!svn/ver/1/progs/cxp/b-participacion_societaria.w
+END
+w-tipopersoneria.w
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/Paulista/!svn/ver/1/progs/cxp/w-tipopersoneria.w
+END
+b-proveedor_condicion.w
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/Paulista/!svn/ver/1/progs/cxp/b-proveedor_condicion.w
+END
+v-sub_detalle_prv.w
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/Paulista/!svn/ver/1/progs/cxp/v-sub_detalle_prv.w
+END
+lspagos_xproveedor.p
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/Paulista/!svn/ver/1/progs/cxp/lspagos_xproveedor.p
+END
+v-familia_regimen_retiva.w
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/Paulista/!svn/ver/1/progs/cxp/v-familia_regimen_retiva.w
+END
+acumrgan.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/cxp/acumrgan.p
+END
+calreten.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/cxp/calreten.p
+END
+prrtgan001.p
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/1/progs/cxp/prrtgan001.p
+END
+b-programacion_pagos.w
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/Paulista/!svn/ver/1/progs/cxp/b-programacion_pagos.w
+END
+d-selectaprv.w
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/Paulista/!svn/ver/1/progs/cxp/d-selectaprv.w
+END
+opqyriva.i
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/cxp/opqyriva.i
+END
+selrmprv.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/cxp/selrmprv.p
+END
+w-generar_lote_pagos.w
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/Paulista/!svn/ver/1/progs/cxp/w-generar_lote_pagos.w
+END
+lsctfiva.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/cxp/lsctfiva.p
+END
+b-retencioniva.w
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/cxp/b-retencioniva.w
+END
+c-transferencia_monprv.w
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/Paulista/!svn/ver/1/progs/cxp/c-transferencia_monprv.w
+END
+w-opgpendientes.w
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/cxp/w-opgpendientes.w
+END
+lspvreshistorico.p
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/Paulista/!svn/ver/1/progs/cxp/lspvreshistorico.p
+END
+d-detalle_facprov.w
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/Paulista/!svn/ver/1/progs/cxp/d-detalle_facprov.w
+END
+imprimir_certificado_iva.p
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/Paulista/!svn/ver/1/progs/cxp/imprimir_certificado_iva.p
+END
+w-lsobligaciones_pendientes.w
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/Paulista/!svn/ver/1/progs/cxp/w-lsobligaciones_pendientes.w
+END
+seltpiva.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/cxp/seltpiva.p
+END
+b-tipoproveedor.w
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/cxp/b-tipoproveedor.w
+END
+d-seldomicilio_proveedor.w
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/Paulista/!svn/ver/1/progs/cxp/d-seldomicilio_proveedor.w
+END
+w-familia_proveedores.w
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/Paulista/!svn/ver/1/progs/cxp/w-familia_proveedores.w
+END
+lsexportaret.p
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/Paulista/!svn/ver/1/progs/cxp/lsexportaret.p
+END
+b-familia_ganancias.w
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/Paulista/!svn/ver/1/progs/cxp/b-familia_ganancias.w
+END
+b-familia_regimen_retibr.w
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/Paulista/!svn/ver/1/progs/cxp/b-familia_regimen_retibr.w
+END
+b-proveedor_cai.w
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/cxp/b-proveedor_cai.w
+END
+w-proveedores.w
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/Paulista/!svn/ver/1/progs/cxp/w-proveedores.w
+END
+v-domicilio_prv.w
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/cxp/v-domicilio_prv.w
+END
+b-excencion_retiva.w
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/Paulista/!svn/ver/1/progs/cxp/b-excencion_retiva.w
+END
+v-tipoproveedor.w
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/cxp/v-tipoproveedor.w
+END
+w-tipoproveedor.w
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/cxp/w-tipoproveedor.w
+END
+vlb-familia-proveedores.p
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/Paulista/!svn/ver/1/progs/cxp/vlb-familia-proveedores.p
+END
+v-familia_ganancias.w
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/Paulista/!svn/ver/1/progs/cxp/v-familia_ganancias.w
+END
+b-familia_retsuss.w
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/Paulista/!svn/ver/1/progs/cxp/b-familia_retsuss.w
+END
+v-articulo_proveedor.w
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/Paulista/!svn/ver/1/progs/cxp/v-articulo_proveedor.w
+END
+v-familia_retibr.w
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/Paulista/!svn/ver/1/progs/cxp/v-familia_retibr.w
+END
+retener_sus_docum.p
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/Paulista/!svn/ver/1/progs/cxp/retener_sus_docum.p
+END
+w-lsobligaciones_xfecha.w
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/Paulista/!svn/ver/15/progs/cxp/w-lsobligaciones_xfecha.w
+END
+w-rlasncom.w
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/1/progs/cxp/w-rlasncom.w
+END
+v-proveedor_cai.w
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/cxp/v-proveedor_cai.w
+END
+d-detalle_opago-tab.w
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/Paulista/!svn/ver/1/progs/cxp/d-detalle_opago-tab.w
+END
+acumpago.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/cxp/acumpago.p
+END
+b-certificados_ibrutos.w
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/Paulista/!svn/ver/1/progs/cxp/b-certificados_ibrutos.w
+END
+w-retencionibr.w
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/cxp/w-retencionibr.w
+END
+b-rangoretencionibr.w
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/Paulista/!svn/ver/1/progs/cxp/b-rangoretencionibr.w
+END
+acumccpv.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/cxp/acumccpv.p
+END
+b-certificados_suss.w
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/Paulista/!svn/ver/1/progs/cxp/b-certificados_suss.w
+END
+v-rng-proveedor.w
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/cxp/v-rng-proveedor.w
+END
+w-lismovctaprv.w
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/cxp/w-lismovctaprv.w
+END
+RTIVAUMN.P
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/cxp/RTIVAUMN.P
+END
+b-familia_proveedores.w
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/Paulista/!svn/ver/1/progs/cxp/b-familia_proveedores.w
+END
+clretibr.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/cxp/clretibr.p
+END
+retener_ganancias.p
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/Paulista/!svn/ver/1/progs/cxp/retener_ganancias.p
+END
+propg001.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/cxp/propg001.p
+END
+imprimir_facprov.p
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/Paulista/!svn/ver/1/progs/cxp/imprimir_facprov.p
+END
+prctfibr.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/cxp/prctfibr.p
+END
+pruopg.p
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/svn/Paulista/!svn/ver/1/progs/cxp/pruopg.p
+END
+prfpr103.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/cxp/prfpr103.p
+END
+imprimir_opago.p
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/cxp/imprimir_opago.p
+END
+b-ctacte-prov.w
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/Paulista/!svn/ver/1/progs/cxp/b-ctacte-prov.w
+END
+emitir_certifibr.p
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/Paulista/!svn/ver/1/progs/cxp/emitir_certifibr.p
+END
+v-rangoretencionibr.w
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/Paulista/!svn/ver/1/progs/cxp/v-rangoretencionibr.w
+END
+selrtsus.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/cxp/selrtsus.p
+END
+w-familia_retibr.w
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/Paulista/!svn/ver/1/progs/cxp/w-familia_retibr.w
+END
+calcular_asiento_compras.i
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/Paulista/!svn/ver/1/progs/cxp/calcular_asiento_compras.i
+END
+v-actividad_proveedor.w
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/Paulista/!svn/ver/1/progs/cxp/v-actividad_proveedor.w
+END
+opqyrgan.i
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/cxp/opqyrgan.i
+END
+lsallopgdia.p
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/1/progs/cxp/lsallopgdia.p
+END
+v-retencionibr.w
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/cxp/v-retencionibr.w
+END
+v-par-ivacompras.w
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/Paulista/!svn/ver/1/progs/cxp/v-par-ivacompras.w
+END
+selprove.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/cxp/selprove.p
+END
+calcular_diferencia_cambio_prv.p
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/Paulista/!svn/ver/1/progs/cxp/calcular_diferencia_cambio_prv.p
+END
+cocinero_imputar_cheque_a_orden_de _pago.p
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/Paulista/!svn/ver/20/progs/cxp/cocinero_imputar_cheque_a_orden_de%20_pago.p
+END
+chrpvdoc.i
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/cxp/chrpvdoc.i
+END
+imprimir_certificado_suss.p
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/Paulista/!svn/ver/1/progs/cxp/imprimir_certificado_suss.p
+END
+v-cnd_proveedor.w
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/cxp/v-cnd_proveedor.w
+END
+emitir_diferencia_cambio_prv.p
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/Paulista/!svn/ver/1/progs/cxp/emitir_diferencia_cambio_prv.p
+END
+acumribr.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/cxp/acumribr.p
+END
+lsmaeprc.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/cxp/lsmaeprc.p
+END
+v-que-impuesto.w
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/cxp/v-que-impuesto.w
+END
+lsasientos_compras.p
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/Paulista/!svn/ver/1/progs/cxp/lsasientos_compras.p
+END
+b-tipoactividad.w
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/cxp/b-tipoactividad.w
+END
+b-sub_header_prv.w
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/Paulista/!svn/ver/1/progs/cxp/b-sub_header_prv.w
+END
+d-ver_certificado_iva.w
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/Paulista/!svn/ver/1/progs/cxp/d-ver_certificado_iva.w
+END
+emitir_opago_ant.p
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/Paulista/!svn/ver/1/progs/cxp/emitir_opago_ant.p
+END
+selccprv.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/cxp/selccprv.p
+END
+b-pagos_sin_programar.w
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/Paulista/!svn/ver/1/progs/cxp/b-pagos_sin_programar.w
+END
+w-rlasientos_compras.w
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/Paulista/!svn/ver/1/progs/cxp/w-rlasientos_compras.w
+END
+seldompv.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/cxp/seldompv.p
+END
+opqryprv.i
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/cxp/opqryprv.i
+END
+anular_forma_opago.p
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/Paulista/!svn/ver/1/progs/cxp/anular_forma_opago.p
+END
+w-consulta_retsuss.w
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/Paulista/!svn/ver/1/progs/cxp/w-consulta_retsuss.w
+END
+v-excencion_retibr.w
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/Paulista/!svn/ver/1/progs/cxp/v-excencion_retibr.w
+END
+v-tipoactividad.w
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/cxp/v-tipoactividad.w
+END
+w-lspagos_xfecha.w
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/Paulista/!svn/ver/1/progs/cxp/w-lspagos_xfecha.w
+END
+lstot_articulos_proveedores.p
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/Paulista/!svn/ver/1/progs/cxp/lstot_articulos_proveedores.p
+END
+propg002.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/cxp/propg002.p
+END
+v-familia_regimen_retsuss.w
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/Paulista/!svn/ver/1/progs/cxp/v-familia_regimen_retsuss.w
+END
+listar_certificados_ganancias.p
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/Paulista/!svn/ver/1/progs/cxp/listar_certificados_ganancias.p
+END
+v-familia_regimen.w
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/Paulista/!svn/ver/1/progs/cxp/v-familia_regimen.w
+END
+lspvresanalitico.p
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/Paulista/!svn/ver/1/progs/cxp/lspvresanalitico.p
+END
+w-lstot_articulos_proveedores.w
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/Paulista/!svn/ver/1/progs/cxp/w-lstot_articulos_proveedores.w
+END
+PROPG724.P
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/cxp/PROPG724.P
+END
+c-comprobante_proveedor.w
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/Paulista/!svn/ver/1/progs/cxp/c-comprobante_proveedor.w
+END
+levantar_ctacteprv.p
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/Paulista/!svn/ver/1/progs/cxp/levantar_ctacteprv.p
+END
+b-acumulado_pagos.w
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/Paulista/!svn/ver/1/progs/cxp/b-acumulado_pagos.w
+END
+b-retencionsuss.w
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/cxp/b-retencionsuss.w
+END
+prrtg194.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/cxp/prrtg194.p
+END
+vlrubret.i
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/cxp/vlrubret.i
+END
+lspvdethistorico.p
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/Paulista/!svn/ver/1/progs/cxp/lspvdethistorico.p
+END
+prctfga2.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/cxp/prctfga2.p
+END
+retener_sus_monto.p
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/Paulista/!svn/ver/1/progs/cxp/retener_sus_monto.p
+END
+v-retencionsuss.w
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/cxp/v-retencionsuss.w
+END
+vlb-proveedores.p
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/cxp/vlb-proveedores.p
+END
+v-proveedor.w
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/1/progs/cxp/v-proveedor.w
+END
+w-retencionsuss.w
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/cxp/w-retencionsuss.w
+END
+w-familia_ganancias.w
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/Paulista/!svn/ver/1/progs/cxp/w-familia_ganancias.w
+END
+propg193.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/cxp/propg193.p
+END
+b-certificados_iva.w
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/Paulista/!svn/ver/1/progs/cxp/b-certificados_iva.w
+END
+fichaintegral_proveedor.p
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/Paulista/!svn/ver/1/progs/cxp/fichaintegral_proveedor.p
+END
+v-familia_regimen_retibr.w
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/Paulista/!svn/ver/1/progs/cxp/v-familia_regimen_retibr.w
+END
+retener_iva_docum.p
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/Paulista/!svn/ver/1/progs/cxp/retener_iva_docum.p
+END
+opqyribr.i
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/cxp/opqyribr.i
+END
+d-crear_articulos_empleados.w
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/Paulista/!svn/ver/1/progs/cxp/d-crear_articulos_empleados.w
+END
+prrtibr000.p
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/1/progs/cxp/prrtibr000.p
+END
+calcular_comprobante_proveedor.p
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/Paulista/!svn/ver/1/progs/cxp/calcular_comprobante_proveedor.p
+END
+calcularopago.i
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/Paulista/!svn/ver/1/progs/cxp/calcularopago.i
+END
+emitir_comprobante_proveedor.p
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/Paulista/!svn/ver/1/progs/cxp/emitir_comprobante_proveedor.p
+END
+v-dsc_proveedor.w
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/cxp/v-dsc_proveedor.w
+END
+lsctfibr.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/cxp/lsctfibr.p
+END
+b-retencionibr.w
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/cxp/b-retencionibr.w
+END
+propg003.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/cxp/propg003.p
+END
+que00001.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/cxp/que00001.p
+END
+b-pagos-programados.w
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/Paulista/!svn/ver/1/progs/cxp/b-pagos-programados.w
+END
+c-corregir_Fac_header_prv.w
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/Paulista/!svn/ver/1/progs/cxp/c-corregir_Fac_header_prv.w
+END
+rtibrudc.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/cxp/rtibrudc.p
+END
+d-nominar_opago.w
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/cxp/d-nominar_opago.w
+END
+emitir_certifsus.p
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/Paulista/!svn/ver/1/progs/cxp/emitir_certifsus.p
+END
+imprimir_certificado_ibr.p
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/Paulista/!svn/ver/1/progs/cxp/imprimir_certificado_ibr.p
+END
+w-participacion_sociedades.w
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/Paulista/!svn/ver/1/progs/cxp/w-participacion_sociedades.w
+END
+v-proveedor_impositivos.w
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/Paulista/!svn/ver/1/progs/cxp/v-proveedor_impositivos.w
+END
+seltpibr.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/cxp/seltpibr.p
+END
+d-selctacteprv.w
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/cxp/d-selctacteprv.w
+END
+crear_canje.p
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/1/progs/cxp/crear_canje.p
+END
+lscomprado_xarticulo.p
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/Paulista/!svn/ver/1/progs/cxp/lscomprado_xarticulo.p
+END
+v-leyenda_cc.w
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/Paulista/!svn/ver/1/progs/cxp/v-leyenda_cc.w
+END
+b-sub_detalle_prv.w
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/Paulista/!svn/ver/1/progs/cxp/b-sub_detalle_prv.w
+END
+v-esp-moneda.w
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/Paulista/!svn/ver/1/progs/cxp/v-esp-moneda.w
+END
+lsanticuacion_salprov.p
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/Paulista/!svn/ver/1/progs/cxp/lsanticuacion_salprov.p
+END
+b-familia_retiva.w
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/Paulista/!svn/ver/1/progs/cxp/b-familia_retiva.w
+END
+d-selectar_ctacteprv.w
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/Paulista/!svn/ver/1/progs/cxp/d-selectar_ctacteprv.w
+END
+v-que-proveedor.w
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/cxp/v-que-proveedor.w
+END
+d-detalle_comprov.w
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/Paulista/!svn/ver/1/progs/cxp/d-detalle_comprov.w
+END
+b-excencion_retibr.w
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/Paulista/!svn/ver/1/progs/cxp/b-excencion_retibr.w
+END
+prcpv000.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/cxp/prcpv000.p
+END
+wfamilia_proveedores.w
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/Paulista/!svn/ver/1/progs/cxp/wfamilia_proveedores.w
+END
+lisccpro.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/cxp/lisccpro.p
+END
+b-rangoretencionsuss.w
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/Paulista/!svn/ver/1/progs/cxp/b-rangoretencionsuss.w
+END
+tgvalfrt.i
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/cxp/tgvalfrt.i
+END
+calcular_retenciones.p
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/Paulista/!svn/ver/1/progs/cxp/calcular_retenciones.p
+END
+w-liberar_pagos.w
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/cxp/w-liberar_pagos.w
+END
+propg194.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/cxp/propg194.p
+END
+lspagos_xfecha.p
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/cxp/lspagos_xfecha.p
+END
+lsexportasicore.p
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/cxp/lsexportasicore.p
+END
+v-excencion_retsus.w
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/Paulista/!svn/ver/1/progs/cxp/v-excencion_retsus.w
+END
+w-lsexportasicore.w
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/Paulista/!svn/ver/1/progs/cxp/w-lsexportasicore.w
+END
+acumular_pagos.p
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/cxp/acumular_pagos.p
+END
+prrtsus002.p
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/1/progs/cxp/prrtsus002.p
+END
+prrtibr001.p
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/1/progs/cxp/prrtibr001.p
+END
+calrtiva.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/cxp/calrtiva.p
+END
+v-familia_regimen_retsuss-1.w
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/Paulista/!svn/ver/1/progs/cxp/v-familia_regimen_retsuss-1.w
+END
+lsobligaciones_pendientes.p
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/Paulista/!svn/ver/1/progs/cxp/lsobligaciones_pendientes.p
+END
+propg004.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/cxp/propg004.p
+END
+b-generacion_lote_pagos.w
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/Paulista/!svn/ver/1/progs/cxp/b-generacion_lote_pagos.w
+END
+lislbpro.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/cxp/lislbpro.p
+END
+selrtiva.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/cxp/selrtiva.p
+END
+prfpr982.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/cxp/prfpr982.p
+END
+retroceder_anulacion_opagos.p
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/Paulista/!svn/ver/1/progs/cxp/retroceder_anulacion_opagos.p
+END
+d-seleccionar_facprov.w
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/Paulista/!svn/ver/1/progs/cxp/d-seleccionar_facprov.w
+END
+b-proveedor_jurisdiccion.w
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/Paulista/!svn/ver/1/progs/cxp/b-proveedor_jurisdiccion.w
+END
+retener_iva.p
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/1/progs/cxp/retener_iva.p
+END
+tgretenc.i
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/cxp/tgretenc.i
+END
+d-seleccionar_opago.w
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/Paulista/!svn/ver/1/progs/cxp/d-seleccionar_opago.w
+END
+w-rlexportaciti.w
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/cxp/w-rlexportaciti.w
+END
+lspvdetanalitico.p
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/Paulista/!svn/ver/1/progs/cxp/lspvdetanalitico.p
+END
+impfintg-ret.p
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/Paulista/!svn/ver/1/progs/cxp/impfintg-ret.p
+END
+b-certificados_ganancias-.w
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/Paulista/!svn/ver/1/progs/cxp/b-certificados_ganancias-.w
+END
+q-proveedor.w
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/1/progs/cxp/q-proveedor.w
+END
+lsobligaciones_xfecha.p
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/Paulista/!svn/ver/15/progs/cxp/lsobligaciones_xfecha.p
+END
+calcular_opago.p
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/cxp/calcular_opago.p
+END
+calculafacprov.i
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/cxp/calculafacprov.i
+END
+emitir_opago.p
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/Paulista/!svn/ver/1/progs/cxp/emitir_opago.p
+END
+retener_iva_monto.p
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/Paulista/!svn/ver/1/progs/cxp/retener_iva_monto.p
+END
+w-subdiario_compras.w
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/Paulista/!svn/ver/1/progs/cxp/w-subdiario_compras.w
+END
+rtivaudc.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/cxp/rtivaudc.p
+END
+prrti001.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/cxp/prrti001.p
+END
+w-consulta_retganancias.w
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/Paulista/!svn/ver/1/progs/cxp/w-consulta_retganancias.w
+END
+propg195.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/cxp/propg195.p
+END
+retener_ibr_docum.p
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/Paulista/!svn/ver/1/progs/cxp/retener_ibr_docum.p
+END
+imprimir_certificado_ganancias.p
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/Paulista/!svn/ver/1/progs/cxp/imprimir_certificado_ganancias.p
+END
+b-tipopersoneria.w
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/Paulista/!svn/ver/1/progs/cxp/b-tipopersoneria.w
+END
+anular_comprobante_proveedor.p
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/Paulista/!svn/ver/1/progs/cxp/anular_comprobante_proveedor.p
+END
+b-actividad_proveedor.w
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/Paulista/!svn/ver/1/progs/cxp/b-actividad_proveedor.w
+END
+v-familia_retsuss.w
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/Paulista/!svn/ver/1/progs/cxp/v-familia_retsuss.w
+END
+prrtibr002.p
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/1/progs/cxp/prrtibr002.p
+END
+lstot_proveedores_articulos.p
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/Paulista/!svn/ver/1/progs/cxp/lstot_proveedores_articulos.p
+END
+v-id-proveedor.w
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/cxp/v-id-proveedor.w
+END
+propg005.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/cxp/propg005.p
+END
+c-orden_de_pago.w
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/Paulista/!svn/ver/12/progs/cxp/c-orden_de_pago.w
+END
+versaldoccprv.p
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/Paulista/!svn/ver/1/progs/cxp/versaldoccprv.p
+END
+seltprov.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/cxp/seltprov.p
+END
+seltpsus.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/cxp/seltpsus.p
+END
+w-lstot_proveedores_articulos.w
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/Paulista/!svn/ver/1/progs/cxp/w-lstot_proveedores_articulos.w
+END
+b-proveedores.w
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/Paulista/!svn/ver/1/progs/cxp/b-proveedores.w
+END
+d-ver_certificado_ganancias.w
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/Paulista/!svn/ver/1/progs/cxp/d-ver_certificado_ganancias.w
+END
+d-detalle_opago.w
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/cxp/d-detalle_opago.w
+END
+v-familia_proveedores.w
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/Paulista/!svn/ver/1/progs/cxp/v-familia_proveedores.w
+END
+emitir_diferencia_prv.p
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/Paulista/!svn/ver/1/progs/cxp/emitir_diferencia_prv.p
+END
+v-excencion_gananacias.w
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/Paulista/!svn/ver/1/progs/cxp/v-excencion_gananacias.w
+END
+calrtgan.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/cxp/calrtgan.p
+END
+traer_movimiento_caja.p
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/Paulista/!svn/ver/1/progs/cxp/traer_movimiento_caja.p
+END
+b-excencion_retsus.w
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/Paulista/!svn/ver/1/progs/cxp/b-excencion_retsus.w
+END
+b-familia_regimen_retiva.w
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/Paulista/!svn/ver/1/progs/cxp/b-familia_regimen_retiva.w
+END
+w-cons_ccproveedor.w
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/Paulista/!svn/ver/1/progs/cxp/w-cons_ccproveedor.w
+END
+w-lscomprado_xarticulo.w
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/Paulista/!svn/ver/1/progs/cxp/w-lscomprado_xarticulo.w
+END
+ANFRMOPG.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/cxp/ANFRMOPG.p
+END
+b-pagos_x_proveedor.w
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/Paulista/!svn/ver/1/progs/cxp/b-pagos_x_proveedor.w
+END
+validar_excencion_retenciones.p
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/Paulista/!svn/ver/1/progs/cxp/validar_excencion_retenciones.p
+END
+v-rango_retgan.w
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/cxp/v-rango_retgan.w
+END

@@ -1,0 +1,938 @@
+/*===============================================================================================*/
+/*                 REALIZA EL CALCULO DE UN COMPROBANTE DE CLIENTE                               */
+/*===============================================================================================*/
+
+/*===============================================================================================*/
+/*                           DEFINICION DE LAS TABLAS TEMPORALES                                 */
+/*===============================================================================================*/
+
+   DEFINE TEMP-TABLE T-Fac_header               NO-UNDO LIKE Fac_header.
+   DEFINE TEMP-TABLE T-Fac_detalle              NO-UNDO LIKE Fac_detalle.
+   DEFINE TEMP-TABLE T-Sub_header_vta           NO-UNDO LIKE Sub_header_vta.
+   DEFINE TEMP-TABLE T-Sub_detalle_vta          NO-UNDO LIKE Sub_detalle_vta.
+   DEFINE temp-table T-Fac_header-bon           NO-UNDO like fac_header-bon.
+   DEFINE TEMP-TABLE T-Fac_detalle-bon          NO-UNDO LIKE Fac_detalle-bon.
+   DEFINE temp-table T-Fac_header_impuesto      NO-UNDO like fac_header_impuesto.
+   DEFINE TEMP-TABLE T-Fac_detalle_impuesto     NO-UNDO LIKE Fac_detalle_impuesto.
+   DEFINE TEMP-TABLE T-Asn_header               NO-UNDO LIKE Asn_header.
+   DEFINE TEMP-TABLE T-Asn_detalle              NO-UNDO LIKE Asn_detalle.
+   DEFINE TEMP-TABLE T-Asn_totales              NO-UNDO LIKE Asn_totales.
+                                                                                                       
+/*===============================================================================================*/
+/*                               DEFINICION DE PARAMETROS                                        */
+/*===============================================================================================*/
+    
+   DEFINE INPUT-OUTPUT PARAMETER TABLE FOR T-Fac_header.
+   DEFINE INPUT-OUTPUT PARAMETER TABLE FOR T-Fac_detalle.
+   DEFINE INPUT-OUTPUT PARAMETER TABLE FOR T-Sub_header_vta.
+   DEFINE INPUT-OUTPUT PARAMETER TABLE FOR T-Sub_detalle_vta.
+   DEFINE INPUT-OUTPUT PARAMETER TABLE FOR T-Fac_header-bon.
+   DEFINE INPUT-OUTPUT PARAMETER TABLE FOR T-Fac_detalle-bon.
+   DEFINE INPUT-OUTPUT PARAMETER TABLE FOR T-Fac_header_impuesto.
+   DEFINE INPUT-OUTPUT PARAMETER TABLE FOR T-Fac_detalle_impuesto.
+   DEFINE INPUT-OUTPUT PARAMETER TABLE FOR T-Asn_header.
+   DEFINE INPUT-OUTPUT PARAMETER TABLE FOR T-Asn_detalle.
+   DEFINE INPUT-OUTPUT PARAMETER TABLE FOR T-Asn_totales.
+
+/*===============================================================================================*/
+/*                               DEFINICION DE VARIABLES                                         */
+/*===============================================================================================*/
+
+   DEFINE VARIABLE x-tasa             LIKE Cliente_impuesto.tasa.
+   DEFINE VARIABLE x-importe          AS DECIMAL.
+   DEFINE VARIABLE x-monto_imponible  AS DECIMAL.
+   DEFINE VARIABLE tasa_iva           AS DECIMAL.
+   DEFINE VARIABLE hubo_iva           AS LOGICAL.
+   DEFINE VARIABLE v-debug            AS LOGICAL.
+   DEFINE VARIABLE v-saldo_renglon    AS DECIMAL.
+   DEFINE VARIABLE v-aux_importe      AS DECIMAL.
+   DEFINE VARIABLE v-dif_redondeo     AS DECIMAL.
+
+   DEFINE BUFFER B-Impuesto FOR Impuesto.
+
+/*===============================================================================================*/
+/*                                       PROCESO                                                 */
+/*===============================================================================================*/
+
+   {findempresa.i}
+   
+   FIND Entidad WHERE Entidad.cdg_entidad = Empresa.cdg_empresa NO-LOCK.
+   FIND FIRST T-Fac_header EXCLUSIVE-LOCK.
+   FIND Punto-venta WHERE Punto-venta.cdg_empresa  = T-Fac_header.cdg_empresa
+                      AND Punto-venta.cdg_puntovta = T-Fac_header.prf_comprob
+                          NO-LOCK.
+
+   FIND Tipocomprobante OF T-Fac_header NO-LOCK.
+   FIND Obra OF T-Fac_header NO-LOCK NO-ERROR.
+   FIND Cliente OF T-Fac_header NO-LOCK.
+   FIND Familia_cliente OF Cliente NO-LOCK.
+
+/*----------------------------------------------------------------------------------------------*/
+/*                              Borrado de las tablas temporales                                */
+/*----------------------------------------------------------------------------------------------*/
+
+   EMPTY TEMP-TABLE T-Sub_header_vta.
+   EMPTY TEMP-TABLE T-Sub_detalle_vta.
+
+   EMPTY TEMP-TABLE T-Asn_header.
+   EMPTY TEMP-TABLE T-Asn_detalle.
+   EMPTY TEMP-TABLE T-Asn_totales.
+
+/*----------------------------------------------------------------------------------------------*/
+/*                        Crear registro de encabezado de subdiario                             */
+/*----------------------------------------------------------------------------------------------*/
+
+   CREATE T-Sub_header_vta.
+   BUFFER-COPY T-Fac_header TO T-Sub_header_vta
+        ASSIGN T-Sub_header_vta.nro_cuenta      = Familia_cliente.nro_cuenta
+               T-Sub_header_vta.nro_entidad     = Entidad.nro_entidad.
+   IF AVAILABLE Obra 
+       THEN T-Sub_header_vta.nro_obra        = Obra.nro_obra.
+
+/*----------------------------------------------------------------------------------------------*/
+/*    Borramos los importes de las bonificaciones y las tablas temporales de los impuestos      */
+/*----------------------------------------------------------------------------------------------*/
+
+   FOR EACH T-Fac_header-bon OF T-Fac_header EXCLUSIVE-LOCK:
+       T-Fac_header-bon.importe = 0.
+       T-Fac_header-bon.importe_cf = 0.
+   END.
+
+   EMPTY TEMP-TABLE T-Fac_header_impuesto  NO-ERROR.
+   EMPTY TEMP-TABLE T-Fac_detalle_impuesto NO-ERROR.
+
+/*----------------------------------------------------------------------------------------------*/
+/* Recorre el detalle de facturas. El subtotal GENERAL es el que surge del PRECIO * CANTIDAD.   */
+/* Descontadas las bonificaciones POR ARTICULO se obtiene el subtotal BRUTO. En base a  el, se  */
+/* descuentas prorrateadas las bonificaciones GENERALES y se halla el subtotal NETO. Los brutos */
+/* y netos que terminan en "cf" son los calculos para consumidor final                          */
+/*----------------------------------------------------------------------------------------------*/
+
+   T-Fac_header.imp_iva  = 0.
+
+   FOR EACH T-Fac_detalle OF T-Fac_header EXCLUSIVE-LOCK, Articulo NO-LOCK OF T-Fac_detalle, 
+            Familia_articulo NO-LOCK OF Articulo, Familia_impositiva OF Articulo NO-LOCK:
+
+       RUN calcular_subtotales_detalle. 
+       IF Tipocomprobante.aplica_impuestos
+       THEN DO:
+           RUN aplicar_impuestos_destino. 
+           IF T-Fac_header.cdg_provincia <> Punto-venta.cdg_provincia 
+               AND Cliente.convenio_sino 
+               AND CAN-FIND(FIRST Cliente_jurisdiccion OF Cliente WHERE Cliente_jurisdiccion.cdg_provincia = Punto-venta.cdg_provincia )
+               THEN RUN aplicar_impuestos_origen.
+       END.
+
+       IF CAN-FIND(FIRST Entidad_distribucion 
+                          WHERE Entidad_distribucion.cdg_empresa = T-Fac_header.cdg_empresa
+                            AND Entidad_distribucion.nro_entidad = T-Fac_detalle.nro_entidad)
+           THEN RUN crear_imputacion_distribuida.
+           ELSE RUN crear_imputacion_directa.            
+
+   END. /* De recorrer el detalle */             
+
+/*----------------------------------------------------------------------------------------------*/
+/*          Halla el total neto y bruto de la factura para calcular impuestos generales         */
+/*----------------------------------------------------------------------------------------------*/
+
+   ASSIGN T-Fac_header.imp_neto       = 0
+          T-Fac_header.imp_no_neto    = 0
+          T-Fac_header.imp_bruto      = 0
+          T-Fac_header.imp_descuentos = 0.
+
+   FOR EACH T-Fac_detalle OF T-Fac_header NO-LOCK, Articulo OF T-Fac_detalle NO-LOCK:
+
+       IF Articulo.sumaneto = 1
+       THEN DO:
+           T-Fac_header.imp_neto  = T-Fac_header.imp_neto  + T-Fac_detalle.subtotal_neto.
+           T-Fac_header.imp_bruto = T-Fac_header.imp_bruto + T-Fac_detalle.subtotal_bruto.
+/*            IF Tipocomprobante.aplica_bonificaciones                                                             */
+/*               THEN T-Fac_header.imp_descuentos = T-Fac_header.imp_descuentos + T-Fac_detalle.subtotal_general - */
+/*                                                  T-Fac_detalle.subtotal_bruto.                                  */
+       END.
+       ELSE DO:
+           T-Fac_header.imp_no_neto  = T-Fac_header.imp_no_neto  + T-Fac_detalle.subtotal_neto.
+       END.
+
+   END.
+
+/*----------------------------------------------------------------------------------------------*/
+/*                      Acumula los impuestos de detalle en la cabecera                         */
+/*----------------------------------------------------------------------------------------------*/
+
+   IF Tipocomprobante.aplica_impuestos
+   THEN DO:
+
+       FOR EACH T-Fac_detalle_impuesto OF T-Fac_header: 
+           
+           FIND FIRST T-Fac_header_impuesto OF T-Fac_header
+                      WHERE T-Fac_header_impuesto.cdg_impuesto = T-Fac_detalle_impuesto.cdg_impuesto
+                        AND T-Fac_header_impuesto.tasa         = T-Fac_detalle_impuesto.tasa
+                            EXCLUSIVE-LOCK NO-ERROR.
+           IF NOT AVAILABLE T-Fac_header_impuesto
+           THEN DO:
+                CREATE T-Fac_header_impuesto.
+                ASSIGN T-Fac_header_impuesto.nro_factura  = T-Fac_detalle_impuesto.nro_factura
+                       T-Fac_header_impuesto.cdg_impuesto = T-Fac_detalle_impuesto.cdg_impuesto
+                       T-Fac_header_impuesto.tasa         = T-Fac_detalle_impuesto.tasa.
+           END.
+           T-Fac_header_impuesto.monto_imponible = T-Fac_header_impuesto.monto_imponible  + T-Fac_detalle_impuesto.monto_imponible.
+         /*T-Fac_header_impuesto.importe  = T-Fac_header_impuesto.importe  + T-Fac_detalle_impuesto.importe.*/ /* Anulado, se calcula todo mas adelante */
+       END.
+       
+       T-Fac_header.imp_iva = 0.
+       T-Fac_header.imp_total = T-Fac_header.imp_neto.
+       FOR EACH T-Fac_header_impuesto OF T-Fac_header, Impuesto OF T-Fac_header_impuesto:
+           
+           FIND FIRST Impuesto_condicion 
+               WHERE Impuesto_condicion.cdg_impuesto = T-Fac_header_impuesto.cdg_impuesto 
+                 AND Impuesto_condicion.cdg_condiva = T-Fac_header.cdg_condiva
+                     NO-LOCK.
+           
+           IF ROUND(ABS(T-Fac_header_impuesto.monto_imponible) * T-Fac_header.cambio,2) >= Impuesto_condicion.valor_minimo AND
+              ROUND(ABS(T-Fac_header_impuesto.importe) * T-Fac_header.cambio,2) >= Impuesto_condicion.imp_minimo
+           THEN DO:
+
+               T-Fac_header_impuesto.importe = ABS(T-Fac_header_impuesto.monto_imponible) * T-Fac_header_impuesto.tasa / 100. /* CR 26/07/08 */
+
+               T-Fac_header.imp_total = T-Fac_header.imp_total + T-Fac_header_impuesto.importe.
+               IF Impuesto.es_iva
+                  THEN T-Fac_header.imp_iva = T-Fac_header.imp_iva + T-Fac_header_impuesto.importe.
+
+               FIND  T-Sub_detalle_vta 
+                    WHERE T-Sub_detalle_vta.cdg_empresa    = T-Fac_header.cdg_empresa
+                      AND T-Sub_detalle_vta.tip_comprob    = T-Fac_header.tip_comprob
+                      AND T-Sub_detalle_vta.prf_comprob    = T-Fac_header.prf_comprob
+                      AND T-Sub_detalle_vta.nro_comprob    = T-Fac_header.nro_comprob
+                      AND T-Sub_detalle_vta.nro_cuenta     = Impuesto.nro_cuenta
+                      AND T-Sub_detalle_vta.tipo           = 2
+                           EXCLUSIVE-LOCK NO-ERROR.
+
+               IF NOT AVAILABLE T-Sub_detalle_vta 
+               THEN DO:
+                   FIND Obra WHERE Obra.cdg_obra = T-Fac_header.cdg_empresa NO-LOCK.
+                   CREATE T-Sub_detalle_vta.
+                   ASSIGN T-Sub_detalle_vta.cdg_empresa    = T-Fac_header.cdg_empresa
+                          T-Sub_detalle_vta.tip_comprob    = T-Fac_header.tip_comprob
+                          T-Sub_detalle_vta.prf_comprob    = T-Fac_header.prf_comprob
+                          T-Sub_detalle_vta.nro_comprob    = T-Fac_header.nro_comprob
+                          T-Sub_detalle_vta.nro_cuenta     = Impuesto.nro_cuenta
+                          T-Sub_detalle_vta.nro_entidad    = T-Sub_header_vta.nro_entidad
+                          T-Sub_detalle_vta.nro_obra       = Obra.nro_obra
+                          T-Sub_detalle_vta.tipo           = 2.
+               END.
+
+               T-Sub_detalle_vta.valor = T-Sub_detalle_vta.valor  + T-Fac_header_impuesto.importe.
+
+           END.
+           ELSE DO:
+
+               /* Si el impuesto no aplica lo eliminamos de la tabla de detalle y de la tabla general */
+
+               FOR EACH T-Fac_detalle_impuesto OF T-Fac_header
+                        WHERE T-Fac_detalle_impuesto.cdg_impuesto = T-Fac_header_impuesto.cdg_impuesto:
+                   DELETE T-Fac_detalle_impuesto.
+               END.
+
+               DELETE T-Fac_header_impuesto.
+
+           END.
+       
+       END.
+
+       T-Fac_header.imp_total = T-Fac_header.imp_total + T-Fac_header.imp_no_neto.       
+
+   END.
+   ELSE DO:
+
+       T-Fac_header.imp_total = T-Fac_header.imp_neto + T-Fac_header.imp_no_neto.
+
+   END.
+
+/*----------------------------------------------------------------------------------------------*/
+/*                      Acumula las bonificaciones de la cabecera                               */
+/*----------------------------------------------------------------------------------------------*/
+
+   T-Fac_header.imp_descuentos = 0.
+   IF Tipocomprobante.aplica_bonificaciones
+   THEN DO:
+       FOR EACH T-Fac_header-bon OF T-Fac_header:
+           T-Fac_header.imp_descuentos = T-Fac_header.imp_descuentos  + T-Fac_header-bon.importe.
+       END.
+   END.
+   
+/*----------------------------------------------------------------------------------------------*/
+/*             Da vuelta los importes si el cálculo del comprobante dio negativo                */
+/*----------------------------------------------------------------------------------------------*/
+
+   IF T-Fac_header.imp_total < 0
+   THEN DO:
+       ASSIGN T-Fac_header.imp_total = ABS(T-Fac_header.imp_total)
+              T-Fac_header.imp_neto  = ABS(T-Fac_header.imp_neto) 
+              T-Fac_header.imp_iva   = ABS(T-Fac_header.imp_iva).  
+       FOR EACH T-Sub_detalle_vta:
+           T-Sub_detalle_vta.valor = T-Sub_detalle_vta.valor * ( -1 ).
+       END.
+   END.
+
+   ASSIGN T-Sub_header_vta.imp_total   = T-Fac_header.imp_total.
+
+/*----------------------------------------------------------------------------------------------*/
+/*                         REDONDEO DEL VALOR TOTAL DE LA FACTURA                               */
+/*----------------------------------------------------------------------------------------------*/
+
+FIND Condicion_impos OF T-Fac_header NO-LOCK.
+IF Condicion_impos.nivel_redondeo > 0.01
+THEN DO:
+
+    /* Redondeo del total de la factura y alamcenamiento de la diferencia producida */
+
+    T-Fac_header.imp_total = ROUND(T-Fac_header.imp_total / Condicion_impos.nivel_redondeo,0) * 
+                                    Condicion_impos.nivel_redondeo.
+
+    IF T-Sub_header_vta.imp_total <> T-Fac_header.imp_total
+    THEN DO:
+
+        v-dif_redondeo = T-Sub_header_vta.imp_total - T-Fac_header.imp_total.
+    
+        OPEN QUERY q-iva 
+            FOR EACH T-Fac_header_impuesto OF T-Fac_header, 
+                     FIRST Impuesto OF T-Fac_header_impuesto WHERE Impuesto.es_iva.
+        GET FIRST q-iva.
+        IF AVAILABLE T-Fac_header_impuesto
+        THEN DO:
+            T-Fac_header_impuesto.importe = T-Fac_header_impuesto.importe - v-dif_redondeo.
+        END.
+
+        FIND FIRST T-Sub_detalle_vta WHERE T-Sub_detalle_vta.nro_cuenta = Impuesto.nro_cuenta.
+        T-Sub_detalle_vta.valor = T-Sub_detalle_vta.valor - v-dif_redondeo.
+
+        DO WHILE v-dif_redondeo <> 0:
+            
+            FOR EACH T-Fac_detalle_impuesto OF T-Fac_header, 
+                     FIRST Impuesto OF T-Fac_detalle_impuesto WHERE Impuesto.es_iva:
+
+                IF v-dif_redondeo <> 0
+                THEN DO:
+                    IF v-dif_redondeo > 0
+                        THEN ASSIGN T-Fac_detalle_impuesto.importe = T-Fac_detalle_impuesto.importe + 0.01
+                                    v-dif_redondeo = v-dif_redondeo - 0.01.
+                        ELSE ASSIGN T-Fac_detalle_impuesto.importe = T-Fac_detalle_impuesto.importe - 0.01
+                                    v-dif_redondeo = v-dif_redondeo + 0.01.
+                END.
+
+            END.
+
+        END.
+
+        T-Sub_header_vta.imp_total = T-Fac_header.imp_total.
+
+    END.
+
+END.
+
+/*----------------------------------------------------------------------------------------------*/
+/*                      Calcula el asiento contable                                             */
+/*----------------------------------------------------------------------------------------------*/
+
+   RUN calcular_asiento_contable.
+
+
+/*----------------------------------------------------------------------------------------------*/
+/*                   HACE EL VUELCO FISICO PARA SEGUIMIENTO DEL CALCVUO                         */
+/*----------------------------------------------------------------------------------------------*/
+/*
+   RUN vuelco_fisico.
+*/
+/*===============================================================================================*/
+/*                                PROCEDIMIENTOS                                                 */
+/*===============================================================================================*/
+
+PROCEDURE calcular_subtotales_detalle:
+
+    DEFINE VARIABLE que_tasa LIKE Impuesto_condicion.tasa.
+
+          /* --------------------------------------------------- */
+          /*  El precio a CF es el precio + impuestos. SI no hay */
+          /*  impuestos, el precio_cf quedará igual al precio    */
+          /* --------------------------------------------------- */
+
+    RUN hallar_iva_detalle ( OUTPUT que_tasa ).
+
+    T-Fac_detalle.precio_cf = T-Fac_detalle.precio * ( 1 + que_tasa / 100).
+    
+          /* --------------------------------------------------- */
+          /*     Halla el total bruto del renglón de factura     */
+          /* --------------------------------------------------- */
+
+    IF Articulo.extendida
+    THEN DO:
+       T-Fac_detalle.subtotal_general = 
+           ( IF T-Fac_detalle.cantidad <> 0 
+                THEN ROUND( T-Fac_detalle.precio * T-Fac_detalle.cantidad , 2 )
+                ELSE T-Fac_detalle.precio ).
+
+       T-Fac_detalle.subtotal_gral_cf = 
+           ( IF T-Fac_detalle.cantidad <> 0 
+                THEN ROUND( T-Fac_detalle.precio_cf * T-Fac_detalle.cantidad , 2 )
+                ELSE T-Fac_detalle.precio_cf ).
+
+    END.
+    ELSE DO:
+       T-Fac_detalle.subtotal_general = 
+           ( IF T-Fac_detalle.a_granel 
+                THEN ROUND( T-Fac_detalle.precio * T-Fac_detalle.granel   , 2 )
+                ELSE ROUND( T-Fac_detalle.precio * T-Fac_detalle.cantidad , 2 ) ).
+       T-Fac_detalle.subtotal_gral_cf = 
+           ( IF T-Fac_detalle.a_granel 
+                THEN ROUND( T-Fac_detalle.precio_cf * T-Fac_detalle.granel   , 2 )
+                ELSE ROUND( T-Fac_detalle.precio_cf * T-Fac_detalle.cantidad , 2 ) ).
+
+    
+    END.            
+    
+    T-Fac_detalle.subtotal_bruto = T-Fac_detalle.subtotal_general.
+    T-Fac_detalle.subtotal_bruto_cf = T-Fac_detalle.subtotal_gral_cf.
+
+    IF Tipocomprobante.aplica_bonificaciones
+    THEN DO:
+
+          /* --------------------------------------------------- */
+          /* Descuenta las bonificaciones del renglon de detalle */
+          /* generando el importe BRUTO del renglon.             */
+          /* --------------------------------------------------- */
+
+        FOR EACH T-Fac_detalle-bon OF T-Fac_detalle EXCLUSIVE-LOCK:
+
+           T-Fac_detalle-bon.importe = ROUND(T-Fac_detalle.subtotal_bruto *
+                                       T-Fac_detalle-bon.porcentaje / 100 ,2 ).
+        
+           T-Fac_detalle-bon.importe_cf = ROUND(T-Fac_detalle.subtotal_bruto_cf *
+                                       T-Fac_detalle-bon.porcentaje / 100 ,2 ).
+
+           T-Fac_detalle.subtotal_bruto = T-Fac_detalle.subtotal_bruto - T-Fac_detalle-bon.importe.
+           T-Fac_detalle.subtotal_bruto_cf = T-Fac_detalle.subtotal_bruto_cf - T-Fac_detalle-bon.importe_cf.
+        
+        END. /* De las bonificaciones del detalle */
+
+         /* ---------------------------------------------------- */
+         /* Descuenta las bonificaciones globales prorrateadas   */
+         /* en cada renglon de factura, generando el NETO y      */
+         /* acumulando los descuentos totales para rehacer el    */
+         /* total de la factura antes de las bonificaciones      */
+         /* ---------------------------------------------------- */
+
+        ASSIGN T-Fac_detalle.subtotal_neto    = T-Fac_detalle.subtotal_bruto
+               T-Fac_detalle.subtotal_neto_cf = T-Fac_detalle.subtotal_bruto_cf.
+
+        FOR EACH T-Fac_header-bon OF T-Fac_header:
+        
+            v-aux_importe  = ROUND(T-Fac_detalle.subtotal_neto * T-Fac_header-bon.porcentaje / 100, 2 ).
+            T-Fac_header-bon.importe    = T-Fac_header-bon.importe     + v-aux_importe.
+            T-Fac_detalle.subtotal_neto = T-Fac_detalle.subtotal_neto  - v-aux_importe.
+
+            v-aux_importe  = ROUND(T-Fac_detalle.subtotal_neto_cf * T-Fac_header-bon.porcentaje / 100, 2 ).
+            T-Fac_header-bon.importe_cf    = T-Fac_header-bon.importe_cf     + v-aux_importe.
+            T-Fac_detalle.subtotal_neto_cf = T-Fac_detalle.subtotal_neto_cf  - v-aux_importe.
+
+        END.
+
+    END.
+    ELSE DO:
+
+        ASSIGN T-Fac_detalle.subtotal_neto       = T-Fac_detalle.subtotal_bruto
+               T-Fac_detalle.subtotal_neto_cf    = T-Fac_detalle.subtotal_bruto_cf.
+
+    END.
+
+END PROCEDURE.
+
+PROCEDURE aplicar_impuestos_destino:
+
+    FIND Familia_impositiva OF Articulo NO-LOCK.
+
+    FOR EACH Impuesto_condicion OF  Familia_impositiva 
+       WHERE Impuesto_condicion.cdg_condiva = T-Fac_header.cdg_condiva
+         AND Impuesto_condicion.cdg_empresa = T-Fac_header.cdg_empresa 
+         AND Impuesto_condicion.fch_desde <= T-Fac_header.fecha_iva
+         AND Impuesto_condicion.fch_hasta >= T-Fac_header.fecha_iva
+         AND CAN-DO(Impuesto_condicion.lista_provincias,T-Fac_header.cdg_provincia) NO-LOCK, 
+             FIRST Impuesto OF Impuesto_condicion NO-LOCK, 
+                   FIRST Impuesto_concepto OF Impuesto NO-LOCK 
+                         WHERE Impuesto_concepto.cdg_imputacion = T-Fac_header.cdg_imputacion:
+
+          FIND FIRST Cliente_impuesto OF Cliente
+              WHERE Cliente_impuesto.cdg_empresa = T-Fac_header.cdg_empresa
+                AND Cliente_impuesto.cdg_impuesto = Impuesto_condicion.cdg_impuesto
+                AND Cliente_impuesto.rige_desde <= T-Fac_header.fecha_iva
+                AND Cliente_impuesto.rige_hasta >= T-Fac_header.fecha_iva
+             /* AND Cliente_impuesto.cdg_provincia = T-Fac_header.cdg_provincia */
+                    NO-LOCK NO-ERROR.
+              
+          IF AVAILABLE Cliente_impuesto
+          THEN DO:
+              x-tasa = Cliente_impuesto.tasa.
+          END.
+          ELSE DO:
+              FIND FIRST  Cliente_excencion OF Cliente 
+                  WHERE Cliente_excencion.cdg_empresa  = T-Fac_header.cdg_empresa
+                    AND Cliente_excencion.cdg_impuesto = Impuesto_condicion.cdg_impuesto
+                    AND Cliente_excencion.fch_desde <= T-Fac_header.fecha_iva
+                    AND Cliente_excencion.fch_hasta >= T-Fac_header.fecha_iva 
+                        NO-LOCK NO-ERROR.
+
+              IF NOT AVAILABLE Cliente_excencion
+                 THEN x-tasa = Impuesto_condicion.tasa.
+                 ELSE x-tasa = Impuesto_condicion.tasa * ( 1 - Cliente_excencion.prc_excencion  / 100.0 ).
+          END.
+          
+          x-monto_imponible = T-Fac_detalle.subtotal_neto.
+          x-importe = x-monto_imponible * x-tasa / 100.0.
+          x-importe = ROUND(x-importe,2).
+
+          IF x-importe <> 0
+          THEN DO:
+
+              CREATE T-Fac_detalle_impuesto.
+              ASSIGN T-Fac_detalle_impuesto.nro_factura     = T-Fac_detalle.nro_factura
+                     T-Fac_detalle_impuesto.nro_linea       = T-Fac_detalle.nro_linea
+                     T-Fac_detalle_impuesto.cdg_impuesto    = Impuesto_condicion.cdg_impuesto
+                     T-Fac_detalle_impuesto.tasa            = x-tasa
+                     T-Fac_detalle_impuesto.monto_imponible = x-monto_imponible
+                     T-Fac_detalle_impuesto.importe         = x-importe.
+
+           /* MESSAGE "Considera:" Impuesto.cdg_impuesto Impuesto.nombre SKIP
+                      "tasa" x-tasa "Calculado:" x-monto_imponible * x-tasa / 100.0 SKIP
+                      "Almacena" T-Fac_detalle_impuesto.importe
+                   VIEW-AS ALERT-BOX INFO BUTTONS OK. */
+
+          END.
+    
+    END.
+    
+END PROCEDURE.
+
+PROCEDURE aplicar_impuestos_origen:
+
+    FIND Familia_impositiva OF Articulo NO-LOCK.
+
+    FOR EACH Impuesto_condicion OF  Familia_impositiva 
+       WHERE Impuesto_condicion.cdg_condiva = T-Fac_header.cdg_condiva
+         AND Impuesto_condicion.cdg_empresa = T-Fac_header.cdg_empresa 
+         AND Impuesto_condicion.fch_desde <= T-Fac_header.fecha_iva
+         AND Impuesto_condicion.fch_hasta >= T-Fac_header.fecha_iva
+         AND CAN-DO(Impuesto_condicion.lista_provincias,Punto-venta.cdg_provincia) NO-LOCK, 
+             FIRST Impuesto OF Impuesto_condicion WHERE Impuesto.tipo_impuesto = "IB" NO-LOCK:
+              
+          FIND FIRST  Cliente_excencion OF Cliente 
+                      WHERE Cliente_excencion.cdg_empresa  = T-Fac_header.cdg_empresa
+                        AND Cliente_excencion.cdg_impuesto = Impuesto_condicion.cdg_impuesto
+                        AND Cliente_excencion.fch_desde <= T-Fac_header.fecha_iva
+                        AND Cliente_excencion.fch_hasta >= T-Fac_header.fecha_iva NO-LOCK NO-ERROR.
+
+          IF NOT AVAILABLE Cliente_excencion
+             THEN x-tasa = Impuesto_condicion.tasa.
+             ELSE x-tasa = Impuesto_condicion.tasa * ( 1 - Cliente_excencion.prc_excencion  / 100.0 ).
+          
+          x-monto_imponible = T-Fac_detalle.subtotal_neto.
+          x-importe = ROUND(x-monto_imponible * x-tasa / 100.0, 2).
+
+          IF x-importe <> 0
+          THEN DO:
+              CREATE T-Fac_detalle_impuesto.
+              ASSIGN T-Fac_detalle_impuesto.nro_factura     = T-Fac_detalle.nro_factura
+                     T-Fac_detalle_impuesto.nro_linea       = T-Fac_detalle.nro_linea
+                     T-Fac_detalle_impuesto.cdg_impuesto    = Impuesto_condicion.cdg_impuesto
+                     T-Fac_detalle_impuesto.tasa            = x-tasa
+                     T-Fac_detalle_impuesto.monto_imponible = x-monto_imponible
+                     T-Fac_detalle_impuesto.importe         = x-importe.
+          END.
+    
+    END.
+    
+END PROCEDURE.
+
+PROCEDURE hallar_iva_detalle:
+
+    DEFINE OUTPUT PARAMETER p-tasa LIKE Impuesto_condicion.tasa.
+
+    FIND Familia_impositiva OF Articulo NO-LOCK.
+
+    FOR EACH Impuesto_condicion OF  Familia_impositiva 
+       WHERE Impuesto_condicion.cdg_condiva = T-Fac_header.cdg_condiva
+         AND Impuesto_condicion.cdg_empresa = T-Fac_header.cdg_empresa 
+         AND Impuesto_condicion.fch_desde <= T-Fac_header.fecha_iva
+         AND Impuesto_condicion.fch_hasta >= T-Fac_header.fecha_iva
+         AND CAN-DO(Impuesto_condicion.lista_provincias,T-Fac_header.cdg_provincia) NO-LOCK, 
+             FIRST Impuesto OF Impuesto_condicion NO-LOCK WHERE Impuesto.es_iva:
+              
+          FIND FIRST  Cliente_excencion OF Cliente 
+                      WHERE Cliente_excencion.cdg_empresa  = T-Fac_header.cdg_empresa
+                        AND Cliente_excencion.cdg_impuesto = Impuesto_condicion.cdg_impuesto
+                        AND Cliente_excencion.fch_desde <= T-Fac_header.fecha_iva
+                        AND Cliente_excencion.fch_hasta >= T-Fac_header.fecha_iva NO-LOCK NO-ERROR.
+
+          IF NOT AVAILABLE Cliente_excencion
+             THEN p-tasa = Impuesto_condicion.tasa.
+             ELSE p-tasa = Impuesto_condicion.tasa * ( 1 - Cliente_excencion.prc_excencion  / 100.0 ).
+          
+    END.
+    
+END PROCEDURE.
+
+PROCEDURE crear_imputacion_directa:
+          
+    FIND FIRST Familia_cuenta OF Familia_articulo 
+         WHERE Familia_cuenta.cdg_imputacion = T-Fac_header.cdg_imputacion 
+           AND Familia_cuenta.cdg_empresa    = T-Fac_header.cdg_empresa 
+               NO-LOCK NO-ERROR.
+    IF NOT AVAILABLE Familia_cuenta 
+    THEN DO: 
+        MESSAGE "Cdg familia art: " Familia_articulo.cdg_familia " Buscar si existe Familia_Cuenta donde Cod_imputacion: " T-Fac_header.cdg_imputacion "Cod_empresa: " T-Fac_header.cdg_empresa
+            VIEW-AS ALERT-BOX MESSAGE TITLE "Familia_cuenta no encontrada".
+        RETURN.
+    END.
+    FIND  T-Sub_detalle_vta 
+         WHERE T-Sub_detalle_vta.cdg_empresa   = T-Fac_header.cdg_empresa
+           AND T-Sub_detalle_vta.tip_comprob   = T-Fac_header.tip_comprob
+           AND T-Sub_detalle_vta.prf_comprob   = T-Fac_header.prf_comprob
+           AND T-Sub_detalle_vta.nro_comprob   = T-Fac_header.nro_comprob
+           AND T-Sub_detalle_vta.nro_cuenta    = Familia_cuenta.nro_cuenta
+           AND T-Sub_detalle_vta.nro_entidad   = T-Fac_detalle.nro_entidad
+           AND T-Sub_detalle_vta.nro_obra      = T-Fac_detalle.nro_obra
+         EXCLUSIVE-LOCK NO-ERROR.
+
+    IF NOT AVAILABLE T-Sub_detalle_vta 
+    THEN DO:
+       CREATE T-Sub_detalle_vta.
+       ASSIGN T-Sub_detalle_vta.cdg_empresa    = T-Fac_header.cdg_empresa
+              T-Sub_detalle_vta.tip_comprob    = T-Fac_header.tip_comprob
+              T-Sub_detalle_vta.prf_comprob    = T-Fac_header.prf_comprob
+              T-Sub_detalle_vta.nro_comprob    = T-Fac_header.nro_comprob
+              T-Sub_detalle_vta.nro_cuenta     = Familia_cuenta.nro_cuenta
+              T-Sub_detalle_vta.nro_entidad    = T-Fac_detalle.nro_entidad
+              T-Sub_detalle_vta.nro_obra       = T-Fac_detalle.nro_obra
+              T-Sub_detalle_vta.tipo           = 1.
+    END.
+
+    T-Sub_detalle_vta.valor = T-Sub_detalle_vta.valor + T-Fac_detalle.subtotal_neto.
+
+END PROCEDURE.
+
+PROCEDURE crear_imputacion_distribuida:
+
+    FIND FIRST Familia_cuenta OF Familia_articulo 
+         WHERE Familia_cuenta.cdg_imputacion = T-Fac_header.cdg_imputacion 
+           AND Familia_cuenta.cdg_empresa    = T-Fac_header.cdg_empresa 
+               NO-LOCK NO-ERROR.
+
+    IF NOT AVAILABLE Familia_cuenta 
+    THEN DO:
+        MESSAGE "Cdg familia art: " Familia_articulo.cdg_familia " Buscar si existe Familia_Cuenta donde Cod_imputacion: " T-Fac_header.cdg_imputacion "Cod_empresa: " T-Fac_header.cdg_empresa.
+        RETURN.
+    END.
+
+    v-saldo_renglon = T-Fac_detalle.subtotal_neto.
+    FOR EACH Entidad_distribucion 
+        WHERE Entidad_distribucion.cdg_empresa = T-Fac_header.cdg_empresa
+          AND Entidad_distribucion.nro_entidad = T-Fac_detalle.nro_entidad
+              BREAK BY Entidad_distribucion.nro_entidad:
+
+        FIND T-Sub_detalle_vta 
+             WHERE T-Sub_detalle_vta.cdg_empresa    = T-Fac_header.cdg_empresa
+               AND T-Sub_detalle_vta.tip_comprob    = T-Fac_header.tip_comprob
+               AND T-Sub_detalle_vta.prf_comprob    = T-Fac_header.prf_comprob
+               AND T-Sub_detalle_vta.nro_comprob    = T-Fac_header.nro_comprob
+               AND T-Sub_detalle_vta.nro_cuenta     = Familia_cuenta.nro_cuenta
+               AND T-Sub_detalle_vta.nro_entidad    = Entidad_distribucion.nro_entidad-dis
+               AND T-Sub_detalle_vta.nro_obra       = T-Fac_detalle.nro_obra
+             EXCLUSIVE-LOCK NO-ERROR.
+
+        IF NOT AVAILABLE T-Sub_detalle_vta 
+        THEN DO:
+           CREATE T-Sub_detalle_vta.
+           ASSIGN T-Sub_detalle_vta.cdg_empresa    = T-Fac_header.cdg_empresa
+                  T-Sub_detalle_vta.tip_comprob    = T-Fac_header.tip_comprob
+                  T-Sub_detalle_vta.prf_comprob    = T-Fac_header.prf_comprob
+                  T-Sub_detalle_vta.nro_comprob    = T-Fac_header.nro_comprob
+                  T-Sub_detalle_vta.nro_cuenta     = Familia_cuenta.nro_cuenta
+                  T-Sub_detalle_vta.nro_entidad    = Entidad_distribucion.nro_entidad-dis
+                  T-Sub_detalle_vta.nro_obra       = T-Fac_detalle.nro_obra
+                  T-Sub_detalle_vta.tipo           = 1.
+        END.
+
+        IF LAST-OF(Entidad_distribucion.nro_entidad)
+           THEN v-aux_importe = v-saldo_renglon.
+           ELSE v-aux_importe = ROUND(T-Fac_detalle.subtotal_neto * Entidad_distribucion.porcentaje / 100.0 ,2).
+
+        T-Sub_detalle_vta.valor = T-Sub_detalle_vta.valor + v-aux_importe.
+        v-saldo_renglon = v-saldo_renglon - v-aux_importe.
+    END.
+
+END PROCEDURE.
+
+PROCEDURE vuelco_fisico:
+
+    /* ======================================================================== */
+    /*                 VUELCO FISICO DE LOS DATOS DE UNA FACTURA                */
+    /* ======================================================================== */
+    
+    /*
+    FIND FIRST T-Fac_header.
+
+    OUTPUT TO "c:\sic-temp\dumpfactura.txt" PAGE-SIZE 0.
+
+    DISPLAY T-Fac_header.afecta_stock             LABEL "afecta_stock      "
+            T-Fac_header.ano                      LABEL "ano               "
+            T-Fac_header.anulado                  LABEL "anulado           "
+            T-Fac_header.aplica_minimos           LABEL "aplica_minimos    "
+            T-Fac_header.cai                      LABEL "cai               "
+            T-Fac_header.cambio                   LABEL "cambio            "
+            T-Fac_header.cambio_dolar             LABEL "cambio_dolar      "
+            T-Fac_header.cant_hojas               LABEL "cant_hojas        "
+            T-Fac_header.cdg_comprobante          LABEL "cdg_comprobante   "
+            T-Fac_header.cdg_condiva              LABEL "cdg_condiva       "
+            T-Fac_header.nro_deposito             LABEL "nro_deposito      "
+            T-Fac_header.cdg_empresa              LABEL "cdg_empresa       "
+            T-Fac_header.cdg_imputacion           LABEL "cdg_imputacion    "
+            T-Fac_header.cdg_lista                LABEL "cdg_lista         "
+            T-Fac_header.cdg_postal               LABEL "cdg_postal        "
+            T-Fac_header.cdg_postal_leg           LABEL "cdg_postal_leg    "
+            T-Fac_header.cdg_provincia            LABEL "cdg_provincia     "
+            T-Fac_header.cdg_provincia_leg        LABEL "cdg_provincia_leg "
+            T-Fac_header.cdg_zonag                LABEL "cdg_zonag         "
+            T-Fac_header.cta_cte                  LABEL "cta_cte           "
+            T-Fac_header.cuit                     LABEL "cuit              "
+            T-Fac_header.direccion                LABEL "direccion         "
+            T-Fac_header.direccion_leg            LABEL "direccion_leg     "
+            T-Fac_header.estado                   LABEL "estado            "
+            T-Fac_header.fecha                    LABEL "fecha             "
+            T-Fac_header.fecha_grab               LABEL "fecha_grab        "
+            T-Fac_header.fecha_iva                LABEL "fecha_iva         "
+            T-Fac_header.fecha_ocm                LABEL "fecha_ocm         "
+            T-Fac_header.fecha_precios            LABEL "fecha_precios     "
+            T-Fac_header.hora                     LABEL "hora              "
+            T-Fac_header.hora_grab                LABEL "hora_grab         "
+            T-Fac_header.ibrutos_sino             LABEL "ibrutos_sino      "
+            T-Fac_header.impreso                  LABEL "impreso           "
+            T-Fac_header.imp_bruto                LABEL "imp_bruto         "
+            T-Fac_header.imp_descuentos           LABEL "imp_descuentos    "
+            T-Fac_header.imp_iva                  LABEL "imp_iva           "
+            T-Fac_header.imp_neto                 LABEL "imp_neto          "
+            T-Fac_header.imp_total                LABEL "imp_total         "
+            T-Fac_header.leyenda                  LABEL "leyenda           " FORMAT "X(30)"
+            T-Fac_header.leyenda_cc               LABEL "leyenda_cc        "
+            T-Fac_header.localidad                LABEL "localidad         "
+            T-Fac_header.localidad_leg            LABEL "localidad_leg     "
+            T-Fac_header.mes                      LABEL "mes               "
+            T-Fac_header.modo_abasto              LABEL "modo_abasto       "
+            T-Fac_header.modo_remito              LABEL "modo_remito       "
+            T-Fac_header.monto_letras             LABEL "monto_letras      "
+            T-Fac_header.nombre                   LABEL "nombre            "
+            T-Fac_header.nombre_domicilio         LABEL "nombre_domicilio  "
+            T-Fac_header.nombre_leg               LABEL "nombre_leg        "
+            T-Fac_header.nro_cliente              LABEL "nro_cliente       "
+            T-Fac_header.nro_cndventa             LABEL "nro_cndventa      "
+            T-Fac_header.nro_comprob              LABEL "nro_comprob       "
+            T-Fac_header.nro_contrato             LABEL "nro_contrato      "
+            T-Fac_header.nro_domicilio            LABEL "nro_domicilio     "
+            T-Fac_header.nro_entidad              LABEL "nro_entidad       "
+            T-Fac_header.nro_factura              LABEL "nro_factura       "
+            T-Fac_header.nro_moneda               LABEL "nro_moneda        "
+            T-Fac_header.nro_obra                 LABEL "nro_obra          "
+            T-Fac_header.nro_ocm                  LABEL "nro_ocm           "
+            T-Fac_header.nro_remito               LABEL "nro_remito        "
+            T-Fac_header.nro_transaccion          LABEL "nro_transaccion   "
+            T-Fac_header.nro_usuario              LABEL "nro_usuario       "
+            T-Fac_header.nro_vendedor             LABEL "nro_vendedor      "
+            T-Fac_header.num_sucursal             LABEL "num_sucursal      "
+            T-Fac_header.observacion              LABEL "observacion       "
+            T-Fac_header.origen                   LABEL "origen            "
+            T-Fac_header.pc_name                  LABEL "pc_name           "
+            T-Fac_header.prc_canje                LABEL "prc_canje         "
+            T-Fac_header.prf_comprob              LABEL "prf_comprob       "
+            T-Fac_header.proc_estad               LABEL "proc_estad        "
+            T-Fac_header.rige_hasta               LABEL "rige_hasta        "
+            T-Fac_header.tip_comprob              LABEL "tip_comprob       "
+            T-Fac_header.ultima_linea             LABEL "ultima_linea      "
+            WITH SIDE-LABELS 4 COLUMNS STREAM-IO TITLE "Encabezado de factura" WIDTH 192.
+
+    FOR EACH T-Fac_header-bon OF T-Fac_header:
+        DISPLAY 
+            T-Fac_header-bon EXCEPT nro_factura WITH STREAM-IO
+              TITLE "Bonificaciones de cabecera".
+    END.
+
+    FOR EACH T-Fac_header_impuesto OF T-Fac_header:
+        DISPLAY 
+            T-Fac_header_impuesto EXCEPT nro_factura WITH STREAM-IO
+              TITLE "Impuestos de cabecera".
+    END.
+
+    FOR EACH T-Fac_detalle OF T-Fac_header:
+
+        DISPLAY 
+            T-Fac_detalle.nro_linea                  COLUMN-LABEL "nro!linea"   
+            T-Fac_detalle.nro_articulo               COLUMN-LABEL "nro!articulo"
+            T-Fac_detalle.nro_partida                COLUMN-LABEL "nro!partida"
+            T-Fac_detalle.cantidad                   COLUMN-LABEL "canti-!dad"
+            T-Fac_detalle.precio                     COLUMN-LABEL "precio!neto"
+            T-Fac_detalle.precio_cf                  COLUMN-LABEL "precio!cf"
+            T-Fac_detalle.subtotal_general           COLUMN-LABEL "subtotal!general"
+            T-Fac_detalle.subtotal_gral_cf           COLUMN-LABEL "subtotal!gral_cf"
+            T-Fac_detalle.subtotal_bruto             COLUMN-LABEL "subtotal!bruto"
+            T-Fac_detalle.subtotal_bruto_cf          COLUMN-LABEL "subtotal!bruto_cf"
+            T-Fac_detalle.subtotal_neto              COLUMN-LABEL "subtotal!neto"
+            T-Fac_detalle.subtotal_neto_cf           COLUMN-LABEL "subtotal!neto_cf"
+             WITH STREAM-IO TITLE "Detalle de factura" WIDTH 192.
+
+    END.
+
+    FOR EACH T-Fac_detalle-bon OF T-Fac_header:
+        DISPLAY 
+            T-Fac_detalle-bon EXCEPT nro_factura WITH STREAM-IO
+              TITLE "Bonificaciones de detalle".
+    END.
+
+    FOR EACH T-Fac_detalle_impuesto OF T-Fac_header:
+        DISPLAY  T-Fac_detalle_impuesto EXCEPT nro_factura WITH STREAM-IO
+              TITLE "Impuestos de detalle".
+    END.
+
+    OUTPUT CLOSE .
+
+    RUN veresult.w ( INPUT "c:\sic-temp\dumpfactura.txt", INPUT 22 ).
+    */
+
+END PROCEDURE.
+
+PROCEDURE calcular_asiento_contable:
+   
+   FIND Tipocomprobante OF T-Fac_header NO-LOCK.  
+   FIND FIRST T-Sub_header_vta.
+
+   FIND Cliente OF T-Fac_header NO-LOCK NO-ERROR.
+   CREATE T-Asn_header.
+   ASSIGN T-Asn_header.anulado           = NO
+          T-Asn_header.cdg_empresa       = T-Sub_header_vta.cdg_empresa
+          T-Asn_header.cdg_sigla-sic     = "FAC"
+          T-Asn_header.nro_idcabecera    = T-Fac_header.nro_factura 
+          T-Asn_header.cdg_librocontable = T-Fac_header.cdg_librocontable
+          T-Asn_header.tabla_comprobante = "Fac_header"
+          T-Asn_header.posteo            = "0"
+          
+          T-Asn_header.reexpresa_saldos  = Tipocomprobante.reexpresa_movimiento
+          T-Asn_header.cambio            = T-Sub_header_vta.cambio
+          T-Asn_header.cambio_dolar      = T-Sub_header_vta.cambio_dolar
+          T-Asn_header.fecha             = T-Sub_header_vta.fecha
+          T-Asn_header.leyenda           = T-Sub_header_vta.tip_comprob + " " +
+                                           STRING(T-Sub_header_vta.prf_comprob,"9999") + " " +
+                                           STRING(T-Sub_header_vta.nro_comprob,"99999999") +  " " +
+                                           IF AVAILABLE Cliente 
+                                              THEN "[" + Cliente.cdg_cliente + "] " + Cliente.nom_cliente
+                                              ELSE ""
+          T-Asn_header.nro_asiento       = 0
+          T-Asn_header.nro_comprob       = 0
+          T-Asn_header.nro_usuario       = Usuario.nro_usuario
+          T-Asn_header.origen            = "A"
+          T-Asn_header.tip_comprob       = "AS"
+          T-Asn_header.estado            = IF T-Sub_header_vta.contable THEN "*" ELSE "P".
+          
+
+   IF Tipocomprobante.debita  /* Debitamos encabezado si corresponde */
+   THEN DO: 
+       FIND Obra WHERE Obra.cdg_obra = T-Fac_header.cdg_empresa NO-LOCK.
+       CREATE T-Asn_detalle.
+       ASSIGN T-Asn_header.ultima_linea       = T-Asn_header.ultima_linea + 1
+              T-Asn_detalle.cdg_empresa       = T-Asn_header.cdg_empresa
+              T-Asn_detalle.credito           = 0
+              T-Asn_detalle.debito            = T-Sub_header_vta.imp_total
+              T-Asn_detalle.cambio            = T-Sub_header_vta.cambio
+              T-Asn_detalle.cambio_dolar      = 1
+              T-Asn_detalle.fecha_mayor       = T-Asn_header.fecha
+              T-Asn_detalle.nro_asiento       = T-Asn_header.nro_asiento
+              T-Asn_detalle.nro_cuenta        = T-Sub_header_vta.nro_cuenta
+              T-Asn_detalle.nro_entidad       = T-Sub_header_vta.nro_entidad
+              T-Asn_detalle.nro_linea         = T-Asn_header.ultima_linea
+              T-Asn_detalle.nro_moneda        = T-Sub_header_vta.nro_moneda
+              T-Asn_detalle.cdg_sigla-sic     = T-Asn_header.cdg_sigla-sic
+              T-Asn_detalle.cdg_librocontable = T-Asn_header.cdg_librocontable
+              T-Asn_detalle.leyen_detalle     = T-Asn_header.leyenda
+              T-Asn_detalle.nro_obra          = Obra.nro_obra
+              T-Asn_detalle.nro_subcuenta     = 0.
+
+   END.     
+
+   FOR EACH T-Sub_detalle_vta WHERE T-Sub_detalle_vta.cdg_empresa   = T-Sub_header_vta.cdg_empresa
+                                AND T-Sub_detalle_vta.tip_comprob   = T-Sub_header_vta.tip_comprob
+                                AND T-Sub_detalle_vta.prf_comprob   = T-Sub_header_vta.prf_comprob
+                                AND T-Sub_detalle_vta.nro_comprob   = T-Sub_header_vta.nro_comprob
+                                    EXCLUSIVE-LOCK, Cuenta OF T-Sub_detalle_vta:
+
+       CREATE T-Asn_detalle.
+       ASSIGN T-Asn_header.ultima_linea       = T-Asn_header.ultima_linea + 1
+              T-Asn_detalle.cdg_empresa       = T-Asn_header.cdg_empresa
+              T-Asn_detalle.fecha_mayor       = T-Asn_header.fecha
+              T-Asn_detalle.leyen_detalle     = T-Asn_header.leyenda
+              T-Asn_detalle.nro_asiento       = T-Asn_header.nro_asiento
+              T-Asn_detalle.nro_cuenta        = T-Sub_detalle_vta.nro_cuenta
+              T-Asn_detalle.nro_entidad       = T-Sub_detalle_vta.nro_entidad
+              T-Asn_detalle.nro_linea         = T-Asn_header.ultima_linea
+              T-Asn_detalle.nro_moneda        = T-Sub_header_vta.nro_moneda
+              T-Asn_detalle.nro_obra          = T-Sub_detalle_vta.nro_obra  
+              T-Asn_detalle.cdg_sigla-sic     = T-Asn_header.cdg_sigla-sic
+              T-Asn_detalle.cdg_librocontable = T-Asn_header.cdg_librocontable
+              T-Asn_detalle.leyen_detalle     = T-Asn_header.leyenda
+              T-Asn_detalle.nro_subcuenta     = 0
+              T-Asn_detalle.cambio            = T-Sub_header_vta.cambio
+              T-Asn_detalle.cambio_dolar      = 1.
+
+       IF Tipocomprobante.debita
+       THEN DO:
+           T-Asn_detalle.credito  = T-Sub_detalle_vta.valor.
+           T-Asn_detalle.debito   = 0.
+       END.
+       ELSE DO:
+           T-Asn_detalle.credito  = 0.
+           T-Asn_detalle.debito   = T-Sub_detalle_vta.valor.
+       END.
+
+
+   END. /* De los detalles de subdiario de Compras */
+       
+   IF NOT Tipocomprobante.debita /* Acreditamos encabezado si corresponde */
+   THEN DO: 
+       FIND Obra WHERE Obra.cdg_obra = T-Fac_header.cdg_empresa NO-LOCK.
+       CREATE T-Asn_detalle.
+       ASSIGN T-Asn_header.ultima_linea       = T-Asn_header.ultima_linea + 1
+              T-Asn_detalle.cdg_empresa       = T-Asn_header.cdg_empresa
+              T-Asn_detalle.credito           = T-Sub_header_vta.imp_total
+              T-Asn_detalle.debito            = 0
+                                              
+              T-Asn_detalle.cambio            = T-Sub_header_vta.cambio
+              T-Asn_detalle.cambio_dolar      = 1
+                                              
+              T-Asn_detalle.fecha_mayor       = T-Asn_header.fecha
+              T-Asn_detalle.leyen_detalle     = T-Asn_header.leyenda
+              T-Asn_detalle.nro_asiento       = T-Asn_header.nro_asiento
+              T-Asn_detalle.nro_cuenta        = T-Sub_header_vta.nro_cuenta
+              T-Asn_detalle.nro_entidad       = T-Sub_header_vta.nro_entidad
+              T-Asn_detalle.nro_linea         = T-Asn_header.ultima_linea
+              T-Asn_detalle.nro_moneda        = T-Sub_header_vta.nro_moneda
+              T-Asn_detalle.cdg_sigla-sic     = T-Asn_header.cdg_sigla-sic
+              T-Asn_detalle.cdg_librocontable = T-Asn_header.cdg_librocontable
+              T-Asn_detalle.leyen_detalle     = T-Asn_header.leyenda
+              T-Asn_detalle.nro_obra          = Obra.nro_obra
+              T-Asn_detalle.nro_subcuenta     = 0.
+
+    END.     
+
+    RUN reexpresar_asiento.p ( INPUT-OUTPUT TABLE T-Asn_header,
+                               INPUT-OUTPUT TABLE T-Asn_detalle,
+                               INPUT-OUTPUT TABLE T-Asn_totales).
+    FIND FIRST T-Asn_header.
+    
+    T-Sub_header_vta.contable = YES.
+
+END PROCEDURE.
+

@@ -1,0 +1,138 @@
+/*===================================================================================*/
+/*             Emite el listado de servicios prestados POR o PARA                    */
+/*===================================================================================*/
+
+DEFINE VARIABLE tr           AS INTEGER.
+DEFINE VARIABLE ctr          AS CHARACTER LABEL "T.Resp.".
+DEFINE VARIABLE que_{&TABLA} LIKE {&TABLA}.cdg_{&TABLA} LABEL "{&TABLA}".
+DEFINE VARIABLE chr_{&TABLA} LIKE {&TABLA}.nom_{&TABLA}.
+DEFINE VARIABLE que_fecha    AS DATE    LABEL "Fecha".
+DEFINE VARIABLE des_hora     AS INTEGER LABEL "De Hora" FORMAT "99".
+DEFINE VARIABLE has_hora     AS INTEGER LABEL "A  Hora" FORMAT "99".
+DEFINE VARIABLE des_tipoemr  AS CHARACTER LABEL "De Color" FORMAT "X(1)".
+DEFINE VARIABLE has_tipoemr  AS CHARACTER LABEL "A Color" FORMAT "X(1)".
+DEFINE VARIABLE deshas_color AS CHARACTER LABEL "De Color" FORMAT "X(15)".
+DEFINE VARIABLE arch_salida  AS CHARACTER.
+
+DEFINE VARIABLE fecha_lis    AS DATE.
+DEFINE VARIABLE hora_lis     AS CHARACTER.
+DEFINE VARIABLE p_printed    AS LOGICAL.
+DEFINE VARIABLE v-domicilio  AS CHARACTER FORMAT "X(30)" COLUMN-LABEL "Domicilio".
+DEFINE VARIABLE v-telefono   AS CHARACTER LABEL "Telefono" FORMAT "X(12)".
+DEFINE VARIABLE v-color      AS CHARACTER FORMAT "X(2)" LABEL "Co".
+
+DEFINE VARIABLE v-color_emr    AS CHARACTER EXTENT 8 
+       INITIAL ["Ro","Am","Ve","Az","Ne","Na","Li","Ma"].
+
+
+DEFINE FRAME frm-titulo HEADER
+  que_empresa 
+  "{&TITULO-LST}" AT 91 
+  "Pagina:" AT 203 PAGE-NUMBER FORMAT ">9" AT 210
+  SKIP
+  que_fecha AT 91
+  des_hora
+  " - "
+  has_hora
+  fecha_lis AT 203
+  SKIP
+  chr_{&TABLA} AT 91
+  hora_lis AT 203
+  SKIP(1)
+  WITH WIDTH 222 FRAME frm-titulo TOP-ONLY PAGE-TOP STREAM-IO.
+
+FORM
+  v-color
+  Ficha.num_ficha      COLUMN-LABEL "Numero!Incidte"
+  Ficha.cdg_subconvenio   COLUMN-LABEL "Cód.!Conv."
+  Ficha.nombre_pac     FORMAT "X(20)"
+  Ficha.hms_alta       FORMAT "X(5)" COLUMN-LABEL "Hora!Alta"
+  v-domicilio COLUMN-LABEL "Domicilio"
+  Diagnostico.dsc_diagnostico FORMAT "X(18)" COLUMN-LABEL "Diagnostico"
+  Destemer.dsc_destino FORMAT "X(15)" COLUMN-LABEL "Destino"
+  Ficha.hms_arrdom      FORMAT "X(5)" COLUMN-LABEL "Arr.!Domic"
+  Ficha.hms_saldom      FORMAT "X(5)" COLUMN-LABEL "Sal.!Domic"
+  Ficha.hms_arrhosp     FORMAT "X(5)" COLUMN-LABEL "Arr.!Hosp."
+  Ficha.hms_disponible  FORMAT "X(5)" COLUMN-LABEL "Movil!Dispn"
+  Ficha.lugar_int       FORMAT "X(15)"    
+  Ficha.recibe_int      FORMAT "X(15)"
+  Ficha.sino_coseguro COLUMN-LABEL "Pago"
+  Memo-Ficha.observacion FORMAT "X(20)"
+  WITH WIDTH 222 DOWN CENTERED FRAME frm-listado USE-TEXT STREAM-IO.
+
+UPDATE que_fecha des_hora has_hora que_{&TABLA} SKIP 
+       WITH FRAME aa SIDE-LABELS THREE-D VIEW-AS DIALOG-BOX WIDTH 90 3 COLUMNS CENTERED
+            TITLE "Ingrese parametros del listado: {&TITULO-LST}".
+
+fecha_lis = TODAY.
+hora_lis = STRING(TIME,"HH:MM:SS").
+FIND {&TABLA} WHERE {&TABLA}.cdg_{&TABLA} = que_{&TABLA} NO-LOCK.
+ASSIGN chr_{&TABLA} = {&TABLA}.nom_{&TABLA} + {&TABLA}.fax.
+
+{drsalida.i "55"} /* Direcciona la salida de impresión */
+
+FOR EACH Ficha
+    WHERE Ficha.fch_alta = que_fecha 
+      AND Ficha.hor_alta <= has_hora * 3600
+      AND Ficha.hor_alta >= des_hora * 3600
+      AND Ficha.cdg_{&TABLA} = que_{&TABLA}
+      AND Ficha.cdg_destino <> "A" NO-LOCK 
+      BREAK BY Ficha.fch_alta 
+            BY Ficha.num_ficha WITH FRAME f-listado:
+
+    VIEW FRAME frm-titulo.
+
+    FIND Diagnostico OF Ficha NO-LOCK NO-ERROR.
+    FIND Motivo      OF Ficha NO-LOCK NO-ERROR.
+    FIND Destemer    OF Ficha NO-LOCK NO-ERROR.
+    FIND Localidad   OF Ficha NO-LOCK NO-ERROR.
+    FIND FIRST Memo-ficha OF Ficha NO-LOCK NO-ERROR.
+
+    v-domicilio  = Ficha.calle_emr + " " + Ficha.nropta_emr + "-" + Localidad.dsc_localidad.
+    v-telefono   = Ficha.prefijotel_emr + "-" + Ficha.telefono_emr.
+
+    DISPLAY v-color
+            Ficha.num_ficha
+            Ficha.cdg_subconvenio
+            Ficha.nombre_pac
+            Ficha.hms_alta
+            v-domicilio 
+            Diagnostico.dsc_diagnostico WHEN AVAILABLE Diagnostico 
+            Destemer.dsc_destino WHEN AVAILABLE Destemer 
+            Ficha.hms_arrdom    
+            Ficha.hms_saldom    
+            Ficha.hms_arrhosp   
+            Ficha.hms_disponible
+            Ficha.lugar_int       
+            Ficha.recibe_int
+            Ficha.sino_coseguro 
+            Memo-Ficha.observacion WHEN AVAILBLE Memo-Ficha
+            WITH FRAME frm-listado.
+    DOWN WITH FRAME frm-listado.        
+
+END.            
+
+UNDERLINE Ficha.hms_alta
+          Ficha.num_ficha 
+          Ficha.cdg_subconvenio
+          v-domicilio 
+          Ficha.nombre_pac
+          Diagnostico.dsc_diagnostico
+          Destemer.dsc_destino
+          Ficha.hms_arrdom
+          Ficha.hms_saldom
+          Ficha.hms_arrhosp
+          Ficha.hms_disponible
+          Ficha.lugar_int
+          Ficha.recibe_int
+          Ficha.sino_coseguro
+          Memo-Ficha.observacion
+          WITH FRAME frm-listado.
+
+OUTPUT CLOSE.
+
+   /* Visualiza en pantalla el archivo de salida */
+
+RUN veresult.w ( INPUT  arch_salida ,  /* Archivo */
+                 INPUT 9 ).            /* FONT a utilizar por default */               
+

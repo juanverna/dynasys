@@ -1,0 +1,10 @@
+FIND tipo_evento WHERE tipo_evento.cdg_tipo_evento = "LT".
+DEFINE VAR rok AS LOGICAL.
+FOR EACH evento WHERE evento.nro_tipo_evento = tipo_evento.nro_tipo_evento AND NOT anulado AND evento.frealizado <> ? AND
+evento.frealizado >= 12/15/2010 AND evento.frealizado <= 12/31/2010 AND evento.sub_evento = 1 AND evento.origen = "CONTRATO":
+FIND cliente OF evento.
+FIND tarea OF cliente WHERE tarea.estado <> "D" AND ( tarea.cdg_tipotarea = "H" OR tarea.cdg_tipotarea = "J" ) NO-LOCK NO-ERROR.
+  IF NOT AVAILABLE tarea THEN DO:
+     RUN crea_tarea.p( evento.nro_evento,evento.nro_cliente, "J" , "Tarea Confirmacion Libro","Tarea Confirmacion Libro", USERID("SIC"),TODAY,"*",OUTPUT rok).
+  END.
+END.

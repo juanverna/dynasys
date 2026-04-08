@@ -1,0 +1,4 @@
+FIND Cliente WHERE cdg_cliente = "0002".
+FOR EACH Cliente-observacion OF Cliente:
+DISPLAY Cliente-observacion EXCEPT descripcion.
+END.

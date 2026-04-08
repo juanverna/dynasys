@@ -1,0 +1,11 @@
+
+                Thu Oct 22 08:35:16 2009
+[2009/10/22@08:35:16.968-0300] P-7916       T-7576  I DBUTIL   : (451)   Inicio de sesión prostrct create para fernando en CON:. 
+[2009/10/22@08:35:17.000-0300] P-7916       T-7576  I DBUTIL   : (12862) El fichero de estructura tablastt.st usado para crear la base de datos con el blocksize 4096. 
+[2009/10/22@08:35:17.000-0300] P-7916       T-7576  I DBUTIL   : (334)   Fin de sesión prostrct create. 
+[2009/10/22@08:35:17.000-0300] P-7916       T-7576  I DBUTIL   : (451)   Inicio de sesión procopy para fernando en CON:. 
+[2009/10/22@08:35:17.140-0300] P-7916       T-7576  I DBUTIL   : (334)   Fin de sesión procopy. 
+
+                Thu Oct 22 08:35:17 2009
+[2009/10/22@08:35:17.156-0300] P-7916       T-7576  I          : (451)   Inicio de sesión procopy get default SQL DBA para fernando en CON:. 
+[2009/10/22@08:35:17.312-0300] P-7916       T-7576  I          : (334)   Fin de sesión procopy get default SQL DBA. 

@@ -1,0 +1,539 @@
+K 25
+svn:wc:ra_dav:version-url
+V 35
+/svn/Paulista/!svn/ver/20/progs/bdu
+END
+validardestinatario.i
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/Paulista/!svn/ver/1/progs/bdu/validardestinatario.i
+END
+b-Sre_detalle_a_despachar.w
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/Paulista/!svn/ver/1/progs/bdu/b-Sre_detalle_a_despachar.w
+END
+w-lsrnk_solicitudesxsector.w
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/Paulista/!svn/ver/1/progs/bdu/w-lsrnk_solicitudesxsector.w
+END
+validar_crear_transportista.i
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/Paulista/!svn/ver/1/progs/bdu/validar_crear_transportista.i
+END
+v-rng-destinatario.w
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/Paulista/!svn/ver/1/progs/bdu/v-rng-destinatario.w
+END
+d-solicitante_sector.w
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/Paulista/!svn/ver/1/progs/bdu/d-solicitante_sector.w
+END
+d-reimprimir_remito.w
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/Paulista/!svn/ver/1/progs/bdu/d-reimprimir_remito.w
+END
+b-ingresos_por_aprobar1.w
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/Paulista/!svn/ver/1/progs/bdu/b-ingresos_por_aprobar1.w
+END
+dftabletiqueta.i
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/bdu/dftabletiqueta.i
+END
+c-busartic_solicit.w
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/Paulista/!svn/ver/1/progs/bdu/c-busartic_solicit.w
+END
+tgbtcambsol.i
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/1/progs/bdu/tgbtcambsol.i
+END
+chporter.w
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/bdu/chporter.w
+END
+w-rlmotivos_retiro.w
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/Paulista/!svn/ver/1/progs/bdu/w-rlmotivos_retiro.w
+END
+validar_autorizante.i
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/Paulista/!svn/ver/1/progs/bdu/validar_autorizante.i
+END
+Tiene_precinto.i
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/bdu/Tiene_precinto.i
+END
+d-selsolicitudes_pendientes.w
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/Paulista/!svn/ver/1/progs/bdu/d-selsolicitudes_pendientes.w
+END
+p-btn_sector.w
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/Paulista/!svn/ver/1/progs/bdu/p-btn_sector.w
+END
+b-ingresos_por_egresar.w
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/Paulista/!svn/ver/1/progs/bdu/b-ingresos_por_egresar.w
+END
+w-articulos_bdu.w
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/bdu/w-articulos_bdu.w
+END
+v-rng-motivo.w
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/Paulista/!svn/ver/1/progs/bdu/v-rng-motivo.w
+END
+w-consulta_proveedores.w
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/Paulista/!svn/ver/1/progs/bdu/w-consulta_proveedores.w
+END
+d-etiquetas_generalizadas.w
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/Paulista/!svn/ver/1/progs/bdu/d-etiquetas_generalizadas.w
+END
+b-cumplimiento_detalle.w
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/Paulista/!svn/ver/1/progs/bdu/b-cumplimiento_detalle.w
+END
+b-transportistas.w
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/Paulista/!svn/ver/1/progs/bdu/b-transportistas.w
+END
+trgetiqueta.i
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/1/progs/bdu/trgetiqueta.i
+END
+b-ingreso_planta.w
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/Paulista/!svn/ver/1/progs/bdu/b-ingreso_planta.w
+END
+hab_panel_folder.i
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/Paulista/!svn/ver/1/progs/bdu/hab_panel_folder.i
+END
+b-solicitudes_retiro.w
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/Paulista/!svn/ver/1/progs/bdu/b-solicitudes_retiro.w
+END
+b-registrable_a_despachar.w
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/Paulista/!svn/ver/1/progs/bdu/b-registrable_a_despachar.w
+END
+b-fecha_retorno.w
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/bdu/b-fecha_retorno.w
+END
+b-ingresos_por_aprobar.w
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/Paulista/!svn/ver/1/progs/bdu/b-ingresos_por_aprobar.w
+END
+Muestra-remito.i
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/bdu/Muestra-remito.i
+END
+w-lsrnk_solicitudesxarticulo.w
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/Paulista/!svn/ver/1/progs/bdu/w-lsrnk_solicitudesxarticulo.w
+END
+b-carlos.w
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/bdu/b-carlos.w
+END
+b-motivos_retiro.w
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/Paulista/!svn/ver/1/progs/bdu/b-motivos_retiro.w
+END
+w-lsrnk_solicitudesxdestinatario.w
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/Paulista/!svn/ver/1/progs/bdu/w-lsrnk_solicitudesxdestinatario.w
+END
+displaytablasre.i
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/bdu/displaytablasre.i
+END
+w-articulo_sector.w
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/Paulista/!svn/ver/1/progs/bdu/w-articulo_sector.w
+END
+b-detalle_solicitud.w
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/Paulista/!svn/ver/1/progs/bdu/b-detalle_solicitud.w
+END
+v-sel_registrable.w
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/Paulista/!svn/ver/1/progs/bdu/v-sel_registrable.w
+END
+c-egresar_remitos.w
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/Paulista/!svn/ver/1/progs/bdu/c-egresar_remitos.w
+END
+validartabla_articulo.i
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/Paulista/!svn/ver/1/progs/bdu/validartabla_articulo.i
+END
+chpru.w
+K 25
+svn:wc:ra_dav:version-url
+V 42
+/svn/Paulista/!svn/ver/1/progs/bdu/chpru.w
+END
+w-lssolicitudes_xestado.w
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/Paulista/!svn/ver/1/progs/bdu/w-lssolicitudes_xestado.w
+END
+w-lssolicitudes_xarticulo.w
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/Paulista/!svn/ver/1/progs/bdu/w-lssolicitudes_xarticulo.w
+END
+v-rng-sector.w
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/Paulista/!svn/ver/1/progs/bdu/v-rng-sector.w
+END
+w-egreso_planta.w
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/bdu/w-egreso_planta.w
+END
+w-cumplimiento_solicitud.w
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/Paulista/!svn/ver/1/progs/bdu/w-cumplimiento_solicitud.w
+END
+chlogon.w
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/svn/Paulista/!svn/ver/1/progs/bdu/chlogon.w
+END
+case_motivo.i
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/1/progs/bdu/case_motivo.i
+END
+w-destinatario.w
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/bdu/w-destinatario.w
+END
+d-selsolicitudes_sector.w
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/Paulista/!svn/ver/1/progs/bdu/d-selsolicitudes_sector.w
+END
+validartabla_registrable.i
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/Paulista/!svn/ver/1/progs/bdu/validartabla_registrable.i
+END
+v-detalle_solicitud.w
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/Paulista/!svn/ver/1/progs/bdu/v-detalle_solicitud.w
+END
+b-numeros_serie.w
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/bdu/b-numeros_serie.w
+END
+displaytablarem.i
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/bdu/displaytablarem.i
+END
+validar_ptovta.i
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/bdu/validar_ptovta.i
+END
+validar_transportista.i
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/Paulista/!svn/ver/1/progs/bdu/validar_transportista.i
+END
+w-lssolicitudes_xsector.w
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/Paulista/!svn/ver/1/progs/bdu/w-lssolicitudes_xsector.w
+END
+chlogbarra.w
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/1/progs/bdu/chlogbarra.w
+END
+b-destinatario.w
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/bdu/b-destinatario.w
+END
+w-motivo_retiro.w
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/bdu/w-motivo_retiro.w
+END
+v-articulo_otrosdatos.w
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/Paulista/!svn/ver/1/progs/bdu/v-articulo_otrosdatos.w
+END
+sdo-motivo_retiro.i
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/Paulista/!svn/ver/1/progs/bdu/sdo-motivo_retiro.i
+END
+d-regreso_solicitud.w
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/Paulista/!svn/ver/1/progs/bdu/d-regreso_solicitud.w
+END
+d-ldinterface_art.w
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/Paulista/!svn/ver/1/progs/bdu/d-ldinterface_art.w
+END
+w-aprobar_solicitud.w
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/Paulista/!svn/ver/1/progs/bdu/w-aprobar_solicitud.w
+END
+w-ingreso_planta.w
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/Paulista/!svn/ver/1/progs/bdu/w-ingreso_planta.w
+END
+c-busartic_sector.w
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/Paulista/!svn/ver/1/progs/bdu/c-busartic_sector.w
+END
+ponestado.i
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/Paulista/!svn/ver/1/progs/bdu/ponestado.i
+END
+v-transportista.w
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/bdu/v-transportista.w
+END
+w-aprobar_ingreso.w
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/Paulista/!svn/ver/1/progs/bdu/w-aprobar_ingreso.w
+END
+w-registro_firma.w
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/Paulista/!svn/ver/1/progs/bdu/w-registro_firma.w
+END
+w-transportista.w
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/bdu/w-transportista.w
+END
+chlogbara.w
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/Paulista/!svn/ver/1/progs/bdu/chlogbara.w
+END
+b-registrables_solicitud.w
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/Paulista/!svn/ver/1/progs/bdu/b-registrables_solicitud.w
+END
+v-lista_sectores.w
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/Paulista/!svn/ver/1/progs/bdu/v-lista_sectores.w
+END
+w-solicitud_retiro.w
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/Paulista/!svn/ver/1/progs/bdu/w-solicitud_retiro.w
+END
+v-regreso_solicitud.w
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/Paulista/!svn/ver/1/progs/bdu/v-regreso_solicitud.w
+END
+b-motivo.w
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/bdu/b-motivo.w
+END
+CALCRPROVEEDOR.I
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/bdu/CALCRPROVEEDOR.I
+END
+case_estado.i
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/1/progs/bdu/case_estado.i
+END
+b-detalle_solicitudes_aprobacion.w
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/Paulista/!svn/ver/1/progs/bdu/b-detalle_solicitudes_aprobacion.w
+END
+b-detalle_registrables.w
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/Paulista/!svn/ver/1/progs/bdu/b-detalle_registrables.w
+END
+trigerarticulorgistrable.i
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/Paulista/!svn/ver/1/progs/bdu/trigerarticulorgistrable.i
+END
+traducetabla_registrable.i
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/Paulista/!svn/ver/1/progs/bdu/traducetabla_registrable.i
+END
+validar_solicitante.i
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/Paulista/!svn/ver/1/progs/bdu/validar_solicitante.i
+END
+w-despachar_solicitudes.w
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/Paulista/!svn/ver/1/progs/bdu/w-despachar_solicitudes.w
+END
+d-empleado.w
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/1/progs/bdu/d-empleado.w
+END

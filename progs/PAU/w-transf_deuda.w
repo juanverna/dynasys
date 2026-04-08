@@ -1,0 +1,715 @@
+&ANALYZE-SUSPEND _VERSION-NUMBER UIB_v8r12 GUI ADM1
+&ANALYZE-RESUME
+/* Connected Databases 
+          sic              PROGRESS
+*/
+&Scoped-define WINDOW-NAME W-Win
+
+
+/* Temp-Table and Buffer definitions                                    */
+DEFINE BUFFER adm-comprob FOR Cliente.
+DEFINE BUFFER Administrador FOR Cliente.
+
+
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CUSTOM _DEFINITIONS W-Win 
+/*********************************************************************
+* Copyright (C) 2000 by Progress Software Corporation ("PSC"),       *
+* 14 Oak Park, Bedford, MA 01730, and other contributors as listed   *
+* below.  All Rights Reserved.                                       *
+*                                                                    *
+* The Initial Developer of the Original Code is PSC.  The Original   *
+* Code is Progress IDE code released to open source December 1, 2000.*
+*                                                                    *
+* The contents of this file are subject to the Possenet Public       *
+* License Version 1.0 (the "License"); you may not use this file     *
+* except in compliance with the License.  A copy of the License is   *
+* available as of the date of this notice at                         *
+* http://www.possenet.org/license.html                               *
+*                                                                    *
+* Software distributed under the License is distributed on an "AS IS"*
+* basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. You*
+* should refer to the License for the specific language governing    *
+* rights and limitations under the License.                          *
+*                                                                    *
+* Contributors:                                                      *
+*                                                                    *
+*********************************************************************/
+/*------------------------------------------------------------------------
+
+  File: 
+
+  Description: from cntnrwin.w - ADM SmartWindow Template
+
+  Input Parameters:
+      <none>
+
+  Output Parameters:
+      <none>
+
+  History: 
+          
+------------------------------------------------------------------------*/
+/*          This .W file was created with the Progress UIB.             */
+/*----------------------------------------------------------------------*/
+
+/* Create an unnamed pool to store all the widgets created 
+     by this procedure. This is a good default which assures
+     that this procedure's triggers and internal procedures 
+     will execute in this procedure's storage, and that proper
+     cleanup will occur on deletion of the procedure. */
+
+CREATE WIDGET-POOL.
+
+/* ***************************  Definitions  ************************** */
+
+/* Parameters Definitions ---                                           */
+
+/* Local Variable Definitions ---                                       */
+
+DEF VAR rid_tabla AS ROWID NO-UNDO.
+DEF VAR paga AS CHARACTER NO-UNDO LABEL "Pagada".
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-PREPROCESSOR-BLOCK 
+
+/* ********************  Preprocessor Definitions  ******************** */
+
+&Scoped-define PROCEDURE-TYPE SmartWindow
+&Scoped-define DB-AWARE no
+
+&Scoped-define ADM-CONTAINER WINDOW
+
+/* Name of designated FRAME-NAME and/or first browse and/or first query */
+&Scoped-define FRAME-NAME F-Main
+&Scoped-define BROWSE-NAME BROWSE-1
+
+/* Internal Tables (found by Frame, Query & Browse Queries)             */
+&Scoped-define INTERNAL-TABLES fac_header cta_cte Administrador adm-comprob ~
+Cliente
+
+/* Definitions for BROWSE BROWSE-1                                      */
+&Scoped-define FIELDS-IN-QUERY-BROWSE-1 adm-comprob.cdg_cliente adm-comprob.nom_cliente fac_header.tip_comprob fac_header.prf_comprob fac_header.nro_comprob fac_header.fecha pagado() @ paga fac_header.imp_total fac_header.imp_total   
+&Scoped-define ENABLED-FIELDS-IN-QUERY-BROWSE-1   
+&Scoped-define SELF-NAME BROWSE-1
+&Scoped-define QUERY-STRING-BROWSE-1 FOR EACH fac_header OF Cliente       WHERE  fac_header.nro_administrador <> cliente.nro_administrador NO-LOCK, ~
+             FIRST cta_cte WHERE       cta_cte.cdg_empresa = fac_header.cdg_empresa AND       cta_cte.tip_comprob = fac_header.tip_comprob AND       cta_cte.prf_comprob = fac_header.prf_comprob AND       cta_cte.nro_comprob = fac_header.nro_comprob AND       cta_cte.credito <> cta_cte.debito , ~
+       FIRST Administrador WHERE Administrador.nro_cliente = cliente.nro_admin NO-LOCK, ~
+             FIRST adm-comprob WHERE fac_header.nro_administrador = adm-comprob.nro_cliente NO-LOCK INDEXED-REPOSITION
+&Scoped-define OPEN-QUERY-BROWSE-1 OPEN QUERY {&SELF-NAME} FOR EACH fac_header OF Cliente       WHERE  fac_header.nro_administrador <> cliente.nro_administrador NO-LOCK, ~
+             FIRST cta_cte WHERE       cta_cte.cdg_empresa = fac_header.cdg_empresa AND       cta_cte.tip_comprob = fac_header.tip_comprob AND       cta_cte.prf_comprob = fac_header.prf_comprob AND       cta_cte.nro_comprob = fac_header.nro_comprob AND       cta_cte.credito <> cta_cte.debito , ~
+       FIRST Administrador WHERE Administrador.nro_cliente = cliente.nro_admin NO-LOCK, ~
+             FIRST adm-comprob WHERE fac_header.nro_administrador = adm-comprob.nro_cliente NO-LOCK INDEXED-REPOSITION.
+&Scoped-define TABLES-IN-QUERY-BROWSE-1 fac_header cta_cte Administrador ~
+adm-comprob
+&Scoped-define FIRST-TABLE-IN-QUERY-BROWSE-1 fac_header
+&Scoped-define SECOND-TABLE-IN-QUERY-BROWSE-1 cta_cte
+&Scoped-define THIRD-TABLE-IN-QUERY-BROWSE-1 Administrador
+&Scoped-define FOURTH-TABLE-IN-QUERY-BROWSE-1 adm-comprob
+
+
+/* Definitions for FRAME F-Main                                         */
+&Scoped-define FIELDS-IN-QUERY-F-Main Cliente.nom_cliente ~
+Administrador.nom_cliente 
+&Scoped-define ENABLED-FIELDS-IN-QUERY-F-Main Cliente.nom_cliente ~
+Administrador.nom_cliente 
+&Scoped-define ENABLED-TABLES-IN-QUERY-F-Main Cliente Administrador
+&Scoped-define FIRST-ENABLED-TABLE-IN-QUERY-F-Main Cliente
+&Scoped-define SECOND-ENABLED-TABLE-IN-QUERY-F-Main Administrador
+&Scoped-define QUERY-STRING-F-Main FOR EACH Cliente SHARE-LOCK, ~
+      EACH Administrador WHERE TRUE /* Join to Cliente incomplete */ SHARE-LOCK
+&Scoped-define OPEN-QUERY-F-Main OPEN QUERY F-Main FOR EACH Cliente SHARE-LOCK, ~
+      EACH Administrador WHERE TRUE /* Join to Cliente incomplete */ SHARE-LOCK.
+&Scoped-define TABLES-IN-QUERY-F-Main Cliente Administrador
+&Scoped-define FIRST-TABLE-IN-QUERY-F-Main Cliente
+&Scoped-define SECOND-TABLE-IN-QUERY-F-Main Administrador
+
+
+/* Standard List Definitions                                            */
+&Scoped-Define ENABLED-FIELDS Cliente.nom_cliente Administrador.nom_cliente 
+&Scoped-define ENABLED-TABLES Cliente Administrador
+&Scoped-define FIRST-ENABLED-TABLE Cliente
+&Scoped-define SECOND-ENABLED-TABLE Administrador
+&Scoped-Define ENABLED-OBJECTS v-cdg_cliente B-tr v-cdg_administrador ~
+BROWSE-1 
+&Scoped-Define DISPLAYED-FIELDS Cliente.nom_cliente ~
+Administrador.nom_cliente 
+&Scoped-define DISPLAYED-TABLES Cliente Administrador
+&Scoped-define FIRST-DISPLAYED-TABLE Cliente
+&Scoped-define SECOND-DISPLAYED-TABLE Administrador
+&Scoped-Define DISPLAYED-OBJECTS v-cdg_cliente v-cdg_administrador 
+
+/* Custom List Definitions                                              */
+/* List-1,List-2,List-3,List-4,List-5,List-6                            */
+
+/* _UIB-PREPROCESSOR-BLOCK-END */
+&ANALYZE-RESUME
+
+
+/* ************************  Function Prototypes ********************** */
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _FUNCTION-FORWARD pagado W-Win 
+FUNCTION pagado RETURNS CHARACTER
+  ( /* parameter-definitions */ )  FORWARD.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+/* ***********************  Control Definitions  ********************** */
+
+/* Define the widget handle for the window                              */
+DEFINE VAR W-Win AS WIDGET-HANDLE NO-UNDO.
+
+/* Definitions of the field level widgets                               */
+DEFINE BUTTON B-tr 
+     LABEL "Transferir" 
+     SIZE 11 BY .95.
+
+DEFINE VARIABLE v-cdg_administrador AS CHARACTER FORMAT "X(8)" 
+     LABEL "Administ." 
+     VIEW-AS FILL-IN 
+     SIZE 14 BY 1
+     BGCOLOR 9 FGCOLOR 15 .
+
+DEFINE VARIABLE v-cdg_cliente AS CHARACTER FORMAT "X(8)" 
+     LABEL "Cliente" 
+     VIEW-AS FILL-IN NATIVE 
+     SIZE 13 BY 1
+     BGCOLOR 15 FGCOLOR 9 .
+
+/* Query definitions                                                    */
+&ANALYZE-SUSPEND
+DEFINE QUERY BROWSE-1 FOR 
+      fac_header, 
+      cta_cte, 
+      Administrador, 
+      adm-comprob SCROLLING.
+
+DEFINE QUERY F-Main FOR 
+      Cliente, 
+      Administrador SCROLLING.
+&ANALYZE-RESUME
+
+/* Browse definitions                                                   */
+DEFINE BROWSE BROWSE-1
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _DISPLAY-FIELDS BROWSE-1 W-Win _FREEFORM
+  QUERY BROWSE-1 NO-LOCK DISPLAY
+      adm-comprob.cdg_cliente FORMAT "x(8)" 
+      adm-comprob.nom_cliente FORMAT "X(25)"
+      fac_header.tip_comprob FORMAT "X(2)":U
+      fac_header.prf_comprob FORMAT "9999":U
+      fac_header.nro_comprob FORMAT "99999999":U
+      fac_header.fecha FORMAT "99/99/9999":U
+      pagado() @ paga 
+      fac_header.imp_total FORMAT "->>>,>>9.99":U
+      fac_header.imp_total FORMAT "->>>,>>9.99":U WIDTH 22.2
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+    WITH SEPARATORS MULTIPLE SIZE 125 BY 10.24
+         TITLE "Deuda anterior impaga a transferir al administrador actual" ROW-HEIGHT-CHARS .62 FIT-LAST-COLUMN.
+
+
+/* ************************  Frame Definitions  *********************** */
+
+DEFINE FRAME F-Main
+     v-cdg_cliente AT ROW 1.24 COL 12 COLON-ALIGNED WIDGET-ID 42
+     Cliente.nom_cliente AT ROW 1.24 COL 27 COLON-ALIGNED NO-LABEL WIDGET-ID 44
+          VIEW-AS FILL-IN 
+          SIZE 86 BY 1
+          BGCOLOR 15 FGCOLOR 9  NO-TAB-STOP 
+     B-tr AT ROW 1.95 COL 117 WIDGET-ID 48
+     v-cdg_administrador AT ROW 2.43 COL 11.8 COLON-ALIGNED WIDGET-ID 36 NO-TAB-STOP 
+     Administrador.nom_cliente AT ROW 2.43 COL 27 COLON-ALIGNED NO-LABEL WIDGET-ID 46
+          VIEW-AS FILL-IN 
+          SIZE 86 BY 1
+          BGCOLOR 9 FGCOLOR 15  NO-TAB-STOP 
+     BROWSE-1 AT ROW 4.1 COL 3 WIDGET-ID 200
+     "Marque las facturas a transferir con ayuda del CTRL, y transfiera" VIEW-AS TEXT
+          SIZE 125 BY 1.19 AT ROW 14.57 COL 3 WIDGET-ID 50
+    WITH 1 DOWN NO-BOX KEEP-TAB-ORDER OVERLAY 
+         SIDE-LABELS NO-UNDERLINE THREE-D 
+         AT COL 1 ROW 1
+         SIZE 131.6 BY 14.95 WIDGET-ID 100.
+
+
+/* *********************** Procedure Settings ************************ */
+
+&ANALYZE-SUSPEND _PROCEDURE-SETTINGS
+/* Settings for THIS-PROCEDURE
+   Type: SmartWindow
+   Allow: Basic,Browse,DB-Fields,Query,Smart,Window
+   Temp-Tables and Buffers:
+      TABLE: adm-comprob B "?" ? sic Cliente
+      TABLE: Administrador B "?" ? sic Cliente
+   END-TABLES.
+ */
+&ANALYZE-RESUME _END-PROCEDURE-SETTINGS
+
+/* *************************  Create Window  ************************** */
+
+&ANALYZE-SUSPEND _CREATE-WINDOW
+IF SESSION:DISPLAY-TYPE = "GUI":U THEN
+  CREATE WINDOW W-Win ASSIGN
+         HIDDEN             = YES
+         TITLE              = "Transferencia de Deuda"
+         HEIGHT             = 15.19
+         WIDTH              = 131.6
+         MAX-HEIGHT         = 17
+         MAX-WIDTH          = 147
+         VIRTUAL-HEIGHT     = 17
+         VIRTUAL-WIDTH      = 147
+         RESIZE             = no
+         SCROLL-BARS        = no
+         STATUS-AREA        = no
+         BGCOLOR            = ?
+         FGCOLOR            = ?
+         THREE-D            = yes
+         MESSAGE-AREA       = no
+         SENSITIVE          = yes.
+ELSE {&WINDOW-NAME} = CURRENT-WINDOW.
+/* END WINDOW DEFINITION                                                */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CUSTOM _INCLUDED-LIB W-Win 
+/* ************************* Included-Libraries *********************** */
+
+{src/adm/method/containr.i}
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+
+
+/* ***********  Runtime Attributes and AppBuilder Settings  *********** */
+
+&ANALYZE-SUSPEND _RUN-TIME-ATTRIBUTES
+/* SETTINGS FOR WINDOW W-Win
+  VISIBLE,,RUN-PERSISTENT                                               */
+/* SETTINGS FOR FRAME F-Main
+   FRAME-NAME                                                           */
+/* BROWSE-TAB BROWSE-1 nom_cliente F-Main */
+ASSIGN 
+       Cliente.nom_cliente:READ-ONLY IN FRAME F-Main        = TRUE.
+
+ASSIGN 
+       Administrador.nom_cliente:READ-ONLY IN FRAME F-Main        = TRUE.
+
+ASSIGN 
+       v-cdg_administrador:READ-ONLY IN FRAME F-Main        = TRUE.
+
+IF SESSION:DISPLAY-TYPE = "GUI":U AND VALID-HANDLE(W-Win)
+THEN W-Win:HIDDEN = yes.
+
+/* _RUN-TIME-ATTRIBUTES-END */
+&ANALYZE-RESUME
+
+
+/* Setting information for Queries and Browse Widgets fields            */
+
+&ANALYZE-SUSPEND _QUERY-BLOCK BROWSE BROWSE-1
+/* Query rebuild information for BROWSE BROWSE-1
+     _START_FREEFORM
+OPEN QUERY {&SELF-NAME} FOR EACH fac_header OF Cliente
+      WHERE  fac_header.nro_administrador <> cliente.nro_administrador NO-LOCK,
+      FIRST cta_cte WHERE
+      cta_cte.cdg_empresa = fac_header.cdg_empresa AND
+      cta_cte.tip_comprob = fac_header.tip_comprob AND
+      cta_cte.prf_comprob = fac_header.prf_comprob AND
+      cta_cte.nro_comprob = fac_header.nro_comprob AND
+      cta_cte.credito <> cta_cte.debito ,
+FIRST Administrador WHERE Administrador.nro_cliente = cliente.nro_admin NO-LOCK,
+      FIRST adm-comprob WHERE fac_header.nro_administrador = adm-comprob.nro_cliente NO-LOCK INDEXED-REPOSITION.
+     _END_FREEFORM
+     _Options          = "NO-LOCK INDEXED-REPOSITION"
+     _Where[1]         = "sic.fac_header.estado_2_impresion = ""0"" and fac_header.nro_administrador <> administrador.nro_cliente"
+     _Where[2]         = "Administrador.nro_cliente = cliente.nro_admin"
+     _Query            is NOT OPENED
+*/  /* BROWSE BROWSE-1 */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _QUERY-BLOCK FRAME F-Main
+/* Query rebuild information for FRAME F-Main
+     _TblList          = "sic.Cliente,Temp-Tables.Administrador WHERE sic.Cliente ..."
+     _Query            is OPENED
+*/  /* FRAME F-Main */
+&ANALYZE-RESUME
+
+ 
+
+
+
+/* ************************  Control Triggers  ************************ */
+
+&Scoped-define SELF-NAME W-Win
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL W-Win W-Win
+ON END-ERROR OF W-Win /* Transferencia de Deuda */
+OR ENDKEY OF {&WINDOW-NAME} ANYWHERE DO:
+  /* This case occurs when the user presses the "Esc" key.
+     In a persistently run window, just ignore this.  If we did not, the
+     application would exit. */
+  IF THIS-PROCEDURE:PERSISTENT THEN RETURN NO-APPLY.
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL W-Win W-Win
+ON WINDOW-CLOSE OF W-Win /* Transferencia de Deuda */
+DO:
+  /* This ADM code must be left here in order for the SmartWindow
+     and its descendents to terminate properly on exit. */
+  APPLY "CLOSE":U TO THIS-PROCEDURE.
+  RETURN NO-APPLY.
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME B-tr
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL B-tr W-Win
+ON CHOOSE OF B-tr IN FRAME F-Main /* Transferir */
+DO:
+  RUN barrer.
+  {&OPEN-QUERY-{&BROWSE-NAME}}
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME v-cdg_cliente
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL v-cdg_cliente W-Win
+ON MOUSE-SELECT-DBLCLICK OF v-cdg_cliente IN FRAME F-Main /* Cliente */
+OR MOUSE-MENU-DOWN OF v-cdg_cliente IN FRAME {&FRAME-NAME}
+DO:
+    ASSIGN v-cdg_cliente.
+    FIND cliente WHERE cliente.cdg_cliente = v-cdg_cliente NO-LOCK NO-ERROR.
+    rid_tabla = IF AVAILABLE cliente THEN ROWID( cliente ) ELSE ?.
+
+    RUN selclien.p ( INPUT-OUTPUT rid_tabla, INPUT YES ).
+    IF rid_tabla <> ?
+    THEN DO:
+        FIND cliente WHERE ROWID(cliente) = rid_tabla NO-LOCK.
+        RUN poner_cliente.
+    END.  
+
+    /*RETURN NO-APPLY.  */
+   
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL v-cdg_cliente W-Win
+ON RETURN OF v-cdg_cliente IN FRAME F-Main /* Cliente */
+DO:
+    IF v-cdg_cliente:SCREEN-VALUE IN FRAME {&FRAME-NAME} <> ""
+    THEN DO:
+        
+        FIND cliente WHERE cliente.cdg_cliente = INPUT FRAME {&FRAME-NAME} v-cdg_cliente NO-LOCK NO-ERROR.
+        IF NOT AVAILABLE cliente 
+        THEN DO:
+            RUN PONMENSJ.P ( 'IREF002' ).
+            RETURN NO-APPLY.
+        END.
+        RUN poner_cliente.
+
+
+    END.          
+
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define BROWSE-NAME BROWSE-1
+&UNDEFINE SELF-NAME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CUSTOM _MAIN-BLOCK W-Win 
+
+
+/* ***************************  Main Block  *************************** */
+
+/* Include custom  Main Block code for SmartWindows. */
+{src/adm/template/windowmn.i}
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+/* **********************  Internal Procedures  *********************** */
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE adm-create-objects W-Win  _ADM-CREATE-OBJECTS
+PROCEDURE adm-create-objects :
+/*------------------------------------------------------------------------------
+  Purpose:     Create handles for all SmartObjects used in this procedure.
+               After SmartObjects are initialized, then SmartLinks are added.
+  Parameters:  <none>
+------------------------------------------------------------------------------*/
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE adm-row-available W-Win  _ADM-ROW-AVAILABLE
+PROCEDURE adm-row-available :
+/*------------------------------------------------------------------------------
+  Purpose:     Dispatched to this procedure when the Record-
+               Source has a new row available.  This procedure
+               tries to get the new row (or foriegn keys) from
+               the Record-Source and process it.
+  Parameters:  <none>
+------------------------------------------------------------------------------*/
+
+  /* Define variables needed by this internal procedure.             */
+  {src/adm/template/row-head.i}
+
+  /* Process the newly available records (i.e. display fields,
+     open queries, and/or pass records on to any RECORD-TARGETS).    */
+  {src/adm/template/row-end.i}
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE barrer W-Win 
+PROCEDURE barrer :
+/*------------------------------------------------------------------------------*/
+DEF VAR i AS INT NO-UNDO.
+
+DO i = 1 TO browse-1:NUM-SELECTED-ROWS IN FRAME {&FRAME-NAME}:
+    BROWSE-1:FETCH-SELECTED-ROW ( i ).
+    RUN transferir.
+END.
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE disable_UI W-Win  _DEFAULT-DISABLE
+PROCEDURE disable_UI :
+/*------------------------------------------------------------------------------
+  Purpose:     DISABLE the User Interface
+  Parameters:  <none>
+  Notes:       Here we clean-up the user-interface by deleting
+               dynamic widgets we have created and/or hide 
+               frames.  This procedure is usually called when
+               we are ready to "clean-up" after running.
+------------------------------------------------------------------------------*/
+  /* Delete the WINDOW we created */
+  IF SESSION:DISPLAY-TYPE = "GUI":U AND VALID-HANDLE(W-Win)
+  THEN DELETE WIDGET W-Win.
+  IF THIS-PROCEDURE:PERSISTENT THEN DELETE PROCEDURE THIS-PROCEDURE.
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE enable_UI W-Win  _DEFAULT-ENABLE
+PROCEDURE enable_UI :
+/*------------------------------------------------------------------------------
+  Purpose:     ENABLE the User Interface
+  Parameters:  <none>
+  Notes:       Here we display/view/enable the widgets in the
+               user-interface.  In addition, OPEN all queries
+               associated with each FRAME and BROWSE.
+               These statements here are based on the "Other 
+               Settings" section of the widget Property Sheets.
+------------------------------------------------------------------------------*/
+
+  {&OPEN-QUERY-F-Main}
+  GET FIRST F-Main.
+  DISPLAY v-cdg_cliente v-cdg_administrador 
+      WITH FRAME F-Main IN WINDOW W-Win.
+  IF AVAILABLE Administrador THEN 
+    DISPLAY Administrador.nom_cliente 
+      WITH FRAME F-Main IN WINDOW W-Win.
+  IF AVAILABLE Cliente THEN 
+    DISPLAY Cliente.nom_cliente 
+      WITH FRAME F-Main IN WINDOW W-Win.
+  ENABLE v-cdg_cliente Cliente.nom_cliente B-tr v-cdg_administrador 
+         Administrador.nom_cliente BROWSE-1 
+      WITH FRAME F-Main IN WINDOW W-Win.
+  {&OPEN-BROWSERS-IN-QUERY-F-Main}
+  VIEW W-Win.
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE local-exit W-Win 
+PROCEDURE local-exit :
+/* -----------------------------------------------------------
+  Purpose:  Starts an "exit" by APPLYing CLOSE event, which starts "destroy".
+  Parameters:  <none>
+  Notes:    If activated, should APPLY CLOSE, *not* dispatch adm-exit.   
+-------------------------------------------------------------*/
+   APPLY "CLOSE":U TO THIS-PROCEDURE.
+   
+   RETURN.
+       
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE poner_cliente W-Win 
+PROCEDURE poner_cliente :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+/*
+IF cliente.nro_administrador = cliente.nro_cliente THEN DO:
+    RUN ponmensj.p ("TRCLI01").
+    RETURN NO-APPLY.
+END.
+*/
+
+FIND administrador WHERE administrador.nro_cliente = cliente.nro_administrador NO-ERROR.
+IF NOT AVAILABLE administrador THEN DO:
+    MESSAGE "ERROR INTERNO" SKIP
+    "FALTA EL ADMINISTRADOR DEL CLIENTE" cliente.cdg_cliente SKIP
+    "SUSPENDA TODA OPERACION HASTA SOLUCIONAR EL PROBLEMA" VIEW-AS ALERT-BOX ERROR.
+    return.
+END.
+v-cdg_cliente = cliente.cdg_cliente.
+v-cdg_administrador = administrador.cdg_cliente.
+
+DISPLAY v-cdg_cliente cliente.nom_cliente v-cdg_administrador administrador.nom_cliente WITH FRAME {&FRAME-NAME}.
+{&OPEN-QUERY-{&BROWSE-NAME}}
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE send-records W-Win  _ADM-SEND-RECORDS
+PROCEDURE send-records :
+/*------------------------------------------------------------------------------
+  Purpose:     Send record ROWID's for all tables used by
+               this file.
+  Parameters:  see template/snd-head.i
+------------------------------------------------------------------------------*/
+
+  /* Define variables needed by this internal procedure.               */
+  {src/adm/template/snd-head.i}
+
+  /* For each requested table, put it's ROWID in the output list.      */
+  {src/adm/template/snd-list.i "Cliente"}
+  {src/adm/template/snd-list.i "Administrador"}
+  {src/adm/template/snd-list.i "fac_header"}
+  {src/adm/template/snd-list.i "cta_cte"}
+  {src/adm/template/snd-list.i "Administrador"}
+  {src/adm/template/snd-list.i "adm-comprob"}
+
+  /* Deal with any unexpected table requests before closing.           */
+  {src/adm/template/snd-end.i}
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE state-changed W-Win 
+PROCEDURE state-changed :
+/* -----------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+-------------------------------------------------------------*/
+  DEFINE INPUT PARAMETER p-issuer-hdl AS HANDLE NO-UNDO.
+  DEFINE INPUT PARAMETER p-state AS CHARACTER NO-UNDO.
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE transferir W-Win 
+PROCEDURE transferir :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+DEFINE VAR ant AS INT NO-UNDO.
+find cta_cte where 
+          fac_header.cdg_empresa = cta_cte.cdg_empresa and
+          fac_header.tip_comprob = cta_cte.tip_comprob and
+          fac_header.prf_comprob = cta_cte.prf_comprob and
+          fac_header.nro_comprob = cta_cte.nro_comprob.
+if not available cta_cte then DO:
+    MESSAGE "Ha ocurrido un error interno , no se encuentra el comprobante "
+fac_header.tip_comprob + "-" + STRING(fac_header.prf_comprob,"9999") + "-" + STRING(fac_header.nro_comprob) + 
+     " no puede continuar".
+    RETURN ERROR.
+END.
+ant = fac_header.nro_administrador.
+/*eliminamos las tareas de cobranzas abiertas si no tiene deuda el administrador anterior al igual que eventos de cobranza relacionados*/
+FOR EACH evento WHERE evento.nro_cliente =  ant AND
+evento.nro_tipo_evento = tipo_evento.nro_tipo_evento AND NOT evento.anulado AND
+evento.frealizado = ?:
+    DELETE evento.
+END.
+FOR EACH tarea WHERE tarea.estado = "A" AND tarea.cdg_tipotarea = "C" AND
+    tarea.nro_cliente = ant:
+    DELETE tarea.
+END.
+/*genera evento o tarea aun sin no hay deuda vencida*/
+FIND CURRENT fac_header EXCLUSIVE-LOCK.
+ASSIGN 
+            fac_header.nro_administrador = administrador.nro_cliente
+            fac_header.estado_2_impresion = IF fac_header.estado_2_impresion = "I" THEN "" ELSE fac_header.estado_2_impresion
+            Cta_cte.imp_comision = Administrador.HAT
+            Cta_cte.nro_administrador = administrador.nro_cliente.
+RELEASE fac_header.
+RUN gen_tarea_cobranzasH.p(administrador.nro_cliente,"Cambio de Administracion",TODAY).
+/*genera evento o tarea aun sin no hay deuda vencida*/
+RUN gen_tarea_cobranzasH.p(ant,"Recalculo por cambio de Administracion",TODAY). 
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+/* ************************  Function Implementations ***************** */
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _FUNCTION pagado W-Win 
+FUNCTION pagado RETURNS CHARACTER
+  ( /* parameter-definitions */ ) :
+/*------------------------------------------------------------------------------
+  Purpose:  
+    Notes:  
+------------------------------------------------------------------------------*/
+
+  FIND cta_cte WHERE
+      cta_cte.cdg_empresa = fac_header.cdg_empresa AND
+      cta_cte.tip_comprob = fac_header.tip_comprob AND
+      cta_cte.prf_comprob = fac_header.prf_comprob AND
+      cta_cte.nro_comprob = fac_header.nro_comprob NO-LOCK NO-ERROR.
+  IF AVAILABLE cta_cte THEN DO:
+IF cta_cte.credito = 0 and cta_cte.debito = 0  then paga = "S".
+else
+      IF cta_cte.credito = 0 OR cta_cte.debito = 0 
+          THEN RETURN "N".
+          ELSE IF cta_cte.credito = cta_cte.debito 
+              THEN RETURN "S".
+              ELSE RETURN "P".
+  END.
+  ELSE RETURN "?".
+     
+END FUNCTION.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+

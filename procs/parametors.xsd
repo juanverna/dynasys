@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="" xmlns:prodata="urn:schemas-progress-com:xml-prodata:0001">
+  <xsd:element name="tt" prodata:proTempTable="true" prodata:undo="true">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="ttRow" minOccurs="0" maxOccurs="unbounded">
+          <xsd:complexType>
+            <xsd:sequence>
+              <xsd:element name="cdg_empresa" type="xsd:string" nillable="true" prodata:label="Código" prodata:columnLabel="Código!Empresa" prodata:help="Código de la empresa"/>
+              <xsd:element name="cdg_parametro" type="xsd:string" nillable="true" prodata:label="C.Parametro" prodata:columnLabel="Codigo" prodata:help="Codigo de parametro"/>
+              <xsd:element name="descripcion" type="xsd:string" nillable="true" prodata:format="X(70)" prodata:label="Descripcion" prodata:columnLabel="Descripcion" prodata:help="Descripcion"/>
+              <xsd:element name="valor_n" type="xsd:int" nillable="true" prodata:format="ZZZZZZZ9" prodata:label="Valor.N." prodata:columnLabel="Valor.N." prodata:help="Valor numerico"/>
+              <xsd:element name="valor_c" type="xsd:string" nillable="true" prodata:format="X(20)" prodata:label="Valor.Ch." prodata:columnLabel="Valor.Ch." prodata:help="Valor caracter"/>
+              <xsd:element name="valor_d" type="xsd:decimal" nillable="true" prodata:format="->>,>>9.9999" prodata:label="Valor.D." prodata:columnLabel="Valor.D." prodata:help="Valor numerico decimal" prodata:decimals="4"/>
+              <xsd:element name="valor_l" type="xsd:boolean" nillable="true" default="true" prodata:format="Si/No" prodata:label="Valor.L." prodata:columnLabel="Valor.L." prodata:help="Valor logico"/>
+              <xsd:element name="tipo" type="xsd:string" nillable="true" default="N" prodata:format="X(1)" prodata:label="Tipo" prodata:columnLabel="T" prodata:help="Tipo de parametro. Puede ser N, D o C"/>
+              <xsd:element name="observacion" type="xsd:string" nillable="true" prodata:format="X(50)" prodata:label="Texto" prodata:columnLabel="Texto" prodata:help="Observaciones. estan disponibles las operaciones cortar y pegar"/>
+              <xsd:element name="cdg_sigla-sic" type="xsd:string" nillable="true" prodata:format="X(3)" prodata:label="Sigla" prodata:columnLabel="Sigla" prodata:help="Sigla de tres caracteres que corresponde al modulo"/>
+            </xsd:sequence>
+          </xsd:complexType>
+        </xsd:element>
+      </xsd:sequence>
+    </xsd:complexType>
+    <xsd:unique name="cdg_parametro" prodata:primaryIndex="true">
+      <xsd:selector xpath=".//ttRow"/>
+      <xsd:field xpath="cdg_empresa"/>
+      <xsd:field xpath="cdg_parametro"/>
+    </xsd:unique>
+    <xsd:unique name="por_modulo">
+      <xsd:selector xpath=".//ttRow"/>
+      <xsd:field xpath="cdg_empresa"/>
+      <xsd:field xpath="cdg_sigla-sic"/>
+      <xsd:field xpath="cdg_parametro"/>
+    </xsd:unique>
+  </xsd:element>
+  <xsd:annotation>
+    <xsd:appinfo>
+      <prodata:index name="descripcion" prodata:wordIndex="true">
+        <prodata:table name="tt"/>
+        <prodata:field name="descripcion"/>
+      </prodata:index>
+    </xsd:appinfo>
+  </xsd:annotation>
+</xsd:schema>

@@ -1,0 +1,39 @@
+/*=================================================================================*/
+/*                           VARIABLES Y FRAMES                                    */
+/*=================================================================================*/
+
+{VRSHARED.I}
+
+DEFINE VARIABLE que_ciclo LIKE Ciclo.nro_ciclo.
+
+FORM 
+   que_ciclo LABEL "Indique el numero de ciclo actual" FGCOLOR fe_c BGCOLOR be_c
+   Ciclo.descripcion FGCOLOR fg_c BGCOLOR bg_c NO-LABEL 
+   SPACE(1) 
+   WITH CENTERED OVERLAY ROW 7 TITLE "Cambiar el ciclo actual para la sesion"
+        SIDE-LABEL FRAME frm-ciclo VIEW-AS DIALOG-BOX THREE-D
+        FGCOLOR f-fg_c BGCOLOR f-bg_c FONT 8.
+
+REPEAT WITH FRAME frm-ciclo:
+     IF act_ciclo = ?
+        THEN FIND FIRST Ciclo WHERE actual NO-LOCK.
+        ELSE FIND FIRST Ciclo WHERE act_ciclo = ROWID(Ciclo) NO-LOCK.
+     que_ciclo = Ciclo.nro_ciclo.
+     DISPLAY que_ciclo Ciclo.descripcion WITH FRAME frm-ciclo.
+     UPDATE que_ciclo WITH FRAME frm-ciclo.
+     IF que_ciclo = Ciclo.nro_ciclo THEN LEAVE.
+     FIND Ciclo WHERE nro_ciclo = que_ciclo NO-ERROR.
+     IF NOT AVAILABLE Ciclo
+     THEN DO:
+        BELL.
+        MESSAGE "No ha sido hallado el ciclo indicado"
+             VIEW-AS ALERT-BOX ERROR BUTTONS OK
+             TITLE "Se ha detectado un error".
+        UNDO, RETRY.
+     END.
+     ELSE DO:
+        act_ciclo = ROWID(Ciclo).   
+        LEAVE.
+     END.
+END.
+

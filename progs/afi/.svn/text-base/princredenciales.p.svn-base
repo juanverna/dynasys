@@ -1,0 +1,227 @@
+/*=========================================================================================*/
+/*                                   IMPRESION DE CUPONES                                  */
+/*=========================================================================================*/
+
+DEFINE INPUT PARAMETER p-que_empresa      AS CHARACTER.
+DEFINE INPUT PARAMETER p-des_cobrador     LIKE Cobrador.cdg_cobrador.
+DEFINE INPUT PARAMETER p-has_cobrador     LIKE Cobrador.cdg_cobrador.
+DEFINE INPUT PARAMETER p-des_fecha        AS DATE.
+DEFINE INPUT PARAMETER p-has_fecha        AS DATE.
+
+{dfvarcupones.i}
+{findempresa.i}
+/*=========================================================================================*/
+/*                                       VARIABLES                                         */
+/*=========================================================================================*/
+
+DEFINE VARIABLE n-cred                    AS INTEGER.
+DEFINE VARIABLE k                         AS INTEGER.
+DEFINE VARIABLE n-hoja                    AS INTEGER.
+
+DEFINE VARIABLE fila_cred                 AS INTEGER.
+DEFINE VARIABLE columna_cred              AS INTEGER.
+
+DEFINE VARIABLE fila0                     AS INTEGER.
+DEFINE VARIABLE col0                      AS INTEGER.
+
+DEFINE VARIABLE alto_cupon                AS DECIMAL INITIAL 51.0.
+DEFINE VARIABLE ancho_cupon               AS DECIMAL INITIAL 80.0.
+
+DEFINE VARIABLE TextColor                 AS CHARACTER INITIAL "BLACK".
+DEFINE VARIABLE formato                   AS CHARACTER.
+DEFINE VARIABLE salida                    AS CHARACTER.
+
+DEFINE STREAM Credenciales.
+
+DEFINE BUFFER B-Pedido_credencial FOR Pedido_credencial.
+
+/*=========================================================================================*/
+/*                           B L O Q U E   P R I N C I P A L                               */
+/*=========================================================================================*/
+
+FIND Empresa WHERE Empresa.cdg_empresa = ENTRY(1,p-que_empresa,",").
+
+salida = "c:\sic-temp\cupones.xpr".
+
+OPEN QUERY q-credenciales
+     FOR EACH Pedido_credencial NO-LOCK OF Empresa
+         WHERE Pedido_credencial.cumplido = ""
+             AND CAN-DO (Usuario.lista_empresas,Pedido_credencial.cdg_empresa)
+           AND Pedido_credencial.fecha_alta <= p-has_fecha
+           AND Pedido_credencial.fecha_alta >= p-des_fecha, 
+        FIRST Afiliado NO-LOCK OF Pedido_credencial, 
+        FIRST Grupofam NO-LOCK OF Afiliado 
+              WHERE Grupofam.cdg_cobrador <= p-has_cobrador
+                AND Grupofam.cdg_cobrador >= p-des_cobrador 
+                    BY Grupofam.cdg_cobrador.
+
+n-hoja = 0.
+RUN abrir_hoja.
+
+GET FIRST q-credenciales.
+DO WHILE AVAILABLE Pedido_credencial:
+
+    IF n-cred = 10
+    THEN DO:
+        RUN cerrar_hoja.
+        RUN abrir_hoja.
+    END.
+    
+    n-cred = n-cred + 1.
+
+              /* Completamos los campos con los datos de la credencial */
+
+    fila_cred = fila0 + TRUNC(( n-cred - 1 ) / 2, 0) * alto_cupon .
+    columna_cred = col0 + ( ( n-cred - 1 ) MOD 2 ) * ancho_cupon.
+    
+    PUT STREAM Credenciales UNFORMATTED "<AT=" STRING(fila_cred,">>>9") "," STRING(columna_cred,">>>9") "><#1>".
+
+    FIND FIRST Grupo-domicilio OF Grupofam WHERE Grupo-domicilio.cdg_tipodom = "C" NO-LOCK.
+    IF NOT AVAILABLE Grupo-domicilio 
+       THEN FIND FIRST Grupo-domicilio OF Grupofam NO-LOCK.
+
+    RUN escribir ( INPUT "28,40" , INPUT   Afiliado.nom_afiliado, INPUT 10, INPUT no).
+    RUN escribir ( INPUT "34,40" , INPUT   "Docum:" + Afiliado.num_documento, INPUT 8, INPUT no).
+    RUN escribir ( INPUT "34,80" , INPUT   Grupofam.cdg_plan, INPUT 8, INPUT no).
+
+    RUN escribir ( INPUT "40,40" , INPUT   Grupo-domicilio.calle + " " +
+                                           Grupo-domicilio.nropta + " " +
+                                           Grupo-domicilio.piso + " " +
+                                           Grupo-domicilio.depto, INPUT 8, INPUT no).
+    FIND Localidad OF Grupo-domicilio NO-LOCK NO-ERROR.
+    IF AVAILABLE Localidad
+       THEN RUN escribir ( INPUT "44,40" , INPUT "(" + Grupo-domicilio.cdg_postal + ") " +
+                            Localidad.dsc_localidad, INPUT 8, INPUT no).
+
+    RUN escribir ( INPUT "50,40" , INPUT   "Socio:" + Afiliado.num_carnet, INPUT 8, INPUT no).
+
+    RUN escribir ( INPUT "50,80" , INPUT   Afiliado.cdg_grupofam, INPUT 10, INPUT no).
+
+    RUN escribir ( INPUT "56,65" , INPUT   Grupofam.cdg_cobrador
+                                                   + "-" + Grupo-domicilio.cdg_zonag, INPUT 8, INPUT no).
+
+    FIND B-Pedido_credencial WHERE ROWID(B-Pedido_credencial) = ROWID(Pedido_credencial) EXCLUSIVE-LOCK.
+    ASSIGN
+         B-Pedido_credencial.cumplido      = "S"
+         B-Pedido_credencial.fecha_cump    = TODAY
+         B-Pedido_credencial.hms_cump      = STRING(TIME,"HH:MM:SS")
+         B-Pedido_credencial.Usuario-cumpl = USERID("sic").
+    RELEASE B-Pedido_credencial.
+    
+    GET NEXT q-credenciales.
+
+END. 
+
+IF n-cred <> 0 THEN RUN cerrar_hoja.
+
+OUTPUT STREAM Credenciales CLOSE.
+
+/*=========================================================================================*/
+/*                           P R O C E D I M I E N T O S                                   */
+/*=========================================================================================*/
+
+PROCEDURE cerrar_hoja:
+
+    OUTPUT STREAM Credenciales CLOSE.
+    FILE-INFO:File-NAME = salida.
+    RUN printFile( FILE-INFO:FULL-PATHNAME).
+
+END PROCEDURE.
+
+PROCEDURE abrir_hoja:
+
+    OUTPUT STREAM Credenciales TO VALUE(salida) CONVERT TARGET "iso8859-1".
+    RUN inicia_hoja.  /* Manda la iniciación de página: formato, orientación, etc.      */
+    n-cred = 0.            /* Inicializa en CERO el numero de cupones generados en la pagina */
+
+END PROCEDURE.
+
+PROCEDURE escribir:
+
+    DEFINE INPUT PARAMETER posicion AS CHARACTER.
+    DEFINE INPUT PARAMETER texto    AS CHARACTER.
+    DEFINE INPUT PARAMETER puntos   AS CHARACTER.
+    DEFINE INPUT PARAMETER negrita  AS LOGICAL.
+    
+    DEFINE VARIABLE linea           AS CHARACTER.
+
+    DEFINE VARIABLE i-linea         AS INTEGER.
+    DEFINE VARIABLE i-columna       AS INTEGER.
+
+    i-linea   = INTEGER(ENTRY(1,posicion,",")).
+    i-columna = INTEGER(ENTRY(2,posicion,",")).
+
+    linea = '<FGCOLOR=' + textColor + '><=#1><AT=+' + TRIM(STRING(i-linea,">>9")) + ',+' + TRIM(STRING(i-columna,">>9")) + '><FArial><P' + puntos + '>'.
+
+    IF negrita THEN linea = linea + '<B>'.
+    linea = linea + texto.
+    IF negrita THEN linea = linea + '</B>'.
+
+    PUT STREAM Credenciales UNFORMATTED linea.
+
+END PROCEDURE.
+
+PROCEDURE escribenumero:
+
+    DEFINE INPUT PARAMETER posicion AS CHARACTER.
+    DEFINE INPUT PARAMETER texto    AS CHARACTER.
+    DEFINE INPUT PARAMETER puntos   AS CHARACTER.
+    DEFINE INPUT PARAMETER negrita  AS LOGICAL.
+    
+    DEFINE VARIABLE linea           AS CHARACTER.
+
+    DEFINE VARIABLE i-linea         AS INTEGER.
+    DEFINE VARIABLE i-columna       AS INTEGER.
+
+    i-linea   = INTEGER(ENTRY(1,posicion,",")).
+    i-columna = INTEGER(ENTRY(2,posicion,",")).
+
+    linea = '<FGCOLOR=' + textColor + '>>=#1><AT=' + TRIM(STRING(i-linea,">>9")) + ',+' + TRIM(STRING(i-columna,">>9")) + '><Flineprinter><P' + puntos + '>'.
+
+    IF negrita THEN linea = linea + '<B>'.
+    linea = linea + texto.
+    IF negrita THEN linea = linea + '</B>'.
+
+    PUT UNFORMATTED linea.
+
+END PROCEDURE.
+
+PROCEDURE escribarra:
+
+    DEFINE INPUT PARAMETER posicion AS CHARACTER.
+    DEFINE INPUT PARAMETER texto    AS CHARACTER.
+    DEFINE INPUT PARAMETER puntos   AS CHARACTER.
+    DEFINE INPUT PARAMETER negrita  AS LOGICAL.
+    
+    DEFINE VARIABLE linea           AS CHARACTER.
+
+    DEFINE VARIABLE i-linea         AS INTEGER.
+    DEFINE VARIABLE i-columna       AS INTEGER.
+
+    i-linea   = INTEGER(ENTRY(1,posicion,",")).
+    i-columna = INTEGER(ENTRY(2,posicion,",")).
+
+    PUT STREAM Credenciales UNFORMATTED "<=#1><AT=+" TRIM(STRING(i-linea,">>9")) ",+" TRIM(STRING(i-columna,'>>9')) "><#2>".
+    PUT STREAM Credenciales UNFORMATTED "<=#2><AT=+7,+55><#3>".
+    PUT STREAM Credenciales UNFORMATTED "<=#2><FROM><BARCODE#3,TYPE=128A,CHECKSUM=TRUE,VALUE="   texto ">".
+
+END PROCEDURE.
+
+PROCEDURE inicia_hoja:
+
+    PUT STREAM Credenciales CONTROL '<PREVIEW=70>' /*=ZoomToWidth>'*/. 
+/*  PUT STREAM Credenciales CONTROL '<TOOLBAR=!PRINT>'.*/
+        
+    n-hoja = n-hoja + 1.
+    PUT STREAM Credenciales CONTROL "<OPORTRAIT><Title=Impresion de credenciales. Hoja:" + STRING(n-hoja,">>>9") + "><UNITS=mm><|2>".
+    PUT STREAM Credenciales CONTROL "<FORMAT=Letter>".
+
+END PROCEDURE.
+
+PROCEDURE printFile EXTERNAL "xPrint.dll" :
+
+    DEFINE INPUT PARAMETER a AS CHARACTER.
+
+END PROCEDURE.
+
+

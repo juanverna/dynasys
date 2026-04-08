@@ -1,0 +1,24 @@
+/*==========================================================================================*/
+/*              COPIA LAS IMPUTACIONES CONTABLES DE UN CONCEPTO A OTRO                      */
+/*==========================================================================================*/
+
+DEFINE VARIABLE de-codigo  LIKE Concepto.cdg_concepto INITIAL 998.
+DEFINE VARIABLE a-codigo   LIKE Concepto.cdg_concepto INITIAL 400.
+DEFINE VARIABLE de-numero  LIKE Concepto.nro_concepto.
+DEFINE VARIABLE a-numero   LIKE Concepto.nro_concepto.
+
+DEFINE BUFFER B-Concepto-cuenta FOR Concepto-cuenta.
+UPDATE de-codigo a-codigo.
+FIND Concepto WHERE Concepto.cdg_concepto = de-codigo NO-LOCK.
+de-numero = Concepto.nro_concepto.
+
+FIND Concepto WHERE Concepto.cdg_concepto = a-codigo NO-LOCK.
+a-numero = Concepto.nro_concepto.
+
+FOR EACH Concepto-cuenta WHERE Concepto-cuenta.nro_concepto = de-numero:
+    CREATE B-Concepto-cuenta.
+    BUFFER-COPY Concepto-cuenta TO B-Concepto-cuenta 
+                ASSIGN B-Concepto-cuenta.nro_concepto = a-numero.
+
+END.
+

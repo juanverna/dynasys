@@ -1,0 +1,119 @@
+/*genera el xml para los avisos*/
+{extrae.i}
+DEFINE TEMP-TABLE aimp
+    FIELD c_nro_tipo_evento LIKE tipo_evento.nro_tipo_evento COLUMN-LABEL "Tipo!Evento"
+    FIELD nro_evento AS INT LABEL "EVENTO"
+    FIELD recurso LIKE evento.recurso 
+    FIELD turno LIKE evento.turno
+    FIELD aviso_evento AS INT LABEL "AVISO EVENTO"
+    FIELD aviso_fasignado AS DATE LABEL "REPARTIR"
+    FIELD aviso_recurso AS CHAR LABEL "RECURSO"
+    FIELD tipoespecial AS CHAR LABEL "ESPECIAL".
+
+DEFINE TEMP-TABLE lstorden
+    FIELD ind AS INT
+    FIELD nro_evento AS int 
+    FIELD operario AS CHAR 
+    FIELD direccion LIKE cliente.direccion
+    FIELD fecha AS date
+    FIELD turno AS CHAR FORMAT "x(10)"
+    FIELD cdg_tipoart LIKE  articulo.cdg_tipoart
+    FIELD cdg_articulo LIKE articulo.cdg_articulo
+    FIELD prf_comprob LIKE contrato_hd.prf_contrato
+    FIELD origen LIKE evento.origen
+    FIELD nro_identificacion LIKE evento.nro_identificacion
+    FIELD leyenda LIKE evento.leyenda
+    FIELD observacion LIKE evento.leyenda
+    FIELD laboratorio LIKE evento_protocolo.laboratorio
+    INDEX ind ind.
+    
+{crystal_dyna.p}
+
+DEFINE INPUT PARAMETER TABLE FOR aimp.
+DEFINE OUTPUT PARAMETER xfile1 AS CHAR.
+DEFINE INPUT PARAMETER pcant AS INT.
+
+DEFINE VAR i AS INT NO-UNDO.
+DEFINE VAR k AS INT NO-UNDO.
+DEFINE VAR ccant AS INT NO-UNDO.
+DEFINE DATASET dset FOR lstorden.
+DEFINE VAR vind AS INT NO-UNDO.
+DEFINE BUFFER administracion FOR cliente.
+
+FOR EACH aimp:
+    FIND evento WHERE evento.nro_evento = aimp.nro_evento NO-LOCK.
+    IF NOT evento.fasignado<>? THEN NEXT.
+    IF evento.anulado THEN NEXT.
+    IF evento.frealizado<>? THEN NEXT.
+    FIND cliente OF evento NO-LOCK.
+
+    CREATE lstorden.
+        ASSIGN vind = vind + 1
+               lstorden.ind = vind
+               lstorden.nro_evento = evento.nro_evento
+               lstorden.operario = evento.recursos
+               lstorden.direccion = cliente.direccion
+               lstorden.fecha = evento.fasignado
+               lstorden.turno = evento.turno
+               lstorden.leyenda = evento.leyenda
+               lstorden.observacion = evento.leyenda.
+
+        IF evento.origen = "CONTRATO" THEN DO:
+          FIND contrato_hd WHERE contrato_hd.nro_contrato = evento.nro_identificacion NO-LOCK NO-ERROR.
+          FIND FIRST contrato_dt OF contrato_hd NO-LOCK.
+          FIND articulo OF contrato_dt NO-LOCK.
+          FIND restriccion WHERE restriccion.cdg_restriccion = "ANAGUA" NO-LOCK.
+          FIND FIRST contrato_restriccion WHERE contrato_restriccion.nro_contrato = evento.nro_identificacion and
+                contrato_restriccion.nro_restriccion = restriccion.nro_restriccion NO-LOCK NO-ERROR.
+          IF AVAILABLE contrato_restriccion THEN
+                lstorden.laboratorio = contrato_restriccion.valor.
+          ELSE
+                lstorden.laboratorio = "1".
+          ASSIGN 
+                lstorden.prf_comprob = contrato_hd.prf_contrato
+                lstorden.cdg_articulo = articulo.cdg_articulo
+                lstorden.cdg_tipoart = Articulo.cdg_tipoart
+                lstorden.nro_identificacion = contrato_hd.nro_contrato
+                lstorden.origen = "C".
+                lstorden.leyenda = contrato_hd.leyenda + " " + lstorden.leyenda.
+
+                
+        END.
+        IF evento.origen BEGINS "REMIT" THEN DO:
+            FIND rem_header WHERE rem_header.nro_remito = evento.nro_identificacion NO-LOCK NO-ERROR.
+            FIND FIRST rem_detalle OF rem_header NO-LOCK.
+            FIND articulo OF rem_detalle NO-LOCK.
+            ASSIGN 
+              lstorden.prf_comprob = rem_header.prf_comprob
+              lstorden.cdg_articulo = articulo.cdg_articulo
+              lstorden.cdg_tipoart = Articulo.cdg_tipoart
+              lstorden.nro_identificacion = rem_header.nro_comprob
+              lstorden.origen = "R".
+        END.
+        IF evento.origen = "TAREA" THEN DO:
+            FIND tarea WHERE tarea.nro_tarea = evento.nro_identificacion NO-LOCK NO-ERROR.
+            IF AVAILABLE tarea THEN DO:
+                IF tarea.cdg_tipotarea = "J" THEN DO:
+                    CASE extrae("texto_adic",tarea.datos-template):
+                        WHEN "A" THEN DO:
+                            FIND administracion WHERE administracion.nro_admin = cliente.nro_admin NO-LOCK.
+                            lstorden.direccion = administracion.direccion + "-".
+                        END.
+                        WHEN "O" THEN DO:
+                            lstorden.direccion = "".
+                        END.
+                        OTHERWISE DO:
+                            lstorden.direccion = lstorden.direccion + "-".
+                        END.
+                    END CASE.
+                    lstorden.direccion = lstorden.direccion + extrae("texto_adic",tarea.datos-template).
+                END.
+                     
+            END.
+        END.
+
+END.
+
+xfile1 = TempFile("") + ".xml".
+
+DATASET dset:WRITE-XML ("FILE", xfile1, TRUE,?,"",YES,YES).

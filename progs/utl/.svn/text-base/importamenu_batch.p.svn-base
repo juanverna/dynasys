@@ -1,0 +1,60 @@
+/*==============================================================================================*/
+/*                        IMPORTA UN MENU DE FORMA BACTH                                        */
+/*==============================================================================================*/
+
+  DEFINE VARIABLE a-entrada    AS CHARACTER INITIAL "C:\PROFAMILY\MENUES\TEX.TXT".
+  DEFINE VARIABLE nue_empresa  AS CHARACTER INITIAL "P".
+  DEFINE VARIABLE modo_bajada  AS CHARACTER INITIAL "agregar".
+
+  DEFINE TEMP-TABLE T-Menu LIKE Menu.
+
+  INPUT FROM VALUE(a-entrada) PAGE-SIZE 0.
+  REPEAT:
+      CREATE T-Menu.
+      IMPORT Delimiter "@" T-Menu.
+  END.
+  INPUT CLOSE.
+
+  IF modo_bajada = "reemplazar"
+  THEN DO:
+       FOR EACH Menu WHERE Menu.cdg_empresa = nue_empresa:
+           DELETE Menu.
+       END.    
+  END.
+      
+  FOR EACH T-Menu:
+
+      CASE modo_bajada:
+
+           WHEN "reemplazar"
+           THEN DO:
+                CREATE Menu.
+                BUFFER-COPY T-Menu TO Menu 
+                            ASSIGN Menu.cdg_empresa = nue_empresa.
+           END.
+
+           WHEN "actualizar"
+           THEN DO:
+                FIND Menu WHERE Menu.cdg_empresa = nue_empresa
+                            AND Menu.cdg_item    = T-Menu.cdg_item EXCLUSIVE-LOCK NO-ERROR.
+                IF NOT AVAILABLE Menu THEN CREATE Menu.            
+                BUFFER-COPY T-Menu TO Menu 
+                            ASSIGN Menu.cdg_empresa = nue_empresa.
+           END.
+           WHEN "agregar"
+           THEN DO:
+                FIND Menu WHERE Menu.cdg_empresa = nue_empresa
+                            AND Menu.cdg_item    = T-Menu.cdg_item EXCLUSIVE-LOCK NO-ERROR.
+                IF NOT AVAILABLE Menu 
+                THEN DO:
+                     CREATE Menu.            
+                     BUFFER-COPY T-Menu TO Menu 
+                                 ASSIGN Menu.cdg_empresa = nue_empresa.
+                END.
+           END.
+   
+      END CASE.     
+
+      DELETE T-Menu.
+
+  END.

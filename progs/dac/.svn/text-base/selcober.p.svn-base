@@ -1,0 +1,13 @@
+/*=================================================================================*/
+/*                                                                                 */
+/*                      SELECCION DE COBERTURAS                                    */
+/*                                                                                 */
+/*=================================================================================*/
+
+&GLOBAL-DEFINE TABLA           Cobertura
+&GLOBAL-DEFINE CODIGO          cdg_cobertura
+&GLOBAL-DEFINE NOMBRE          dsc_cobertura
+&GLOBAL-DEFINE TITULO-BROWSE   Tipee un nombre o seleccione de la lista
+&GLOBAL-DEFINE TITULO-FRAME    Seleccion de Coberturas
+
+{SELBROWS.I}

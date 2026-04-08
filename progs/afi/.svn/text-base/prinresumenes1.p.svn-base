@@ -1,0 +1,83 @@
+/*=========================================================================================*/
+/*                                   IMPRESION DE RESUMENES DE DEUDA                       */
+/*=========================================================================================*/
+
+DEFINE INPUT PARAMETER p-que_empresa      AS CHARACTER.
+DEFINE INPUT PARAMETER p-des_cliente      LIKE Cliente.cdg_cliente.
+DEFINE INPUT PARAMETER p-has_cliente      LIKE Cliente.cdg_cliente.
+DEFINE INPUT PARAMETER p-has_fecha        AS DATE.
+
+DEFINE OUTPUT PARAMETER xfile AS CHAR NO-UNDO.
+
+/*=========================================================================================*/
+/*                                          VARIABLES                                      */
+/*=========================================================================================*/
+
+{crystal_dyna.p}
+
+DEFINE VARIABLE j                         AS INTEGER.
+DEFINE VARIABLE k                         AS INTEGER.
+DEFINE VARIABLE x-importe                 LIKE Cta_cte.debito.
+DEFINE VARIABLE t-importe                 LIKE Cta_cte.debito.
+DEFINE VAR senal AS LOGICAL NO-UNDO.
+
+DEFINE BUFFER Administrador FOR Cliente.
+
+DEFINE TEMP-TABLE T-Administrador LIKE Cliente.
+DEFINE TEMP-TABLE T-Cliente       LIKE Cliente.
+DEFINE TEMP-TABLE T-Cta_cte       LIKE Cta_cte
+    FIELD debita LIKE Tipocomprobante.debita.
+
+DEFINE DATASET dset FOR T-Administrador,T-Cliente,T-Cta_cte. 
+
+/*=========================================================================================*/
+/*                                    FUNCIONES                                            */
+/*=========================================================================================*/
+
+FUNCTION fnComprobante RETURN CHARACTER ( tip AS CHARACTER, prf AS INTEGER, nro AS INTEGER).
+  RETURN tip + "-" + STRING(prf,"9999") + "-" + STRING(nro,"99999999").
+END FUNCTION.
+
+/*=========================================================================================*/
+/*                           B L O Q U E   P R I N C I P A L                               */
+/*=========================================================================================*/
+
+FOR EACH Administrador NO-LOCK 
+    WHERE Administrador.cdg_cliente >= p-des_cliente
+      AND Administrador.cdg_cliente <= p-has_cliente:
+       CREATE T-Administrador.
+       BUFFER-COPY Administrador TO T-Administrador.
+       senal = FALSE.
+       
+           FOR EACH Cta_cte NO-LOCK
+                WHERE cta_cte.nro_administrador = administrador.nro_administrador
+                  AND Cta_cte.cdg_empresa     = p-que_empresa
+                  AND Cta_cte.fecha_emision  <= p-has_fecha
+                  AND Cta_cte.debito <> Cta_cte.credito ,
+                  FIRST Tipocomprobante OF Cta_cte NO-LOCK,
+                  FIRST cliente OF cta_cte NO-LOCK: 
+            FIND t-cliente WHERE t-cliente.nro_cliente = cliente.nro_cliente NO-ERROR.
+            IF NOT AVAILABLE t-cliente THEN DO:
+                CREATE T-Cliente.
+                BUFFER-COPY Cliente TO T-Cliente.
+            END.
+                senal = TRUE.
+                CREATE T-Cta_cte.
+                BUFFER-COPY Cta_cte TO T-Cta_cte
+                    ASSIGN T-Cta_cte.debita = Tipocomprobante.debita.
+
+    
+    END. /* De los movimientos de un administador */
+    IF NOT senal THEN DELETE t-administrador.
+
+END. /* Del rango de administradores */
+
+ /*xfile =TempFile("") + ".xml".*/
+    xfile = "c:\aa.xml".
+    /*
+RUN exportToXmlDset ( "dset", STRING( TEMP-TABLE T-Administrador:HANDLE ) + "," + 
+                              STRING( TEMP-TABLE T-Cliente:HANDLE ) + "," +
+                              STRING( TEMP-TABLE T-Cta_cte:HANDLE ), xfile).
+      */
+DATASET dset:WRITE-XML ("FILE", xfile, FALSE,
+                                     ?,"",YES,YES).

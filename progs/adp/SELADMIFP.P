@@ -1,0 +1,11 @@
+/*=================================================================================*/
+/*                           HELP DE SELECCION DE A.F.J.P.                         */
+/*=================================================================================*/
+
+&GLOBAL-DEFINE TABLA           Afjp
+&GLOBAL-DEFINE CODIGO          cdg_afjp
+&GLOBAL-DEFINE NOMBRE          nom_afjp
+&GLOBAL-DEFINE TITULO-BROWSE   Seleccione la A.F.J.P.
+&GLOBAL-DEFINE TITULO-FRAME    Seleccion de A.F.J.P.
+
+{SELBROWS.I}

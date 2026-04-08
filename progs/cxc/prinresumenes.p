@@ -1,0 +1,194 @@
+/*=========================================================================================*/
+/*                                   GENERA XML para la IMPRESION DE RESUMENES DE DEUDA                       */
+/*=========================================================================================*/
+
+DEFINE INPUT PARAMETER p-que_empresa      AS CHARACTER.
+DEFINE INPUT PARAMETER p-des_cliente      AS char.
+DEFINE INPUT PARAMETER p-has_cliente      AS char.
+DEFINE INPUT PARAMETER p-has_fecha        AS DATE.
+DEFINE INPUT PARAMETER p-vencimiento      AS DATE.
+DEFINE INPUT PARAMETER p-punto-vta        AS CHARACTER.
+DEFINE INPUT PARAMETER p-ver_por AS INTEGER.
+DEFINE OUTPUT PARAMETER xfile1 AS CHAR NO-UNDO.
+
+/*=========================================================================================*/
+/*                                          VARIABLES                                      */
+/*=========================================================================================*/
+
+{crystal_dyna.p}
+{findempresa.i}
+
+DEFINE VARIABLE j                         AS INTEGER.
+DEFINE VARIABLE k                         AS INTEGER.
+DEFINE VARIABLE x-importe                 LIKE Cta_cte.debito.
+DEFINE VARIABLE t-importe                 LIKE Cta_cte.debito.
+DEFINE VAR senal AS LOGICAL NO-UNDO.
+
+DEFINE BUFFER Administrador FOR Cliente.
+
+DEFINE TEMP-TABLE T-Administrador 
+        field nro_cliente              like Administrador.nro_cliente 
+        field horario_de_atencion      like Administrador.horario_de_atencion 
+        field HAT                      like Administrador.HAT 
+        field horario_de_pago          like Administrador.horario_de_pago 
+        field cdg_cliente              like Administrador.cdg_cliente 
+        field direccion                like Administrador.direccion 
+        field dias_de_pago             like Administrador.dias_de_pago 
+        field nom_cliente              like Administrador.nom_cliente 
+        field localidad                like Administrador.localidad
+        FIELD telefonos                LIKE Administrador.telefonos
+        FIELD Cobranzas                AS CHAR 
+        FIELD fechac                   AS CHAR
+        FIELD fechai                   AS DATE
+        FIELD horac                    AS CHAR
+    INDEX I1 cdg_cliente.
+DEFINE TEMP-TABLE T-Cta_cte       
+    FIELD nro_administrador LIKE Cta_cte.nro_administrador
+    FIELD fnComprobante AS char FORMAT "x(16)"
+    FIELD cli_direccion LIKE fac_header.direccion
+    FIELD codigo_cliente LIKE Fac_header.codigo_cliente
+    FIELD cli_nombre LIKE  Fac_header.nombre
+    FIELD credito LIKE Cta_cte.credito
+    FIELD debito LIKE Cta_cte.debito
+    FIELD fecha_emision LIKE Cta_cte.fecha_emision 
+    FIELD fecha_vencimiento LIKE Cta_cte.fecha_vencimiento 
+    FIELD imp_total LIKE Cta_cte.imp_total
+    FIELD ListaArticulo AS CHAR FORMAT "X(20)"
+    FIELD debita LIKE Tipocomprobante.debita
+    INDEX I1 nro_administrador.
+
+DEFINE DATASET dset FOR T-Administrador,T-Cta_cte
+    DATA-RELATION ACTACTE FOR T-Administrador, T-Cta_cte NESTED
+        RELATION-FIELDS ( T-Administrador.nro_cliente,T-Cta_cte.nro_administrador ).
+
+/*=========================================================================================*/
+/*                                    FUNCIONES                                            */
+/*=========================================================================================*/
+
+FUNCTION fnComprobante RETURN CHARACTER ( tip AS CHARACTER, prf AS INTEGER, nro AS INTEGER).
+  RETURN tip + "-" + STRING(prf,"9999") + "-" + STRING(nro,"99999999").
+END FUNCTION.
+
+/*=========================================================================================*/
+/*                           B L O Q U E   P R I N C I P A L                               */
+/*=========================================================================================*/
+IF p-ver_por = 1 THEN DO:
+ FOR EACH Administrador  
+    WHERE Administrador.cdg_cliente >= p-des_cliente
+      AND Administrador.cdg_cliente <= p-has_cliente
+      AND CAN-DO(Administrador.lista_empresas,empresa.cdg_empresa)
+        /*AND LOOKUP(Administrador.lista_sectores, que_sector) = 1 */
+            USE-INDEX cdg_cliente NO-LOCK:
+
+       CREATE T-Administrador.
+       BUFFER-COPY Administrador TO T-Administrador.
+       senal = FALSE.
+       
+           FOR EACH Cta_cte NO-LOCK
+                WHERE cta_cte.nro_administrador = administrador.nro_cliente
+                  AND Cta_cte.cdg_empresa     = p-que_empresa
+                  AND Cta_cte.fecha_emision  <= p-has_fecha
+                  AND Cta_cte.debito <> Cta_cte.credito 
+                       BY cta_cte.fecha_emision:
+
+                IF NOT CAN-DO(p-punto-vta, string(cta_cte.prf_comprob,"9999") ) THEN NEXT.
+                IF cta_cte.fecha_vencimiento > p-vencimiento THEN NEXT.
+                FIND FIRST Tipocomprobante OF Cta_cte NO-LOCK.
+                FIND FIRST cliente OF cta_cte NO-LOCK. 
+                senal = TRUE.
+                FIND fac_header WHERE 
+                    fac_header.cdg_empresa = cta_cte.cdg_empresa AND
+                    fac_header.tip_comprob = cta_cte.tip_comprob AND
+                    fac_header.prf_comprob = cta_cte.prf_comprob AND
+                    fac_header.nro_comprob = cta_cte.nro_comprob NO-LOCK.
+
+                CREATE T-Cta_cte.
+                BUFFER-COPY Cta_cte TO T-Cta_cte
+                    ASSIGN T-Cta_cte.debita = Tipocomprobante.debita.
+                    ASSIGN T-Cta_cte.fnComprobante = fnComprobante(cta_cte.tip_comprob,cta_cte.prf_comprob,cta_cte.nro_comprob)
+                           T-Cta_cte.cli_nombre = fac_header.nombre
+                           T-Cta_cte.codigo_cliente = fac_header.codigo_cliente
+                           T-Cta_cte.cli_direccion = fac_header.direccion.
+                T-Cta_cte.ListaArticulo = "".
+                FOR EACH fac_detalle OF fac_header,articulo OF fac_detalle:
+                    T-Cta_cte.ListaArticulo = T-Cta_cte.ListaArticulo + " " + Articulo.cdg_tipoart.
+                END.
+                FOR EACH rendicion_hd WHERE rendicion_hd.nro_administrador = administrador.nro_cliente BY Rendicion_hd.fch_rendicion DESC:
+                    t-administrador.cobranzas = t-administrador.cobranzas + "," + string(rendicion_hd.fecha).
+                    IF NUM-ENTRIES(t-administrador.cobranzas) = 2 THEN LEAVE.
+                END.
+                t-administrador.cobranzas = SUBSTRING(t-administrador.cobranzas,2).
+                    
+    
+    END. /* De los movimientos de un administador */
+    IF NOT senal THEN do:
+        DELETE t-administrador.
+        NEXT.
+    END.
+
+    FIND restriccion WHERE restriccion.cdg_restriccion = "FECHAC" NO-LOCK.
+    FIND FIRST cliente_restriccion of restriccion WHERE cliente_restriccion.nro_cliente = administrador.nro_administrador NO-LOCK NO-ERROR.
+    IF AVAILABLE cliente_restriccion THEN T-Administrador.fechac = cliente_restriccion.valor.
+    FIND restriccion WHERE restriccion.cdg_restriccion = "HORAC" NO-LOCK.
+    FIND FIRST cliente_restriccion OF restriccion WHERE cliente_restriccion.nro_cliente = administrador.nro_administrador NO-LOCK NO-ERROR.
+    IF AVAILABLE cliente_restriccion THEN T-Administrador.horac = cliente_restriccion.valor.
+    FIND restriccion WHERE restriccion.cdg_restriccion = "FECHAI" NO-LOCK.
+    FIND FIRST cliente_restriccion OF restriccion WHERE cliente_restriccion.nro_cliente = administrador.nro_administrador NO-LOCK NO-ERROR.
+    IF AVAILABLE cliente_restriccion THEN T-Administrador.fechai = date(cliente_restriccion.valor) NO-ERROR.
+
+ END. /* Del rango de administradores */
+END.
+ELSE DO:
+     FOR EACH Administrador  
+    WHERE Administrador.nom_cliente >= p-des_cliente
+      AND Administrador.nom_cliente <= p-has_cliente
+      AND CAN-DO(Administrador.lista_empresas,empresa.cdg_empresa)
+        /*AND LOOKUP(Administrador.lista_sectores, que_sector) = 1 */
+      USE-INDEX por_nombre NO-LOCK:
+       CREATE T-Administrador.
+       BUFFER-COPY Administrador TO T-Administrador.
+       senal = FALSE.
+           FOR EACH Cta_cte NO-LOCK
+                WHERE cta_cte.nro_administrador = administrador.nro_cliente
+                  AND Cta_cte.cdg_empresa     = p-que_empresa
+                  AND Cta_cte.fecha_emision  <= p-has_fecha
+                  AND Cta_cte.debito <> Cta_cte.credito 
+                       BY cta_cte.fecha_emision:
+               IF cta_cte.fecha_vencimiento > p-vencimiento THEN NEXT.
+               IF NOT CAN-DO(p-punto-vta, string(cta_cte.prf_comprob,"9999") ) THEN NEXT.
+                FIND FIRST Tipocomprobante OF Cta_cte NO-LOCK.
+                FIND FIRST cliente OF cta_cte NO-LOCK. 
+                senal = TRUE.
+                FIND fac_header WHERE 
+                    fac_header.cdg_empresa = cta_cte.cdg_empresa AND
+                    fac_header.tip_comprob = cta_cte.tip_comprob AND
+                    fac_header.prf_comprob = cta_cte.prf_comprob AND
+                    fac_header.nro_comprob = cta_cte.nro_comprob NO-LOCK.
+
+                CREATE T-Cta_cte.
+                BUFFER-COPY Cta_cte TO T-Cta_cte
+                    ASSIGN T-Cta_cte.debita = Tipocomprobante.debita.
+                    ASSIGN T-Cta_cte.fnComprobante = fnComprobante(cta_cte.tip_comprob,cta_cte.prf_comprob,cta_cte.nro_comprob)
+                           T-Cta_cte.cli_nombre = fac_header.nombre
+                           T-Cta_cte.codigo_cliente = fac_header.codigo_cliente
+                           T-Cta_cte.cli_direccion = fac_header.direccion.
+                T-Cta_cte.ListaArticulo = "".
+                FOR EACH fac_detalle OF fac_header,articulo OF fac_detalle:
+                    T-Cta_cte.ListaArticulo = T-Cta_cte.ListaArticulo + " " + Articulo.cdg_tipoart.
+                END.
+    END. /* De los movimientos de un administador */
+    IF NOT senal THEN DELETE t-administrador.
+
+END. /* Del rango de administradores */
+
+END.
+
+xfile1 =TempFile("") + ".xml".
+
+    /*
+RUN exportToXmlDset ( "dset", STRING( TEMP-TABLE T-Administrador:HANDLE ) + "," + 
+                              STRING( TEMP-TABLE T-Cliente:HANDLE ) + "," +
+                              STRING( TEMP-TABLE T-Cta_cte:HANDLE ), xfile).
+      */
+DATASET dset:WRITE-XML ("FILE", xfile1, TRUE,
+                                     ?,"",YES,YES).

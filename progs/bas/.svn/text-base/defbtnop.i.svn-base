@@ -1,0 +1,3 @@
+DEFINE BUTTON {1}
+     LABEL "{2}":L 
+     SIZE 27 BY 0.9 FONT 4.

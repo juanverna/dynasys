@@ -1,0 +1,10 @@
+DEFINE BUFFER B-Menu FOR Menu.
+FOR EACH Menu WHERE Menu.cdg_padre begins "DSP":
+
+    CREATE b-menu.
+    BUFFER-COPY Menu TO B-Menu
+                ASSIGN B-Menu.cdg_padre = REPLACE(Menu.cdg_padre,"DSP","EXP")
+                       B-Menu.cdg_item  = REPLACE(Menu.cdg_item,"DSP","EXP").
+
+    
+END.                   

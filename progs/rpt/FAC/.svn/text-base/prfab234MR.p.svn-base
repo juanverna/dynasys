@@ -1,0 +1,83 @@
+/*====================================================================================*/
+/*                 IMPRESION DE UN LOTE DE FACTURAS CONSECUTIVAS                      */
+/*====================================================================================*/
+
+DEFINE INPUT PARAMETER p-tip_comprob LIKE Fac_header.tip_comprob.
+DEFINE INPUT PARAMETER p-prf_comprob LIKE Fac_header.prf_comprob.
+DEFINE INPUT PARAMETER p-des_nrocomp LIKE Fac_header.nro_comprob.
+DEFINE INPUT PARAMETER p-has_nrocomp LIKE Fac_header.nro_comprob.
+DEFINE INPUT PARAMETER p-cdg_empresa LIKE empresa.cdg_empresa no-undo.
+DEFINE OUTPUT PARAMETER xfile AS CHAR NO-UNDO.
+
+
+DEF VAR i AS INT NO-UNDO.
+DEF VAR j AS INT NO-UNDO.
+DEF VAR juntas AS LOGICAL NO-UNDO.
+DEF VAR listaposible AS CHAR.
+
+/*se resuelven aqui las relaciones solo se pasaran a CR los datos que se necesitan*/
+DEFINE temp-table ttcopias
+    FIELD unico AS INT
+    FIELD nro_factura LIKE fac_header.nro_factura
+    FIELD nro_copia AS INT
+    INDEX unico unico.
+DEFINE TEMP-TABLE ttheader LIKE Fac_header.
+DEFINE TEMP-TABLE ttdetalle LIKE Fac_detalle.
+DEFINE DATASET dset FOR ttcopias,ttheader,ttdetalle
+    DATA-RELATION copias FOR ttcopias,ttheader RELATION-FIELDS(nro_factura, nro_factura)
+    DATA-RELATION headerdetalle FOR ttheader,ttdetalle RELATION-FIELDS(nro_factura, nro_factura).
+EMPTY TEMP-TABLE ttheader.
+EMPTY TEMP-TABLE ttdetalle.
+/*====================================================================================*/
+/*                                 BLOQUE PRINCIPAL                                   */
+/*====================================================================================*/
+j = 0.
+RUN getparametro_l.p( INPUT "CREDEBFC" , OUTPUT juntas ).
+  IF juntas THEN
+    listaposible = "F" + SUBSTR(p-tip_comprob,2) + ",C" + SUBSTR(p-tip_comprob,2) + ",D" + SUBSTR(p-tip_comprob,2).
+ ELSE
+    listaposible = p-tip_comprob.
+
+
+FOR EACH Fac_header 
+    WHERE Fac_header.cdg_empresa  = p-cdg_empresa
+      AND Fac_header.prf_comprob  = p-prf_comprob
+      AND Fac_header.nro_comprob  <= p-has_nrocomp
+      AND Fac_header.nro_comprob  >= p-des_nrocomp NO-LOCK:
+    IF NOT CAN-DO(listaposible, Fac_header.tip_comprob) THEN NEXT.
+    CREATE ttheader.
+    BUFFER-COPY fac_header TO ttheader NO-ERROR.
+    IF fac_header.nombre  BEGINS "CP." THEN ttheader.nombre = "CONSORCIO DE PROPIETARIOS".
+    FOR EACH fac_detalle OF fac_header WHERE fac_detalle.precio <> 0:
+        CREATE ttdetalle.
+        BUFFER-COPY fac_detalle TO ttdetalle NO-ERROR.
+    END.
+    DO i = 1 TO 2:
+        CREATE ttcopias.
+        ASSIGN ttcopias.unico = j
+               ttcopias.nro_factura = fac_header.nro_factura
+               ttcopias.nro_copia = i
+               j = j + 1.
+    END.
+END.
+xfile = SUBST('&1/cr-' + userid("sic") + ".xml" , SESSION:TEMP-DIRECTORY).
+xfile = REPLACE(xfile,"/","\").
+
+DATASET dset:WRITE-XML ("FILE", xfile, FALSE,
+                                     ?,"",YES,YES).
+
+FOR EACH Fac_header 
+    WHERE Fac_header.cdg_empresa  = p-cdg_empresa
+      AND Fac_header.prf_comprob  = p-prf_comprob
+      AND Fac_header.nro_comprob  <= p-has_nrocomp
+      AND Fac_header.nro_comprob  >= p-des_nrocomp:
+    IF NOT CAN-DO(listaposible, Fac_header.tip_comprob) THEN NEXT.
+    ASSIGN fac_header.impreso = "S".
+END.
+                                   
+/*A fin de tener las definiciones solamente grabo la estructura y con eso desarrollo el reporte*/
+
+/*dataset dset:WRITE-XMLSCHEMA("FILE",'fac/cr-facturasAB.xsd',
+                                     yes,?,no).
+*/
+

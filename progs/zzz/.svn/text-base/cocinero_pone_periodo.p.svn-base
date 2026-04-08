@@ -1,0 +1,7 @@
+FOR EACH evento WHERE periodo = 0 BY evento.nro_evento DESC:
+IF frealizado <> ? THEN
+    evento.periodo = YEAR(evento.frealizado) * 100 + MONTH(evento.frealizado).
+ELSE IF fasignado <> ? THEN
+    evento.periodo = YEAR(evento.fasignado) * 100 + MONTH(evento.fasignado).
+ELSE IF fmin <> ? THEN
+    evento.periodo = YEAR(evento.fmin) * 100 + MONTH(evento.fmin).

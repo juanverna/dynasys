@@ -1,0 +1,117 @@
+/*=================================================================================*/
+/*               DESAPLICA UNA RENDICION DE LA CUENTA CORRIENTE                    */
+/*=================================================================================*/
+
+DEFINE INPUT PARAMETER rid_rendicion      AS ROWID.
+
+DEFINE BUFFER b-fac_header FOR fac_header.
+ DEFINE VAR puede_anular AS INTEGER NO-UNDO.
+
+/*=================================================================================*/
+/*                           VARIABLES, FRAMES, Y SUBMENUES                        */
+/*=================================================================================*/
+
+FIND Usuario WHERE Usuario.cdg_usuario = USERID("sic") NO-LOCK.
+{vrshared.i NEW }
+DO TRANSACTION:
+
+    FIND Rendicion_hd WHERE ROWID(Rendicion_hd) = rid_rendicion EXCLUSIVE-LOCK.
+    
+    FOR EACH comprobante_rendicion EXCLUSIVE-LOCK OF Rendicion_hd , fac_header OF comprobante_rendicion EXCLUSIVE-LOCK:
+    
+            /* -------------------------------------------------- */
+            /* Proceso de desaplicacion de la cuenta corriente    */
+            /* Elimina el registro de Rec_header correspondiente  */
+            /* -------------------------------------------------- */
+
+        FIND FIRST Cta_cte WHERE Cta_cte.cdg_empresa     = fac_header.cdg_empresa
+                             AND Cta_cte.tip_comprob     = fac_header.tip_comprob 
+                             AND Cta_cte.prf_comprob     = fac_header.prf_comprob
+                             AND Cta_cte.nro_comprob     = fac_header.nro_comprob
+                                 EXCLUSIVE-LOCK NO-ERROR.
+        IF AVAILABLE Cta_cte
+        THEN DO:
+            IF lookup(SUBSTRING( Cta_cte.tip_comprob,1,1),"F,D") <> 0  THEN DO: /*se cancela con recibos*/
+                Cta_cte.credito = Cta_cte.credito - comprobante_rendicion.este_pago.
+                /*eliminar los recibos*/
+                FOR EACH rec_header WHERE
+                            rec_header.nro_rendicion = rendicion_hd.nro_rendicion EXCLUSIVE-LOCK:
+                    FOR EACH Rec_detalle OF Rec_header EXCLUSIVE-LOCK:    
+                        DELETE Rec_detalle.
+                    END.
+            
+                    FOR EACH Aplicacion_pagos OF Rec_header:
+                        DELETE Aplicacion_pagos.
+                    END.
+                    FOR each Cta_cte WHERE Cta_cte.cdg_empresa     = rec_header.cdg_empresa
+                                         AND Cta_cte.tip_comprob     = rec_header.tip_comprob 
+                                         AND Cta_cte.prf_comprob     = rec_header.prf_comprob
+                                         AND Cta_cte.nro_comprob     = rec_header.nro_comprob
+                                             EXCLUSIVE-LOCK:
+                        DELETE cta_cte.
+                    END.
+                    DELETE rec_header.
+                END.
+            END.
+       
+            ELSE DO:
+                /*se intentara anular el comprobate de debito de esta transaccion en el caso que ya se utilizo no se podra anular a transaccion*/
+                FIND FIRST Cta_cte WHERE Cta_cte.cdg_empresa     = fac_header.cdg_empresa
+                                     AND Cta_cte.tip_comprob     = fac_header.tip_comprob 
+                                     AND Cta_cte.prf_comprob     = fac_header.prf_comprob
+                                     AND Cta_cte.nro_comprob     = fac_header.nro_comprob
+                                         EXCLUSIVE-LOCK NO-ERROR.
+                IF AVAILABLE Cta_cte THEN DO:
+                    cta_cte.debito = 0.
+                    FIND aplicacion_pagos WHERE
+                               Aplicacion_pagos.tip_comprob      = cta_cte.tip_comprob AND
+                               Aplicacion_pagos.prf_comprob      = cta_cte.prf_comprob AND
+                               Aplicacion_pagos.nro_comprob      = cta_cte.nro_comprob EXCLUSIVE-LOCK .
+                    IF NOT AVAILABLE aplicacion_pagos THEN DO:
+                        MESSAGE "Error interno, no puede proseguir"
+                                "no se encuentra el comprobante cancelatorio"
+                                "de la cuenta corriente" VIEW-AS ALERT-BOX ERROR.
+                        UNDO,LEAVE.
+                    END.
+
+
+                    FIND FIRST b-fac_header WHERE b-fac_header.cdg_empresa    = fac_header.cdg_empresa
+                                             AND b-fac_header.tip_comprob     = Aplicacion_pagos.tip_cancela
+                                             AND b-fac_header.prf_comprob     = Aplicacion_pagos.prf_cancela 
+                                             AND b-fac_header.nro_comprob     = Aplicacion_pagos.nro_cancela
+                                                 EXCLUSIVE-LOCK.
+                   FIND cta_cte WHERE Cta_cte.cdg_empresa = b-Fac_header.cdg_empresa
+                                      AND Cta_cte.nro_comprob = b-Fac_header.nro_comprob 
+                                      AND Cta_cte.prf_comprob = b-Fac_header.prf_comprob
+                                      AND Cta_cte.tip_comprob = b-Fac_header.tip_comprob EXCLUSIVE-LOCK.
+                    DELETE Aplicacion_pagos.
+                    Cta_cte.credito = 0. /*desasignar la NC*/
+                    RELEASE cta_cte.
+                    RUN anular_comprobante_cliente.p (ROWID(b-fac_header) , OUTPUT puede_anular ).
+                    IF puede_anular <> 0 THEN UNDO,LEAVE.
+                END.
+            END.
+        END.
+    END.
+         
+                 
+    FIND Caj_header WHERE Caj_header.nro_transaccion = Rendicion_hd.nro_transaccion EXCLUSIVE-LOCK.
+    FOR EACH Caj_detalle OF Caj_header, FIRST Valor OF Caj_header EXCLUSIVE-LOCK:
+        DELETE Valor.
+    END.
+
+    /*anular evento relacionado con la cobranza*/
+    FIND evento WHERE Rendicion_hd.nro_evento = evento.nro_evento EXCLUSIVE-LOCK NO-ERROR.
+    IF AVAILABLE evento THEN DO:
+         ASSIGN evento.anulado = TRUE.
+         FOR EACH recurso_agenda OF evento: DELETE recurso_agenda. END.
+    END.
+
+    ASSIGN Caj_header.anulado = YES
+           Caj_header.estado  = "A"
+           Rendicion_hd.st_tesoreria = "A".
+    
+    RELEASE fac_header.
+    RELEASE Rendicion_hd.
+
+END.

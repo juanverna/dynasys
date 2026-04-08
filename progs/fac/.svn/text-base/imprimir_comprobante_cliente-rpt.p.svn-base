@@ -1,0 +1,216 @@
+/*=================================================================================*/
+/*                    IMPRESION DE FACTURAS A CLIENTES                             */
+/*=================================================================================*/
+
+DEFINE INPUT PARAMETER rid_factura  AS ROWID.
+
+/*=================================================================================*/
+/*                                VARIABLES                                        */
+/*=================================================================================*/
+
+FUNCTION fnComprobante RETURN CHARACTER ( tip AS CHARACTER, prf AS INTEGER, nro AS INTEGER).
+  RETURN tip + "-" + STRING(prf,"9999") + "-" + STRING(nro,"99999999").
+END FUNCTION.
+
+{nombrecopia.i}
+{parlocales.i}
+
+{crystal_dyna.p}
+
+DEFINE VARIABLE v-formato_salida    AS CHARACTER NO-UNDO INITIAL "PDF". 
+DEFINE VARIABLE v-preview           AS LOGICAL NO-UNDO INITIAL YES. 
+
+DEFINE VARIABLE que_parametro       AS CHARACTER NO-UNDO.
+DEFINE VARIABLE x-formulario        AS CHARACTER NO-UNDO.
+DEFINE VARIABLE x-copias            AS CHARACTER NO-UNDO.
+DEFINE VARIABLE x-hojasuelta        AS CHARACTER NO-UNDO.
+DEFINE VARIABLE que_rutina          AS CHARACTER NO-UNDO.
+DEFINE VARIABLE ncopias             AS INTEGER NO-UNDO.
+DEFINE VARIABLE j                   AS INTEGER NO-UNDO.
+
+DEFINE TEMP-TABLE T-Empresa                  NO-UNDO LIKE Empresa .
+DEFINE TEMP-TABLE T-Fac_header               NO-UNDO LIKE Fac_header
+      FIELD dsc_provincia      AS CHARACTER
+      FIELD dsc_provincia_leg  AS CHARACTER
+      FIELD dsc_condicionimpos AS CHARACTER
+      FIELD dsc_comprobante    AS CHARACTER
+      FIELD dsc_condicionventa AS CHARACTER.
+DEFINE TEMP-TABLE T-Fac_detalle              NO-UNDO LIKE Fac_detalle.
+DEFINE TEMP-TABLE T-Registrable-factura      NO-UNDO LIKE Registrable-factura.
+DEFINE TEMP-TABLE T-Fac_header-bon           NO-UNDO LIKE Fac_header-bon.
+DEFINE TEMP-TABLE T-Fac_detalle-bon          NO-UNDO LIKE Fac_detalle-bon.
+DEFINE TEMP-TABLE T-Fac_header_impuesto      NO-UNDO LIKE Fac_header_impuesto.
+DEFINE TEMP-TABLE T-Fac_detalle_impuesto     NO-UNDO LIKE Fac_detalle_impuesto.
+
+DEFINE TEMP-TABLE T-Articulo                 NO-UNDO LIKE Articulo.
+DEFINE TEMP-TABLE T-Condicion_impos          NO-UNDO LIKE Condicion_impos.
+DEFINE TEMP-TABLE T-Condicion_venta          NO-UNDO LIKE Condicion_venta.
+DEFINE TEMP-TABLE T-Provincia                NO-UNDO LIKE Provincia.
+DEFINE TEMP-TABLE T-Cliente                  NO-UNDO LIKE Cliente.
+DEFINE TEMP-TABLE T-Vendedor                 NO-UNDO LIKE Vendedor.
+DEFINE TEMP-TABLE T-Domicilio                NO-UNDO LIKE Domicilio.
+DEFINE TEMP-TABLE T-Cobrador                 NO-UNDO LIKE Cobrador.
+
+DEFINE DATASET dset FOR T-Empresa, 
+                        T-Fac_header, 
+                        T-Fac_detalle, 
+                        T-Registrable-factura, 
+                        T-Fac_header-bon,
+                        T-Fac_detalle-bon, 
+                        T-Fac_header_impuesto, 
+                        T-Fac_detalle_impuesto, 
+                        T-Articulo,
+                        T-Condicion_impos,        
+                        T-Condicion_venta,        
+                        T-Provincia,              
+                        T-Cliente,                
+                        T-Vendedor,               
+                        T-Domicilio,              
+                        T-Cobrador.
+
+/*=================================================================================*/
+/*                         INICIALIZACION DE LA EMISION                            */
+/*=================================================================================*/
+
+FIND Fac_header WHERE ROWID(Fac_header) = rid_factura EXCLUSIVE-LOCK.
+
+FIND Tipocomprobante OF Fac_header NO-LOCK.
+IF Tipocomprobante.usa_letra
+   THEN FIND Condicion_impos OF Fac_header NO-LOCK.
+
+x-formulario = Tipocomprobante.prefijo_formulario.
+IF Tipocomprobante.usa_letra
+   THEN x-formulario = REPLACE(x-formulario,"*",Condicion_impos.tipo_factura). 
+
+RUN getparametro_n.p (  INPUT  x-formulario, OUTPUT v-valor_n ).
+que_rutina = Tipocomprobante.prefijo_programa + STRING(v-valor_n, "999").
+IF Tipocomprobante.usa_letra
+   THEN que_rutina = REPLACE(que_rutina,"*",Condicion_impos.tipo_factura).
+
+/* -------------------------------------------------------------------------- */
+/* chequea si hay alguna rutina especial para el punto de venta en particular */
+/* -------------------------------------------------------------------------- */
+
+FIND Punto-venta 
+    WHERE Punto-venta.cdg_empresa = Fac_header.cdg_empresa
+      AND Punto-venta.cdg_puntovta = Fac_header.prf_comprob
+          NO-LOCK.
+
+que_rutina = que_rutina + TRIM(Punto-venta.impresor) + ".rpt".
+
+/* -------------------------------------------------------------------------- */
+/*     determina la cantida de copias a imprimir para este comprobante        */
+/* -------------------------------------------------------------------------- */
+
+x-copias = Tipocomprobante.prefijo_ncopias.
+IF Tipocomprobante.usa_letra
+   THEN x-copias = REPLACE(x-copias,"*",Condicion_impos.tipo_factura). 
+
+RUN getparametro_n.p (  INPUT  x-copias, OUTPUT ncopias ).
+
+x-hojasuelta = Tipocomprobante.prefijo_hojas.
+IF Tipocomprobante.usa_letra
+   THEN x-hojasuelta = REPLACE(x-hojasuelta,"*",Condicion_impos.tipo_factura). 
+
+RUN getparametro_l.p (  INPUT  x-hojasuelta, OUTPUT v-valor_l).
+
+xfile = tempfile("") + ".xml".
+
+/***********************************************************************/
+/**************/ xfile = "..\datafiles\compcliente.xml". /**************/
+/***********************************************************************/
+
+RUN generar_comprobante_xml /* ( INPUT xfile )*/ .   
+
+DATASET dset:WRITE-XML ("FILE", xfile, TRUE, ?,"",YES,YES).
+
+que_parametro =    "imprimirfondo"  + CHR(1) + STRING(TRUE,"true/false").
+
+/*que_parametro =  "p-que_nota" + CHR(1) + STRING( Fac_header.nro_comprob) + CHR(1) +*/
+
+/*que_parametro =    "formnumero"     + CHR(1) + "YMD"                          + CHR(1) +
+                     "form2412"      + CHR(1) + "YMD"                          + CHR(1) +
+                     "sinnumero"      + CHR(1) + STRING(lis_numero,"true/false") + CHR(1) +
+                     "nombrebalance" + CHR(1) + v-nom_balance                  + CHR(1) +
+                     "listalibros"   + CHR(1) + v-lista_libros                 + CHR(1) +
+                     "listamodulos"  + CHR(1) + v-cdg_modulo                   + CHR(1) +
+                     "desnumero"      + CHR(1) + string(des_numero)              + CHR(1) +
+                     "hasnumero"      + CHR(1) + string(has_numero)              + CHR(1) +
+                     "desejer"       + CHR(1) + string(des_ejer)               + CHR(1) +
+                     "hasejer"       + CHR(1) + string(has_ejer)               + CHR(1) +
+                     "moneda"        + CHR(1) + (IF AVAILABLE Moneda 
+                                                     THEN Moneda.descripcion 
+                                                     ELSE "" ).              */
+
+DO j = 1 TO ncopias:
+   IF v-valor_l
+   THEN DO:
+      MESSAGE "Por Favor, coloque formulario en la impresora para imprimir copia" nombre_copia [ j ] 
+          "del comprobante:" fnComprobante(Fac_header.tip_comprob,Fac_header.prf_comprob,Fac_header.nro_comprob) 
+              VIEW-AS ALERT-BOX MESSAGE TITLE "Pausa de impresion".
+   END.
+    
+   RUN graba_temp ( INPUT que_rutina, INPUT que_parametro, INPUT xfile ).
+
+   RUN invocaCrystal( INPUT que_rutina /*"PRFAA787"*/, 
+                      INPUT xfile, 
+                      INPUT que_parametro,
+                      INPUT  /*reportFormat*/ v-formato_salida,
+                      INPUT  /*ViewReport*/ v-preview ,
+                      INPUT  /*printername*/ IF v-preview THEN "" ELSE "EX?",
+                      INPUT /*exportToDisk*/ FALSE,
+                      INPUT-OUTPUT  exportFileName ).
+
+
+END.
+
+Fac_header.impreso = "S".
+
+PROCEDURE generar_comprobante_xml:
+
+    FIND Empresa OF Fac_header.
+    CREATE T-Empresa.
+    BUFFER-COPY Empresa TO T-Empresa.
+
+    CREATE T-Fac_header.
+    BUFFER-COPY Fac_header TO T-Fac_header.
+
+    FIND Provincia WHERE Provincia.cdg_provincia = Fac_header.cdg_provincia NO-LOCK.
+    T-Fac_header.dsc_provincia = Provincia.nombre.
+
+    FIND Provincia WHERE Provincia.cdg_provincia = Fac_header.cdg_provincia_leg NO-LOCK.
+    T-Fac_header.dsc_provincia_leg = Provincia.nombre.
+
+    FIND Condicion_impos WHERE Condicion_impos.cdg_condiva = Fac_header.cdg_condiva NO-LOCK.
+    T-Fac_header.dsc_condicionimpos = Condicion_impos.descripcion.
+
+    FIND Condicion_venta WHERE Condicion_venta.nro_cndventa = Fac_header.nro_cndventa NO-LOCK.
+    T-Fac_header.dsc_condicionventa = Condicion_venta.descripcion.
+
+    FIND Tipocomprobante OF Fac_header NO-LOCK.
+    T-Fac_header.dsc_comprobante = Tipocomprobante.denominacion_impresa.
+
+    FOR EACH Fac_detalle OF Fac_header NO-LOCK, Articulo OF Fac_detalle NO-LOCK:
+
+        FIND T-Articulo WHERE T-Articulo.nro_articulo = Articulo.nro_articulo NO-ERROR.
+        IF NOT AVAILABLE T-Articulo
+        THEN DO:
+            CREATE T-Articulo.
+            BUFFER-COPY Articulo TO T-Articulo.
+        END.
+            
+        CREATE T-Fac_detalle.
+        BUFFER-COPY Fac_detalle TO T-Fac_detalle.
+
+    END.
+
+    {copiar_tabla_xml.i "Condicion_impos" "Fac_header"}
+    {copiar_tabla_xml.i "Condicion_venta" "Fac_header"}
+    {copiar_tabla_xml.i "Provincia" "Fac_header"}
+    {copiar_tabla_xml.i "Cliente"   "Fac_header"}
+    {copiar_tabla_xml.i "Vendedor" "Fac_header"}
+    {copiar_tabla_xml.i "Domicilio" "Fac_header"}
+    {copiar_tabla_xml.i "Cobrador" "Cliente"}
+
+END PROCEDURE.
+

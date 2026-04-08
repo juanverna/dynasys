@@ -1,0 +1,32 @@
+DEFINE VAR v-param AS CHAR.
+DEFINE VAR v-filtr AS CHAR.
+
+DEFINE VAR chdesde AS CHAR.
+DEFINE VAR chhasta AS CHAR.
+DEFINE VAR filtr   AS CHAR.
+
+DEFINE VAR desde AS DATE LABEL "Desde".
+DEFINE VAR hasta AS DATE LABEL "Hasta".
+
+UPDATE desde hasta SKIP WITH SIDE-LABELS FRAME
+    a VIEW-AS DIALOG-BOX THREE-D TITLE "Indique fechas".
+
+RUN rbfecha.p (INPUT desde, OUTPUT chdesde).
+RUN rbfecha.p (INPUT hasta, OUTPUT chhasta).
+
+v-filtr = "Ficha.fch_alta >= " + chdesde + " AND " +
+          "Ficha.fch_alta <= " + chhasta + " AND " +
+          "Ficha.derivada = NO AND " +
+          "(LOOKUP(Ficha.cdg_destino,'B,C,E,L,M,X') > 0 OR " +
+          "(cdg_tipoemr = '4' AND cdg_destino <> 'a'))".
+
+v-param = "desde = " + STRING(desde,"99/99/99") + "~n" +
+          "hasta = " + STRING(hasta,"99/99/99") + "~n" +
+          "filtr = 'B,C,E,L,M,X'~n".
+
+RUN exreport.p (INPUT ".\imagenes\reports.prl",
+                INPUT "Traslados",
+                INPUT v-filtr,
+                INPUT "D",
+                INPUT "",
+                INPUT v-param).   

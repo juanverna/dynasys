@@ -1,0 +1,9 @@
+&GLOBAL-DEFINE TABLA           Pais
+&GLOBAL-DEFINE CODIGO          cdg_pais
+&GLOBAL-DEFINE NOMBRE          nombre
+&GLOBAL-DEFINE TITULO-BROWSE   Seleccione el pais o ingrese nombre
+&GLOBAL-DEFINE TITULO-FRAME    Seleccion de paiss
+&GLOBAL-DEFINE PROCESO         ACBRWPAI
+&GLOBAL-DEFINE ULT_REGISTRO    ult_pais
+
+{SELBROWS.I}

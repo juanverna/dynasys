@@ -1,0 +1,124 @@
+DEFINE STREAM INn.
+DEFINE VAR a1 AS CHAR.
+DEFINE VAR a2 AS CHAR.
+DEFINE VAR a3 AS CHAR.
+DEFINE VAR a4 AS CHAR.
+DEFINE VAR a5 AS CHAR.
+DEFINE VAR a6 AS CHAR.
+DEFINE VAR a7 AS CHAR.
+DEFINE VAR a8 AS CHAR.
+DEFINE VAR a9 AS CHAR.
+DEFINE VAR a10 AS CHAR.
+DEFINE VAR registro AS CHAR NO-UNDO.
+DEFINE VAR delim AS CHAR NO-UNDO.
+delim = CHR( 9 ).
+{DEBUG.i}
+INPUT STREAM INn FROM "c:\restric_admin modificada.txt".
+IMPORT STREAM inn UNFORMATTED registro.
+IMPORT STREAM inn UNFORMATTED registro.
+REPEAT :
+IMPORT STREAM inn UNFORMATTED registro.        
+a1 = entry(1,registro,chr( 9 )).
+
+FIND cliente WHERE cliente.cdg_cliente = a1 NO-LOCK NO-ERROR.
+IF NOT AVAILABLE cliente THEN DO:
+DISPLAY a1.
+UNDO,NEXT.
+END.
+    /*diasem*/
+    FIND restriccion no-lock WHERE restriccion.cdg_restriccion BEGINS "DIASsEM" AND restriccion.nro_tipo_evento = 13.
+    a2 = entry(3,registro,chr( 9 )).
+    IF a2 <> "" THEN DO:
+        FIND cliente_restriccion OF cliente WHERE cliente_restriccion.nro_restriccion = restriccion.nro_restriccion NO-ERROR.
+        IF NOT AVAILABLE cliente_restriccion THEN DO:
+            CREATE cliente_restriccion.
+            ASSIGN cliente_restriccion.nro_cliente = cliente.nro_cliente
+                   cliente_restriccion.nro_restriccion = restriccion.nro_restriccion.
+        END.
+            cliente_restriccion.valor = entry(1,ENTRY(2,a2,"["),"]").
+    END.
+/*rango*/
+FIND restriccion no-lock WHERE restriccion.cdg_restriccion BEGINS "RANGO" AND restriccion.nro_tipo_evento = 13.
+a2 = entry(4,registro,chr( 9 )).
+IF a2 <> "" THEN DO:
+        
+    FIND cliente_restriccion OF cliente WHERE cliente_restriccion.nro_restriccion = restriccion.nro_restriccion NO-ERROR.
+    IF NOT AVAILABLE cliente_restriccion THEN DO:
+        CREATE cliente_restriccion.
+        ASSIGN cliente_restriccion.nro_cliente = cliente.nro_cliente
+               cliente_restriccion.nro_restriccion = restriccion.nro_restriccion.
+    END.
+        cliente_restriccion.valor = entry(1,ENTRY(2,a2,"["),"]").
+END.
+/*dfijo*/
+FIND restriccion no-lock WHERE restriccion.cdg_restriccion BEGINS "dfijo" AND restriccion.nro_tipo_evento = 13.
+a2 = entry(5,registro,chr( 9 )).
+IF a2 <> "" THEN DO:
+    
+        FIND cliente_restriccion OF cliente WHERE cliente_restriccion.nro_restriccion = restriccion.nro_restriccion NO-ERROR.
+        IF NOT AVAILABLE cliente_restriccion THEN DO:
+            CREATE cliente_restriccion.
+            ASSIGN cliente_restriccion.nro_cliente = cliente.nro_cliente
+                   cliente_restriccion.nro_restriccion = restriccion.nro_restriccion.
+        END.
+            cliente_restriccion.valor = entry(1,ENTRY(2,a2,"["),"]").
+END.
+/*conf*/
+FIND restriccion no-lock WHERE restriccion.cdg_restriccion BEGINS "conf" AND restriccion.nro_tipo_evento = 13.
+a2 = entry(6,registro,chr( 9 )).
+IF a2 <> "" THEN DO:
+    
+        FIND cliente_restriccion OF cliente WHERE cliente_restriccion.nro_restriccion = restriccion.nro_restriccion NO-ERROR.
+        IF NOT AVAILABLE cliente_restriccion THEN DO:
+            CREATE cliente_restriccion.
+            ASSIGN cliente_restriccion.nro_cliente = cliente.nro_cliente
+                   cliente_restriccion.nro_restriccion = restriccion.nro_restriccion.
+        END.
+            cliente_restriccion.valor = a2.
+END.
+/*fechac*/
+FIND restriccion no-lock WHERE restriccion.cdg_restriccion BEGINS "fecha" AND restriccion.nro_tipo_evento = 13.
+a2 = entry(7,registro,chr( 9 )).
+IF a2 <> "" THEN DO:
+    
+        FIND cliente_restriccion OF cliente WHERE cliente_restriccion.nro_restriccion = restriccion.nro_restriccion NO-ERROR.
+        IF NOT AVAILABLE cliente_restriccion THEN DO:
+            CREATE cliente_restriccion.
+            ASSIGN cliente_restriccion.nro_cliente = cliente.nro_cliente
+                   cliente_restriccion.nro_restriccion = restriccion.nro_restriccion.
+        END.
+            cliente_restriccion.valor = a2.
+END.
+/*coper*/
+FIND restriccion no-lock WHERE restriccion.cdg_restriccion BEGINS "coper" AND restriccion.nro_tipo_evento = 13.
+a2 = entry(10,registro,chr( 9 )).
+IF a2 <> "" THEN DO:
+    
+        FIND cliente_restriccion OF cliente WHERE cliente_restriccion.nro_restriccion = restriccion.nro_restriccion NO-ERROR.
+        IF NOT AVAILABLE cliente_restriccion THEN DO:
+            CREATE cliente_restriccion.
+            ASSIGN cliente_restriccion.nro_cliente = cliente.nro_cliente
+                   cliente_restriccion.nro_restriccion = restriccion.nro_restriccion.
+        END.
+            cliente_restriccion.valor = a2.
+END.
+/*hatencion*/
+FIND restriccion no-lock WHERE restriccion.cdg_restriccion BEGINS "HORAC" AND restriccion.nro_tipo_evento = 13.
+a2 = entry(13,registro,chr( 9 )).
+IF a2 <> "" THEN DO:
+    
+        FIND cliente_restriccion OF cliente WHERE cliente_restriccion.nro_restriccion = restriccion.nro_restriccion NO-ERROR.
+        IF NOT AVAILABLE cliente_restriccion THEN DO:
+            CREATE cliente_restriccion.
+            ASSIGN cliente_restriccion.nro_cliente = cliente.nro_cliente
+                   cliente_restriccion.nro_restriccion = restriccion.nro_restriccion.
+        END.
+            cliente_restriccion.valor = replace(a2,'"','').
+END.
+/*hatencion*/
+a2 = entry(12,registro,chr( 9 )).
+IF a2 <> "" THEN DO:
+    FIND CURRENT cliente EXCLUSIVE-LOCK.         
+    Cliente.horario_de_atencion  = a2.
+END.
+END.

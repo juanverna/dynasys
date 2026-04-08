@@ -1,0 +1,146 @@
+=====================================================
+PROGRESS stack trace as of Fri Jun 30 17:16:10 2017
+=====================================================
+Startup parameters:
+-pf C:\Progress102\OpenEdge\startup.pf,-cpinternal ISO8859-1,-cpstream ISO8859-1,-cpcoll Spanish9,-cpcase Basic,-d dmy,-numsep 46,-numdec 44,(end .pf),-p xxmf.p,-db c:\bases\dynasys102,-ld sic,-T c:\temp,-basekey INI,-ininame c:\dynasys10\procs\dynasys10.ini,-s 200,-inp 8192,-nb 150
+
+Exception code: C0000005 ACCESS_VIOLATION
+Fault address:  1021E7F0 01:0021D7F0 C:\Progress102\OpenEdge\bin\prow32.dll
+
+Registers:
+EAX:FFFF0000
+EBX:00000000
+ECX:00000002
+EDX:00000000
+ESI:0018F9D8
+EDI:00000000
+CS:EIP:0023:1021E7F0
+SS:ESP:002B:0018F924  EBP:167A0CEA
+DS:002B  ES:002B  FS:0053  GS:002B
+Flags:00010286
+
+Call Stack:
+Address   Frame
+1021E7F0  00000000  pam_get_item+19810
+724277B5  00000000  sprintf+58
+1020B555  00000000  pam_get_item+6575
+1020B574  00000000  pam_get_item+6594
+1020F359  00000000  pam_get_item+A379
+1020FAF7  00000000  pam_get_item+AB17
+
+
+** ABL Stack Trace **
+
+--> USER-INTERFACE-TRIGGER v-evento.w (.\opr\v-evento.r) at line 7349
+    adecomm/_runcode.p (adecomm/_runcode.r) at line 684
+    adeshar/_gen4gl.p (adeshar/_gen4gl.r) at line 5335
+    call_run adeuib/_uibmain.p (adeuib/_uibmain.r) at line 5396
+    choose_run adeuib/_uibmain.p (adeuib/_uibmain.r) at line 8314
+    adeuib/_uibmain.p (adeuib/_uibmain.r) at line 17274
+    _ab.p (C:\Progress102\OpenEdge\gui\_ab.r) at line 394
+    _RunTool adedesk/_desktop.p (adedesk/_desktop.r) at line 1635
+    USER-INTERFACE-TRIGGER adedesk/_desktop.p (adedesk/_desktop.r) at line 2146
+    adedesk/_desktop.p (adedesk/_desktop.r) at line 2834
+    _desk.p (C:\Progress102\OpenEdge\gui\_desk.r) at line 430
+
+** Persistent procedures/Classes **
+
+Handle  File Name
+009422  .\opr\v-evento.r
+009414  .\bas\p-soloedita.r
+009410  .\opr\b-eventocli.r
+009408  .\fac\v-dsc_cliente.r
+009403  .\bas\p-excel.r
+009309  .\bas\p-updspa.r
+009307  .\PAU\vo-cliente.r
+009296  .\bas\p-updspa.r
+009294  .\opr\v-canal.r
+009290  .\opr\b-canal.r
+009288  .\PAU\v-consorcios.r
+009283  .\PAU\b.r
+009280  C:\Progress102\OpenEdge\gui\adm\objects\folder.r
+009276  c:\temp\p51663_w-consorcios.ab
+009060  .\opr\v-evento.r
+005717  adeuib/_semain.r
+004615  adeuib/_semain.r
+003961  .\cpy\v-temp_tarea1.r
+003938  .\cpy\b-busc-tarea.r
+003916  .\fac\v-dsc_cliente.r
+003865  .\bas\p-soloedita.r
+003842  .\opr\b-eventocli.r
+003820  .\fac\v-dsc_cliente.r
+003796  .\bas\p-excel.r
+003773  .\fac\b-remitos-cli.r
+003751  .\fac\v-dsc_cliente.r
+003727  .\fac\b-comprobantes1.r
+003705  .\fac\v-dsc_cliente.r
+003680  .\PAU\q-cliente_otros_datos.r
+003650  .\bas\p-updspa.r
+003628  .\PAU\v-otros_datos1.r
+003606  .\fac\v-dsc_cliente.r
+003582  .\cxc\b-ctacte-cli.r
+003560  .\fac\v-dsc_cliente.r
+003530  .\bas\p-updspa.r
+003508  .\PAU\v-detalle_contrato1linea.r
+003485  .\cpy\b-detalle_contrato.r
+003458  .\bas\p-updspa-noadd.r
+003433  .\PAU\v-contrato_consorcios.r
+003411  .\fac\v-dsc_cliente.r
+003387  .\cpy\b-contratos.r
+003362  .\PAU\q-domicilio.r
+003332  .\bas\p-updspa.r
+003310  .\fac\v-cliente_contacto.r
+003287  .\fac\b-cliente_contacto.r
+003265  .\PAU\v-dsc_unico-domicilio.r
+003243  .\fac\v-dsc_cliente.r
+003217  .\bas\p-soloalta.r
+003195  .\cxc\v-observacion-cli.r
+003172  .\cxc\b-observacion-cli.r
+003150  .\fac\v-dsc_cliente.r
+003120  .\bas\p-updspa.r
+003098  .\PAU\vo-cliente.r
+003068  .\bas\p-updspa.r
+003046  .\opr\v-canal.r
+003023  .\opr\b-canal.r
+003001  .\PAU\v-consorcios.r
+002977  .\PAU\b.r
+002955  C:\Progress102\OpenEdge\gui\adm\objects\folder.r
+002877  adecomm/as-utils.r
+002828  adecomm/_palette.r
+002827  protools/_protool.r
+002191  adecomm/_winmenu.r
+002190  adeshar/_mlmgr.r
+002068  adeuib/_abfuncs.r
+001636  C:\Progress102\OpenEdge\gui\adm\objects\broker.r
+001425  C:\Progress102\OpenEdge\gui\adm2\containr.r
+001423  C:\Progress102\OpenEdge\gui\adm2\visual.r
+001418  C:\Progress102\OpenEdge\gui\adm2\smart.r
+001415  .\bas\Winfunc.r
+001414  .\bas\Windows.r
+
+//=====================================================
+PROGRESS stack trace as of Fri Jun 30 17:16:11 2017
+//=====================================================
+Exception code: C0000005 ACCESS_VIOLATION
+Fault address:  1021E7F0 01:0021D7F0 C:\Progress102\OpenEdge\bin\prow32.dll
+
+Registers:
+EAX:FFFF0000
+EBX:00000000
+ECX:00000002
+EDX:00000000
+ESI:0018F9D8
+EDI:00000000
+CS:EIP:0023:1021E7F0
+SS:ESP:002B:0018FA44  EBP:167A0CEA
+DS:002B  ES:002B  FS:0053  GS:002B
+Flags:00010286
+
+Call Stack:
+Address   Frame
+1021E7F0  0018FA5C  pam_get_item+19810
+102098D5  0018FA60  pam_get_item+48F5
+102E1485  0018FA74  pam_get_item+DC4A5
+102B9514  0018FA7C  pam_get_item+B4534
+1013BE31  0018FA90  DllStartup+C49A1
+

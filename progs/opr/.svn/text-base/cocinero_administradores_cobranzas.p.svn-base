@@ -1,0 +1,36 @@
+{tt2xls.i}
+DEFINE TEMP-TABLE tt
+FIELD cdg_cliente LIKE cliente.cdg_cliente 
+FIELD    nom_cliente LIKE Cliente.nom_cliente  
+FIELD direccion LIKE cliente.direccion 
+FIELD fch_rendicion LIKE Rendicion_hd.fch_rendicion 
+FIELD  cdg_cobrador LIKE  Cobrador.cdg_cobrador COLUMN-LABEL "Código de!Cobrador"
+FIELD nom_cobrador LIKE    Cobrador.nom_cobrador 
+INDEX t1 cdg_cliente fch_rendicion.
+DEFINE VAR tt AS DATE NO-UNDO.
+DEFINE VAR rr AS INT.
+FOR EACH  Rendicion_hd NO-LOCK  ,
+          FIRST Cobrador OF Rendicion_hd
+           BREAK BY Rendicion_hd.nro_administrador BY Rendicion_hd.fch_rendicion DESCENDING:
+IF FIRST-OF(Rendicion_hd.nro_administrador) THEN do:
+  rr = 0.
+tt = ?.
+END.
+rr = rr + 1.
+IF rr > 12 THEN NEXT.
+IF tt = Rendicion_hd.fch_rendicion THEN NEXT.
+tt = Rendicion_hd.fch_rendicion. 
+FIND cliente WHERE cliente.nro_cliente = Rendicion_hd.nro_administrador NO-LOCK NO-ERROR.
+IF NOT AVAILABLE cliente THEN DISPLAY Rendicion_hd.nro_administrador.
+CREATE tt.
+ASSIGN tt.cdg_cliente = cliente.cdg_cliente 
+    tt.nom_cliente = Cliente.nom_cliente  
+ tt.direccion = cliente.direccion 
+ tt.fch_rendicion = Rendicion_hd.fch_rendicion 
+  tt.cdg_cobrador =  Cobrador.cdg_cobrador 
+ tt.nom_cobrador =    Cobrador.nom_cobrador.
+END.
+RUN pTT2XLS                                                              
+  ( INPUT TEMP-TABLE tt:DEFAULT-BUFFER-HANDLE,                       
+    INPUT 'c:\administradores_cobranzas.xls',                                               
+    INPUT 'PageSetup:PrintGridlines=Y|PageSetup:PrintTitleRows=$1:$1' ). 

@@ -1,0 +1,15 @@
+  DEFINE VARIABLE {&ROWID_TABLA} AS ROWID.
+  RUN {&SELECCION} ( OUTPUT {&ROWID_TABLA} ).
+  IF {&ROWID_TABLA} <> ? 
+  THEN DO:
+       FIND {&TABLA} WHERE ROWID({&TABLA}) = {&ROWID_TABLA} NO-LOCK.
+       DISPLAY {&TABLA}.{&CDG_TABLA} @ {&ENTIDAD}.{&CDG_ENTIDAD}
+               WITH FRAME F-Main.
+       &IF {&MOSTRAR_DSC} 
+       &THEN
+       {&V-DSC_TABLA} = {&TABLA}.{&DSC_TABLA}.
+       DISPLAY {&V-DSC_TABLA}
+               WITH FRAME F-Main.
+       &ENDIF        
+       RETURN NO-APPLY.
+  END.                        

@@ -1,0 +1,66 @@
+DD,01  
+MM,11  
+AA,2000
+DMA,01/11/2000 
+FECH,01 de Noviembre de 2000       
+NOM,ESC.GRAL. BELGRANO                  
+CUIT,               
+DIR,ALVEAR  1075                        
+LOC,(0000)                              
+CNV,CONTADO                             
+CIV,Consumidor Final                    
+NCLI,[A037564A] 
+NCOB,[151]  
+D01,Cuota del Mes de Noviembre de 2000.-                                                  
+I01,     442.00 
+D02,                  
+I02,              
+D03,                  
+I03,              
+D04,                  
+I04,              
+D05,                  
+I05,              
+D06,                  
+I06,              
+D07,                  
+I07,              
+D08,                  
+I08,              
+D09,                  
+I09,              
+D10,                  
+I10,              
+D11,                  
+I11,              
+D12,                  
+I12,              
+D13,                  
+I13,              
+D14,                  
+I14,              
+D15,                  
+I15,              
+D16,                  
+I16,              
+D17,                  
+I17,              
+D18,                  
+I18,              
+D19,                  
+I19,              
+D20,                  
+I20,              
+ILE1, CUATROCIENTOS CUARENTA Y DOS.-                                                      
+ILE2,                                                                                     
+LEY1,                                                                                     
+LEY2,                                                                                     
+LEY3,                                                                                     
+LEY4,                                                                                     
+LEY5,                                                                                     
+BRUT,      442.00 
+IIVA,       42.00 
+ITOT,      442.00 
+INOI,        0.00 
+CTL,0001 00006035 
+!PAGE!

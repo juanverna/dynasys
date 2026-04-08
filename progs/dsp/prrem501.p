@@ -1,0 +1,280 @@
+/*=================================================================================*/
+/*                            IMPRESION DE REMITOS                                 */
+/*=================================================================================*/
+
+DEFINE INPUT PARAMETER act_factura      AS ROWID.
+
+/*=================================================================================*/
+/*                           VARIABLES, FRAMES, Y SUBMENUES                        */
+/*=================================================================================*/
+
+
+DEFINE VARIABLE subtotal        AS DECIMAL FORMAT "-ZZZZZ9.99".
+DEFINE VARIABLE prfac           AS CHARACTER.
+DEFINE VARIABLE titulo-detalle  AS CHARACTER FORMAT "X(150)".
+DEFINE VARIABLE blancos         AS CHARACTER.
+DEFINE VARIABLE v-letra         AS CHARACTER FORMAT "X(1)".
+DEFINE VARIABLE v-comprobante   AS CHARACTER FORMAT "X(12)" INITIAL "REMITO".
+DEFINE VARIABLE que_articulo    AS CHARACTER FORMAT "X(8)".
+DEFINE VARIABLE que_descripcion AS CHARACTER FORMAT "X(40)".
+DEFINE VARIABLE que_cantidad    AS CHARACTER FORMAT "X(8)".
+DEFINE VARIABLE que_unidad      AS CHARACTER FORMAT "X(5)".
+DEFINE VARIABLE que_precio      AS CHARACTER FORMAT "X(12)".
+DEFINE VARIABLE que_subtotal    AS CHARACTER FORMAT "X(12)".
+DEFINE VARIABLE nreng           AS INTEGER.
+DEFINE VARIABLE j               AS INTEGER.
+DEFINE VARIABLE nt_lineas       AS INTEGER.
+DEFINE VARIABLE total_chars     AS INTEGER.
+DEFINE VARIABLE ancho_linea     AS INTEGER INITIAL 40.
+DEFINE VARIABLE nmax_det        AS INTEGER INITIAL 18.
+DEFINE VARIABLE linea0          AS INTEGER.
+DEFINE VARIABLE cliobsdc        AS INTEGER.
+DEFINE VARIABLE ccoobsdc        AS INTEGER.
+
+DEFINE VARIABLE t-kilos         LIKE Fac_header.imp_neto FORMAT "Z,ZZZ,ZZ9.99-".
+DEFINE VARIABLE t-bultos        LIKE Fac_header.imp_neto FORMAT "ZZZZ,ZZZ,ZZ9-".
+
+{VRSHARED.I}
+{VPERSINM.I}
+
+FORM
+    SKIP(1)
+    v-letra AT 41
+    Rem_header.prf_comprob FORMAT "9999" AT 56
+    Rem_header.nro_comprob FORMAT "99999999"
+    SKIP(1)
+    v-comprobante          AT 56
+    SKIP
+    "COMPROBANTE NO VALIDO COMO FACTURA" AT 46
+    SKIP
+    Rem_header.fecha       AT 56
+    WITH FRAME frm-comprobante NO-LABELS USE-TEXT STREAM-IO WIDTH 96.
+
+FORM
+    SKIP(8)
+    Cliente.cdg_cliente    AT 12
+    Cliente.nom_cliente    AT 21   
+    SKIP(1)
+    Domicilio.direccion    AT 21
+    Domicilio.cdg_postal   AT 21  FORMAT "X(4)"
+    Domicilio.localidad
+    SKIP
+    Provincia.nombre       AT 21
+    Domicilio.nombre       AT 54
+    SKIP
+    Condicion_impos.texto  AT 12
+    Cliente.cuit           AT 54 FORMAT "X(15)"
+    SKIP(3)
+    "O/Compra" AT 9 
+    "Nro. Pedido" AT 19 
+    "Factura Nro." AT 34
+    "Transporte - Chofer" AT 53
+    SKIP(1)
+    Rem_header.nro_ocm  AT 9
+    Ped_header.tip_comprob FORMAT "X(2)" AT 19
+    Ped_header.nro_comprob FORMAT ">>>>9"
+    Fac_header.prf_comprob AT 34 FORMAT "9999"
+    Fac_header.nro_comprob FORMAT "99999999" 
+    Rem_header.transportista  AT 53
+    WITH FRAME frm-encabezado NO-LABELS USE-TEXT STREAM-IO WIDTH 132.
+
+FORM
+    Rem_header.leyenda VIEW-AS EDITOR SIZE 65 BY 3 AT 7
+    SKIP
+    "Kilos" AT 18
+    "Bultos" AT 43
+    "Valor Asegurado" AT 63
+    SKIP(1)
+    t-kilos AT 18
+    t-bultos AT 43
+    Rem_header.imp_total AT 73
+    SKIP(1)
+    "La mercaderia viaja por cuenta y riesgo de la Empresa Transportadora y debera ser entregada en destino mañana a primera hora" AT 9
+    SKIP(2)
+    "----------------                       ---------------------                        ---------------------" AT 9 SKIP
+    "Control de Carga                             Chofer                                         Recibio" AT 9
+    WITH FRAME frm-pie SIDE-LABELS USE-TEXT STREAM-IO WIDTH 160 NO-LABELS.
+
+FORM
+    Articulo.cdg_articulo AT 9 
+    Articulo.descripcion FORMAT "X(35)" AT 22
+    Partida.cdg_partida 
+    Rem_detalle.cantidad AT 71 FORMAT "->>,>>9.99"
+    Rem_detalle.granel AT 84
+    Unidad.abrevia AT 95
+    WITH FRAME frm-detalle USE-TEXT STREAM-IO DOWN WIDTH 160 NO-UNDERLINE NO-LABELS. 
+
+FORM
+    titulo-detalle
+    SKIP(1)
+    WITH FRAME frm-titdetalle USE-TEXT STREAM-IO DOWN WIDTH 160 NO-UNDERLINE NO-LABELS. 
+    
+FORM
+    blancos
+    WITH FRAME frm-blanco USE-TEXT STREAM-IO DOWN WIDTH 131 NO-LABELS.
+/*=================================================================================*/
+/*                                    IMPRESION                                    */
+/*=================================================================================*/
+
+RUN getparametro.p (  INPUT  "CLIOBSFC",
+                      OUTPUT v-valor_c,
+                      OUTPUT v-valor_d,
+                      OUTPUT v-valor_l,
+                      OUTPUT v-valor_n,
+                      OUTPUT v-observacion ).
+
+cliobsdc = v-valor_n.
+
+
+RUN getparametro.p (  INPUT  "CCOOBSFC",
+                      OUTPUT v-valor_c,
+                      OUTPUT v-valor_d,
+                      OUTPUT v-valor_l,
+                      OUTPUT v-valor_n,
+                      OUTPUT v-observacion ).
+
+ccoobsdc = v-valor_n.
+
+Rem_header.leyenda:WIDTH = ccoobsdc.
+Rem_header.leyenda:HEIGHT = cliobsdc.
+
+FIND Rem_header WHERE ROWID(Rem_header) = act_factura EXCLUSIVE-LOCK.
+FIND Condicion_impos OF Rem_header NO-LOCK.
+FIND Domicilio OF Rem_header NO-LOCK.
+FIND Provincia OF Domicilio  NO-LOCK.
+FIND Cliente   OF Rem_header NO-LOCK NO-ERROR.
+
+FIND Fac_header WHERE Fac_header.nro_factura = Rem_header.nro_factura NO-LOCK NO-ERROR.
+FIND Ped_header WHERE Ped_header.nro_pedido = Rem_header.nro_pedido NO-LOCK NO-ERROR.
+
+v-letra = "X". 
+
+SUBSTRING(titulo-detalle,9,8) = "Articulo". 
+SUBSTRING(titulo-detalle,22,10) = "Descripcion".
+SUBSTRING(titulo-detalle,58,7) = "Partida".
+SUBSTRING(titulo-detalle,76,8) = "Cantidad".
+SUBSTRING(titulo-detalle,87,5) = "Kilaje".
+SUBSTRING(titulo-detalle,95,6) = "Unidad".
+
+OUTPUT TO PRINTER PAGE-SIZE 72.
+
+PUT CONTROL CHR(18).
+PUT CONTROL "~033CH".
+
+/*---------------------------------------------------------------------------------*/
+/*                                    ENCABEZADO                                   */
+/*---------------------------------------------------------------------------------*/
+
+DISPLAY
+    v-letra 
+    v-comprobante
+    Rem_header.prf_comprob
+    Rem_header.nro_comprob
+    Rem_header.fecha
+    WITH FRAME frm-comprobante.
+
+DISPLAY
+    Cliente.nom_cliente    WHEN AVAILABLE Cliente
+    Cliente.cdg_cliente    WHEN AVAILABLE Cliente
+    Domicilio.nombre
+    Domicilio.direccion
+    Rem_header.nro_ocm
+    Domicilio.cdg_postal
+    Domicilio.localidad
+    Provincia.nombre
+    Domicilio.nombre
+    Ped_header.tip_comprob WHEN AVAILABLE Ped_header
+    Ped_header.nro_comprob WHEN AVAILABLE Ped_header
+    Fac_header.prf_comprob WHEN AVAILABLE Fac_header
+    Fac_header.nro_comprob WHEN AVAILABLE Fac_header
+    Condicion_impos.texto
+    Cliente.cuit
+    Rem_header.transportista
+    WITH FRAME frm-encabezado.
+
+
+/*---------------------------------------------------------------------------------*/
+/*                                      DETALLE                                    */
+/*---------------------------------------------------------------------------------*/
+
+PUT CONTROL CHR(15).
+
+DISPLAY
+    titulo-detalle
+    WITH FRAME frm-titdetalle.
+
+linea0 = LINE-COUNTER.
+t-bultos = 0.
+t-kilos = 0.
+
+FOR EACH Rem_detalle OF Rem_header, Articulo OF Rem_detalle NO-LOCK,
+                                    Unidad OF Articulo NO-LOCK, Partida OF Rem_detalle:
+
+  IF Articulo.extendida
+  THEN DO:
+     total_chars = LENGTH(Rem_header.leyenda).
+     nt_lineas =  TRUNC(total_chars / ancho_linea,0).
+     IF nt_lineas * ancho_linea <> total_chars THEN nt_lineas = nt_lineas + 1.
+     DO j = 1 to nt_lineas:
+
+        que_articulo = ( IF j = 1 THEN STRING(Articulo.cdg_articulo,"ZZZZZZZ9")
+                                  ELSE "").
+        que_descripcion = SUBSTRING(Rem_header.leyenda,( j - 1) * ancho_linea + 1 ,
+                                                                     ancho_linea ).
+        que_cantidad = STRING(Rem_detalle.cantidad, "ZZZZZZZ9").
+        que_unidad   = Unidad.abrevia.
+        que_precio   = STRING(Rem_detalle.precio, "ZZZZZZ9.99").
+        que_subtotal = ( IF Rem_detalle.cantidad = 0 THEN STRING(Rem_detalle.precio, "ZZZZZZ9.99")
+                                                     ELSE STRING(subtotal, "ZZZZZZ9.99")).
+        /*
+        DISPLAY  que_cantidad    WHEN Rem_detalle.cantidad <> 0  AND j = nt_lineas
+                 que_descripcion
+                 que_precio      WHEN Rem_detalle.cantidad <> 0  AND j = nt_lineas
+                 que_subtotal    WHEN j = nt_lineas
+                 WITH FRAME frm-detalle USE-TEXT STREAM-IO DOWN.
+        DOWN WITH FRAME frm-detalle.
+        */
+     END.
+  END.
+  ELSE DO:
+    DISPLAY
+            Articulo.cdg_articulo
+            Articulo.descripcion
+            Partida.cdg_partida  
+            Rem_detalle.cantidad
+            Rem_detalle.granel
+            Unidad.abrevia
+            WITH FRAME frm-detalle USE-TEXT STREAM-IO DOWN.
+    DOWN WITH FRAME frm-detalle.
+  END.
+
+  t-kilos  = t-kilos  + IF Articulo.a_granel 
+                           THEN Rem_detalle.granel
+                           ELSE Rem_detalle.cantidad * Articulo.kgxun_bruto.
+
+END.
+
+DO nreng = LINE-COUNTER - linea0 TO nmax_det:
+   DISPLAY blancos WITH FRAME frm-blanco.
+   DOWN WITH FRAME frm-blanco.
+END.
+
+t-bultos = Rem_header.tot_bultos.
+
+/*---------------------------------------------------------------------------------*/
+/*                                       PIE                                       */
+/*---------------------------------------------------------------------------------*/
+
+DISPLAY
+    Rem_header.leyenda
+    t-kilos
+    t-bultos
+    Rem_header.imp_total
+    WITH FRAME frm-pie.
+
+/*=================================================================================*/
+/*                                       FIN                                       */
+/*=================================================================================*/
+
+OUTPUT CLOSE.
+

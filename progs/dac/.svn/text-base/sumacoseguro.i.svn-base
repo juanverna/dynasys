@@ -1,0 +1,16 @@
+    tot_fichas = tot_fichas + 1.
+    tmv_fichas = tmv_fichas + 1.
+    
+    IF Ficha.sino_coseguro 
+    THEN DO:
+         v-imp_pago = Ficha.imp_coseguro.
+         v-imp_impago = 0.
+         tmv_coseguro-si = tmv_coseguro-si + imp_coseguro.
+         tot_coseguro-si = tot_coseguro-si + imp_coseguro.
+    END.
+    ELSE DO:
+         v-imp_impago = Ficha.imp_coseguro.
+         v-imp_pago = 0.
+         tmv_coseguro-no = tmv_coseguro-no + imp_coseguro.
+         tot_coseguro-no = tot_coseguro-no + imp_coseguro.
+    END.

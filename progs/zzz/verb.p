@@ -1,0 +1,2 @@
+MESSAGE SEARCH("aderb\_printrb.r")
+    VIEW-AS ALERT-BOX INFO BUTTONS OK.

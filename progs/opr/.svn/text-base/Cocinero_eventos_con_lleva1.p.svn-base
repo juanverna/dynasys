@@ -1,0 +1,14 @@
+
+FIND restriccion WHERE restriccion.cdg_restriccion = "AVISOF".
+FOR EACH evento WHERE periodo = 200907 AND NOT anulado:
+FIND contrato_restriccion WHERE contrato_restriccion.nro_contrato = evento.nro_identificacion AND 
+    contrato_restriccion.sub_evento = evento.sub_evento AND
+    contrato_restriccion.nro_restriccion = restriccion.nro_restriccion NO-ERROR.
+IF NOT AVAILABLE contrato_restriccion THEN NEXT.
+IF evento.fasignado > 07/16/2009 THEN NEXT.
+    IF entry(3,contrato_restriccion.valor,"|") = "L" THEN DO:
+        IF evento.frealizado <> ? THEN NEXT.
+        display evento.nro_identificacion evento.sub_evento evento.fasignado.
+    END.
+END.
+

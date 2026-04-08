@@ -1,0 +1,721 @@
+/*=================================================================================*/
+/*                      EMISION DE ORDENES DE PAGO                                 */
+/*=================================================================================*/
+
+/*=================================================================================*/
+/*                          TABLAS TEMPORALES                                      */
+/*=================================================================================*/
+
+DEFINE TEMP-TABLE T-Caja-imputacion          NO-UNDO LIKE Caja-imputacion.
+DEFINE TEMP-TABLE T-Caj_detalle              NO-UNDO LIKE Caj_detalle.
+DEFINE TEMP-TABLE T-Caj_header               NO-UNDO LIKE Caj_header.
+DEFINE TEMP-TABLE T-Certificado_gan          NO-UNDO LIKE Certificado_gan.
+DEFINE TEMP-TABLE T-Certificado_ibr          NO-UNDO LIKE Certificado_ibr.
+DEFINE TEMP-TABLE T-Certificado_iva          NO-UNDO LIKE Certificado_iva.
+DEFINE TEMP-TABLE T-Certificado_sus          NO-UNDO LIKE Certificado_sus.
+DEFINE TEMP-TABLE T-Cert_ibr-detalle         NO-UNDO LIKE Cert_ibr-detalle.
+DEFINE TEMP-TABLE T-Cert_iva-detalle         NO-UNDO LIKE Cert_iva-detalle.
+DEFINE TEMP-TABLE T-Cert_sus-detalle         NO-UNDO LIKE Cert_sus-detalle.
+DEFINE TEMP-TABLE T-Cheque                   NO-UNDO LIKE Cheque.
+DEFINE TEMP-TABLE T-Cta_cte_prv              NO-UNDO LIKE Cta_cte_prv.
+DEFINE TEMP-TABLE T-Fac_detalle_prv          NO-UNDO LIKE Fac_detalle_prv.
+DEFINE TEMP-TABLE T-Fac_detalle_prv_bon      NO-UNDO LIKE Fac_detalle_prv_bon.
+DEFINE TEMP-TABLE T-Fac_detalle_prv_impuesto NO-UNDO LIKE Fac_detalle_prv_impuesto.
+DEFINE TEMP-TABLE T-Fac_header_prv           NO-UNDO LIKE Fac_header_prv.
+DEFINE TEMP-TABLE T-Fac_header_prv_bon       NO-UNDO LIKE Fac_header_prv_bon.
+DEFINE TEMP-TABLE T-Fac_header_prv_impuesto  NO-UNDO LIKE Fac_header_prv_impuesto.
+DEFINE TEMP-TABLE T-Opg_detalle              NO-UNDO LIKE Opg_detalle.
+DEFINE TEMP-TABLE T-Opg_header               NO-UNDO LIKE Opg_header.
+DEFINE TEMP-TABLE T-Pagos_x_actividad        NO-UNDO LIKE Pagos_x_actividad.
+DEFINE TEMP-TABLE T-Pagos_x_retibr           NO-UNDO LIKE Pagos_x_retibr.
+DEFINE TEMP-TABLE T-Pagos_x_retibr_det       NO-UNDO LIKE Pagos_x_retibr_det.
+DEFINE TEMP-TABLE T-Pagos_x_retiva           NO-UNDO LIKE Pagos_x_retiva.
+DEFINE TEMP-TABLE T-Pagos_x_retiva_det       NO-UNDO LIKE Pagos_x_retiva_det.
+DEFINE TEMP-TABLE T-Pagos_x_retsus           NO-UNDO LIKE Pagos_x_retsus.
+DEFINE TEMP-TABLE T-Pagos_x_retsus_det       NO-UNDO LIKE Pagos_x_retsus_det.
+DEFINE TEMP-TABLE T-Sub_detalle_prv          NO-UNDO LIKE Sub_detalle_prv.
+DEFINE TEMP-TABLE T-Sub_header_prv           NO-UNDO LIKE Sub_header_prv.
+DEFINE TEMP-TABLE T-Totales_opago            NO-UNDO LIKE Totales_opago.
+DEFINE TEMP-TABLE T-Valor                    NO-UNDO LIKE Valor.
+DEFINE TEMP-TABLE T-Asn_detalle              NO-UNDO LIKE Asn_detalle.
+DEFINE TEMP-TABLE T-Asn_header               NO-UNDO LIKE Asn_header.
+DEFINE TEMP-TABLE T-Asn_totales              NO-UNDO LIKE Asn_totales.
+
+/*=================================================================================*/
+/*                          PARAMETROS                                             */
+/*=================================================================================*/
+
+DEFINE INPUT-OUTPUT PARAMETER TABLE FOR T-Caja-imputacion. 
+DEFINE INPUT-OUTPUT PARAMETER TABLE FOR T-Caj_detalle. 
+DEFINE INPUT-OUTPUT PARAMETER TABLE FOR T-Caj_header. 
+DEFINE INPUT-OUTPUT PARAMETER TABLE FOR T-Certificado_gan. 
+DEFINE INPUT-OUTPUT PARAMETER TABLE FOR T-Certificado_ibr. 
+DEFINE INPUT-OUTPUT PARAMETER TABLE FOR T-Certificado_iva. 
+DEFINE INPUT-OUTPUT PARAMETER TABLE FOR T-Certificado_sus. 
+DEFINE INPUT-OUTPUT PARAMETER TABLE FOR T-Cert_ibr-detalle. 
+DEFINE INPUT-OUTPUT PARAMETER TABLE FOR T-Cert_iva-detalle. 
+DEFINE INPUT-OUTPUT PARAMETER TABLE FOR T-Cert_sus-detalle. 
+DEFINE INPUT-OUTPUT PARAMETER TABLE FOR T-Cheque. 
+DEFINE INPUT-OUTPUT PARAMETER TABLE FOR T-Cta_cte_prv. 
+DEFINE INPUT-OUTPUT PARAMETER TABLE FOR T-Fac_detalle_prv. 
+DEFINE INPUT-OUTPUT PARAMETER TABLE FOR T-Fac_detalle_prv_bon. 
+DEFINE INPUT-OUTPUT PARAMETER TABLE FOR T-Fac_detalle_prv_impuesto. 
+DEFINE INPUT-OUTPUT PARAMETER TABLE FOR T-Fac_header_prv. 
+DEFINE INPUT-OUTPUT PARAMETER TABLE FOR T-Fac_header_prv_bon. 
+DEFINE INPUT-OUTPUT PARAMETER TABLE FOR T-Fac_header_prv_impuesto. 
+DEFINE INPUT-OUTPUT PARAMETER TABLE FOR T-Opg_detalle. 
+DEFINE INPUT-OUTPUT PARAMETER TABLE FOR T-Opg_header. 
+DEFINE INPUT-OUTPUT PARAMETER TABLE FOR T-Pagos_x_actividad. 
+DEFINE INPUT-OUTPUT PARAMETER TABLE FOR T-Pagos_x_retibr. 
+DEFINE INPUT-OUTPUT PARAMETER TABLE FOR T-Pagos_x_retibr_det. 
+DEFINE INPUT-OUTPUT PARAMETER TABLE FOR T-Pagos_x_retiva. 
+DEFINE INPUT-OUTPUT PARAMETER TABLE FOR T-Pagos_x_retiva_det. 
+DEFINE INPUT-OUTPUT PARAMETER TABLE FOR T-Pagos_x_retsus. 
+DEFINE INPUT-OUTPUT PARAMETER TABLE FOR T-Pagos_x_retsus_det. 
+DEFINE INPUT-OUTPUT PARAMETER TABLE FOR T-Sub_detalle_prv. 
+DEFINE INPUT-OUTPUT PARAMETER TABLE FOR T-Sub_header_prv. 
+DEFINE INPUT-OUTPUT PARAMETER TABLE FOR T-Totales_opago. 
+DEFINE INPUT-OUTPUT PARAMETER TABLE FOR T-Valor. 
+DEFINE INPUT-OUTPUT PARAMETER TABLE FOR T-Asn_detalle. 
+DEFINE INPUT-OUTPUT PARAMETER TABLE FOR T-Asn_header. 
+DEFINE INPUT-OUTPUT PARAMETER TABLE FOR T-Asn_totales. 
+
+/*=================================================================================*/
+/*                          VARIABLES Y BUFFERS                                    */
+/*=================================================================================*/
+
+{parlocales.i}
+
+DEFINE VARIABLE saldo_recibo                AS DECIMAL.
+DEFINE VARIABLE saldo_factura               AS DECIMAL.
+DEFINE VARIABLE monto_imputado              AS DECIMAL.
+
+DEFINE VARIABLE saldo_importe               LIKE Opg_detalle.importe.
+DEFINE VARIABLE prop_importe                LIKE Opg_detalle.importe.
+DEFINE VARIABLE aux_nro_vencimiento         AS INTEGER.
+
+DEFINE VARIABLE que_mes                     AS INTEGER.
+DEFINE VARIABLE que_ano                     AS INTEGER.
+
+DEFINE VARIABLE ncopias                     AS INTEGER.
+DEFINE VARIABLE j                           AS INTEGER.
+DEFINE VARIABLE v-fecha_dep_retenciones     AS DATE.
+
+DEFINE BUFFER B-Sub_header_prv              FOR Sub_header_prv.
+DEFINE BUFFER B-Sub_detalle_prv             FOR Sub_detalle_prv.
+DEFINE BUFFER B-Opg_detalle                 FOR Opg_detalle.
+DEFINE BUFFER Moneda_local                  FOR Moneda.
+DEFINE BUFFER Comprobante_cc                FOR Tipocomprobante.
+
+DEFINE VARIABLE es_agretiva                 AS LOGICAL INITIAL NO.
+DEFINE VARIABLE es_agretibr                 AS LOGICAL INITIAL NO.
+DEFINE VARIABLE es_agretgan                 AS LOGICAL INITIAL NO.
+DEFINE VARIABLE es_agretsus                 AS LOGICAL INITIAL NO.
+
+/*=================================================================================*/
+/*                         INICIALIZACION DE LA EMISION                            */
+/*=================================================================================*/
+
+{findempresa.i}
+
+FIND FIRST T-Opg_header.
+FIND Tipocomprobante OF T-Opg_header NO-LOCK NO-ERROR.
+IF NOT AVAILABLE Tipocomprobante 
+THEN DO:
+    MESSAGE "No se puede emitir la orden de pago" SKIP
+            "No existe el Comprobante" T-Opg_header.cdg_comprobante SKIP
+            "para la empresa" T-Opg_header.cdg_empresa
+        VIEW-AS ALERT-BOX INFO BUTTONS OK.
+    RETURN.
+END.
+
+FIND Condicion_impos   OF T-Opg_header NO-LOCK.
+FIND Imputacion        OF T-Opg_header NO-LOCK.
+FIND Proveedor         OF T-Opg_header NO-LOCK.
+FIND Moneda            OF T-Opg_header NO-LOCK.
+FIND Familia_proveedor OF Proveedor NO-LOCK.
+FIND Cuenta            OF Familia_proveedor NO-LOCK.
+
+/*------------------------------------------------------------------------------*/
+/* CALCULA LA FECHA DE DEPOSITO DE LAS RETENCIONES COMO EL 15 DEL MES SIGUIENTE */
+/*------------------------------------------------------------------------------*/
+
+que_ano = YEAR(T-Opg_header.fecha).
+que_mes = MONTH(T-Opg_header.fecha) + 1.
+IF que_mes = 13 
+THEN DO:
+    que_ano = que_ano + 1.
+    que_mes = 1.
+END.  
+v-fecha_dep_retenciones = DATE(que_mes,15,que_ano).
+
+
+IF T-Opg_header.tipo_pago = 1
+THEN DO:
+    IF T-Opg_header.calcular_cambio
+    THEN DO:
+
+        FIND FIRST T-Fac_header_prv NO-ERROR.
+        IF AVAILABLE T-Fac_header_prv AND T-Fac_header_prv.imp_total <> 0
+        THEN DO:
+            FIND Tipocomprobante OF T-Fac_header_prv NO-LOCK.
+            RUN emitir_diferencia_prv.p ( INPUT-OUTPUT TABLE T-Fac_header_prv,
+                                          INPUT TABLE T-Fac_detalle_prv,
+                                          INPUT TABLE T-Sub_header_prv, 
+                                          INPUT TABLE T-Sub_detalle_prv,
+                                          INPUT TABLE T-Fac_header_prv_impuesto,
+                                          INPUT TABLE T-Fac_detalle_prv_impuesto).
+            FIND Moneda WHERE Moneda.es_local NO-LOCK.
+
+            FOR EACH T-Fac_header_prv, Tipocomprobante OF T-Fac_header_prv:
+
+                T-Opg_header.ultima_linea = T-Opg_header.ultima_linea + 1.
+                CREATE T-Opg_detalle.
+                ASSIGN T-Opg_detalle.nro_ordpago      = T-Opg_header.nro_ordpago
+                       T-Opg_detalle.nro_linea        = T-Opg_header.ultima_linea
+                       T-Opg_detalle.cdg_emprecancela = T-Opg_header.cdg_empresa
+                       T-Opg_detalle.tip_cancela      = T-Fac_header_prv.tip_comprob
+                       T-Opg_detalle.prf_cancela      = T-Fac_header_prv.prf_comprob
+                       T-Opg_detalle.nro_cancela      = T-Fac_header_prv.nro_comprob
+                       T-Opg_detalle.nro_vencimiento  = 1
+                       T-Opg_detalle.nro_moneda       = Moneda.nro_moneda
+                       T-Opg_detalle.cambio           = 1
+                       T-Opg_detalle.importe          = 0
+                       T-Opg_detalle.imp_pesos        = 0
+                       T-Opg_detalle.difcambio        = 
+                            IF Tipocomprobante.debita 
+                               THEN T-Fac_header_prv.imp_total * ( - 1 )
+                               ELSE T-Fac_header_prv.imp_total 
+                       T-Opg_detalle.es_difcambio     = YES.
+
+            END.
+        END.
+    END.
+END.
+
+RUN completar_auditoria.p ( OUTPUT T-Opg_header.nro_usuario,
+                            OUTPUT T-Opg_header.fecha_grab,
+                            OUTPUT T-Opg_header.hora_grab,
+                            OUTPUT T-Opg_header.pc_name).
+
+CREATE Opg_header.
+BUFFER-COPY T-Opg_header TO Opg_header
+    ASSIGN  Opg_header.nro_ordpago = NEXT-VALUE(proxima_transaccion).
+
+FOR EACH T-Opg_detalle:
+    CREATE Opg_detalle.
+    BUFFER-COPY T-Opg_detalle TO Opg_detalle
+        ASSIGN  Opg_detalle.nro_ordpago = Opg_header.nro_ordpago.
+END.
+
+FOR EACH T-Totales_opago:
+    CREATE Totales_opago.
+    BUFFER-COPY T-Totales_opago TO Totales_opago
+        ASSIGN  Totales_opago.nro_ordpago = Opg_header.nro_ordpago.
+END.
+
+FOR EACH T-Pagos_x_actividad:
+    CREATE Pagos_x_actividad.
+    BUFFER-COPY T-Pagos_x_actividad TO Pagos_x_actividad
+        ASSIGN  Pagos_x_actividad.nro_ordpago = Opg_header.nro_ordpago.
+END.             
+
+FOR EACH T-Pagos_x_retiva:
+    CREATE Pagos_x_retiva.
+    BUFFER-COPY T-Pagos_x_retiva TO Pagos_x_retiva
+        ASSIGN  Pagos_x_retiva.nro_ordpago = Opg_header.nro_ordpago.
+END.             
+
+FOR EACH T-Pagos_x_retiva_det:
+    CREATE Pagos_x_retiva_det.
+    BUFFER-COPY T-Pagos_x_retiva_det TO Pagos_x_retiva_det
+        ASSIGN  Pagos_x_retiva_det.nro_ordpago = Opg_header.nro_ordpago
+                Pagos_x_retiva_det.nro_proveedor = Opg_header.nro_proveedor.
+END.             
+
+FOR EACH T-Pagos_x_retibr:
+    CREATE Pagos_x_retibr.
+    BUFFER-COPY T-Pagos_x_retibr TO Pagos_x_retibr
+        ASSIGN  Pagos_x_retibr.nro_ordpago = Opg_header.nro_ordpago.
+END.             
+
+FOR EACH T-Pagos_x_retibr_det:
+    CREATE Pagos_x_retibr_det.
+    BUFFER-COPY T-Pagos_x_retibr_det TO Pagos_x_retibr_det
+        ASSIGN  Pagos_x_retibr_det.nro_ordpago = Opg_header.nro_ordpago
+                Pagos_x_retibr_det.nro_proveedor = Opg_header.nro_proveedor.
+END.             
+
+FOR EACH T-Pagos_x_retsus:
+    CREATE Pagos_x_retsus.
+    BUFFER-COPY T-Pagos_x_retsus TO Pagos_x_retsus
+        ASSIGN  Pagos_x_retsus.nro_ordpago = Opg_header.nro_ordpago.
+END.             
+
+FOR EACH T-Pagos_x_retsus_det:
+    CREATE Pagos_x_retsus_det.
+    BUFFER-COPY T-Pagos_x_retsus_det TO Pagos_x_retsus_det
+        ASSIGN  Pagos_x_retsus_det.nro_ordpago = Opg_header.nro_ordpago
+                Pagos_x_retsus_det.nro_proveedor = Opg_header.nro_proveedor.
+END.             
+
+FIND FIRST T-Caj_header EXCLUSIVE-LOCK NO-ERROR.
+
+IF AVAILABLE T-Caj_header /* tiene tx caja asociada */
+THEN DO:
+     ASSIGN
+          T-Caj_header.cdg_empresa = Opg_header.cdg_empresa
+          T-Caj_header.tip_comprob = Opg_header.tip_comprob
+          T-Caj_header.prf_comprob = Opg_header.prf_comprob
+          T-Caj_header.nro_comprob = Opg_header.nro_comprob.
+     CREATE Caj_header.
+     BUFFER-COPY T-Caj_header TO Caj_header
+         ASSIGN Caj_header.nro_transaccion = NEXT-VALUE(proxima_transaccion)
+                Opg_header.nro_transaccion = Caj_header.nro_transaccion.
+
+     FOR EACH T-Caj_detalle:
+         
+         CREATE Caj_detalle.
+         BUFFER-COPY T-Caj_detalle TO Caj_detalle
+             ASSIGN Caj_detalle.nro_transaccion = Caj_header.nro_transaccion.
+
+         FIND T-Valor WHERE T-Valor.nro_valor = T-Caj_detalle.nro_linea NO-ERROR.
+         IF AVAILABLE T-Valor
+         THEN DO:
+             FIND Valor WHERE Valor.nro_valor = T-Valor.nro_valor EXCLUSIVE-LOCK.
+             ASSIGN Valor.nro_transaccion = Caj_header.nro_transaccion
+                    Caj_detalle.nro_valor = Valor.nro_valor
+                    Valor.nro_proveedor   = Opg_header.nro_proveedor
+                    Valor.fecha_salida    = Opg_header.fecha.
+             RELEASE Valor.
+         END.
+
+         FIND T-Cheque WHERE T-Cheque.nro_cheque = T-Caj_detalle.nro_linea NO-ERROR.
+         IF AVAILABLE T-Cheque
+         THEN DO:
+             CREATE Cheque.
+             BUFFER-COPY T-Cheque TO Cheque
+                 ASSIGN Cheque.nro_cheque      = NEXT-VALUE(proximo_cheque)
+                        Cheque.nro_transaccion = Caj_header.nro_transaccion
+                        Cheque.cdg_caja        = Caj_header.cdg_caja
+                        Cheque.nro_proveedor   = Proveedor.nro_proveedor
+                        Cheque.estado          = "PP"
+                        Cheque.nro_proveedor   = Opg_header.nro_proveedor
+                        Cheque.orden           = Proveedor.orden_cheque
+                        Cheque.fecha_salida    = Opg_header.fecha
+                        Caj_detalle.nro_cheque = Cheque.nro_cheque.
+
+             RELEASE Cheque.
+         END.
+
+         RUN bajar_certificados_ganancias.
+         RUN bajar_certificados_ibrutos.
+         RUN bajar_certificados_iva.
+         RUN bajar_certificados_suss.
+
+         RELEASE Caj_detalle.
+
+     END.
+
+     FOR EACH T-Caja-imputacion:
+
+         CREATE Caja-imputacion.
+         BUFFER-COPY T-Caja-imputacion TO Caja-imputacion
+                     ASSIGN Caja-imputacion.nro_transaccion = Caj_header.nro_transaccion.
+         RELEASE Caja-imputacion.
+
+     END.
+
+     RUN emitir_movcaja.p ( INPUT ROWID(Caj_header)).
+     RELEASE Caj_header.    
+
+END.
+
+/*=================================================================================*/
+/*                     ACUMULACION DE PAGOS PARA RETENCIONES DE GANANCIAS          */
+/*=================================================================================*/
+
+RUN acumular_pagos.p ( INPUT ROWID(Opg_header), INPUT "A" ).
+
+/*=================================================================================*/
+/*                             CANCELACION DE DOCUMENTOS                           */
+/*=================================================================================*/
+
+saldo_recibo = Opg_header.imp_bruto.
+
+IF Tipocomprobante.afecta_cc
+THEN DO:
+
+    FOR EACH Opg_detalle OF Opg_header:
+    
+        /*----------------------------------------------------------------------------------*/
+        /*      CANCELACION DE LOS REGISTROS DE CUENTA CORRIENTE DEL DETALLE DE RECIBO      */
+        /*----------------------------------------------------------------------------------*/
+
+        FIND Cta_cte_prv WHERE Cta_cte_prv.cdg_empresa     = Opg_header.cdg_empresa
+                           AND Cta_cte_prv.nro_proveedor   = Opg_header.nro_proveedor
+                           AND Cta_cte_prv.tip_comprob     = Opg_detalle.tip_cancela
+                           AND Cta_cte_prv.prf_comprob     = Opg_detalle.prf_cancela
+                           AND Cta_cte_prv.nro_comprob     = Opg_detalle.nro_cancela
+                           AND Cta_cte_prv.nro_vencimiento = Opg_detalle.nro_vencimiento
+                               EXCLUSIVE-LOCK NO-ERROR.
+        IF NOT AVAILABLE Cta_cte_prv 
+        THEN DO:
+             MESSAGE "no encontro ctacte " SKIP
+                    "Opg_header.cdg_empresa      :"    Opg_header.cdg_empresa      SKIP
+                    "Opg_detalle.tip_cancela     :"    Opg_detalle.tip_cancela     SKIP
+                    "Opg_detalle.prf_cancela     :"    Opg_detalle.prf_cancela     SKIP
+                    "Opg_detalle.nro_cancela     :"    Opg_detalle.nro_cancela     SKIP
+                    "Opg_detalle.nro_vencimiento :"    Opg_detalle.nro_vencimiento SKIP
+                  VIEW-AS ALERT-BOX MESSAGE TITLE "emitir_opago".
+        END.
+        ELSE DO:
+            FIND FIRST Comprobante_cc 
+                WHERE Comprobante_cc.cdg_comprobante = Cta_cte_prv.cdg_comprobante
+                  AND Comprobante_cc.cdg_empresa     = Cta_cte_prv.cdg_empresa
+                      NO-LOCK NO-ERROR.
+            IF NOT AVAILABLE Comprobante_cc
+                THEN MESSAGE Cta_cte_prv.cdg_comprobante Cta_cte_prv.cdg_empresa     
+                        VIEW-AS ALERT-BOX INFO BUTTONS OK TITLE "ERROR DE IMPLEMENTACION:Comprobante no hallado".
+            
+            IF Comprobante_cc.debita
+            THEN DO: /* En los debitos , los importes son negativos */
+                IF Opg_detalle.es_difcambio
+                    THEN ASSIGN Cta_cte_prv.credito = Cta_cte_prv.credito - Opg_detalle.difcambio /* Opg_detalle.difcambio < 0 */
+                                saldo_recibo = saldo_recibo + Opg_detalle.difcambio. /* /// */
+                    ELSE ASSIGN Cta_cte_prv.credito = Cta_cte_prv.credito - Opg_detalle.importe /* Opg_detalle.importe < 0 */
+                                saldo_recibo = saldo_recibo + Opg_detalle.importe.
+            END.
+            ELSE DO:
+                IF Opg_detalle.es_difcambio
+                    THEN ASSIGN Cta_cte_prv.debito = Cta_cte_prv.debito + Opg_detalle.difcambio 
+                                saldo_recibo = saldo_recibo - Opg_detalle.difcambio.
+                    ELSE ASSIGN Cta_cte_prv.debito = Cta_cte_prv.debito + Opg_detalle.importe 
+                                saldo_recibo = saldo_recibo - Opg_detalle.importe.
+             END.
+        
+            Cta_cte_prv.imputado = NO.
+
+        END.
+
+    END. /* Fin de recorrer el detalle del recibo */
+
+/*==================================================================================*/
+/*                  INCORPORACION A LA CUENTA CORRIENTE                             */
+/*==================================================================================*/
+
+/*----------------------------------------------------------------------------------*/
+/*         INCORPORA EN LA CUENTA CORRIENTE EL COMPONENTE DE CADA MONEDA            */
+/*----------------------------------------------------------------------------------*/
+
+    ASSIGN aux_nro_vencimiento = 0
+           T-Opg_header.imp_difcambio = 0.
+
+    FOR EACH Totales_opago OF Opg_header NO-LOCK, Moneda OF Totales_opago NO-LOCK:
+
+        /*----------------------------------------------------------------------------------------*/
+        /*     GENERA EL MOVIMIENTO DE CUENTA CORRIENTE QUE CORRESPONDE A LA O/P PARA CADA MONEDA */
+        /*----------------------------------------------------------------------------------------*/
+
+        CREATE Cta_cte_prv.
+        BUFFER-COPY Opg_header TO Cta_cte_prv
+            ASSIGN Cta_cte_prv.nro_moneda        = Totales_opago.nro_moneda
+                   Cta_cte_prv.nro_vencimiento   = aux_nro_vencimiento 
+                   Cta_cte_prv.fecha_emision     = Opg_header.fecha
+                   Cta_cte_prv.fecha_vencimiento = Opg_header.fecha
+                   aux_nro_vencimiento           = aux_nro_vencimiento + 1.
+
+        IF Moneda.es_local
+            THEN ASSIGN Cta_cte_prv.debito      = Totales_opago.imp_total + Opg_header.imp_difcambio
+                        Cta_cte_prv.credito     = IF Opg_header.tipo_pago = 1 
+                                                     THEN Totales_opago.imp_total + Opg_header.imp_difcambio
+                                                     ELSE 0.
+            ELSE ASSIGN Cta_cte_prv.debito      = Totales_opago.imp_total
+                        Cta_cte_prv.credito     = IF Opg_header.tipo_pago = 1 
+                                                     THEN Totales_opago.imp_total
+                                                     ELSE 0
+                        T-Opg_header.imp_difcambio = T-Opg_header.imp_difcambio + Totales_opago.imp_difcambio .
+        
+        /*----------------------------------------------------------------------------------*/
+        /*     GENERA EL REGISTRO DE APLICACION DE PAGOS PARA CADA DOCUMENTO CANCELADO      */
+        /*----------------------------------------------------------------------------------*/
+
+        FOR EACH Opg_detalle OF Opg_header WHERE Opg_detalle.nro_moneda = Totales_opago.nro_moneda:
+
+            CREATE Aplicacion_pagos_prv.
+            ASSIGN Aplicacion_pagos_prv.nro_proveedor    = Opg_header.nro_proveedor
+                   Aplicacion_pagos_prv.cdg_empresa      = Opg_header.cdg_empresa
+                   Aplicacion_pagos_prv.importe          = IF Opg_detalle.es_difcambio 
+                                                              THEN Opg_detalle.difcambio 
+                                                              ELSE Opg_detalle.importe
+                   Aplicacion_pagos_prv.descuento        = Opg_detalle.descuento
+                   Aplicacion_pagos_prv.tip_cancela      = Opg_detalle.tip_cancela
+                   Aplicacion_pagos_prv.prf_cancela      = Opg_detalle.prf_cancela
+                   Aplicacion_pagos_prv.nro_cancela      = Opg_detalle.nro_cancela
+                   Aplicacion_pagos_prv.nro_ven_cancela  = Opg_detalle.nro_vencimiento
+                   Aplicacion_pagos_prv.tip_comprob      = Opg_header.tip_comprob
+                   Aplicacion_pagos_prv.prf_comprob      = Opg_header.prf_comprob
+                   Aplicacion_pagos_prv.nro_comprob      = Opg_header.nro_comprob           
+                   Aplicacion_pagos_prv.nro_vencimiento  = Cta_cte_prv.nro_vencimiento
+                   Aplicacion_pagos_prv.nro_usuario      = Opg_header.nro_usuario
+                   Aplicacion_pagos_prv.fecha_grab       = Opg_header.fecha_grab
+                   Aplicacion_pagos_prv.hora_grab        = Opg_header.hora_grab
+                   Aplicacion_pagos_prv.pc_name          = Opg_header.pc_name.   
+
+        END.
+
+    END.
+
+/*----------------------------------------------------------------------------------*/
+/* SI HAY DIFERENCIA DE CAMBIO Y SE DEBE A MONEDAS EXTRANJERAS, INCORPORA EL COMPO- */
+/* NENTE DE LA ORDEN DE PAGO EN MONEDA NACIONAL                                     */
+/*----------------------------------------------------------------------------------*/
+
+    IF T-Opg_header.imp_difcambio <> 0
+    THEN DO:
+
+        FIND FIRST Moneda WHERE Moneda.es_local NO-LOCK.
+        CREATE Cta_cte_prv.
+        BUFFER-COPY Opg_header TO Cta_cte_prv
+            ASSIGN Cta_cte_prv.nro_moneda        = Moneda.nro_moneda
+                   Cta_cte_prv.nro_vencimiento   = aux_nro_vencimiento 
+                   Cta_cte_prv.fecha_emision     = Opg_header.fecha
+                   Cta_cte_prv.fecha_vencimiento = Opg_header.fecha
+                   aux_nro_vencimiento           = aux_nro_vencimiento + 1
+                   Cta_cte_prv.debito            = T-Opg_header.imp_difcambio
+                   Cta_cte_prv.credito           = T-Opg_header.imp_difcambio.
+
+        FIND FIRST Opg_detalle OF Opg_header WHERE Opg_detalle.es_difcambio NO-LOCK.
+
+        CREATE Aplicacion_pagos_prv.
+        ASSIGN Aplicacion_pagos_prv.nro_proveedor    = Opg_header.nro_proveedor
+               Aplicacion_pagos_prv.cdg_empresa      = Opg_header.cdg_empresa
+               Aplicacion_pagos_prv.importe          = T-Opg_header.imp_difcambio
+               Aplicacion_pagos_prv.descuento        = Opg_detalle.descuento
+               Aplicacion_pagos_prv.tip_cancela      = Opg_detalle.tip_cancela
+               Aplicacion_pagos_prv.prf_cancela      = Opg_detalle.prf_cancela
+               Aplicacion_pagos_prv.nro_cancela      = Opg_detalle.nro_cancela
+               Aplicacion_pagos_prv.nro_ven_cancela  = Opg_detalle.nro_vencimiento
+               Aplicacion_pagos_prv.tip_comprob      = Opg_header.tip_comprob
+               Aplicacion_pagos_prv.prf_comprob      = Opg_header.prf_comprob
+               Aplicacion_pagos_prv.nro_comprob      = Opg_header.nro_comprob           
+               Aplicacion_pagos_prv.nro_vencimiento  = Cta_cte_prv.nro_vencimiento
+               Aplicacion_pagos_prv.nro_usuario      = Opg_header.nro_usuario
+               Aplicacion_pagos_prv.fecha_grab       = Opg_header.fecha_grab 
+               Aplicacion_pagos_prv.hora_grab        = Opg_header.hora_grab  
+               Aplicacion_pagos_prv.pc_name          = Opg_header.pc_name.   
+        
+    END.
+
+END.
+
+/*=================================================================================*/
+/*                   EMISION E IMPRESION DE CERTIFICADOS DE RETENCION              */
+/*=================================================================================*/
+
+{findparametro.i "AGRETIVA" "es_agretiva" "valor_l"}
+{findparametro.i "AGRETIBR" "es_agretibr" "valor_l"}
+{findparametro.i "AGRETSUS" "es_agretsus" "valor_l"}
+/*
+IF es_agretiva THEN RUN emitir_certifiva.p (INPUT ROWID(Opg_header)).
+IF es_agretsus THEN RUN emitir_certifsus.p (INPUT ROWID(Opg_header)).
+*/
+
+/*=================================================================================*/
+/*                           IMPRESION DEL COMPROBANTE                             */
+/*=================================================================================*/
+
+/*RUN actualiza_notas_debito(INPUT ROWID(Opg_header)).*/
+RUN imprimir_opago.p ( INPUT ROWID(Opg_header)).
+
+/*=================================================================================*/
+/*                             PROCEDIMIENTOS                                      */
+/*=================================================================================*/
+
+PROCEDURE bajar_certificados_ganancias:
+
+    FOR EACH T-Certificado_gan OF T-Caj_detalle, FIRST Tipo_activ OF T-Certificado_gan NO-LOCK:
+    
+         FIND Parametro WHERE Parametro.cdg_empresa   = Opg_header.cdg_empresa 
+                          AND Parametro.cdg_parametro = "PXCTFGAN"
+                              EXCLUSIVE-LOCK NO-ERROR.
+    
+         IF NOT AVAILABLE Parametro
+         THEN DO:
+            CREATE Parametro.
+            ASSIGN Parametro.cdg_empresa   = T-Opg_header.cdg_empresa
+                   Parametro.cdg_parametro = "PXCTFGAN"
+                   Parametro.descripcion   = "Proximo numero de cert.ret.gancias. a emitir " + PROGRAM-NAME(1)
+                   Parametro.observacion   = ""
+                   Parametro.tipo          = "N"
+                   Parametro.valor_n       = 1.
+         END.        
+    
+         que_ano = YEAR(T-Opg_header.fecha).
+         que_mes = MONTH(T-Opg_header.fecha) + 1.
+         IF que_mes = 13 
+         THEN DO:
+            que_ano = que_ano + 1.
+            que_mes = 1.
+         END.  
+    
+         CREATE Certificado_gan.
+         BUFFER-COPY T-Certificado_gan TO Certificado_gan
+             ASSIGN Certificado_gan.nro_certifgan     = Parametro.valor_n
+                    Certificado_gan.nro_linea         = Caj_detalle.nro_linea
+                    Certificado_gan.nro_proveedor     = Opg_header.nro_proveedor
+                    Certificado_gan.nro_transaccion   = Caj_detalle.nro_transaccion
+                    Certificado_gan.fecha_deposito    = v-fecha_dep_retenciones
+                    Parametro.valor_n                 = Parametro.valor_n + 1
+                    Caj_detalle.observacion           = "Nro.Cert.:" + 
+                                                         STRING(Certificado_gan.nro_certifgan,"99999999") + " - " +
+                                                         Tipo_actividad.nom_tipactiv.
+    
+        RELEASE Parametro.       
+
+        RUN imprimir_certificado_ganancias.p ( INPUT ROWID(Certificado_gan) ).
+    
+    END.
+
+END PROCEDURE.
+
+PROCEDURE bajar_certificados_ibrutos:
+
+    FOR EACH T-Certificado_ibr OF T-Caj_detalle, FIRST Tipo_retibr OF T-Certificado_ibr NO-LOCK:
+
+        FIND Parametro WHERE Parametro.cdg_empresa   = Opg_header.cdg_empresa 
+                         AND Parametro.cdg_parametro = "PXCTFIBR"
+                             EXCLUSIVE-LOCK NO-ERROR.
+    
+        IF NOT AVAILABLE Parametro
+        THEN DO:
+            CREATE Parametro.
+            ASSIGN Parametro.cdg_empresa   = T-Opg_header.cdg_empresa
+                   Parametro.cdg_parametro = "PXCTFIBR"
+                   Parametro.descripcion   = "Proximo numero de cert.ret.ibrutos. a emitir " + PROGRAM-NAME(1)
+                   Parametro.observacion   = ""
+                   Parametro.tipo          = "N"
+                   Parametro.valor_n       = 1.
+        END.        
+    
+        CREATE Certificado_ibr.
+        BUFFER-COPY T-Certificado_ibr TO Certificado_ibr
+            ASSIGN Certificado_ibr.nro_certifibr    = Parametro.valor_n
+                   Certificado_ibr.fecha_deposito   = v-fecha_dep_retenciones
+                   Certificado_ibr.nro_linea        = Caj_detalle.nro_linea
+                   Certificado_ibr.nro_transaccion  = Caj_detalle.nro_transaccion
+                   Caj_detalle.observacion          = "Nro.Cert.:" + STRING(Certificado_ibr.nro_certifibr,"999999")
+                                                       + "-" + Tipo_retibr.nom_retibr.
+                   Parametro.valor_n                = Parametro.valor_n + 1.
+        
+        FOR EACH T-Cert_ibr-detalle OF T-Certificado_ibr NO-LOCK:
+    
+            CREATE Cert_ibr-detalle.
+            BUFFER-COPY T-Cert_ibr-detalle TO Cert_ibr-detalle
+                ASSIGN Cert_ibr-detalle.nro_certifibr   = Certificado_ibr.nro_certifibr.
+        
+        END. 
+
+        RUN imprimir_certificado_ibr.p ( INPUT ROWID(Certificado_ibr) ).
+
+    END.
+
+END PROCEDURE.
+
+PROCEDURE bajar_certificados_iva:
+
+END PROCEDURE.
+
+PROCEDURE bajar_certificados_suss:
+
+END PROCEDURE.
+
+PROCEDURE actualiza_notas_debito:
+
+    DEFINE INPUT PARAMETER rid-recibo AS ROWID.
+    
+    DEFINE BUFFER b_caj_detalle FOR caj_detalle.
+    
+    DEFINE VARIABLE cotiza_dolar AS DECIMAL    NO-UNDO.
+    DEFINE VARIABLE todo_ok      AS LOGICAL    NO-UNDO.
+
+    /*================================================*/
+    /*               PROCESO                          */
+    /*================================================*/
+
+    RUN getparametro.p (  INPUT  "DFMONEDA",
+                              OUTPUT v-valor_c,
+                              OUTPUT v-valor_d,
+                              OUTPUT v-valor_l,
+                              OUTPUT v-valor_n,
+                              OUTPUT v-observacion ).
+
+    FIND Moneda WHERE Moneda.cdg_moneda = v-valor_c NO-LOCK.
+    RUN getparametro.p (  INPUT  "DFNROCAJ",
+                          OUTPUT v-valor_c,
+                          OUTPUT v-valor_d,
+                          OUTPUT v-valor_l,
+                          OUTPUT v-valor_n,
+                          OUTPUT v-observacion ).
+    
+    cotiza_dolar = 0.
+    FIND LAST  Cotizacion
+                WHERE Cotizacion.nro_moneda  = Moneda.nro_moneda
+                AND   Cotizacion.cdg_empresa = Empresa.cdg_empresa
+                AND   Cotizacion.fch_cotizacion <= TODAY
+                NO-LOCK NO-ERROR.
+    IF AVAILABLE Cotizacion 
+        THEN cotiza_dolar = Cotizacion.cambio.
+
+    FIND FIRST Opg_header WHERE ROWID(Opg_header) = rid-recibo NO-LOCK NO-ERROR.
+    IF AVAILABLE Opg_header 
+    THEN DO:                                            
+
+       FIND FIRST Caj_header 
+            WHERE Caj_header.nro_transaccion = Opg_header.nro_transaccion 
+            NO-LOCK NO-ERROR.
+       IF AVAILABLE Caj_header 
+       THEN DO:
+           FIND FIRST Proveedor OF Caj_header NO-LOCK NO-ERROR.
+           FOR EACH  Caj_detalle
+               WHERE Caj_detalle.nro_transaccion   = Caj_header.nro_transaccion
+               AND   Caj_detalle.nro_transrechazo <> 0 NO-LOCK :
+
+
+                FIND FIRST b_caj_detalle
+                      WHERE b_caj_detalle.nro_transaccion = Caj_detalle.nro_transrechazo
+                      AND   b_caj_detalle.importe         = Caj_detalle.importe
+                            NO-LOCK NO-ERROR.
+                  
+                 FIND FIRST Motivo_rechazo
+                      WHERE Motivo_rechazo.cdg_motivo_rechazo = b_Caj_detalle.cdg_motivo_rechazo
+                            NO-LOCK NO-ERROR.
+               IF AVAILABLE Motivo_rechazo          
+                  AND Motivo_rechazo.genera_notadebito  
+               THEN DO:
+                   
+                   FIND FIRST Tipocomprobante
+                        WHERE Tipocomprobante.cdg_comprobante = Motivo_rechazo.cdg_comprobante_rch
+                        AND   Tipocomprobante.cdg_empresa     = Empresa.cdg_empresa
+                              NO-LOCK NO-ERROR.
+                   
+                   IF AVAILABLE Tipocomprobante 
+                      AND Tipocomprobante.afecta_cc 
+                       THEN RUN generar_nota_debito.p  (INPUT  ROWID(b_caj_detalle),
+                                                        INPUT  Motivo_rechazo.cdg_motivo_rechazo,
+                                                        INPUT  Moneda.nro_moneda, 
+                                                        INPUT  TODAY,
+                                                        INPUT  cotiza_dolar,
+                                                        INPUT  Caj_detalle.nro_transrechazo,
+                                                        INPUT  Caj_detalle.observacion,
+                                                        OUTPUT todo_ok).
+                  
+               END.
+
+           END.
+           
+       END.
+    END.
+                      
+END PROCEDURE.
+

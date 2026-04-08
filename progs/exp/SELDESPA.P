@@ -1,0 +1,9 @@
+&GLOBAL-DEFINE TABLA           Despachante
+&GLOBAL-DEFINE CODIGO          cdg_despachante
+&GLOBAL-DEFINE NOMBRE          nom_despachante
+&GLOBAL-DEFINE TITULO-BROWSE   Seleccione el Despachante o ingrese nombre
+&GLOBAL-DEFINE TITULO-FRAME    Seleccion de Despachantes
+&GLOBAL-DEFINE PROCESO         ACTDESPA
+&GLOBAL-DEFINE ULT_REGISTRO    ult_despachante
+
+{SELBROWS.I}

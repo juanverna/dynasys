@@ -1,0 +1,7 @@
+&GLOBAL-DEFINE TABLA           Ciclo
+&GLOBAL-DEFINE CODIGO          nro_ciclo
+&GLOBAL-DEFINE NOMBRE          descripcion
+&GLOBAL-DEFINE TITULO-BROWSE   Seleccione el ciclo de proceso
+&GLOBAL-DEFINE TITULO-FRAME    Seleccion de ciclos de proceso
+
+{SELBROWS.I}

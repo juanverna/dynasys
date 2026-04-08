@@ -1,0 +1,9 @@
+/*==========================================================================================*/
+/*                            EJECUTA FACTURAS DE CLIENTES                                  */
+/*==========================================================================================*/
+                                                                                              
+DEFINE INPUT-OUTPUT PARAMETER  rid_rendgastos    AS ROWID.                                       
+DEFINE INPUT        PARAMETER  modo              AS INTEGER.                                     
+                                                                                              
+RUN c-rendicion_gastos.w ( INPUT-OUTPUT rid_rendgastos , INPUT modo ).                        
+                                                                                              

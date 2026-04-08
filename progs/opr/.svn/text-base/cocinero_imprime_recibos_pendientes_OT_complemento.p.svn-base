@@ -1,0 +1,12 @@
+FOR EACH fac_header WHERE fac_header.fecha > 09/01/2010 AND nro_contrato <> 0 AND NOT anulado:
+    FIND contrato_hd OF fac_header NO-ERROR.
+IF NOT AVAILABLE contrato_hd THEN NEXT.
+FIND cliente OF fac_header.
+IF ( Contrato_hd.cant_periodos - Contrato_hd.resto_periodos = 1 OR Contrato_hd.cant_periodos = 0 ) AND Fac_header.estado_2_impresion <> "OT" and
+Fac_header.estado_2_impresion <> "I" THEN
+Fac_header.estado_2_impresion = "OT".
+/*DISPLAY fac_header.nro_factura Fac_header.estado_2_impresion fac_header.fecha.*/
+
+
+
+

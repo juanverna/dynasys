@@ -1,0 +1,38 @@
+/*============================================================================================*/
+/*                           TOTALES DE CONSUMOS DE CONVENIOS                                 */
+/*============================================================================================*/
+
+
+DEFINE VARIABLE v-filtro AS CHAR.
+DEFINE VARIABLE v-params AS CHAR.
+
+DEFINE VARIABLE des_fecha AS DATE LABEL "Desde".
+DEFINE VARIABLE has_fecha AS DATE LABEL "Hasta".
+
+DEFINE VARIABLE chdes_fecha AS CHAR.
+DEFINE VARIABLE chhas_fecha AS CHAR.
+
+UPDATE des_fecha has_fecha SKIP
+       WITH SIDE-LABELS FRAME César VIEW-AS DIALOG-BOX
+       THREE-D TITLE "Indique período y color".
+
+RUN rbfecha.p ( INPUT des_fecha, OUTPUT chdes_fecha).
+RUN rbfecha.p ( INPUT has_fecha, OUTPUT chhas_fecha).
+
+v-params = "p-desfecha=" + STRING(des_fecha,"99/99/99") + "~n" +
+           "p-hasfecha=" + STRING(has_fecha,"99/99/99") + "~n".
+
+v-filtro = "Ficha.fch_alta <= " + 
+            chhas_fecha  + 
+            " AND Ficha.fch_alta >= " + 
+            chdes_fecha  +
+            " AND cdg_destino <> 'A' AND " + 
+            "LOOKUP(STRING(Ficha.cdg_cliente),'4')> 0".
+
+RUN exreport.p (  INPUT  ".\reports.prl",
+                  INPUT "Consumos",
+                  INPUT  v-filtro,
+                  INPUT  "D",
+                  INPUT  "",
+                  INPUT  v-params
+               ).   

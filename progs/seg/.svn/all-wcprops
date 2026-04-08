@@ -1,0 +1,263 @@
+K 25
+svn:wc:ra_dav:version-url
+V 35
+/svn/Paulista/!svn/ver/20/progs/seg
+END
+b-hst_claves.w
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/Paulista/!svn/ver/1/progs/seg/b-hst_claves.w
+END
+b-funciones_usuario-2.w
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/Paulista/!svn/ver/1/progs/seg/b-funciones_usuario-2.w
+END
+w-usuarios.w
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/7/progs/seg/w-usuarios.w
+END
+b-funciones_usuario.w
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/Paulista/!svn/ver/1/progs/seg/b-funciones_usuario.w
+END
+b-autorizacion_usuarios.w
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/Paulista/!svn/ver/1/progs/seg/b-autorizacion_usuarios.w
+END
+runlsaudit.p
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/1/progs/seg/runlsaudit.p
+END
+w-autorizacion_transacciones.w
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/Paulista/!svn/ver/1/progs/seg/w-autorizacion_transacciones.w
+END
+b-usuarios.w
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/1/progs/seg/b-usuarios.w
+END
+v-usuario.w
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/Paulista/!svn/ver/7/progs/seg/v-usuario.w
+END
+segvrprm.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/seg/segvrprm.p
+END
+creausuarios.p
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/Paulista/!svn/ver/1/progs/seg/creausuarios.p
+END
+b-usuario_programa.w
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/Paulista/!svn/ver/7/progs/seg/b-usuario_programa.w
+END
+armar_lista_funciones.p
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/Paulista/!svn/ver/1/progs/seg/armar_lista_funciones.p
+END
+selfunci.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/seg/selfunci.p
+END
+vlb-usuario.p
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/1/progs/seg/vlb-usuario.p
+END
+b-sesiones_del_usuario.w
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/Paulista/!svn/ver/1/progs/seg/b-sesiones_del_usuario.w
+END
+b-autorizacion_transacciones.w
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/Paulista/!svn/ver/1/progs/seg/b-autorizacion_transacciones.w
+END
+d-autorizacion_transacciones.w
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/Paulista/!svn/ver/1/progs/seg/d-autorizacion_transacciones.w
+END
+v-autorizacion_usuarios.w
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/Paulista/!svn/ver/1/progs/seg/v-autorizacion_usuarios.w
+END
+c-reconectar.w
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/Paulista/!svn/ver/1/progs/seg/c-reconectar.w
+END
+b-funciones.w
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/1/progs/seg/b-funciones.w
+END
+b-uso_de_menues.w
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/seg/b-uso_de_menues.w
+END
+b-tipos_de_transaccion.w
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/Paulista/!svn/ver/1/progs/seg/b-tipos_de_transaccion.w
+END
+b-usuarios_funcion.w
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/Paulista/!svn/ver/1/progs/seg/b-usuarios_funcion.w
+END
+v-funcion_usuario.w
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/Paulista/!svn/ver/1/progs/seg/v-funcion_usuario.w
+END
+v-rng-usuario.w
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/Paulista/!svn/ver/1/progs/seg/v-rng-usuario.w
+END
+d-asignar_clave.w
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/seg/d-asignar_clave.w
+END
+listar_auditoria.i
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/Paulista/!svn/ver/1/progs/seg/listar_auditoria.i
+END
+b-usuario_empresa.w
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/Paulista/!svn/ver/1/progs/seg/b-usuario_empresa.w
+END
+v-dsc_usuario.w
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/Paulista/!svn/ver/1/progs/seg/v-dsc_usuario.w
+END
+v-autorizacion_transacciones.w
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/Paulista/!svn/ver/1/progs/seg/v-autorizacion_transacciones.w
+END
+listar_funciones_seguridad.p
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/Paulista/!svn/ver/1/progs/seg/listar_funciones_seguridad.p
+END
+listar_auditoria.p
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/Paulista/!svn/ver/1/progs/seg/listar_auditoria.p
+END
+d-segcmbpw.w
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/Paulista/!svn/ver/1/progs/seg/d-segcmbpw.w
+END
+d-cambioempresa.w
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/seg/d-cambioempresa.w
+END
+selusuar.p
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/Paulista/!svn/ver/1/progs/seg/selusuar.p
+END
+v-user_empresa.w
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/Paulista/!svn/ver/1/progs/seg/v-user_empresa.w
+END
+w-funciones.w
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/Paulista/!svn/ver/1/progs/seg/w-funciones.w
+END
+c-logon.w
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/svn/Paulista/!svn/ver/1/progs/seg/c-logon.w
+END
+w-listar_auditoria.w
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/Paulista/!svn/ver/1/progs/seg/w-listar_auditoria.w
+END
+v-funcion.w
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/Paulista/!svn/ver/1/progs/seg/v-funcion.w
+END
+v-textoempresas.w
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/Paulista/!svn/ver/1/progs/seg/v-textoempresas.w
+END
+selgrupousuar.p
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/Paulista/!svn/ver/1/progs/seg/selgrupousuar.p
+END

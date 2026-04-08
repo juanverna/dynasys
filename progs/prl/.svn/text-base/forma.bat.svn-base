@@ -1,0 +1,1 @@
+set forma=%1

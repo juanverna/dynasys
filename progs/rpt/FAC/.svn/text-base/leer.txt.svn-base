@@ -1,0 +1,14 @@
+Las impresiones masivas de comprobantes de venta utilizan el programa que arma los datasets y generan el archivo XML de intercambio por rango Estos programas tiene una MR detras ( MASIVA RANGO ) del nombre que es generado por el armado del nombre del formulario de Dynasys.
+
+El formulario se arma en funcion a los parametros del tipo de comprobante ( ver ejemplo FACTUCLI ) si usa letra o no ,etc.
+
+Ver en cr_dyna.p la funcion formulario resume todos estos usus devolviendo el formulario de un comprobante de fac_header.
+
+por ejemplo:
+
+prfab234.p ( impresor de facturas 1 a una , utiliza el prfab234.rpt ).
+prfab234MR.p ( impresor de facturas masivo por rangos, utiliza el prfab234.rpt ).
+prfab234.rpt ( programa Crystal para la impresion utilizando el dataset ).
+
+La direfencia en utilizar el rango es potenciar el ciclo de impresion de la impresora.
+

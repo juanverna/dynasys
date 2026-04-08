@@ -1,0 +1,64 @@
+C01,000072
+C02,17/07/2002
+C03,(00348) 3M ARGENTINA S.A.C.I.F.I.A.           
+C04,LOS ARBOLES 842                               
+C05,() 1686 HURLINGHAM                            
+C06,BUENOS AIRES                                  
+C07,902-869654-0    
+C08,                                    
+C09,004455
+DO01,   FA 0002 00000033   17/04/02       
+IM01,         247.93      
+CA01,     6.00      
+CJ01,          14.88      
+DO02,                 
+IM02,             
+CA02,             
+CJ02,             
+DO03,                 
+IM03,             
+CA03,             
+CJ03,             
+DO04,                 
+IM04,             
+CA04,             
+CJ04,             
+DO05,                 
+IM05,             
+CA05,             
+CJ05,             
+DO06,                 
+IM06,             
+CA06,             
+CJ06,             
+DO07,                 
+IM07,             
+CA07,             
+CJ07,             
+DO08,                 
+IM08,             
+CA08,             
+CJ08,             
+DO09,                 
+IM09,             
+CA09,             
+CJ09,             
+DO10,                 
+IM10,             
+CA10,             
+CJ10,             
+DO11,                 
+IM11,             
+CA11,             
+CJ11,             
+DO12,                 
+IM12,             
+CA12,             
+CJ12,             
+DO13,                 
+IM13,             
+CA13,             
+CJ13,             
+F01,      300.00  
+F02,       14.88  
+!PAGE!

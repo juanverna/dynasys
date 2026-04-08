@@ -1,0 +1,176 @@
+/*=================================================================================*/
+/*                            LISTADO DE PROGRAMACION DE COBROS                    */
+/*=================================================================================*/
+
+DEFINE INPUT PARAMETER des_fecha   AS DATE.
+DEFINE INPUT PARAMETER has_fecha   AS DATE.
+DEFINE INPUT PARAMETER ver_cobros   AS INTEGER.
+
+{VRSHARED.I }
+
+DEFINE VARIABLE todos          AS   INTEGER INITIAL 0.
+DEFINE VARIABLE con_p          AS   INTEGER INITIAL 1.
+DEFINE VARIABLE sin_p          AS   INTEGER INITIAL 2.
+DEFINE VARIABLE debitos        AS   DECIMAL FORMAT ">,>>>,>>9.99" LABEL "Debitos".
+DEFINE VARIABLE creditos       AS   DECIMAL FORMAT ">,>>>,>>9.99" LABEL "Creditos".
+DEFINE VARIABLE saldo          AS   DECIMAL FORMAT "->,>>>,>>9.99" LABEL "Importe".
+DEFINE VARIABLE t_programado   AS   DECIMAL FORMAT "->,>>>,>>9.99" LABEL "Programado".
+DEFINE VARIABLE titulo-f       AS   CHARACTER FORMAT "X(45)".
+DEFINE VARIABLE titulo-2       AS   CHARACTER FORMAT "X(45)".
+DEFINE VARIABLE hora_lis       AS   CHARACTER.
+DEFINE VARIABLE fecha_lis      AS   DATE.
+DEFINE VARIABLE que_empresa    LIKE Empresa.nombre.
+DEFINE VARIABLE que_Cliente  LIKE Cliente.cdg_Cliente.
+DEFINE VARIABLE que_nombre     LIKE Cliente.nom_cliente.
+
+DEFINE QUERY qry_movimiento   FOR Cta_cte, Imputacion, Cliente.
+
+DEFINE FRAME frm-titulo HEADER
+       que_empresa 
+       titulo-f AT 35
+       "Pagina:" AT 99 PAGE-NUMBER FORMAT ">9" AT 106 SKIP
+       fecha_lis
+       titulo-2 AT 35
+       hora_lis AT 99
+       SKIP(1)
+       WITH WIDTH 120 FRAME frm-titulo TOP-ONLY PAGE-TOP STREAM-IO USE-TEXT.
+  
+DEFINE FRAME frm-listado
+       Cliente.cdg_cliente
+       Cliente.nom_cliente FORMAT "X(20)"
+       Cta_cte.tip_comprob
+       Cta_cte.prf_comprob FORMAT "ZZZZZ9"
+       Cta_cte.nro_comprob FORMAT "ZZZZZ9"
+       Cta_cte.nro_vencimiento FORMAT "9" COLUMN-LABEL "V"
+       Imputacion.abrevia
+       Cta_cte.fecha_vencimiento
+       saldo
+       Cta_cte.imp_programado
+       Cta_cte.fecha_programada
+       Cta_cte.programada
+       Cta_cte.liberada FORMAT " /*"
+       WITH WIDTH 120 DOWN CENTERED FRAME frm-listado USE-TEXT STREAM-IO.
+
+FIND Empresa WHERE ROWID(Empresa) = act_empresa NO-LOCK.
+que_empresa = Empresa.nombre.
+
+{SETIMPRE.I}
+
+FIND Moneda WHERE ROWID(Moneda) = act_moneda.
+fecha_lis = TODAY.
+hora_lis = STRING(TIME,"HH:MM:SS").
+titulo-2 = "Comprende del " + STRING(des_fecha,"99/99/9999") + 
+           " al " + STRING(has_fecha,"99/99/9999").
+
+OUTPUT TO VALUE(dire_tmp + "lispgpro.txt") PAGED.
+RUN ABRE_QUERY.
+RUN LISTAR_ANALITICO.
+OUTPUT CLOSE.
+RUN veresult.w ( INPUT dire_tmp + "lispgpro.txt" , INPUT 8 ).
+
+/*=================================================================================*/
+/*                                 PROCEDIMIENTOS                                  */
+/*=================================================================================*/
+
+PROCEDURE LISTAR_ANALITICO:
+
+   GET FIRST qry_movimiento.
+   DO WHILE AVAILABLE Cta_cte WITH FRAME frm-listado:
+
+       VIEW FRAME frm-titulo.
+       DISPLAY   
+           Cliente.cdg_cliente
+           Cliente.nom_cliente
+           Cta_cte.tip_comprob
+           Cta_cte.prf_comprob
+           Cta_cte.nro_comprob
+           Cta_cte.nro_vencimiento
+           Imputacion.abrevia
+           Cta_cte.fecha_vencimiento
+           ( Cta_cte.debito - Cta_cte.credito ) @ saldo
+           Cta_cte.imp_programado
+           Cta_cte.fecha_programada
+           Cta_cte.programada
+           Cta_cte.liberada
+           WITH FRAME frm-listado.
+
+       debitos = debitos + Cta_cte.debito.
+       creditos = creditos + Cta_cte.credito.
+       t_programado = t_programado + Cta_cte.imp_programado.
+           
+       DOWN WITH FRAME frm-listado.
+       GET NEXT qry_movimiento.
+
+   END.
+
+   UNDERLINE 
+           Cliente.cdg_cliente
+           Cliente.nom_cliente
+           Cta_cte.tip_comprob
+           Cta_cte.prf_comprob
+           Cta_cte.nro_comprob
+           Cta_cte.nro_vencimiento
+           Imputacion.abrevia
+           Cta_cte.fecha_vencimiento
+           saldo
+           Cta_cte.imp_programado
+           Cta_cte.fecha_programada
+           Cta_cte.programada
+           WITH FRAME frm-listado.
+           
+   saldo = debitos - creditos.
+   DISPLAY saldo
+           t_programado @ Cta_cte.imp_programado
+           WITH FRAME frm-listado.
+   DOWN WITH FRAME frm-listado.
+   
+END PROCEDURE.      
+
+PROCEDURE ABRE_QUERY:
+
+  CASE ver_cobros:
+    WHEN todos
+    THEN DO:
+        titulo-f = "Cobros programados o no por fecha de vencimiento".
+        OPEN QUERY qry_movimiento       
+             FOR EACH Cta_cte
+                WHERE Cta_cte.nro_moneda = Moneda.nro_moneda
+                  AND Cta_cte.debito <> Cta_cte.credito
+                  AND Cta_cte.fecha_vencimiento <= has_fecha
+                  AND Cta_cte.fecha_vencimiento >= des_fecha,
+                FIRST Imputacion OF Cta_cte, FIRST Cliente OF Cta_cte
+                   BY Cta_cte.fecha_vencimiento. 
+    END.     
+    WHEN con_p 
+    THEN DO:
+        titulo-f = "Cobros programados por fecha de pago".
+        OPEN QUERY qry_movimiento       
+             FOR EACH Cta_cte
+                WHERE Cta_cte.nro_moneda = Moneda.nro_moneda
+                  AND Cta_cte.debito <> Cta_cte.credito
+                  AND Cta_cte.fecha_programada <= has_fecha
+                  AND Cta_cte.fecha_programada >= des_fecha
+                  AND Cta_cte.programada,
+                FIRST Imputacion OF Cta_cte, FIRST Cliente OF Cta_cte
+                   BY Cta_cte.fecha_programada. 
+
+    END.     
+    WHEN sin_p 
+    THEN DO:
+        titulo-f = "Cobros s/programar por fecha de vencimiento".
+        OPEN QUERY qry_movimiento       
+             FOR EACH Cta_cte
+                WHERE Cta_cte.nro_moneda = Moneda.nro_moneda
+                  AND Cta_cte.debito <> Cta_cte.credito
+                  AND Cta_cte.fecha_vencimiento <= has_fecha
+                  AND Cta_cte.fecha_vencimiento >= des_fecha
+                  AND NOT Cta_cte.programada,
+                FIRST Imputacion OF Cta_cte, FIRST Cliente OF Cta_cte
+                   BY Cta_cte.fecha_vencimiento. 
+
+    END.     
+  END CASE.     
+  
+END PROCEDURE.
+
+{CODIMPRE.I}

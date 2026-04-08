@@ -1,0 +1,46 @@
+DEFINE VAR objEntry AS COM-HANDLE.
+DEFINE VAR objSession AS COM-HANDLE.
+DEFINE VAR objMessage AS COM-HANDLE.
+DEFINE VAR objRecip AS COM-HANDLE.
+DEFINE VAR objAttach AS COM-HANDLE.
+DEFINE VAR one AS LOGICAL INIT YES.
+{crystal_dyna.p}
+
+DEFINE VARIABLE szOriginalDirectory AS CHARACTER.
+/*FILE-INFO:FILE-NAME = ".".
+szOriginalDirectory = FILE-INFO:FULL-PATHNAME.*/
+{DEBUG.i}
+szOriginalDirectory=getCurrentDirectory().
+
+DISPLAY SEARCH( "gethostname.p" ).
+CREATE "MAPI.SESSION" objSession.
+objSession:Logon().
+objMessage = objSession:OutBox:Messages:Add().
+objMessage:Subject = "A ver si anda 2".
+objMessage:Text = "Esto es un test2 .".
+
+
+objRecip = objMessage:Recipients:Add().
+objRecip:Name = "fvergniaud@fvsys.com.ar".
+objRecip:Type = 1.
+objRecip:Resolve.
+
+ObjAttach = objMessage:Attachments:Add().
+ObjAttach:Name = "testfile as an attachment".
+ObjAttach:Source = "C:\image.pdf".
+
+objMessage:Update(TRUE, TRUE).
+objMessage:Send(TRUE, FALSE).
+objSession:Logoff.
+RELEASE OBJECT ObjAttach.
+RELEASE OBJECT objRecip.
+RELEASE OBJECT objMessage.
+RELEASE OBJECT objSession.
+ObjAttach=?.
+objRecip=?.   
+objMessage=?. 
+objSession=?. 
+
+RUN SetCurrentDirectoryA(szOriginalDirectory).
+
+MESSAGE "End of Message" VIEW-AS ALERT-BOX.

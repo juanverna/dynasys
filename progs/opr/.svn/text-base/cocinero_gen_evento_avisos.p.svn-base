@@ -1,0 +1,14 @@
+    DEFINE VAR pperiodo AS INT INITIAL 200910.
+    {stavisado.i}
+    FIND tipo_evento WHERE tipo_evento.cdg_tipo_evento = "AV".
+    FOR EACH evento WHERE evento.nro_tipo_evento = tipo_evento.nro_tipo_evento AND 
+        evento.frealizado = ? AND evento.periodo = pperiodo:
+        IF avisoentregado(evento.NRO_EVENTO) THEN NEXT.
+        delete evento.
+    END.
+    RUN cocinero_regenera_agenda_recursos.p.
+    FOR EACH evento WHERE evento.origen = "CONTRATO"
+        AND NOT evento.anulado AND NOT evento.frealizado <> ? AND evento.periodo = pperiodo:
+                RUN crea_aviso_evento.p ( ROWID( evento ) ).
+    END.
+ 

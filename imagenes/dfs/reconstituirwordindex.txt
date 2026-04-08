@@ -1,0 +1,10 @@
+start proutil -C wbreak-compiler proword.wbt 26
+pause
+start copy proword.26 C:\PROGRA~1\OpenEdge
+pause
+SET PROWD26=proword.26
+start proutil <BASE> -C word-rules 26
+pause
+start proutil <BASE> -C idxbuild ALL
+pause
+

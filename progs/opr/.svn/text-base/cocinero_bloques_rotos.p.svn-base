@@ -1,0 +1,9 @@
+    DEFINE BUFFER bevento FOR evento.
+    FOR EACH evento WHERE periodo = 200905 AND NOT anulado AND origen = "CONTRATO" AND 
+       evento.nro_evento_padre =  0 :
+        FOR EACH bevento WHERE bevento.nro_evento_padre = evento.nro_evento:
+            IF evento.recursos <> bevento.recursos OR
+                evento.fasignado <> bevento.fasignado THEN
+                DISPLAY evento.nro_identificacion evento.sub_evento bevento.nro_identificacion bevento.sub_evento.
+        END.
+        END.

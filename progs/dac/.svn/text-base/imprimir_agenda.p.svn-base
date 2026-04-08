@@ -1,0 +1,21 @@
+/*============================================================================================*/
+/*                           IMPRESION DE AGENDA TELEFONICA                                   */
+/*============================================================================================*/
+
+DEFINE INPUT PARAMETER rid_agenda AS ROWID.
+
+DEFINE VARIABLE v-filtro AS CHARACTER.
+DEFINE VARIABLE v-params AS CHARACTER.
+
+FIND Agenda WHERE ROWID(Agenda) = rid_agenda NO-LOCK.
+
+v-params = "".
+
+v-filtro = "Persona.cdg_agenda = '" + Agenda.cdg_agenda + "'".
+
+RUN exreport-agenda.p (INPUT "problemas.prl",
+                       INPUT "Agenda Telefónica",
+                       INPUT  v-filtro,
+                       INPUT  "D",
+                       INPUT  SESSION:PRINTER-NAME,
+                       INPUT  v-params).   

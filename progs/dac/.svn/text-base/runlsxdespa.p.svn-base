@@ -1,0 +1,6 @@
+  /*====================================================================================*/
+  /*        VALIDA LA EJECUCION DEL PROGRAMA DE LISTADO POR DESPACHADOR                 */
+  /*====================================================================================*/
+
+  RUN valida_run.p ( INPUT "LSSXDESP", INPUT "w-lsxdespachador.w").
+  

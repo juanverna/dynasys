@@ -1,0 +1,8 @@
+FOR EACH evento WHERE evento.anulado:
+FIND FIRST rem_header WHERE rem_header.nro_remito = evento.nro_identificacion AND 
+                            rem_header.cdg_comprobante = evento.origen AND NOT 
+                            rem_header.anulado NO-ERROR.
+IF NOT AVAILABLE rem_header THEN NEXT.
+                                DISPLAY rem_header.fecha rem_header.prf_comprob rem_header.nro_comprob.
+          
+END.

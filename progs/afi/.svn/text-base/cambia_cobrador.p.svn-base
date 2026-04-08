@@ -1,0 +1,92 @@
+/*=========================================================================================*/
+/*          REALIZA LA EMISION DEL LISTADO DE COMISIONES RESUMIDAS POR COBRADOR            */
+/*=========================================================================================*/
+
+DEFINE INPUT PARAMETER p-que_empresa      AS CHARACTER.
+DEFINE INPUT PARAMETER p-des_cobrador     LIKE Cobrador.cdg_cobrador.
+DEFINE INPUT PARAMETER p-has_cobrador     LIKE Cobrador.cdg_cobrador.
+DEFINE INPUT PARAMETER p-des_zona         LIKE Zona_geografica.cdg_zonag.
+DEFINE INPUT PARAMETER p-has_zona         LIKE Zona_geografica.cdg_zonag.
+
+DEFINE VARIABLE j                         AS INTEGER.
+
+{vrshared.i "NEW"}
+{WGLISTAR.I}
+
+DEFINE VARIABLE fecha_lis                 AS DATE.     
+DEFINE VARIABLE hora_lis                  AS CHARACTER.
+DEFINE VARIABLE titulo_lst                AS CHARACTER FORMAT "X(40)".
+DEFINE VARIABLE titulo_det                AS CHARACTER FORMAT "X(40)".
+DEFINE VARIABLE que_empresa               LIKE Empresa.nombre.
+DEFINE VARIABLE v-importe_cuota           LIKE Cupon.importe_cuota.
+
+
+DEFINE FRAME frm-titulo HEADER
+       que_empresa
+       "Transferencia de Cobrador y Zona" AT 77
+       "Página:" AT 170 PAGE-NUMBER FORMAT ">>9" AT 178
+       SKIP  
+       fecha_lis       
+       titulo_det AT 77
+       hora_lis AT 170
+       SKIP(1)
+       WITH WIDTH 190 FRAME frm-titulo PAGE-TOP USE-TEXT STREAM-IO.
+
+FORM
+       Grupofam.cdg_Grupofam COLUMN-LABEL "Código!Grupo"
+       Grupofam.nom_Grupofam COLUMN-LABEL "Nombre!Grupo"
+       WITH WIDTH 256 DOWN FRAME frm-listado STREAM-IO.
+
+/*=========================================================================================*/
+/*                           B L O Q U E   P R I N C I P A L                               */
+/*=========================================================================================*/
+
+que_empresa = "".
+DO j = 1 TO NUM-ENTRIES(p-que_empresa,","):
+     FIND Empresa WHERE Empresa.cdg_empresa = ENTRY(j,p-que_empresa,",") NO-LOCK.
+     que_empresa = que_empresa + Empresa.nombre.
+     IF j <> NUM-ENTRIES(p-que_empresa,",") THEN que_empresa = que_empresa + ",".
+END.
+
+titulo_det  = "COBRADORES:" + p-des_cobrador + "-" + p-has_cobrador + 
+              "  ZONAS:" + p-des_zona + "-" + p-has_zona.
+
+fecha_lis = TODAY.
+hora_lis = STRING(TIME,"HH:MM:SS").
+
+/*{DIRPRINFILE.I}*/
+
+OUTPUT TO VALUE("c:\sic-temp\cambiacobrador.txt") PAGE-SIZE 60.
+
+FIND Cobrador 
+     WHERE Cobrador.cdg_cobrador = p-des_cobrador NO-LOCK.
+     
+FOR EACH Grupofam OF Cobrador
+   WHERE Grupofam.cdg_zona <= p-has_zona
+     AND Grupofam.cdg_zona >= p-des_zona
+     AND LOOKUP(Grupofam.cdg_empresa,p-que_empresa,",") <> 0:
+
+    VIEW FRAME frm-titulo.
+
+    Grupofam.cdg_cobrador = p-has_cobrador.
+    FIND Cliente OF Grupofam EXCLUSIVE-LOCK NO-ERROR.
+    IF AVAILABLE Cliente
+    THEN DO:
+         Cliente.nro_cobrador = Cobrador.nro_cobrador.
+    END.
+    
+    DISPLAY Grupofam.cdg_Grupofam
+            Grupofam.nom_Grupofam
+            WITH FRAME frm-listado.
+            
+    DOWN WITH FRAME frm-listado.
+
+END.
+
+OUTPUT CLOSE.
+
+RUN VERESULT.W ( INPUT "c:\sic-temp\cambiacobrador.txt",
+                 INPUT 2 ).
+
+
+

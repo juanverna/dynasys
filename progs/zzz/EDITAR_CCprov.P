@@ -1,0 +1,10 @@
+def var que_cli like proveedor.cdg_proveedor.
+repeat:
+prompt-for proveedor.cdg_proveedor.
+FIND proveedor USING proveedor.cdg_proveedor.
+display proveedor.nombre.
+FOR EACH Cta_cte_prv OF proveedor:
+    DISPLAY tip_comprob nro_comprob nro_vencimiento debito.
+    update TIP_COMPROB FECHA_EMISION FECHA_VENCIMIENTO nro_comprob DEBITO CREDITO selectado imputado .
+end.
+end.    

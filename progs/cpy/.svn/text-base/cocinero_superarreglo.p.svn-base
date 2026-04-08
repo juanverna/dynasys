@@ -1,0 +1,18 @@
+
+DEFINE VAR listaz AS CHAR INITIAL "14798,14799,14924,14739,15075,15169,15084,15355,14940,15097,15076,14759,15175,15378,15587,15292,15438,15006,15071,14757,15053,14758,14948,15072,15134,15336,15342,15421,15497,15349,15379,15337,15347,15334,15345,15333,15338,15343,15348,15425,15332,15389,15340,15426,15009,15427,15428,15429,15430,15346,15431,15331,15432,15344,15433,15335,15339,14856,15222,14858,15088,14861,14859,14963,14857,14863,14862,14860,15491".
+FOR EACH recupera.contrato_hd:
+    FIND sic.contrato_hd WHERE sic.contrato_hd.nro_contrato =
+              recupera.contrato_hd.nro_contrato.
+END.
+FOR EACH sic.contrato_hd:
+    FIND recupera.contrato_hd WHERE recupera.contrato_hd.nro_contrato =
+              sic.contrato_hd.nro_contrato NO-ERROR.
+    IF NOT AVAILABLE recupera.contrato_hd THEN NEXT.
+IF recupera.contrato_hd.resto_periodos = sic.contrato_hd.resto_periodo THEN NEXT.
+
+/*DISPLAY sic.contrato_hd.nro_contrato recupera.contrato_hd.resto_periodos  sic.contrato_hd.resto_periodo.*/
+/*IF LOOKUP(STRING(recupera.contrato_hd.nro_contrato) , listaz) = 0 THEN NEXT.*/
+sic.contrato_hd.resto_periodo = recupera.contrato_hd.resto_periodos.
+/*DISPLAY recupera.contrato_hd.nro_contrato.*/
+END.
+

@@ -1,0 +1,22 @@
+FIND FIRST Usuario.
+COMPILE procm118.p SAVE.
+FOR first Ocm_header 
+     where tip_comprob = "OC"
+       and prf_comprob = 0
+       and nro_comprob = 7
+       and cdg_empresa = "F":
+           
+    /*
+    FOR EACH fac_detalle OF fac_header:
+        display cantidad granel precio a_granel.
+        UPDATE detallada VIEW-AS EDITOR SIZE 65 BY 6.
+    END.
+    RUN toletras.p ( INPUT Fac_header.imp_total, OUTPUT Fac_header.monto_letras).
+    */
+    UPDATE cdg_solicitante.
+    
+    run procm118.p ( input rowid(ocm_header)).       
+
+END.
+
+       

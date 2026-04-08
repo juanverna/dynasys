@@ -1,0 +1,66 @@
+DD,05  
+MM,12  
+AA,2001
+DMA,05/12/2001 
+FECH,05 de Diciembre de 2001       
+NOM,2000 Guadalupe Super.SRL            
+CUIT,30-67842731/0  
+DIR,Av. Gral. Paz 7487                  
+LOC,(3000) Santa Fe                     
+CNV,R 30 Días Neto                      
+CIV,Consumidor Final                    
+NCLI,[D00008]   
+NCOB,[070]  
+D01,                  
+I01,              
+D02,                  
+I02,              
+D03,                  
+I03,              
+D04,                  
+I04,              
+D05,                  
+I05,              
+D06,                  
+I06,              
+D07,                  
+I07,              
+D08,                  
+I08,              
+D09,                  
+I09,              
+D10,                  
+I10,              
+D11,                  
+I11,              
+D12,                  
+I12,              
+D13,                  
+I13,              
+D14,                  
+I14,              
+D15,                  
+I15,              
+D16,                  
+I16,              
+D17,                  
+I17,              
+D18,                  
+I18,              
+D19,                  
+I19,              
+D20,                  
+I20,              
+ILE1,DOSCIENTOS .-                                                                        
+ILE2,                                                                                     
+LEY1,                                                                                     
+LEY2,                                                                                     
+LEY3,                                                                                     
+LEY4,                                                                                     
+LEY5,                                                                                     
+BRUT,      165.29 
+IIVA,       34.71 
+ITOT,      200.00 
+INOI,        0.00 
+CTL,0001 00002987 
+!PAGE!

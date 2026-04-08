@@ -1,0 +1,34 @@
+/* this PROCEDURE EXISTS simply so that a CLASS can have an internal PROCEDURE called 
+   this is called from ServerSocket.cls */
+
+DEF INPUT PARAMETER ServerSocket AS CLASS com.dotr.ServerSocket NO-UNDO. /* Socket Name */
+
+DEF VAR ClientSocket AS CLASS com.dotr.ClientSocket NO-UNDO.
+
+PROCEDURE ClientConnected:
+ DEF INPUT PARAMETER p_Socket AS HANDLE NO-UNDO. /* handle to the client socket that has just connected to the server socket */
+ 
+ DEF VAR lv_Handler AS HANDLE NO-UNDO.
+
+ IF NOT VALID-HANDLE(p_Socket) THEN RETURN. /* check, just in case */
+
+ ClientSocket = NEW com.dotr.ClientSocket(ServerSocket,p_Socket,ServerSocket:MessageHandler) .
+ ClientSocket:Terminator = ServerSocket:Terminator.
+ ClientSocket:UseXML     = ServerSocket:UseXML.
+
+ ClientSocket:SocketName = SUBSTITUTE("&1:&2",p_Socket:LOCAL-PORT,p_Socket:REMOTE-PORT).
+ 
+ RUN com/dotr/ClientSocketHandler.p PERSISTENT SET lv_Handler (ClientSocket).
+ 
+ ServerSocket:AddClient(p_Socket).
+ 
+ p_Socket:SET-READ-RESPONSE-PROCEDURE("InboundData":U,lv_Handler).
+
+ ASSIGN ClientSocket:MessageType    = "Server:Connected"
+        ClientSocket:MessageSubject = "Client Connected".
+
+ ClientSocket:SendMessage().
+
+ RETURN.
+ 
+END PROCEDURE.

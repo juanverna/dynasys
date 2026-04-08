@@ -1,0 +1,37 @@
+/*=========================================================================================*/
+/*                      VALIDACION DE BAJAS DE CONDICIONES DE IVA                          */
+/*=========================================================================================*/
+
+DEFINE INPUT  PARAMETER rid_condicion AS ROWID.
+DEFINE OUTPUT PARAMETER hay_error  AS LOGICAL.
+
+FIND Condicion_impos WHERE ROWID(Condicion_impos) = rid_condicion NO-LOCK.
+RUN VALIDAR_BAJA.
+
+RETURN.
+
+PROCEDURE VALIDAR_BAJA:
+
+  hay_error = YES.
+
+  IF CAN-FIND(FIRST Articulo-impuesto WHERE Articulo-impuesto.cdg_condiva = Condicion_impos.cdg_condiva) OR
+     CAN-FIND(FIRST Cliente WHERE Cliente.cdg_condiva = Condicion_impos.cdg_condiva) OR
+     CAN-FIND(FIRST Contrato_hd WHERE Contrato_hd.cdg_condiva = Condicion_impos.cdg_condiva) OR
+     CAN-FIND(FIRST Emb_header_prv WHERE Emb_header_prv.cdg_condiva = Condicion_impos.cdg_condiva) OR
+     CAN-FIND(FIRST Fac_header WHERE Fac_header.cdg_condiva = Condicion_impos.cdg_condiva) OR
+     CAN-FIND(FIRST Fac_header_prv WHERE Fac_header_prv.cdg_condiva = Condicion_impos.cdg_condiva) OR
+     CAN-FIND(FIRST Impuesto_condicion WHERE Impuesto_condicion.cdg_condiva = Condicion_impos.cdg_condiva) OR
+     CAN-FIND(FIRST Oci_header WHERE Oci_header.cdg_condiva = Condicion_impos.cdg_condiva) OR
+     CAN-FIND(FIRST Ocm_header WHERE Ocm_header.cdg_condiva = Condicion_impos.cdg_condiva) OR
+     CAN-FIND(FIRST Opg_header WHERE Opg_header.cdg_condiva = Condicion_impos.cdg_condiva) OR
+     CAN-FIND(FIRST Ped_header WHERE Ped_header.cdg_condiva = Condicion_impos.cdg_condiva) OR
+     CAN-FIND(FIRST Proveedor WHERE Proveedor.cdg_condiva = Condicion_impos.cdg_condiva) OR
+     CAN-FIND(FIRST Rec_header WHERE Rec_header.cdg_condiva = Condicion_impos.cdg_condiva) OR
+     CAN-FIND(FIRST Rem_header WHERE Rem_header.cdg_condiva = Condicion_impos.cdg_condiva) OR
+     CAN-FIND(FIRST Rem_header_prv WHERE Rem_header_prv.cdg_condiva = Condicion_impos.cdg_condiva)
+     THEN RETURN.
+
+  hay_error = NO.
+
+END PROCEDURE.
+

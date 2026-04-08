@@ -1,0 +1,8 @@
+NEWMEMO lugar-y-fecha:
+{Buenos Aires, 22 de abril de 2005                                                                                                                                                                                                                               }
+NEWMEMO firma:
+{Lic. Gastón Risso                                                                                                                                                                                                                                               }
+NEWMEMO cargo:
+{Gerente de Comercial                                                                                                                                                                                                                                            }
+NEWMEMO por-empresa:
+{FERCOLOR S.A.                                                                                                                                                                                                                                                   }

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<com.openedge.pdt.t4bl.model:Diagram xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:com.openedge.pdt.t4bl.model="http://com.openedge.pdt.t4bl" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmi:id="_2ibkjd4cEeS4P9sA3y4xbg" componentType="Dataset" primaryComponent="_2ibkjt4cEeS4P9sA3y4xbg">
+  <contents xsi:type="com.openedge.pdt.t4bl.model:NamedElement" xmi:id="_2ibkjt4cEeS4P9sA3y4xbg" dimension="123,116" location="363,107">
+    <outgoingConnections xsi:type="com.openedge.pdt.t4bl.model:ReferenceLink" xmi:id="_jjCtDt4dEeSL6cd7nnOsKw" target="_jjCtCN4dEeSL6cd7nnOsKw">
+      <eReference href="../../appModel.t4bl#_jjCtCd4dEeSL6cd7nnOsKw"/>
+    </outgoingConnections>
+    <outgoingConnections xsi:type="com.openedge.pdt.t4bl.model:ReferenceLink" xmi:id="_mKt56N4dEeSL6cd7nnOsKw" target="_mKt54t4dEeSL6cd7nnOsKw">
+      <eReference href="../../appModel.t4bl#_mKt5494dEeSL6cd7nnOsKw"/>
+    </outgoingConnections>
+    <outgoingConnections xsi:type="com.openedge.pdt.t4bl.model:ReferenceLink" xmi:id="_qFQc3t4dEeSL6cd7nnOsKw" target="_qFQc2N4dEeSL6cd7nnOsKw">
+      <bendpoints>584,102</bendpoints>
+      <bendpoints>1076,104</bendpoints>
+      <eReference href="../../appModel.t4bl#_qFQc2d4dEeSL6cd7nnOsKw"/>
+    </outgoingConnections>
+    <outgoingConnections xsi:type="com.openedge.pdt.t4bl.model:ReferenceLink" xmi:id="_Bj_ujN46EeSK3d5PLkT48g" target="_Bj_uht46EeSK3d5PLkT48g">
+      <bendpoints>566,87</bendpoints>
+      <bendpoints>1175,87</bendpoints>
+      <bendpoints>1176,701</bendpoints>
+      <eReference href="../../appModel.t4bl#_Bj_uh946EeSK3d5PLkT48g"/>
+    </outgoingConnections>
+    <outgoingConnections xsi:type="com.openedge.pdt.t4bl.model:ReferenceLink" xmi:id="_eb4c_OUPEeSHwqnvhRZghg" target="_eb4c9uUPEeSHwqnvhRZghg">
+      <bendpoints>570,96</bendpoints>
+      <bendpoints>779,94</bendpoints>
+      <bendpoints>1169,96</bendpoints>
+      <bendpoints>1168,392</bendpoints>
+      <eReference href="../../appModel.t4bl#_eb4c9-UPEeSHwqnvhRZghg"/>
+    </outgoingConnections>
+    <outgoingConnections xsi:type="com.openedge.pdt.t4bl.model:ReferenceLink" xmi:id="_wJjhauVLEeSOT-tcZ05oWg" target="_wJjhZOVLEeSOT-tcZ05oWg">
+      <bendpoints>565,81</bendpoints>
+      <bendpoints>1187,80</bendpoints>
+      <bendpoints>1189,562</bendpoints>
+      <eReference href="../../appModel.t4bl#_wJjhZeVLEeSOT-tcZ05oWg"/>
+    </outgoingConnections>
+    <outgoingConnections xsi:type="com.openedge.pdt.t4bl.model:ReferenceLink" xmi:id="_F7lNJuj8EeSrj76-9j3ysA" target="_IhHRFOHpEeS6rJvMpQ-v2Q" oppositeShown="true">
+      <eReference href="../../appModel.t4bl#_F7lNI-j8EeSrj76-9j3ysA"/>
+    </outgoingConnections>
+    <eNamedElement xsi:type="ecore:EClass" href="../../appModel.t4bl#_2ibkcd4cEeS4P9sA3y4xbg"/>
+  </contents>
+  <contents xsi:type="com.openedge.pdt.t4bl.model:NamedElement" xmi:id="_jjCtCN4dEeSL6cd7nnOsKw" dimension="150,-1" location="350,296" incomingConnections="_jjCtDt4dEeSL6cd7nnOsKw">
+    <outgoingConnections xsi:type="com.openedge.pdt.t4bl.model:ReferenceLink" xmi:id="_o6IGQN4dEeSL6cd7nnOsKw" target="_mKt54t4dEeSL6cd7nnOsKw" oppositeShown="true">
+      <eReference href="../../appModel.t4bl#_o5-VQ94dEeSL6cd7nnOsKw"/>
+    </outgoingConnections>
+    <outgoingConnections xsi:type="com.openedge.pdt.t4bl.model:ReferenceLink" xmi:id="_THKpnOHpEeS6rJvMpQ-v2Q" target="_IhHRFOHpEeS6rJvMpQ-v2Q" oppositeShown="true">
+      <eReference href="../../appModel.t4bl#_THKpk-HpEeS6rJvMpQ-v2Q"/>
+    </outgoingConnections>
+    <eNamedElement xsi:type="ecore:EClass" href="../../appModel.t4bl#_jjCs0N4dEeSL6cd7nnOsKw"/>
+  </contents>
+  <contents xsi:type="com.openedge.pdt.t4bl.model:NamedElement" xmi:id="_mKt54t4dEeSL6cd7nnOsKw" dimension="150,-1" location="740,196" incomingConnections="_mKt56N4dEeSL6cd7nnOsKw _o6IGQN4dEeSL6cd7nnOsKw">
+    <outgoingConnections xsi:type="com.openedge.pdt.t4bl.model:ReferenceLink" xmi:id="_LMsmgN49EeSK3d5PLkT48g" target="_qFQc2N4dEeSL6cd7nnOsKw" oppositeShown="true">
+      <eReference href="../../appModel.t4bl#_LMi1g949EeSK3d5PLkT48g"/>
+    </outgoingConnections>
+    <outgoingConnections xsi:type="com.openedge.pdt.t4bl.model:ReferenceLink" xmi:id="_rA2ZTOUPEeSHwqnvhRZghg" target="_eb4c9uUPEeSHwqnvhRZghg" oppositeShown="true">
+      <eReference href="../../appModel.t4bl#_rA2ZQ-UPEeSHwqnvhRZghg"/>
+    </outgoingConnections>
+    <eNamedElement xsi:type="ecore:EClass" href="../../appModel.t4bl#_mKt5sN4dEeSL6cd7nnOsKw"/>
+  </contents>
+  <contents xsi:type="com.openedge.pdt.t4bl.model:NamedElement" xmi:id="_qFQc2N4dEeSL6cd7nnOsKw" dimension="150,-1" location="960,217" incomingConnections="_qFQc3t4dEeSL6cd7nnOsKw _nYXc8N47EeSK3d5PLkT48g _LMsmgN49EeSK3d5PLkT48g">
+    <eNamedElement xsi:type="ecore:EClass" href="../../appModel.t4bl#_qFQcoN4dEeSL6cd7nnOsKw"/>
+  </contents>
+  <contents xsi:type="com.openedge.pdt.t4bl.model:NamedElement" xmi:id="_Bj_uht46EeSK3d5PLkT48g" dimension="193,-1" location="49,421" incomingConnections="_Bj_ujN46EeSK3d5PLkT48g _sq0V3OUREeSHwqnvhRZghg">
+    <outgoingConnections xsi:type="com.openedge.pdt.t4bl.model:ReferenceLink" xmi:id="_67D7_OVLEeSOT-tcZ05oWg" target="_wJjhZOVLEeSOT-tcZ05oWg" oppositeShown="true">
+      <eReference href="../../appModel.t4bl#_67D78-VLEeSOT-tcZ05oWg"/>
+    </outgoingConnections>
+    <eNamedElement xsi:type="ecore:EClass" href="../../appModel.t4bl#_Bj_uQN46EeSK3d5PLkT48g"/>
+  </contents>
+  <contents xsi:type="com.openedge.pdt.t4bl.model:StickyNote" xmi:id="_l6fJsN47EeSK3d5PLkT48g" dimension="259,181" location="1227,128" text="Posibles Valores y funcionalidad para el campo Tipo:&#xD;&#xA;&#xD;&#xA;RL=Relacion a otra tabla.&#xD;&#xA;TablaOrigen: Nombre de tabla de donde obtener el valor.&#xD;&#xA;CampoOrigen: Campo para el display.&#xD;&#xA;Relacion: Lista separada por coma de los campos de la relacion.&#xD;&#xA;&#xD;&#xA;SUM=Suma.&#xD;&#xA;Cont=Contador.&#xD;&#xA;AcumPor: Nombre del campo a acumular por.&#xD;&#xA;AcumBrakBy: Break By de acumular por&#xD;&#xA;">
+    <outgoingConnections xmi:id="_nYXc8N47EeSK3d5PLkT48g" target="_qFQc2N4dEeSL6cd7nnOsKw"/>
+  </contents>
+  <contents xsi:type="com.openedge.pdt.t4bl.model:NamedElement" xmi:id="_IhHRFOHpEeS6rJvMpQ-v2Q" dimension="150,-1" location="27,63" incomingConnections="_THKpnOHpEeS6rJvMpQ-v2Q _F7lNJuj8EeSrj76-9j3ysA">
+    <eNamedElement xsi:type="ecore:EClass" href="../../appModel.t4bl#_IhHQ4OHpEeS6rJvMpQ-v2Q"/>
+  </contents>
+  <contents xsi:type="com.openedge.pdt.t4bl.model:NamedElement" xmi:id="_eb4c9uUPEeSHwqnvhRZghg" dimension="150,-1" location="658,432" incomingConnections="_eb4c_OUPEeSHwqnvhRZghg _rA2ZTOUPEeSHwqnvhRZghg">
+    <outgoingConnections xsi:type="com.openedge.pdt.t4bl.model:ReferenceLink" xmi:id="_sq0V3OUREeSHwqnvhRZghg" target="_Bj_uht46EeSK3d5PLkT48g" oppositeShown="true">
+      <eReference href="../../appModel.t4bl#_sq0V0-UREeSHwqnvhRZghg"/>
+    </outgoingConnections>
+    <eNamedElement xsi:type="ecore:EClass" href="../../appModel.t4bl#_ebur0OUPEeSHwqnvhRZghg"/>
+  </contents>
+  <contents xsi:type="com.openedge.pdt.t4bl.model:NamedElement" xmi:id="_wJjhZOVLEeSOT-tcZ05oWg" dimension="150,-1" location="436,619" incomingConnections="_wJjhauVLEeSOT-tcZ05oWg _67D7_OVLEeSOT-tcZ05oWg">
+    <eNamedElement xsi:type="ecore:EClass" href="../../appModel.t4bl#_wJjhMOVLEeSOT-tcZ05oWg"/>
+  </contents>
+  <imports href="../../appModel.t4bl#_2f5N0d4cEeS4P9sA3y4xbg"/>
+</com.openedge.pdt.t4bl.model:Diagram>

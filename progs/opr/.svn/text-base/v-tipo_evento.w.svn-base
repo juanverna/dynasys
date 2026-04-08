@@ -1,0 +1,612 @@
+&ANALYZE-SUSPEND _VERSION-NUMBER UIB_v8r12 GUI ADM1
+&ANALYZE-RESUME
+/* Connected Databases 
+          sic              PROGRESS
+*/
+&Scoped-define WINDOW-NAME CURRENT-WINDOW
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CUSTOM _DEFINITIONS V-table-Win 
+/*------------------------------------------------------------------------
+
+  File:
+
+  Description: from VIEWER.W - Template for SmartViewer Objects
+
+  Input Parameters:
+      <none>
+
+  Output Parameters:
+      <none>
+
+------------------------------------------------------------------------*/
+/*          This .W file was created with the Progress UIB.             */
+/*----------------------------------------------------------------------*/
+
+/* Create an unnamed pool to store all the widgets created 
+     by this procedure. This is a good default which assures
+     that this procedure's triggers and internal procedures 
+     will execute in this procedure's storage, and that proper
+     cleanup will occur on deletion of the procedure. */
+
+CREATE WIDGET-POOL.
+
+/* ***************************  Definitions  ************************** */
+
+/* Parameters Definitions ---                                           */
+
+/* Local Variable Definitions ---                                       */
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-PREPROCESSOR-BLOCK 
+
+/* ********************  Preprocessor Definitions  ******************** */
+
+&Scoped-define PROCEDURE-TYPE SmartViewer
+&Scoped-define DB-AWARE no
+
+&Scoped-define ADM-SUPPORTED-LINKS Record-Source,Record-Target,TableIO-Target
+
+/* Name of first Frame and/or Browse and/or first Query                 */
+&Scoped-define FRAME-NAME F-Main
+
+/* External Tables                                                      */
+&Scoped-define EXTERNAL-TABLES Tipo_evento
+&Scoped-define FIRST-EXTERNAL-TABLE Tipo_evento
+
+
+/* Need to scope the external tables to this procedure                  */
+DEFINE QUERY external_tables FOR Tipo_evento.
+/* Standard List Definitions                                            */
+&Scoped-Define ENABLED-FIELDS Tipo_evento.cdg_tipo_evento ~
+Tipo_evento.nro_tipo_evento Tipo_evento.color_letra Tipo_evento.Origen ~
+Tipo_evento.color_fondo Tipo_evento.Habilidades Tipo_evento.Descripcion ~
+Tipo_evento.Certificado Tipo_evento.factura Tipo_evento.OT ~
+Tipo_evento.informa 
+&Scoped-define ENABLED-TABLES Tipo_evento
+&Scoped-define FIRST-ENABLED-TABLE Tipo_evento
+&Scoped-Define DISPLAYED-FIELDS Tipo_evento.cdg_tipo_evento ~
+Tipo_evento.nro_tipo_evento Tipo_evento.color_letra Tipo_evento.Origen ~
+Tipo_evento.color_fondo Tipo_evento.Habilidades Tipo_evento.Descripcion ~
+Tipo_evento.Certificado Tipo_evento.factura Tipo_evento.OT ~
+Tipo_evento.informa 
+&Scoped-define DISPLAYED-TABLES Tipo_evento
+&Scoped-define FIRST-DISPLAYED-TABLE Tipo_evento
+
+
+/* Custom List Definitions                                              */
+/* ADM-CREATE-FIELDS,ADM-ASSIGN-FIELDS,List-3,List-4,List-5,List-6      */
+
+/* _UIB-PREPROCESSOR-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _XFTR "Foreign Keys" V-table-Win _INLINE
+/* Actions: ? adm/support/keyedit.w ? ? ? */
+/* STRUCTURED-DATA
+<KEY-OBJECT>
+THIS-PROCEDURE
+</KEY-OBJECT>
+<FOREIGN-KEYS>
+descripcion||y|sic.Tipo_evento.descripcion
+</FOREIGN-KEYS> 
+<EXECUTING-CODE>
+**************************
+* Set attributes related to FOREIGN KEYS
+*/
+RUN set-attribute-list (
+    'Keys-Accepted = ,
+     Keys-Supplied = "descripcion"':U).
+/**************************
+</EXECUTING-CODE> */
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+/* ***********************  Control Definitions  ********************** */
+
+
+/* Definitions of the field level widgets                               */
+DEFINE BUTTON btn_nextcolorfondo 
+     IMAGE-UP FILE "adeicon\next-au":U
+     LABEL "btn_nextmes" 
+     SIZE 4 BY 1.
+
+DEFINE BUTTON btn_nextcolorletra 
+     IMAGE-UP FILE "adeicon\next-au":U
+     LABEL "btn_nextmes" 
+     SIZE 4 BY 1.
+
+DEFINE BUTTON btn_prevcolorfondo 
+     IMAGE-UP FILE "adeicon\prev-au":U
+     LABEL "btn_prevcolorletra 2" 
+     SIZE 4 BY 1.
+
+DEFINE BUTTON btn_prevcolorletra 
+     IMAGE-UP FILE "adeicon\prev-au":U
+     LABEL "Button 44" 
+     SIZE 4 BY 1.
+
+
+/* ************************  Frame Definitions  *********************** */
+
+DEFINE FRAME F-Main
+     Tipo_evento.cdg_tipo_evento AT ROW 1 COL 14 COLON-ALIGNED
+          VIEW-AS FILL-IN 
+          SIZE 9.6 BY 1
+     Tipo_evento.nro_tipo_evento AT ROW 1 COL 45.2 COLON-ALIGNED WIDGET-ID 20
+          LABEL "Nro"
+          VIEW-AS FILL-IN 
+          SIZE 6 BY 1
+     Tipo_evento.color_letra AT ROW 1 COL 64 COLON-ALIGNED WIDGET-ID 16
+          VIEW-AS FILL-IN 
+          SIZE 6 BY 1
+          BGCOLOR 15 FGCOLOR 9 
+     btn_prevcolorletra AT ROW 1 COL 73 WIDGET-ID 12
+     btn_nextcolorletra AT ROW 1 COL 77 WIDGET-ID 8
+     Tipo_evento.Origen AT ROW 2.19 COL 14 COLON-ALIGNED WIDGET-ID 4
+          VIEW-AS FILL-IN 
+          SIZE 32 BY 1
+     Tipo_evento.color_fondo AT ROW 2.19 COL 64 COLON-ALIGNED WIDGET-ID 14
+          VIEW-AS FILL-IN 
+          SIZE 6 BY 1
+          BGCOLOR 15 FGCOLOR 9 
+     btn_prevcolorfondo AT ROW 2.19 COL 73 WIDGET-ID 10
+     btn_nextcolorfondo AT ROW 2.19 COL 77 WIDGET-ID 6
+     Tipo_evento.Habilidades AT ROW 3.38 COL 14 COLON-ALIGNED WIDGET-ID 2
+          VIEW-AS FILL-IN 
+          SIZE 65 BY 1
+     Tipo_evento.Descripcion AT ROW 5.05 COL 3 NO-LABEL
+          VIEW-AS EDITOR
+          SIZE 78 BY 4.29
+     Tipo_evento.Certificado AT ROW 9.57 COL 12 WIDGET-ID 28
+          VIEW-AS TOGGLE-BOX
+          SIZE 14 BY .81
+     Tipo_evento.factura AT ROW 9.57 COL 32 WIDGET-ID 24
+          LABEL "Factura"
+          VIEW-AS TOGGLE-BOX
+          SIZE 11.6 BY .81
+     Tipo_evento.OT AT ROW 9.57 COL 46 WIDGET-ID 32
+          VIEW-AS TOGGLE-BOX
+          SIZE 8 BY .81
+     Tipo_evento.informa AT ROW 9.57 COL 55 WIDGET-ID 18
+          VIEW-AS TOGGLE-BOX
+          SIZE 13.4 BY .81
+    WITH 1 DOWN NO-BOX KEEP-TAB-ORDER OVERLAY 
+         SIDE-LABELS NO-UNDERLINE THREE-D 
+         AT COL 1 ROW 1 SCROLLABLE .
+
+
+/* *********************** Procedure Settings ************************ */
+
+&ANALYZE-SUSPEND _PROCEDURE-SETTINGS
+/* Settings for THIS-PROCEDURE
+   Type: SmartViewer
+   External Tables: sic.Tipo_evento
+   Allow: Basic,DB-Fields
+   Frames: 1
+   Add Fields to: EXTERNAL-TABLES
+   Other Settings: PERSISTENT-ONLY COMPILE
+ */
+
+/* This procedure should always be RUN PERSISTENT.  Report the error,  */
+/* then cleanup and return.                                            */
+IF NOT THIS-PROCEDURE:PERSISTENT THEN DO:
+  MESSAGE "{&FILE-NAME} should only be RUN PERSISTENT.":U
+          VIEW-AS ALERT-BOX ERROR BUTTONS OK.
+  RETURN.
+END.
+
+&ANALYZE-RESUME _END-PROCEDURE-SETTINGS
+
+/* *************************  Create Window  ************************** */
+
+&ANALYZE-SUSPEND _CREATE-WINDOW
+/* DESIGN Window definition (used by the UIB) 
+  CREATE WINDOW V-table-Win ASSIGN
+         HEIGHT             = 9.62
+         WIDTH              = 82.8.
+/* END WINDOW DEFINITION */
+                                                                        */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CUSTOM _INCLUDED-LIB V-table-Win 
+/* ************************* Included-Libraries *********************** */
+
+{src/adm/method/viewer.i}
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+
+
+/* ***********  Runtime Attributes and AppBuilder Settings  *********** */
+
+&ANALYZE-SUSPEND _RUN-TIME-ATTRIBUTES
+/* SETTINGS FOR WINDOW V-table-Win
+  VISIBLE,,RUN-PERSISTENT                                               */
+/* SETTINGS FOR FRAME F-Main
+   NOT-VISIBLE Size-to-Fit                                              */
+ASSIGN 
+       FRAME F-Main:SCROLLABLE       = FALSE
+       FRAME F-Main:HIDDEN           = TRUE.
+
+/* SETTINGS FOR BUTTON btn_nextcolorfondo IN FRAME F-Main
+   NO-ENABLE                                                            */
+/* SETTINGS FOR BUTTON btn_nextcolorletra IN FRAME F-Main
+   NO-ENABLE                                                            */
+/* SETTINGS FOR BUTTON btn_prevcolorfondo IN FRAME F-Main
+   NO-ENABLE                                                            */
+/* SETTINGS FOR BUTTON btn_prevcolorletra IN FRAME F-Main
+   NO-ENABLE                                                            */
+/* SETTINGS FOR TOGGLE-BOX Tipo_evento.factura IN FRAME F-Main
+   EXP-LABEL                                                            */
+/* SETTINGS FOR FILL-IN Tipo_evento.nro_tipo_evento IN FRAME F-Main
+   EXP-LABEL                                                            */
+ASSIGN 
+       Tipo_evento.nro_tipo_evento:READ-ONLY IN FRAME F-Main        = TRUE.
+
+/* _RUN-TIME-ATTRIBUTES-END */
+&ANALYZE-RESUME
+
+
+/* Setting information for Queries and Browse Widgets fields            */
+
+&ANALYZE-SUSPEND _QUERY-BLOCK FRAME F-Main
+/* Query rebuild information for FRAME F-Main
+     _Options          = "NO-LOCK"
+     _Query            is NOT OPENED
+*/  /* FRAME F-Main */
+&ANALYZE-RESUME
+
+ 
+
+
+
+/* ************************  Control Triggers  ************************ */
+
+&Scoped-define SELF-NAME btn_nextcolorfondo
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL btn_nextcolorfondo V-table-Win
+ON CHOOSE OF btn_nextcolorfondo IN FRAME F-Main /* btn_nextmes */
+DO:
+    DEFINE VAR n-color AS INT NO-UNDO.
+  n-color = tipo_evento.color_fondo:INPUT-VALUE + 1.
+  IF n-color = 16 THEN n-color = 0.
+  DISPLAY n-color @ tipo_evento.color_fondo
+      WITH FRAME {&FRAME-NAME}.
+  cdg_tipo_evento:BGCOLOR = n-color.
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME btn_nextcolorletra
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL btn_nextcolorletra V-table-Win
+ON CHOOSE OF btn_nextcolorletra IN FRAME F-Main /* btn_nextmes */
+DO:
+    DEFINE VAR n-color AS INT NO-UNDO.
+  n-color = tipo_evento.color_letra:INPUT-VALUE + 1.
+  IF n-color = 16 THEN n-color = 0.
+  DISPLAY n-color @ tipo_evento.color_letra
+      WITH FRAME {&FRAME-NAME}.
+  cdg_tipo_evento:FGCOLOR = n-color.
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME btn_prevcolorfondo
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL btn_prevcolorfondo V-table-Win
+ON CHOOSE OF btn_prevcolorfondo IN FRAME F-Main /* btn_prevcolorletra 2 */
+DO:
+    DEFINE VAR n-color AS INT NO-UNDO.
+  n-color = tipo_evento.color_fondo:INPUT-VALUE - 1.
+  IF n-color = -1 THEN n-color = 15.
+  DISPLAY n-color @ tipo_evento.color_fondo
+      WITH FRAME {&FRAME-NAME}.
+  cdg_tipo_evento:BGCOLOR = n-color.
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME btn_prevcolorletra
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL btn_prevcolorletra V-table-Win
+ON CHOOSE OF btn_prevcolorletra IN FRAME F-Main /* Button 44 */
+DO:
+    DEFINE VAR n-color AS INT NO-UNDO.
+  n-color = tipo_evento.color_letra:INPUT-VALUE - 1.
+  IF n-color = -1 THEN n-color = 15.
+  DISPLAY n-color @ tipo_evento.color_letra
+      WITH FRAME {&FRAME-NAME}.
+  cdg_tipo_evento:FGCOLOR = n-color.
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME Tipo_evento.color_fondo
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL Tipo_evento.color_fondo V-table-Win
+ON LEAVE OF Tipo_evento.color_fondo IN FRAME F-Main /* Color Fondo */
+DO:
+  cdg_tipo_evento:BGCOLOR = SELF:INPUT-VALUE.
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME Tipo_evento.color_letra
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL Tipo_evento.color_letra V-table-Win
+ON LEAVE OF Tipo_evento.color_letra IN FRAME F-Main /* Color Letra */
+DO:
+  cdg_tipo_evento:FGCOLOR = SELF:INPUT-VALUE.
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&UNDEFINE SELF-NAME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CUSTOM _MAIN-BLOCK V-table-Win 
+
+
+/* ***************************  Main Block  *************************** */
+
+  &IF DEFINED(UIB_IS_RUNNING) <> 0 &THEN          
+    RUN dispatch IN THIS-PROCEDURE ('initialize':U).        
+  &ENDIF         
+  
+  /************************ INTERNAL PROCEDURES ********************/
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+/* **********************  Internal Procedures  *********************** */
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE adm-find-using-key V-table-Win  adm/support/_key-fnd.p
+PROCEDURE adm-find-using-key :
+/*------------------------------------------------------------------------------
+  Purpose:     Finds the current record using the contents of
+               the 'Key-Name' and 'Key-Value' attributes.
+  Parameters:  <none>
+------------------------------------------------------------------------------*/
+
+  /* No Foreign keys are accepted by this SmartObject. */
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE adm-row-available V-table-Win  _ADM-ROW-AVAILABLE
+PROCEDURE adm-row-available :
+/*------------------------------------------------------------------------------
+  Purpose:     Dispatched to this procedure when the Record-
+               Source has a new row available.  This procedure
+               tries to get the new row (or foriegn keys) from
+               the Record-Source and process it.
+  Parameters:  <none>
+------------------------------------------------------------------------------*/
+
+  /* Define variables needed by this internal procedure.             */
+  {src/adm/template/row-head.i}
+
+  /* Create a list of all the tables that we need to get.            */
+  {src/adm/template/row-list.i "Tipo_evento"}
+
+  /* Get the record ROWID's from the RECORD-SOURCE.                  */
+  {src/adm/template/row-get.i}
+
+  /* FIND each record specified by the RECORD-SOURCE.                */
+  {src/adm/template/row-find.i "Tipo_evento"}
+
+  /* Process the newly available records (i.e. display fields,
+     open queries, and/or pass records on to any RECORD-TARGETS).    */
+  {src/adm/template/row-end.i}
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE disable_UI V-table-Win  _DEFAULT-DISABLE
+PROCEDURE disable_UI :
+/*------------------------------------------------------------------------------
+  Purpose:     DISABLE the User Interface
+  Parameters:  <none>
+  Notes:       Here we clean-up the user-interface by deleting
+               dynamic widgets we have created and/or hide 
+               frames.  This procedure is usually called when
+               we are ready to "clean-up" after running.
+------------------------------------------------------------------------------*/
+  /* Hide all frames. */
+  HIDE FRAME F-Main.
+  IF THIS-PROCEDURE:PERSISTENT THEN DELETE PROCEDURE THIS-PROCEDURE.
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE local-assign-record V-table-Win 
+PROCEDURE local-assign-record :
+/*------------------------------------------------------------------------------
+  Purpose:     Override standard ADM method
+  Notes:       
+------------------------------------------------------------------------------*/
+
+  /* Code placed here will execute PRIOR to standard behavior. */
+
+  /* Dispatch standard ADM method.                             */
+  RUN dispatch IN THIS-PROCEDURE ( INPUT 'assign-record':U ) .
+   IF NEW tipo_evento THEN 
+        ASSIGN tipo_evento.nro_tipo_evento = NEXT-VALUE( proximo_tipo_evento).
+  /* Code placed here will execute AFTER standard behavior.    */
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE local-delete-record V-table-Win 
+PROCEDURE local-delete-record :
+/*------------------------------------------------------------------------------
+  Purpose:     Override standard ADM method
+  Notes:       
+------------------------------------------------------------------------------*/
+
+  /* Code placed here will execute PRIOR to standard behavior. */
+IF CAN-FIND(articulo WHERE articulo.nro_tipo_evento = evento.nro_tipo_evento) THEN DO:
+    RUN ponmenj.p("EVENT02").
+RETURN ERROR.
+END.
+
+  /* Dispatch standard ADM method.                             */
+  RUN dispatch IN THIS-PROCEDURE ( INPUT 'delete-record':U ) .
+
+  /* Code placed here will execute AFTER standard behavior.    */
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE local-disable-fields V-table-Win 
+PROCEDURE local-disable-fields :
+/*------------------------------------------------------------------------------
+  Purpose:     Override standard ADM method
+  Notes:       
+------------------------------------------------------------------------------*/
+
+  /* Code placed here will execute PRIOR to standard behavior. */
+
+  /* Dispatch standard ADM method.                             */
+  RUN dispatch IN THIS-PROCEDURE ( INPUT 'disable-fields':U ) .
+
+  /* Code placed here will execute AFTER standard behavior.    */
+    btn_nextcolorfondo:sensitive IN FRAME {&FRAME-NAME}= false.
+    btn_nextcolorletra:sensitive = false.
+    btn_prevcolorfondo:sensitive = false.
+    btn_prevcolorletra:sensitive = false.
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE local-display-fields V-table-Win 
+PROCEDURE local-display-fields :
+/*------------------------------------------------------------------------------
+  Purpose:     Override standard ADM method
+  Notes:       
+------------------------------------------------------------------------------*/
+
+  /* Code placed here will execute PRIOR to standard behavior. */
+
+  /* Dispatch standard ADM method.                             */
+  RUN dispatch IN THIS-PROCEDURE ( INPUT 'display-fields':U ) .
+
+  /* Code placed here will execute AFTER standard behavior.    */
+IF AVAILABLE tipo_evento THEN do:
+  cdg_tipo_evento:FGCOLOR IN FRAME {&FRAME-NAME}=tipo_evento.color_letra.
+  cdg_tipo_evento:BGCOLOR =tipo_evento.color_fondo.
+END.
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE local-enable-fields V-table-Win 
+PROCEDURE local-enable-fields :
+/*------------------------------------------------------------------------------
+  Purpose:     Override standard ADM method
+  Notes:       
+------------------------------------------------------------------------------*/
+
+  /* Code placed here will execute PRIOR to standard behavior. */
+
+  /* Dispatch standard ADM method.                             */
+  RUN dispatch IN THIS-PROCEDURE ( INPUT 'enable-fields':U ) .
+    btn_nextcolorfondo:sensitive IN FRAME {&FRAME-NAME}= true.
+    btn_nextcolorletra:sensitive = true.
+    btn_prevcolorfondo:sensitive = true.
+    btn_prevcolorletra:sensitive = true.
+  /* Code placed here will execute AFTER standard behavior.    */
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE send-key V-table-Win  adm/support/_key-snd.p
+PROCEDURE send-key :
+/*------------------------------------------------------------------------------
+  Purpose:     Sends a requested KEY value back to the calling
+               SmartObject.
+  Parameters:  <see adm/template/sndkytop.i>
+------------------------------------------------------------------------------*/
+
+  /* Define variables needed by this internal procedure.             */
+  {src/adm/template/sndkytop.i}
+
+  /* Return the key value associated with each key case.             */
+  {src/adm/template/sndkycas.i "descripcion" "Tipo_evento" "descripcion"}
+
+  /* Close the CASE statement and end the procedure.                 */
+  {src/adm/template/sndkyend.i}
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE send-records V-table-Win  _ADM-SEND-RECORDS
+PROCEDURE send-records :
+/*------------------------------------------------------------------------------
+  Purpose:     Send record ROWID's for all tables used by
+               this file.
+  Parameters:  see template/snd-head.i
+------------------------------------------------------------------------------*/
+
+  /* Define variables needed by this internal procedure.               */
+  {src/adm/template/snd-head.i}
+
+  /* For each requested table, put it's ROWID in the output list.      */
+  {src/adm/template/snd-list.i "Tipo_evento"}
+
+  /* Deal with any unexpected table requests before closing.           */
+  {src/adm/template/snd-end.i}
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE state-changed V-table-Win 
+PROCEDURE state-changed :
+/* -----------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+-------------------------------------------------------------*/
+  DEFINE INPUT PARAMETER p-issuer-hdl AS HANDLE    NO-UNDO.
+  DEFINE INPUT PARAMETER p-state      AS CHARACTER NO-UNDO.
+
+  CASE p-state:
+      /* Object instance CASEs can go here to replace standard behavior
+         or add new cases. */
+      {src/adm/template/vstates.i}
+  END CASE.
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+

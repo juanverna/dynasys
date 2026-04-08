@@ -1,0 +1,14 @@
+   DEFINE VAR k AS INT NO-UNDO.
+    FOR EACH contrato_hd WHERE NOT contrato_hd.anulado AND contrato_hd.estado = "A" AND contrato_hd.fecha_baja = ?:
+        DO k = 1 TO contrato_hd.numero_eventos:
+        FOR EACH contrato_restriccion WHERE
+         contrato_restriccion.nro_contrato = contrato_hd.nro_contrato AND
+         contrato_restriccion.sub_evento = k AND (
+        contrato_restriccion.nro_restriccion = 1 OR 
+        contrato_restriccion.nro_restriccion = 2 ):
+          IF lookup(contrato_restriccion.valor,"111") <> 0 THEN
+            DISPLAY contrato_hd.nro_contrato.
+        END.
+        END.
+
+END.

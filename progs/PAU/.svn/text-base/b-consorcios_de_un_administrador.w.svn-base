@@ -1,0 +1,1251 @@
+&ANALYZE-SUSPEND _VERSION-NUMBER UIB_v8r12 GUI ADM1
+&ANALYZE-RESUME
+/* Connected Databases 
+          sic              PROGRESS
+*/
+&Scoped-define WINDOW-NAME CURRENT-WINDOW
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CUSTOM _DEFINITIONS B-table-Win 
+/*********************************************************************
+* Copyright (C) 2000 by Progress Software Corporation ("PSC"),       *
+* 14 Oak Park, Bedford, MA 01730, and other contributors as listed   *
+* below.  All Rights Reserved.                                       *
+*                                                                    *
+* The Initial Developer of the Original Code is PSC.  The Original   *
+* Code is Progress IDE code released to open source December 1, 2000.*
+*                                                                    *
+* The contents of this file are subject to the Possenet Public       *
+* License Version 1.0 (the "License"); you may not use this file     *
+* except in compliance with the License.  A copy of the License is   *
+* available as of the date of this notice at                         *
+* http://www.possenet.org/license.html                               *
+*                                                                    *
+* Software distributed under the License is distributed on an "AS IS"*
+* basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. You*
+* should refer to the License for the specific language governing    *
+* rights and limitations under the License.                          *
+*                                                                    *
+* Contributors:                                                      *
+*                                                                    *
+*********************************************************************/
+/*------------------------------------------------------------------------
+
+  File:  
+
+  Description: from BROWSER.W - Basic SmartBrowser Object Template
+
+  Input Parameters:
+      <none>
+
+  Output Parameters:
+      <none>
+
+------------------------------------------------------------------------*/
+/*          This .W file was created with the Progress UIB.             */
+/*----------------------------------------------------------------------*/
+
+/* Create an unnamed pool to store all the widgets created 
+     by this procedure. This is a good default which assures
+     that this procedure's triggers and internal procedures 
+     will execute in this procedure's storage, and that proper
+     cleanup will occur on deletion of the procedure. */
+
+CREATE WIDGET-POOL.
+
+/* ***************************  Definitions  ************************** */
+
+/* Parameters Definitions ---                                           */
+
+/* Local Variable Definitions ---                                       */
+{VRSHARED.I "NEW"}
+DEFINE VARIABLE que_moneda LIKE moneda.nro_moneda INITIAL 10.
+DEFINE VARIABLE ant_anulado AS LOGICAL.
+
+DEFINE VARIABLE que_empresa LIKE Empresa.cdg_empresa.
+DEFINE VARIABLE fecha_inicial AS DATE.
+DEFINE VARIABLE fecha_elegida AS DATE.
+
+
+DEF VAR Analitico  AS DECIMAL FORMAT ">>,>>9.99" NO-UNDO.
+DEF VAR Historico  AS DECIMAL FORMAT ">>,>>9.99" NO-UNDO.
+DEF VAR Vencido  AS DECIMAL FORMAT ">>,>>9.99" NO-UNDO.
+
+DEF VAR t-Analitico  AS DECIMAL FORMAT ">>,>>9.99" NO-UNDO.
+DEF VAR t-Historico  AS DECIMAL FORMAT ">>,>>9.99" NO-UNDO.
+DEF VAR t-Vencido  AS DECIMAL FORMAT ">>,>>9.99" NO-UNDO.
+
+DEF VAR rid AS ROWID NO-UNDO.
+
+DEF BUFFER administrador FOR cliente.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-PREPROCESSOR-BLOCK 
+
+/* ********************  Preprocessor Definitions  ******************** */
+
+&Scoped-define PROCEDURE-TYPE SmartBrowser
+&Scoped-define DB-AWARE no
+
+&Scoped-define ADM-SUPPORTED-LINKS Record-Source,Record-Target,TableIO-Target
+
+/* Name of first Frame and/or Browse and/or first Query                 */
+&Scoped-define FRAME-NAME F-Main
+&Scoped-define BROWSE-NAME br_table
+
+/* Internal Tables (found by Frame, Query & Browse Queries)             */
+&Scoped-define INTERNAL-TABLES cliente
+
+/* Define KEY-PHRASE in case it is used by any query. */
+&Scoped-define KEY-PHRASE TRUE
+
+/* Definitions for BROWSE br_table                                      */
+&Scoped-define FIELDS-IN-QUERY-br_table Cliente.direccion fcalcular_vencido() @ vencido fcalcular_analitico() @ analitico fcalcular_historico() @ historico Cliente.cdg_cliente Cliente.nom_cliente   
+&Scoped-define ENABLED-FIELDS-IN-QUERY-br_table   
+&Scoped-define SELF-NAME br_table
+&Scoped-define QUERY-STRING-br_table FOR EACH cliente WHERE ~{&KEY-PHRASE}  NO-LOCK     ~{&SORTBY-PHRASE}
+&Scoped-define OPEN-QUERY-br_table OPEN QUERY {&SELF-NAME} FOR EACH cliente WHERE ~{&KEY-PHRASE}  NO-LOCK     ~{&SORTBY-PHRASE}.
+&Scoped-define TABLES-IN-QUERY-br_table cliente
+&Scoped-define FIRST-TABLE-IN-QUERY-br_table cliente
+
+
+/* Definitions for FRAME F-Main                                         */
+
+/* Standard List Definitions                                            */
+&Scoped-Define ENABLED-OBJECTS ficha des_fecha has_fecha btn_credito ~
+btn_imprimir btn_integral id_moneda btn_consolidado bzoom br_table 
+&Scoped-Define DISPLAYED-OBJECTS ficha des_fecha has_fecha id_moneda 
+
+/* Custom List Definitions                                              */
+/* List-1,List-2,List-3,List-4,List-5,List-6                            */
+
+/* _UIB-PREPROCESSOR-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _XFTR "Foreign Keys" B-table-Win _INLINE
+/* Actions: ? adm/support/keyedit.w ? ? ? */
+/* STRUCTURED-DATA
+<KEY-OBJECT>
+&BROWSE-NAME
+</KEY-OBJECT>
+<FOREIGN-KEYS>
+nro_cobrador|y|y|sic.Cliente.nro_cobrador
+nro_administrador|y||sic.Cliente.nro_administrador
+cdg_cliente||y|sic.Cliente.cdg_cliente
+nro_cliente||y|sic.Cliente.nro_cliente
+cdg_estado||y|sic.Cliente.cdg_estado
+cdg_famclie||y|sic.Cliente.cdg_famclie
+cdg_pais||y|sic.Cliente.cdg_pais
+nro_proveedor||y|sic.Cliente.nro_proveedor
+cdg_provincia||y|sic.Cliente.cdg_provincia
+num_sucursal||y|sic.Cliente.num_sucursal
+cdg_tipoclie||y|sic.Cliente.cdg_tipoclie
+nro_usuario||y|sic.Cliente.nro_usuario
+</FOREIGN-KEYS> 
+<EXECUTING-CODE>
+**************************
+* Set attributes related to FOREIGN KEYS
+*/
+RUN set-attribute-list (
+    'Keys-Accepted = "nro_cobrador,nro_administrador",
+     Keys-Supplied = "nro_cobrador,cdg_cliente,nro_cliente,cdg_estado,cdg_famclie,cdg_pais,nro_proveedor,cdg_provincia,num_sucursal,cdg_tipoclie,nro_usuario"':U).
+
+/* Tell the ADM to use the OPEN-QUERY-CASES. */
+&Scoped-define OPEN-QUERY-CASES RUN dispatch ('open-query-cases':U).
+/**************************
+</EXECUTING-CODE> */
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _XFTR "Advanced Query Options" B-table-Win _INLINE
+/* Actions: ? adm/support/advqedit.w ? ? ? */
+/* STRUCTURED-DATA
+<KEY-OBJECT>
+&BROWSE-NAME
+</KEY-OBJECT>
+<SORTBY-OPTIONS>
+</SORTBY-OPTIONS>
+<SORTBY-RUN-CODE>
+************************
+* Set attributes related to SORTBY-OPTIONS */
+RUN set-attribute-list (
+    'SortBy-Options = ""':U).
+/************************
+</SORTBY-RUN-CODE>
+<FILTER-ATTRIBUTES>
+</FILTER-ATTRIBUTES> */   
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+/* ************************  Function Prototypes ********************** */
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _FUNCTION-FORWARD fcalcular_analitico B-table-Win 
+FUNCTION fcalcular_analitico RETURNS DECIMAL
+  ( /* parameter-definitions */ )  FORWARD.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _FUNCTION-FORWARD fcalcular_historico B-table-Win 
+FUNCTION fcalcular_historico RETURNS DECIMAL
+  ( /* parameter-definitions */ )  FORWARD.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _FUNCTION-FORWARD fcalcular_vencido B-table-Win 
+FUNCTION fcalcular_vencido RETURNS DECIMAL
+  ( /* parameter-definitions */ )  FORWARD.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _FUNCTION-FORWARD get-des_fecha B-table-Win 
+FUNCTION get-des_fecha RETURNS DATE
+  ( /* parameter-definitions */ )  FORWARD.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _FUNCTION-FORWARD get-ficha B-table-Win 
+FUNCTION get-ficha RETURNS INTEGER
+  ( /* parameter-definitions */ )  FORWARD.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _FUNCTION-FORWARD get-has_fecha B-table-Win 
+FUNCTION get-has_fecha RETURNS DATE
+  ( /* parameter-definitions */ )  FORWARD.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _FUNCTION-FORWARD get-moneda B-table-Win 
+FUNCTION get-moneda RETURNS INTEGER
+  ( /* parameter-definitions */ )  FORWARD.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+/* ***********************  Control Definitions  ********************** */
+
+
+/* Definitions of the field level widgets                               */
+DEFINE BUTTON btn_consolidado 
+     LABEL "&Consolidado" 
+     SIZE 19 BY 1.14.
+
+DEFINE BUTTON btn_credito 
+     LABEL "&Estado Crediticio" 
+     SIZE 19 BY 1.14.
+
+DEFINE BUTTON btn_imprimir 
+     LABEL "&Imprimir" 
+     SIZE 19 BY 1.14.
+
+DEFINE BUTTON btn_integral 
+     LABEL "&Integral" 
+     SIZE 17 BY 1.19.
+
+DEFINE BUTTON bzoom 
+     LABEL "Zoom" 
+     SIZE 17.2 BY 1.14.
+
+DEFINE VARIABLE id_moneda AS INTEGER FORMAT ">>9":U INITIAL ? 
+     LABEL "Moneda" 
+     VIEW-AS COMBO-BOX INNER-LINES 5
+     LIST-ITEM-PAIRS "Item 1",1
+     DROP-DOWN-LIST
+     SIZE 27 BY 1
+     BGCOLOR 15 FGCOLOR 9 FONT 4 NO-UNDO.
+
+DEFINE VARIABLE des_fecha AS DATE FORMAT "99/99/9999":U 
+     LABEL "Del" 
+     VIEW-AS FILL-IN NATIVE 
+     SIZE 16 BY 1
+     BGCOLOR 14 FGCOLOR 12  NO-UNDO.
+
+DEFINE VARIABLE has_fecha AS DATE FORMAT "99/99/9999":U 
+     LABEL "al" 
+     VIEW-AS FILL-IN NATIVE 
+     SIZE 16 BY 1
+     BGCOLOR 14 FGCOLOR 12  NO-UNDO.
+
+DEFINE VARIABLE ficha AS INTEGER INITIAL 2 
+     VIEW-AS RADIO-SET VERTICAL
+     RADIO-BUTTONS 
+          "Histórico", 0,
+"Analítico", 1,
+"Vencido", 2
+     SIZE 16 BY 2.14 NO-UNDO.
+
+/* Query definitions                                                    */
+&ANALYZE-SUSPEND
+DEFINE QUERY br_table FOR 
+      cliente SCROLLING.
+&ANALYZE-RESUME
+
+/* Browse definitions                                                   */
+DEFINE BROWSE br_table
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _DISPLAY-FIELDS br_table B-table-Win _FREEFORM
+  QUERY br_table NO-LOCK DISPLAY
+      Cliente.direccion FORMAT "X(45)":U
+      fcalcular_vencido() @ vencido COLUMN-LABEL "Vencido" FORMAT "->>>,>>9.99":U
+            WIDTH 13.4
+      fcalcular_analitico() @ analitico COLUMN-LABEL "Analitico" FORMAT "->>>,>>9.99":U
+            WIDTH 13.2
+      fcalcular_historico() @ historico COLUMN-LABEL "Historico" FORMAT "->>>,>>9.99":U
+            WIDTH 13.2
+      Cliente.cdg_cliente FORMAT "X(8)":U
+      Cliente.nom_cliente FORMAT "X(40)":U
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+    WITH NO-ASSIGN SEPARATORS SIZE 146 BY 5.48 ROW-HEIGHT-CHARS .71.
+
+
+/* ************************  Frame Definitions  *********************** */
+
+DEFINE FRAME F-Main
+     ficha AT ROW 1.19 COL 2.2 NO-LABEL WIDGET-ID 14
+     des_fecha AT ROW 1.19 COL 27 COLON-ALIGNED WIDGET-ID 12
+     has_fecha AT ROW 1.24 COL 46 COLON-ALIGNED WIDGET-ID 8
+     btn_credito AT ROW 1.24 COL 86.8 WIDGET-ID 20
+     btn_imprimir AT ROW 1.24 COL 106.8 WIDGET-ID 22
+     btn_integral AT ROW 1.24 COL 126.8 WIDGET-ID 24
+     id_moneda AT ROW 2.43 COL 27 COLON-ALIGNED WIDGET-ID 4
+     btn_consolidado AT ROW 2.43 COL 106.8 WIDGET-ID 18
+     bzoom AT ROW 2.43 COL 126.8 WIDGET-ID 26
+     br_table AT ROW 4.1 COL 1
+    WITH 1 DOWN NO-BOX KEEP-TAB-ORDER OVERLAY 
+         SIDE-LABELS NO-UNDERLINE THREE-D 
+         AT COL 1 ROW 1 SCROLLABLE  WIDGET-ID 100.
+
+
+/* *********************** Procedure Settings ************************ */
+
+&ANALYZE-SUSPEND _PROCEDURE-SETTINGS
+/* Settings for THIS-PROCEDURE
+   Type: SmartBrowser
+   Allow: Basic,Browse
+   Frames: 1
+   Add Fields to: EXTERNAL-TABLES
+   Other Settings: PERSISTENT-ONLY COMPILE
+ */
+
+/* This procedure should always be RUN PERSISTENT.  Report the error,  */
+/* then cleanup and return.                                            */
+IF NOT THIS-PROCEDURE:PERSISTENT THEN DO:
+  MESSAGE "{&FILE-NAME} should only be RUN PERSISTENT.":U
+          VIEW-AS ALERT-BOX ERROR BUTTONS OK.
+  RETURN.
+END.
+
+&ANALYZE-RESUME _END-PROCEDURE-SETTINGS
+
+/* *************************  Create Window  ************************** */
+
+&ANALYZE-SUSPEND _CREATE-WINDOW
+/* DESIGN Window definition (used by the UIB) 
+  CREATE WINDOW B-table-Win ASSIGN
+         HEIGHT             = 8.57
+         WIDTH              = 150.8.
+/* END WINDOW DEFINITION */
+                                                                        */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CUSTOM _INCLUDED-LIB B-table-Win 
+/* ************************* Included-Libraries *********************** */
+
+{src/adm/method/browser.i}
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+
+
+/* ***********  Runtime Attributes and AppBuilder Settings  *********** */
+
+&ANALYZE-SUSPEND _RUN-TIME-ATTRIBUTES
+/* SETTINGS FOR WINDOW B-table-Win
+  NOT-VISIBLE,,RUN-PERSISTENT                                           */
+/* SETTINGS FOR FRAME F-Main
+   NOT-VISIBLE Size-to-Fit                                              */
+/* BROWSE-TAB br_table bzoom F-Main */
+ASSIGN 
+       FRAME F-Main:SCROLLABLE       = FALSE
+       FRAME F-Main:HIDDEN           = TRUE.
+
+ASSIGN 
+       btn_credito:HIDDEN IN FRAME F-Main           = TRUE.
+
+/* _RUN-TIME-ATTRIBUTES-END */
+&ANALYZE-RESUME
+
+
+/* Setting information for Queries and Browse Widgets fields            */
+
+&ANALYZE-SUSPEND _QUERY-BLOCK BROWSE br_table
+/* Query rebuild information for BROWSE br_table
+     _START_FREEFORM
+OPEN QUERY {&SELF-NAME} FOR EACH cliente WHERE ~{&KEY-PHRASE}  NO-LOCK
+    ~{&SORTBY-PHRASE}.
+     _END_FREEFORM
+     _Options          = "NO-LOCK KEY-PHRASE SORTBY-PHRASE"
+     _Query            is NOT OPENED
+*/  /* BROWSE br_table */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _QUERY-BLOCK FRAME F-Main
+/* Query rebuild information for FRAME F-Main
+     _Options          = "NO-LOCK"
+     _Query            is NOT OPENED
+*/  /* FRAME F-Main */
+&ANALYZE-RESUME
+
+ 
+
+
+
+/* ************************  Control Triggers  ************************ */
+
+&Scoped-define BROWSE-NAME br_table
+&Scoped-define SELF-NAME br_table
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL br_table B-table-Win
+ON ROW-ENTRY OF br_table IN FRAME F-Main
+DO:
+  /* This code displays initial values for newly added or copied rows. */
+  {src/adm/template/brsentry.i}  
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL br_table B-table-Win
+ON ROW-LEAVE OF br_table IN FRAME F-Main
+DO:
+    /* Do not disable this code or no updates will take place except
+     by pressing the Save button on an Update SmartPanel. */
+   {src/adm/template/brsleave.i}
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL br_table B-table-Win
+ON VALUE-CHANGED OF br_table IN FRAME F-Main
+DO:
+  /* This ADM trigger code must be preserved in order to notify other
+     objects when the browser's current row changes. */
+  {src/adm/template/brschnge.i}
+
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME btn_consolidado
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL btn_consolidado B-table-Win
+ON CHOOSE OF btn_consolidado IN FRAME F-Main /* Consolidado */
+DO:
+  FIND administrador WHERE administrador.nro_cliente = cliente.nro_administrador NO-LOCK.
+     RUN LISCCCLICONS_adm.P (INPUT ROWID(Administrador), 
+                         INPUT des_fecha, 
+                         INPUT has_fecha, 
+                         INPUT ficha,
+                         INPUT que_moneda ).
+
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME btn_credito
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL btn_credito B-table-Win
+ON CHOOSE OF btn_credito IN FRAME F-Main /* Estado Crediticio */
+DO:
+
+/*   FIND Cliente OF Cta_cte NO-LOCK.*/
+   RUN VERSTCRE.P (INPUT ROWID(Cliente)).
+
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME btn_imprimir
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL btn_imprimir B-table-Win
+ON CHOOSE OF btn_imprimir IN FRAME F-Main /* Imprimir */
+DO:
+    FIND administrador WHERE administrador.nro_cliente = cliente.nro_administrador NO-LOCK.
+    RUN listar_cuenta_corriente_ADM.p ( INPUT ROWID(Administrador), 
+                                    INPUT des_fecha, 
+                                    INPUT has_fecha, 
+                                    INPUT ficha,
+                                    INPUT que_moneda ).
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME btn_integral
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL btn_integral B-table-Win
+ON CHOOSE OF btn_integral IN FRAME F-Main /* Integral */
+DO:
+    FIND administrador WHERE administrador.nro_cliente = cliente.nro_administrador NO-LOCK.
+     RUN fintegral_cliente_ADM.p (INPUT ROWID(Administrador), 
+                              INPUT que_moneda ).
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME bzoom
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL bzoom B-table-Win
+ON CHOOSE OF bzoom IN FRAME F-Main /* Zoom */
+DO:
+  MESSAGE "Zoom no implementado".
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME des_fecha
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL des_fecha B-table-Win
+ON LEAVE OF des_fecha IN FRAME F-Main /* Del */
+DO:
+  ASSIGN des_fecha.
+  RUN dispatch IN THIS-PROCEDURE ('open-query':U).
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL des_fecha B-table-Win
+ON MOUSE-MENU-DOWN OF des_fecha IN FRAME F-Main /* Del */
+DO:
+
+  fecha_inicial = DATE(des_fecha:SCREEN-VALUE IN FRAME {&FRAME-NAME}) NO-ERROR.
+  IF fecha_inicial = ? THEN fecha_inicial = TODAY.
+  RUN d-calendario.w ( INPUT fecha_inicial, OUTPUT fecha_elegida).
+  IF fecha_elegida <> ?
+  THEN DO:
+       DISPLAY fecha_elegida @ des_fecha 
+               WITH FRAME {&FRAME-NAME}.
+       APPLY "RETURN" TO SELF.        
+  END.               
+  
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL des_fecha B-table-Win
+ON RETURN OF des_fecha IN FRAME F-Main /* Del */
+DO:
+  ASSIGN des_fecha.
+  RUN dispatch IN THIS-PROCEDURE ('open-query':U).
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME ficha
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL ficha B-table-Win
+ON VALUE-CHANGED OF ficha IN FRAME F-Main
+DO:
+  ASSIGN ficha.
+  RUN dispatch IN THIS-PROCEDURE ('open-query':U).
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME has_fecha
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL has_fecha B-table-Win
+ON LEAVE OF has_fecha IN FRAME F-Main /* al */
+DO:
+   ASSIGN has_fecha.
+  RUN dispatch IN THIS-PROCEDURE ('open-query':U).
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL has_fecha B-table-Win
+ON MOUSE-MENU-DOWN OF has_fecha IN FRAME F-Main /* al */
+DO:
+
+  fecha_inicial = DATE(has_fecha:SCREEN-VALUE IN FRAME {&FRAME-NAME}) NO-ERROR.
+  IF fecha_inicial = ? THEN fecha_inicial = TODAY.
+  RUN d-calendario.w ( INPUT fecha_inicial, OUTPUT fecha_elegida).
+  IF fecha_elegida <> ?
+  THEN DO:
+       DISPLAY fecha_elegida @ has_fecha 
+               WITH FRAME {&FRAME-NAME}.
+       APPLY "TAB" TO SELF.        
+  END.               
+  
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL has_fecha B-table-Win
+ON RETURN OF has_fecha IN FRAME F-Main /* al */
+DO:
+  ASSIGN has_fecha.
+  RUN dispatch IN THIS-PROCEDURE ('open-query':U).
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME id_moneda
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL id_moneda B-table-Win
+ON VALUE-CHANGED OF id_moneda IN FRAME F-Main /* Moneda */
+DO:
+    ASSIGN FRAME {&FRAME-NAME} id_moneda.
+    FIND FIRST moneda WHERE moneda.nro_moneda = id_moneda.
+    que_moneda = moneda.nro_moneda.
+    RUN dispatch IN THIS-PROCEDURE ('open-query':U).
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&UNDEFINE SELF-NAME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CUSTOM _MAIN-BLOCK B-table-Win 
+
+
+/* ***************************  Main Block  *************************** */
+
+&IF DEFINED(UIB_IS_RUNNING) <> 0 &THEN          
+RUN dispatch IN THIS-PROCEDURE ('initialize':U).        
+&ENDIF
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+/* **********************  Internal Procedures  *********************** */
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE adm-open-query-cases B-table-Win  adm/support/_adm-opn.p
+PROCEDURE adm-open-query-cases :
+/*------------------------------------------------------------------------------
+  Purpose:     Opens different cases of the query based on attributes
+               such as the 'Key-Name', or 'SortBy-Case'
+  Parameters:  <none>
+------------------------------------------------------------------------------*/
+  DEF VAR key-value AS CHAR NO-UNDO.
+
+  /* Look up the current key-value. */
+  RUN get-attribute ('Key-Value':U).
+  key-value = RETURN-VALUE.
+
+  /* Find the current record using the current Key-Name. */
+  RUN get-attribute ('Key-Name':U).
+  CASE RETURN-VALUE:
+    WHEN 'nro_cobrador':U THEN DO:
+       &Scope KEY-PHRASE Cliente.nro_cobrador eq INTEGER(key-value)
+       {&OPEN-QUERY-{&BROWSE-NAME}}
+    END. /* nro_cobrador */
+    WHEN 'nro_administrador':U THEN DO:
+       &Scope KEY-PHRASE Cliente.nro_administrador eq INTEGER(key-value)
+       {&OPEN-QUERY-{&BROWSE-NAME}}
+    END. /* nro_administrador */
+    OTHERWISE DO:
+       &Scope KEY-PHRASE TRUE
+       {&OPEN-QUERY-{&BROWSE-NAME}}
+    END. /* OTHERWISE...*/
+  END CASE.
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE adm-row-available B-table-Win  _ADM-ROW-AVAILABLE
+PROCEDURE adm-row-available :
+/*------------------------------------------------------------------------------
+  Purpose:     Dispatched to this procedure when the Record-
+               Source has a new row available.  This procedure
+               tries to get the new row (or foriegn keys) from
+               the Record-Source and process it.
+  Parameters:  <none>
+------------------------------------------------------------------------------*/
+
+  /* Define variables needed by this internal procedure.             */
+  {src/adm/template/row-head.i}
+
+  /* Process the newly available records (i.e. display fields,
+     open queries, and/or pass records on to any RECORD-TARGETS).    */
+  {src/adm/template/row-end.i}
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE calcular_analitico B-table-Win 
+PROCEDURE calcular_analitico :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+
+   DEFINE OUTPUT PARAMETER saldo AS DECIMAL.
+
+   DEFINE VARIABLE tot_debitogr AS DECIMAL.
+   DEFINE VARIABLE tot_creditogr AS DECIMAL.
+
+   tot_debitogr = 0.
+   tot_creditogr = 0.
+
+   /* Busca por Movimiento en el rango de fechas */
+   FOR EACH Cta_cte OF Cliente
+      WHERE Cta_cte.cdg_empresa = Empresa.cdg_empresa
+        AND Cta_cte.nro_moneda = que_moneda
+        AND Cta_cte.debito <> Cta_cte.credito:
+
+        tot_debitogr  = tot_debitogr  + Cta_cte.debito.
+        tot_creditogr = tot_creditogr + Cta_cte.credito.
+
+   END.
+
+   saldo = tot_debitogr - tot_creditogr.
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE calcular_historico B-table-Win 
+PROCEDURE calcular_historico :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+
+   DEFINE OUTPUT PARAMETER saldo AS DECIMAL.
+
+   DEFINE VARIABLE tot_debitogr AS DECIMAL.
+   DEFINE VARIABLE tot_creditogr AS DECIMAL.
+
+   tot_debitogr = 0.
+   tot_creditogr = 0.
+
+   /* Busca por Movimiento desde principio de mes a la fecha */
+   FOR EACH Cta_cte OF Cliente 
+      WHERE Cta_cte.cdg_empresa = Empresa.cdg_empresa
+        AND Cta_cte.nro_moneda = que_moneda:
+        IF CAN-DO(str_debitan,Cta_cte.tip_comprob)
+         THEN DO: tot_debitogr  = tot_debitogr + Cta_cte.debito.
+         END.
+         ELSE DO: tot_creditogr = tot_creditogr + Cta_cte.credito.
+         END.
+
+   END.
+
+   saldo = tot_debitogr - tot_creditogr.
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE calcular_vencido B-table-Win 
+PROCEDURE calcular_vencido :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+
+   DEFINE OUTPUT PARAMETER saldo AS DECIMAL.
+
+   DEFINE VARIABLE tot_debitogr AS DECIMAL.
+   DEFINE VARIABLE tot_creditogr AS DECIMAL.
+
+   tot_debitogr = 0.
+   tot_creditogr = 0.
+
+   /* Busca por Movimiento en el rango de fechas */
+   FOR EACH Cta_cte OF Cliente 
+      WHERE Cta_cte.cdg_empresa = Empresa.cdg_empresa
+        AND Cta_cte.nro_moneda = que_moneda
+        AND Cta_cte.fecha_vencimiento <= has_fecha
+        AND Cta_cte.debito <> Cta_cte.credito:
+
+        tot_debitogr  = tot_debitogr  + Cta_cte.debito.
+        tot_creditogr = tot_creditogr + Cta_cte.credito.
+
+   END.
+
+   saldo = tot_debitogr - tot_creditogr.
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE disable_UI B-table-Win  _DEFAULT-DISABLE
+PROCEDURE disable_UI :
+/*------------------------------------------------------------------------------
+  Purpose:     DISABLE the User Interface
+  Parameters:  <none>
+  Notes:       Here we clean-up the user-interface by deleting
+               dynamic widgets we have created and/or hide 
+               frames.  This procedure is usually called when
+               we are ready to "clean-up" after running.
+------------------------------------------------------------------------------*/
+  /* Hide all frames. */
+  HIDE FRAME F-Main.
+  IF THIS-PROCEDURE:PERSISTENT THEN DELETE PROCEDURE THIS-PROCEDURE.
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE local-initialize B-table-Win 
+PROCEDURE local-initialize :
+/*------------------------------------------------------------------------------
+  Purpose:     Override standard ADM method
+  Notes:       
+------------------------------------------------------------------------------*/
+
+  /* Code placed here will execute PRIOR to standard behavior. */
+DEF VAR xx AS CHAR NO-UNDO.
+
+  has_fecha = TODAY.
+  des_fecha = has_fecha - 60.
+  ficha = 2.
+
+  {findempresa.i}
+  que_empresa = Empresa.cdg_empresa.
+
+  xx = "".
+  FOR EACH Moneda:
+      xx = xx + "," + Moneda.descripcion + "," + string(moneda.nro_moneda) .
+  END.    
+
+id_moneda:LIST-ITEM-PAIRS IN FRAME {&FRAME-NAME} = substring(xx,2).
+ 
+  FIND FIRST Moneda WHERE moneda.es_local NO-LOCK.
+  que_moneda = moneda.nro_moneda.
+
+
+  /* Dispatch standard ADM method.                             */
+  RUN dispatch IN THIS-PROCEDURE ( INPUT 'initialize':U ) .
+
+  /* Code placed here will execute AFTER standard behavior.    */
+
+    DISPLAY 
+        des_fecha
+        has_fecha
+        ficha
+        id_moneda
+
+        WITH FRAME {&FRAME-NAME}.
+  /*ajuste de colores de las columnas del browse*/
+  vencido:LABEL-BGCOLOR IN BROWSE {&BROWSE-NAME} = 11.
+  historico:label-BGCOLOR IN BROWSE {&BROWSE-NAME} = 10.
+  analitico:LABEL-BGCOLOR IN BROWSE {&BROWSE-NAME} = 14.
+
+    
+  RUN dispatch IN THIS-PROCEDURE ('open-query':U).
+
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE local-open-query B-table-Win 
+PROCEDURE local-open-query :
+/*------------------------------------------------------------------------------
+  Purpose:     Override standard ADM method
+  Notes:       
+------------------------------------------------------------------------------*/
+    DEFINE VARIABLE his            AS   INTEGER INITIAL 0.
+    DEFINE VARIABLE anl            AS   INTEGER INITIAL 1.
+    DEFINE VARIABLE ven            AS   INTEGER INITIAL 2.
+       CASE ficha:
+          WHEN his 
+          THEN DO:
+               des_fecha:SENSITIVE IN FRAME {&FRAME-NAME} = YES.
+               has_fecha:SENSITIVE IN FRAME {&FRAME-NAME} = YES.
+          END.     
+          WHEN anl 
+          THEN DO:
+               des_fecha:SENSITIVE IN FRAME {&FRAME-NAME} = NO.
+               has_fecha:SENSITIVE IN FRAME {&FRAME-NAME} = NO.
+          END.     
+          WHEN ven 
+          THEN DO:
+               des_fecha:SENSITIVE IN FRAME {&FRAME-NAME} = NO.
+               has_fecha:SENSITIVE IN FRAME {&FRAME-NAME} = YES.
+          END.     
+    END CASE. 
+    des_fecha:hidden IN FRAME {&FRAME-NAME} = NOT des_fecha:SENSITIVE IN FRAME {&FRAME-NAME}.
+    has_fecha:HIDDEN IN FRAME {&FRAME-NAME} = NOT has_fecha:SENSITIVE IN FRAME {&FRAME-NAME}.
+  
+
+    rid = ROWID(cliente) NO-ERROR.
+    RUN dispatch IN THIS-PROCEDURE ( INPUT 'open-query':U ) .
+    IF rid <> ? THEN do:
+        REPOSITION br_table TO ROWID rid .
+        RUN dispatch IN THIS-PROCEDURE ('row-changed':U).
+    END.
+    
+    t-vencido = 0.0.
+    t-historico = 0.0.
+    t-analitico = 0.0.
+  /*despues de realizar la query recalcular los valores de los label*/
+    RUN tcalcular_historico(OUTPUT  t-historico).
+    RUN tcalcular_vencido(OUTPUT  t-vencido).
+    RUN tcalcular_analitico(OUTPUT  t-analitico).
+    vencido:LABEL IN BROWSE {&BROWSE-NAME} = "Vencido!" + string(t-vencido,"->>>,>>9.99").
+    analitico:LABEL IN BROWSE {&BROWSE-NAME} = "Analitico!" + string(t-analitico,"->>>,>>9.99").
+    historico:LABEL IN BROWSE {&BROWSE-NAME} = "Historico!" + string(t-historico,"->>>,>>9.99").
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE send-key B-table-Win  adm/support/_key-snd.p
+PROCEDURE send-key :
+/*------------------------------------------------------------------------------
+  Purpose:     Sends a requested KEY value back to the calling
+               SmartObject.
+  Parameters:  <see adm/template/sndkytop.i>
+------------------------------------------------------------------------------*/
+
+  /* Define variables needed by this internal procedure.             */
+  {src/adm/template/sndkytop.i}
+
+  /* Return the key value associated with each key case.             */
+  {src/adm/template/sndkycas.i "nro_cobrador" "Cliente" "nro_cobrador"}
+  {src/adm/template/sndkycas.i "cdg_cliente" "Cliente" "cdg_cliente"}
+  {src/adm/template/sndkycas.i "nro_cliente" "Cliente" "nro_cliente"}
+  {src/adm/template/sndkycas.i "cdg_estado" "Cliente" "cdg_estado"}
+  {src/adm/template/sndkycas.i "cdg_famclie" "Cliente" "cdg_famclie"}
+  {src/adm/template/sndkycas.i "cdg_pais" "Cliente" "cdg_pais"}
+  {src/adm/template/sndkycas.i "nro_proveedor" "Cliente" "nro_proveedor"}
+  {src/adm/template/sndkycas.i "cdg_provincia" "Cliente" "cdg_provincia"}
+  {src/adm/template/sndkycas.i "num_sucursal" "Cliente" "num_sucursal"}
+  {src/adm/template/sndkycas.i "cdg_tipoclie" "Cliente" "cdg_tipoclie"}
+  {src/adm/template/sndkycas.i "nro_usuario" "Cliente" "nro_usuario"}
+
+  /* Close the CASE statement and end the procedure.                 */
+  {src/adm/template/sndkyend.i}
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE send-records B-table-Win  _ADM-SEND-RECORDS
+PROCEDURE send-records :
+/*------------------------------------------------------------------------------
+  Purpose:     Send record ROWID's for all tables used by
+               this file.
+  Parameters:  see template/snd-head.i
+------------------------------------------------------------------------------*/
+
+  /* Define variables needed by this internal procedure.               */
+  {src/adm/template/snd-head.i}
+
+  /* For each requested table, put it's ROWID in the output list.      */
+  {src/adm/template/snd-list.i "cliente"}
+
+  /* Deal with any unexpected table requests before closing.           */
+  {src/adm/template/snd-end.i}
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE state-changed B-table-Win 
+PROCEDURE state-changed :
+/* -----------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+-------------------------------------------------------------*/
+  DEFINE INPUT PARAMETER p-issuer-hdl AS HANDLE    NO-UNDO.
+  DEFINE INPUT PARAMETER p-state      AS CHARACTER NO-UNDO.
+
+  CASE p-state:
+      /* Object instance CASEs can go here to replace standard behavior
+         or add new cases. */
+      {src/adm/template/bstates.i}
+  END CASE.
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE tcalcular_analitico B-table-Win 
+PROCEDURE tcalcular_analitico :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+
+   DEFINE OUTPUT PARAMETER saldo AS DECIMAL.
+
+   DEFINE VARIABLE tot_debitogr AS DECIMAL.
+   DEFINE VARIABLE tot_creditogr AS DECIMAL.
+   DEF BUFFER bcta_cte FOR cta_cte.
+   DEF BUFFER bcliente FOR cliente.
+   tot_debitogr = 0.
+   tot_creditogr = 0.
+
+   /* Busca por Movimiento en el rango de fechas */
+   FOR EACH bcliente WHERE bcliente.nro_administrador = cliente.nro_administrador:
+   
+       FOR EACH bcta_cte WHERE bcta_cte.nro_cliente = bcliente.nro_cliente
+            AND bcta_cte.nro_moneda = moneda.nro_moneda
+            AND bcta_cte.debito <> bCta_cte.credito :
+    
+            tot_debitogr  = tot_debitogr  + bcta_cte.debito.
+            tot_creditogr = tot_creditogr + bcta_cte.credito.
+    
+       END.
+   END.
+
+   saldo = tot_debitogr - tot_creditogr.
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE tcalcular_historico B-table-Win 
+PROCEDURE tcalcular_historico :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+
+   DEFINE OUTPUT PARAMETER saldo AS DECIMAL.
+
+   DEFINE VARIABLE tot_debitogr AS DECIMAL.
+   DEFINE VARIABLE tot_creditogr AS DECIMAL.
+      DEF BUFFER bcta_cte FOR cta_cte.
+      DEF BUFFER bcliente FOR cliente.
+   tot_debitogr = 0.
+   tot_creditogr = 0.
+
+   /* Busca por Movimiento desde principio de mes a la fecha */
+   FOR EACH bcliente WHERE bcliente.nro_administrador = cliente.nro_administrador:
+
+    FOR EACH bcta_cte WHERE bcta_cte.nro_cliente = bcliente.nro_cliente
+
+        AND bcta_cte.nro_moneda = moneda.nro_moneda:
+        IF CAN-DO(str_debitan,bcta_cte.tip_comprob)
+         THEN DO: tot_debitogr  = tot_debitogr + bcta_cte.debito.
+         END.
+         ELSE DO: tot_creditogr = tot_creditogr + bcta_cte.credito.
+         END.
+
+   END.
+   END.
+
+   saldo = tot_debitogr - tot_creditogr.
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE tcalcular_vencido B-table-Win 
+PROCEDURE tcalcular_vencido :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+
+   DEFINE OUTPUT PARAMETER saldo AS DECIMAL.
+
+   DEFINE VARIABLE tot_debitogr AS DECIMAL.
+   DEFINE VARIABLE tot_creditogr AS DECIMAL.
+         DEF BUFFER bcta_cte FOR cta_cte.
+             DEF BUFFER bcliente FOR cliente.
+
+   tot_debitogr = 0.
+   tot_creditogr = 0.
+
+   /* Busca por Movimiento en el rango de fechas */
+   FOR EACH bcliente WHERE bcliente.nro_administrador = cliente.nro_administrador:
+
+    FOR EACH bcta_cte WHERE bcta_cte.nro_cliente = bcliente.nro_cliente
+
+        AND bcta_cte.nro_moneda = Moneda.nro_moneda
+        AND bcta_cte.fecha_vencimiento <= has_fecha
+        AND bcta_cte.debito <> bcta_cte.credito:
+
+        tot_debitogr  = tot_debitogr  + bcta_cte.debito.
+        tot_creditogr = tot_creditogr + bcta_cte.credito.
+
+   END.
+   END.
+   saldo = tot_debitogr - tot_creditogr.
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+/* ************************  Function Implementations ***************** */
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _FUNCTION fcalcular_analitico B-table-Win 
+FUNCTION fcalcular_analitico RETURNS DECIMAL
+  ( /* parameter-definitions */ ) :
+/*------------------------------------------------------------------------------
+  Purpose:  
+    Notes:  
+------------------------------------------------------------------------------*/
+DEF VAR analitico AS DECIMAL.
+RUN calcular_analitico ( OUTPUT analitico ).
+RETURN analitico.   /* Function return value. */
+END FUNCTION.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _FUNCTION fcalcular_historico B-table-Win 
+FUNCTION fcalcular_historico RETURNS DECIMAL
+  ( /* parameter-definitions */ ) :
+/*------------------------------------------------------------------------------
+  Purpose:  
+    Notes:  
+------------------------------------------------------------------------------*/
+DEF VAR historico AS DECIMAL.
+RUN calcular_historico ( OUTPUT historico ).
+RETURN historico.   /* Function return value. */
+
+END FUNCTION.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _FUNCTION fcalcular_vencido B-table-Win 
+FUNCTION fcalcular_vencido RETURNS DECIMAL
+  ( /* parameter-definitions */ ) :
+/*------------------------------------------------------------------------------
+  Purpose:  
+    Notes:  
+------------------------------------------------------------------------------*/
+DEF VAR vencido AS DECIMAL.
+RUN calcular_vencido ( OUTPUT vencido ).
+RETURN vencido.   /* Function return value. */
+
+END FUNCTION.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _FUNCTION get-des_fecha B-table-Win 
+FUNCTION get-des_fecha RETURNS DATE
+  ( /* parameter-definitions */ ) :
+/*------------------------------------------------------------------------------
+  Purpose:  
+    Notes:  
+------------------------------------------------------------------------------*/
+  ASSIGN FRAME {&FRAME-NAME} des_fecha.
+  RETURN des_fecha.   /* Function return value. */
+
+END FUNCTION.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _FUNCTION get-ficha B-table-Win 
+FUNCTION get-ficha RETURNS INTEGER
+  ( /* parameter-definitions */ ) :
+/*------------------------------------------------------------------------------
+  Purpose:  
+    Notes:  
+------------------------------------------------------------------------------*/
+ASSIGN FRAME {&FRAME-NAME} ficha.
+  RETURN ficha.   /* Function return value. */
+
+END FUNCTION.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _FUNCTION get-has_fecha B-table-Win 
+FUNCTION get-has_fecha RETURNS DATE
+  ( /* parameter-definitions */ ) :
+/*------------------------------------------------------------------------------
+  Purpose:  
+    Notes:  
+------------------------------------------------------------------------------*/
+  ASSIGN FRAME {&FRAME-NAME} has_fecha.
+  RETURN has_fecha.   /* Function return value. */
+
+END FUNCTION.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _FUNCTION get-moneda B-table-Win 
+FUNCTION get-moneda RETURNS INTEGER
+  ( /* parameter-definitions */ ) :
+/*------------------------------------------------------------------------------
+  Purpose:  
+    Notes:  
+------------------------------------------------------------------------------*/
+RETURN que_moneda.   /* Function return value. */
+
+END FUNCTION.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+

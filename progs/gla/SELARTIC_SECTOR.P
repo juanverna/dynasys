@@ -1,0 +1,14 @@
+/*===========================================================================================*/
+/*                                    HELP DE ARTICULO                                       */
+/*===========================================================================================*/
+
+DEFINE input-OUTPUT PARAMETER act_registro   AS ROWID.
+DEFINE INPUT  PARAMETER ALT-MOD        AS LOGICAL.
+DEFINE INPUT  PARAMETER p-area         AS INTEGER.
+
+RUN c-busartic_sector.w  ( INPUT  p-area,
+                           INPUT  "",
+                           INPUT  "",
+                           OUTPUT act_registro,
+                           OUTPUT ALT-MOD).   
+                   

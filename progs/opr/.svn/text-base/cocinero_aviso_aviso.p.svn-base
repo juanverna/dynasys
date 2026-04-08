@@ -1,0 +1,23 @@
+/*verifica los avisos de avisos y avisos a eventos que no corresponde*/
+OUTPUT TO c:\avisos_borrados.txt.
+DEFINE BUFFER bevento FOR evento.
+FIND tipo_evento WHERE tipo_evento.cdg_tipo_evento = "AV".
+FOR EACH evento  WHERE evento.nro_tipo_evento = tipo_evento.nro_tipo_evento AND NOT evento.anulado:
+FIND bevento WHERE bevento.nro_evento = evento.refevento NO-LOCK NO-ERROR.
+IF NOT AVAILABLE bevento THEN do:
+    DISPLAY evento.nro_evento Evento.FCreado evento.nro_tipo_evento.
+        FOR EACH recurso_agenda OF evento:
+                DELETE recurso_agenda.
+        END.
+        DELETE evento.
+    NEXT.
+END.
+
+IF bevento.nro_tipo_evento = 1 OR  bevento.nro_tipo_evento = 3 OR  bevento.nro_tipo_evento = 8 THEN NEXT.
+DISPLAY evento.nro_evento Evento.FCreado evento.nro_tipo_evento.
+
+FOR EACH recurso_agenda OF evento:
+        DELETE recurso_agenda.
+END.
+DELETE evento.
+END.

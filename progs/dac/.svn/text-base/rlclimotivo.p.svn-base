@@ -1,0 +1,13 @@
+/*===================================================================================*/
+/*             TOMA EL RANGO PARA EL LISTADO DE TARIFAS DE TRASLADO POR CLIENTE      */
+/*===================================================================================*/
+
+DEFINE VARIABLE des_cliente    LIKE Cliente.cdg_cliente LABEL "De Cliente".
+DEFINE VARIABLE has_cliente    LIKE Cliente.cdg_cliente LABEL "A Cliente".
+DEFINE VARIABLE ctl_salto      AS LOGICAL.
+
+UPDATE des_cliente has_cliente ctl_salto LABEL "Uno por Hoja"
+       WITH FRAME aa SIDE-LABELS THREE-D VIEW-AS DIALOG-BOX WIDTH 90 3 COLUMNS CENTERED
+            TITLE "Ingrese parametros del listado: Tarifas de Convenio por Cliente".
+
+RUN LSCLIMOTIVO.P ( INPUT des_cliente, INPUT has_cliente, INPUT ctl_salto ).

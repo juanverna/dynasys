@@ -1,0 +1,3 @@
+find ficha where recid(ficha) = 10082 exclusive-lock.
+display num_ficha.
+delete ficha

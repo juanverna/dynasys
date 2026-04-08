@@ -1,0 +1,125 @@
+{tt2xls.i}
+DEFINE VAR pp AS INT NO-UNDO INITIAL 5. /*numero de periodos*/
+FUNCTION duref RETURNS INT
+  ( d AS CHAR, h AS CHAR ) :
+/*------------------------------------------------------------------------------
+  Purpose:  
+    Notes:  
+------------------------------------------------------------------------------*/
+DEFINE VAR hh1 AS DECIMAL NO-UNDO.
+DEFINE VAR mm1 AS DECIMAL NO-UNDO.
+DEFINE VAR hh2 AS DECIMAL NO-UNDO.
+DEFINE VAR mm2 AS DECIMAL NO-UNDO.
+
+
+h = REPLACE(h,":","").
+d = REPLACE(d,":","").
+hh1 = INT(h).
+h = STRING(hh1,"9999").
+hh1 = INT(d).
+d = STRING(hh1,"9999").
+
+hh1 = INT( SUBSTRING(d,1,2) ).
+mm1 = INT( SUBSTRING(d,3,2) ).
+hh2 = INT( SUBSTRING(h,1,2) ).
+mm2 = INT( SUBSTRING(h,3,2) ).
+
+mm1 = mm1 / 60.
+mm2 = mm2 / 60.
+hh1 = hh1 + mm1.
+hh2 = hh2 + mm2.
+
+RETURN INT((hh2 - hh1) * 60 ).   /* Function return value. */
+
+END FUNCTION.
+
+
+
+FUNCTION rdur RETURNS INTEGER
+  ( rr AS ROWID ) :
+/*------------------------------------------------------------------------------
+  Purpose:  Duracion media
+    Notes:  Se tiene en cuenta de descartar valores  alejados +- 20% de la media
+------------------------------------------------------------------------------*/
+DEFINE VAR kk AS INT NO-UNDO.
+DEFINE VAR pp1 AS INT NO-UNDO.
+DEFINE VAR media AS INT NO-UNDO.
+DEFINE VAR suma AS INT NO-UNDO.
+DEFINE BUFFER bevento FOR evento.
+DEFINE BUFFER weve FOR evento.
+
+pp1 = 0.
+suma = 0.
+FIND weve WHERE ROWID(weve) = rr.
+IF weve.origen = "CONTRATO" THEN DO:
+    FOR EACH bevento WHERE bevento.origen = weve.origen AND 
+        bevento.nro_identificacion = weve.nro_identificacion AND
+        bevento.sub_evento = weve.sub_evento AND
+        NOT bevento.anulado AND bevento.frealizado<>? BY bevento.fasignado DESCENDING:
+        kk = abs(duref(bevento.hora_desde, bevento.hora_hasta)).
+        IF kk = 0 THEN NEXT.
+        pp1 = pp1 + 1.
+        suma = suma + kk.
+        IF pp1 > pp THEN LEAVE.
+    END.
+    media = suma / pp1.
+    pp1 = 0.
+    suma = 0.
+        FOR EACH bevento WHERE bevento.origen = weve.origen AND 
+        bevento.nro_identificacion = weve.nro_identificacion AND
+        bevento.sub_evento = weve.sub_evento AND
+         NOT bevento.anulado AND bevento.frealizado<>? BY bevento.fasignado DESCENDING:
+            kk = duref(bevento.hora_desde, bevento.hora_hasta).
+            IF kk <= media * .8 OR kk >= media * 1.2 THEN NEXT.
+        pp1 = pp1 + 1.
+        suma = suma + duref(bevento.hora_desde, bevento.hora_hasta).
+        IF pp1 > pp THEN LEAVE.
+    END.
+    media = suma / pp1.
+    RETURN media.
+END.
+ELSE  RETURN ?.
+END FUNCTION.
+
+/*OUTPUT TO "c:\sindurac.txt".*/
+DEFINE VAR rr AS INT.
+DEFINE VAR difer AS DECIMAL.
+DEFINE VAR acudifer AS DECIMAL.
+DEFINE VAR i AS INT.
+FOR EACH evento WHERE NOT anulado AND periodo > 200901 AND evento.origen = "CONTRATO" AND nro_tipo_evento = 1:
+
+rr= rdur( rowid(evento)).
+IF rr = ? THEN 
+    NEXT.
+
+IF rr <> evento.durac THEN do:
+    FIND contrato_restriccion WHERE contrato_restriccion.nro_contrato = evento.nro_identificacion AND 
+    contrato_restriccion.sub_evento = evento.sub_evento AND contrato_restriccion.nro_restriccion = 16 NO-ERROR.
+    IF NOT AVAILABLE contrato_restriccion THEN DO:
+        CREATE contrato_restriccion.
+        ASSIGN contrato_restriccion.nro_contrato = evento.nro_identificacion
+               contrato_restriccion.sub_evento = evento.sub_evento
+               contrato_restriccion.nro_restriccion = 16.
+    END.
+          NEXT.
+    
+    difer = ( (rr - evento.durac) / evento.durac ).
+    IF difer = ? THEN 
+       MESSAGE "ojo" rr evento.durac evento.nro_evento.
+    ELSE         
+        DO:
+           acudifer = acudifer + difer.
+           i = i + 1.
+    END.
+
+/*IF abs(difer) > .2 THEN 
+ DISPLAY evento.frealizado rr contrato_restriccion.valor difer.
+PAUSE 0.*/
+
+    evento.durac = rr.
+    contrato_restriccion.valor = string(rr).
+END.
+    END.
+DISPLAY acudifer i acudifer / i .
+
+        

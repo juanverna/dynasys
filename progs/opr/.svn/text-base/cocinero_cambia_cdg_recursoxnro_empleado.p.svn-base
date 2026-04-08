@@ -1,0 +1,23 @@
+DEFINE VAR k AS INT NO-UNDO.
+    FOR EACH contrato_restriccion WHERE nro_restriccion = 1 OR nro_restriccion = 2:
+        DO k = 1 TO NUM-ENTRIES(contrato_restriccion.valor):
+            FIND recurso WHERE recurso.cdg_recurso = entry(k,contrato_restriccion.valor) NO-ERROR.
+            IF NOT AVAILABLE recurso THEN next.
+                ENTRY(k,contrato_restriccion.valor) = string(recurso.nro_empleado,"999").
+        END.
+END.
+FOR EACH evento:
+        DO k = 1 TO NUM-ENTRIES(evento.recursos):
+            FIND recurso WHERE recurso.cdg_recurso = entry(k,evento.recursos) NO-ERROR.
+            IF NOT AVAILABLE recurso THEN NEXT.
+            entry(k,evento.recursos) = string(recurso.nro_empleado,"999").
+        END.
+END.
+/*FOR EACH recurso_agenda:
+    FIND recurso WHERE recurso.cdg_recurso = recurso_agenda.cdg_recurso NO-ERROR.
+    recurso_agenda.cdg_recurso = string(recurso.nro_empleado,"999").
+END.*/
+
+FOR EACH recurso:
+    recurso.cdg_recurso = STRING(nro_empleado,"999").
+END.

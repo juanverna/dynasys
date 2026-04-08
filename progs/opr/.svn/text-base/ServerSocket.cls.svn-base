@@ -1,0 +1,339 @@
+USING Progress.Lang.*.
+
+CLASS ServerSocket INHERITS socket : 
+    DEF PRIVATE TEMP-TABLE TTClient NO-UNDO
+        FIELD ClientName AS CHAR
+        FIELD ClientSocket AS HANDLE
+        FIELD ClientGUID AS CHAR
+        FIELD ClientPort AS INT
+
+        INDEX ClientName IS PRIMARY
+            ClientName
+            
+        INDEX ClientGUID IS UNIQUE
+            ClientGUID.
+
+    DEF PRIVATE TEMP-TABLE TTSubscription NO-UNDO
+        FIELD ClientGUID   AS CHAR
+        FIELD Subscription AS CHAR 
+
+        INDEX ClientGUID 
+            ClientGUID
+            
+        INDEX Subscription IS PRIMARY
+            Subscription.    
+        
+    DEF PUBLIC PROPERTY Port       AS CHAR NO-UNDO           GET. SET. 
+
+    DEF PUBLIC PROPERTY StartPort     AS INT NO-UNDO INIT 30000 GET. SET. 
+    DEF PUBLIC PROPERTY EndPort       AS INT NO-UNDO INIT 35000 GET. SET. 
+    
+    DEF PUBLIC PROPERTY SENSITIVE AS LOGICAL NO-UNDO 
+        GET():
+         RETURN SocketHandle:SENSITIVE.
+        END GET.
+        
+        SET(p_Sensitive AS LOGICAL):
+         ASSIGN SocketHandle:SENSITIVE = p_Sensitive.
+        END SET. 
+
+    CONSTRUCTOR PUBLIC ServerSocket (p_Handler AS HANDLE):
+		SUPER ().
+		
+		ASSIGN MessageHandler = p_Handler.
+
+  		CREATE SERVER-SOCKET SocketHandle.
+	END CONSTRUCTOR.
+    
+    CONSTRUCTOR PUBLIC ServerSocket (p_Name AS CHAR, p_Handler AS HANDLE):
+		SUPER ().
+		
+		ASSIGN SocketName     = p_Name
+		       MessageHandler = p_Handler.
+		       
+		CREATE SERVER-SOCKET SocketHandle.
+	END CONSTRUCTOR.
+
+	DESTRUCTOR PUBLIC ServerSocket ( ):
+	    SocketHandle:DISABLE-CONNECTIONS() NO-ERROR.
+	    DELETE OBJECT SocketHandle NO-ERROR.
+	    IF VALID-HANDLE(SocketHandler) THEN APPLY "CLOSE" TO SocketHandler.
+	END DESTRUCTOR.
+	
+/*  =========================================================================
+    StartServer
+    this method tries to open a server socket on the first free port in
+    the range StartPort to EndPort
+    ==========================================================================*/ 
+
+    METHOD PUBLIC LOGICAL StartServer():
+     DEF VAR lv_i AS INT NO-UNDO.
+     
+     DEF VAR lv_Port AS CHAR NO-UNDO.
+     
+     IF Port NE "" THEN RETURN StartServer(Port).
+     
+     DO lv_i = StartPort TO EndPort:
+      ASSIGN lv_Port = STRING(lv_i).
+      
+      IF StartServer(lv_Port) THEN RETURN YES.
+     END.
+
+     RETURN NO.
+    END METHOD.
+    
+/*  =========================================================================
+    StartServer
+    This method starts a server socket on the supplied port
+    ==========================================================================*/ 
+
+    METHOD PUBLIC LOGICAL StartServer(p_Port AS CHAR):
+
+     SocketHandle:ENABLE-CONNECTIONS(SUBSTITUTE("-S &1":U,p_Port)) NO-ERROR.
+     
+     IF ERROR-STATUS:NUM-MESSAGES GT 0 THEN RETURN NO.
+
+     ASSIGN Port = p_Port.
+          		
+     IF SocketName EQ "" THEN ASSIGN SocketName = SUBSTITUTE("ServerPort&1",p_Port).
+     
+	 RUN ServerSocketHandler.p PERSISTENT SET SocketHandler (THIS-OBJECT).
+		
+     SocketHandle:SET-CONNECT-PROCEDURE("ClientConnected":U,SocketHandler).
+     
+     RETURN YES.
+    END METHOD. 
+
+/*  =========================================================================
+    AddClient
+    This method adds a connected client to the list
+    ==========================================================================*/ 
+
+    METHOD PUBLIC LOGICAL AddClient(p_Socket AS HANDLE):
+     DEF BUFFER TTClient FOR TEMP-TABLE TTClient.
+     
+     IF NOT VALID-HANDLE(p_Socket) THEN RETURN NO.
+     
+     CREATE TTClient.
+     
+     ASSIGN TTClient.ClientPort   = p_Socket:REMOTE-PORT 
+            TTClient.ClientGUID   = GUID(GENERATE-UUID)
+            TTClient.ClientSocket = p_Socket.
+
+     RETURN YES.
+    END METHOD.
+
+/*  =========================================================================
+    RemoveClient
+    This method removes a connected client to the list
+    ==========================================================================*/ 
+
+    METHOD PUBLIC LOGICAL RemoveClient(p_Socket AS HANDLE):
+     DEF BUFFER TTClient FOR TEMP-TABLE TTClient.
+     
+     IF NOT VALID-HANDLE(p_Socket) THEN RETURN NO.
+
+     RUN ClientDisconnected IN MessageHandler (p_Socket).
+     
+     FIND TTClient WHERE TTClient.ClientPort EQ p_Socket:REMOTE-PORT NO-ERROR.
+     
+     IF NOT AVAIL TTClient THEN RETURN NO.
+     
+     DELETE TTClient.
+ 
+     RETURN YES.
+    END METHOD.
+
+/*  =========================================================================
+    SetClientName
+    This method sets the client name of the connected socket
+    ==========================================================================*/ 
+
+    METHOD PUBLIC LOGICAL SetClientName(p_Socket AS HANDLE,p_Name AS CHAR):
+     DEF BUFFER TTClient FOR TEMP-TABLE TTClient.
+     
+     IF NOT VALID-HANDLE(p_Socket) THEN RETURN NO.
+     
+     FIND TTClient WHERE TTClient.ClientPort EQ p_Socket:REMOTE-PORT NO-ERROR.
+
+     IF NOT AVAIL TTClient THEN RETURN NO.
+     
+     ASSIGN TTClient.ClientName   = p_Name.
+ 
+     RETURN YES.
+    END METHOD.
+
+/*  =========================================================================
+    SubscribeClientToMessage
+    This method adds or removeds a connected client to the list of receipients 
+    of a message
+    ==========================================================================*/ 
+
+    METHOD PUBLIC LOGICAL SubscribeTo(p_Client AS CHAR,p_Message AS char):
+     DEF BUFFER TTClient       FOR TEMP-TABLE TTClient.
+     DEF BUFFER TTSubscription FOR TEMP-TABLE TTSubscription .
+     
+     FOR EACH TTClient WHERE TTClient.ClientName EQ p_Client NO-LOCK:
+      SubscribeTo(TTClient.ClientSocket,p_Message).
+     END.
+     
+     RETURN YES.
+    END.
+
+/*  =========================================================================
+    SubscribeClientToMessage
+    This method adds or removeds a connected client to the list of receipients 
+    of a message
+    ==========================================================================*/ 
+
+    METHOD PUBLIC LOGICAL SubscribeTo(p_Client AS HANDLE,p_Message AS char):
+     DEF BUFFER TTClient       FOR TEMP-TABLE TTClient.
+     DEF BUFFER TTSubscription FOR TEMP-TABLE TTSubscription .
+     
+     FIND TTClient WHERE TTClient.ClientSocket EQ p_Client NO-LOCK NO-ERROR.
+     
+     IF NOT AVAIL TTClient THEN RETURN NO.
+     
+     FIND TTSubscription WHERE TTSubscription.ClientGUID EQ TTClient.ClientGUID
+                           AND TTSubscription.Subscription EQ p_Message NO-LOCK NO-ERROR.
+     
+     IF AVAIL TTSubscription THEN RETURN YES.
+     
+     CREATE TTSubscription.
+     
+     ASSIGN TTSubscription.ClientGUID   = TTClient.ClientGUID
+            TTSubscription.Subscription = p_Message.
+
+     RETURN YES.
+    END METHOD.
+
+
+/*  =========================================================================
+    PublishMessage
+    This method sends a message to all subscribed clients
+    ==========================================================================*/ 
+
+    METHOD PUBLIC LOGICAL PublishMessage(p_from AS CHAR,p_Subject AS CHAR,p_Body AS CHAR): 
+     ASSIGN MessageFrom    = p_from
+            MessageSubject = p_Subject
+            MessageBody    = p_Body.
+            
+     RETURN PublishMessage().            
+    END METHOD.
+    
+/*  =========================================================================
+    PublishMessage
+    This method sends a message to all subscribed clients
+    ==========================================================================*/ 
+
+    METHOD PUBLIC LOGICAL PublishMessage(p_Subject AS CHAR,p_Body AS CHAR): 
+     ASSIGN MessageSubject = p_Subject
+            MessageBody    = p_Body.
+            
+     RETURN PublishMessage().            
+    END METHOD.
+    
+/*  =========================================================================
+    PublishMessage
+    This method sends a message to all subscribed clients
+    ==========================================================================*/ 
+
+    METHOD PUBLIC LOGICAL PublishMessage(p_Body AS CHAR): 
+     ASSIGN MessageBody    = p_Body.
+            
+     RETURN PublishMessage().            
+    END METHOD.
+    
+    
+/*  =========================================================================
+    PublishMessage
+    This method sends a message to all subscribed clients
+    ==========================================================================*/ 
+
+    METHOD PUBLIC LOGICAL PublishMessage(): 
+     DEF BUFFER TTClient       FOR TEMP-TABLE TTClient.
+     DEF BUFFER TTSubscription FOR TEMP-TABLE TTSubscription .
+     
+     FOR EACH TTSubscription WHERE TTSubscription.Subscription EQ MessageSubject NO-LOCK,
+         FIRST TTClient WHERE TTClient.ClientGUID EQ TTSubscription.ClientGUID NO-LOCK:
+       
+      SendMessageToClient(TTClient.ClientName).
+     END.
+     
+     RETURN YES.
+    END METHOD.
+    
+
+/*  =========================================================================
+    SendMessageToClient
+    This method sends a message to the named client
+    ==========================================================================*/ 
+
+    METHOD PUBLIC LOGICAL SendMessageToClient(p_from AS CHAR,p_To AS CHAR,p_Subject AS CHAR,p_Body AS CHAR):
+     ASSIGN MessageFrom    = p_from
+            MessageTo      = p_To
+            MessageSubject = p_Subject
+            MessageBody    = p_Body.
+     
+     RETURN SendMessageToClient().
+    END METHOD.
+    
+/*  =========================================================================
+    SendMessageToClient
+    This method sends a message to the named client
+    MessageBody must be set previously
+    ==========================================================================*/ 
+
+    METHOD PUBLIC LOGICAL SendMessageToClient(p_from AS CHAR,p_To AS CHAR,p_Subject AS CHAR):
+     ASSIGN MessageFrom    = p_from
+            MessageTo      = p_To
+            MessageSubject = p_Subject.     
+     
+     RETURN SendMessageToClient().
+    END METHOD.
+/*  =========================================================================
+    SendMessageToClient
+    This method sends a message to the named client
+    MessageSubject, MessageBody must be set previously
+    ==========================================================================*/ 
+
+    METHOD PUBLIC LOGICAL SendMessageToClient(p_from AS CHAR,p_To AS CHAR):
+     ASSIGN MessageFrom = p_from
+            MessageTo = p_To.     
+     
+     RETURN SendMessageToClient().
+    END METHOD.
+
+/*  =========================================================================
+    SendMessageToClient
+    This method sends a message to the named client
+    MessageSubject, MessageBody must be set previously
+    ==========================================================================*/ 
+
+    METHOD PUBLIC LOGICAL SendMessageToClient(p_To AS CHAR):
+     ASSIGN MessageTo = p_To.     
+     
+     RETURN SendMessageToClient().
+    END METHOD.
+
+/*  =========================================================================
+    SendMessageToClient
+    This method sends a message to the named client
+    MessageSubject, MessageBody must be set previously
+    ==========================================================================*/ 
+
+    METHOD PUBLIC LOGICAL SendMessageToClient():
+     DEF BUFFER TTClient FOR TEMP-TABLE TTClient.
+
+     DEF VAR lv_Start AS CHAR NO-UNDO.
+     
+     ASSIGN lv_Start = ENTRY(1,MessageTo,"*").
+     
+     FOR EACH TTClient NO-LOCK WHERE TTClient.ClientName BEGINS lv_Start
+                                 AND TTClient.ClientName MATCHES MessageTo:
+      SendMessage(TTClient.ClientSocket) NO-ERROR.
+     END.     
+     
+    END METHOD.
+    
+END CLASS.

@@ -1,0 +1,23 @@
+/*=================================================================================*/
+/*                  ACTUALIZA TODOS LOS EJECUTABLES DEL SISTEMA                    */
+/*=================================================================================*/
+
+DEFINE VARIABLE sino AS LOGICAL INITIAL NO.
+DEFINE VARIABLE ant_titulo AS CHARACTER.
+
+MESSAGE "Esta opción produce la actualización del sistema a la última versión disponible."
+        "Indique con ""SI"" o ""NO"" si desea proseguir. "
+        "Tenga en cuenta que la misma puede demorar algunos minutos." 
+        VIEW-AS ALERT-BOX WARNING 
+        BUTTONS YES-NO TITLE "Proceso de actualización" UPDATE sino .
+        
+IF sino 
+THEN DO:
+     ant_titulo = CURRENT-WINDOW:TITLE.
+     CURRENT-WINDOW:TITLE = "Actualizando... ".
+     OS-COMMAND SILENT VALUE(".\procs\actua").
+     CURRENT-WINDOW:TITLE = ant_titulo.
+     MESSAGE "EL sistema ha sido actualizado. Por favor, salga y vuelva a ingresar al mismo."
+             VIEW-AS ALERT-BOX MESSAGE TITLE "Proceso de actualización".
+
+END.     

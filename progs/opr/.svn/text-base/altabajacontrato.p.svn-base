@@ -1,0 +1,118 @@
+/*====================================================================================*/
+/*      ALTAS Y BAJAS DE CONTRATOS EN EL PERIODO                                */
+/*====================================================================================*/
+
+DEFINE INPUT PARAMETER des_fecha AS DATE.
+DEFINE INPUT PARAMETER has_fecha AS DATE.
+DEFINE INPUT-OUTPUT PARAMETER p-xfile       AS CHARACTER.
+
+/*====================================================================================*/
+/*                          DEFINICION DE TABLAS TEMPORALES                           */
+/*====================================================================================*/
+DEFINE TEMP-TABLE tempresa no-undo LIKE empresa.
+DEFINE BUFFER administrador FOR cliente.
+
+DEFINE TEMP-TABLE tcontratos
+    FIELD OPER                  AS CHAR FORMAT "X(4)"
+    FIELD nro_contrato          LIKE contrato_hd.nro_contrato
+    FIELD cdg_emp              LIKE empresa.cdg_empresa
+    FIELD fecha_alta            LIKE contrato_hd.fecha_alta
+    FIELD fecha_baja            LIKE contrato_hd.fecha_baja
+    FIELD cdg_cliente           LIKE cliente.cdg_cliente
+    FIELD direccion             LIKE cliente.direccion
+    FIELD nom_cliente           LIKE cliente.nom_cliente
+    FIELD cdg_articulo          LIKE articulo.cdg_articulo
+    FIELD imp_total             LIKE Contrato_hd.imp_total 
+    FIELD motivo_baja           LIKE Contrato_hd.motivo_baja 
+    FIELD cdg_tipo_evento       LIKE tipo_evento.cdg_tipo_evento 
+    FIELD numero_eventos        LIKE Contrato_hd.numero_eventos 
+    FIELD resto_periodos        LIKE Contrato_hd.resto_periodos 
+    FIELD rige_desde            LIKE Contrato_hd.rige_desde 
+    FIELD rige_hasta            LIKE Contrato_hd.rige_hasta
+    FIELD cdg_admin             LIKE cliente.cdg_cliente
+    FIELD administrador         LIKE cliente.nom_cliente.
+
+
+DEFINE DATASET dset FOR Tempresa, tcontratos.
+
+
+/*====================================================================================*/
+/*                  VARIABLES, FRAMES Y TABLAS TEMPORALES                             */
+/*====================================================================================*/
+
+{crystal_dyna.p}
+
+/*=================================================================================*/
+/*                                BLOQUE PRINCIPAL                                 */
+/*=================================================================================*/
+
+{findempresa.i}
+CREATE tempresa.
+BUFFER-COPY empresa TO tempresa.
+/*altas*/
+FOR EACH contrato_hd
+  WHERE contrato_hd.fecha_alta >= des_fecha and
+    contrato_hd.fecha_alta <= has_fecha
+    AND contrato_hd.estado = "A":
+    FIND FIRST cliente OF contrato_hd NO-ERROR.
+    FIND FIRST administrador WHERE administrador.nro_cliente = cliente.nro_admin NO-ERROR.
+    FIND FIRST tipo_evento where contrato_hd.nro_tipo_evento = tipo_evento.nro_tipo_evento NO-ERROR.
+  CREATE tcontratos.
+  ASSIGN 
+      tcontratos.OPER   = "ALTA"           
+      tcontratos.nro_contrato = contrato_hd.nro_contrato     
+      tcontratos.fecha_alta = contrato_hd.fecha_alta       
+      tcontratos.fecha_baja = contrato_hd.fecha_baja       
+      tcontratos.cdg_cliente = cliente.cdg_cliente      
+      tcontratos.direccion = cliente.direccion        
+      tcontratos.nom_cliente = cliente.nom_cliente       
+      tcontratos.imp_total         = contrato_hd.imp_total 
+      tcontratos.motivo_baja       = contrato_hd.motivo_baja
+      tcontratos.cdg_tipo_evento   = tipo_evento.cdg_tipo_evento
+      tcontratos.numero_eventos    = contrato_hd.numero_eventos 
+      tcontratos.resto_periodos = contrato_hd.resto_periodos   
+      tcontratos.rige_desde = contrato_hd.rige_desde       
+      tcontratos.rige_hasta = contrato_hd.rige_hasta       
+      tcontratos.cdg_admin  = administrador.cdg_cliente    
+      tcontratos.administrador = administrador.nom_cliente
+      tcontratos.cdg_emp = empresa.cdg_empresa.   
+END.
+/*bajas*/
+FOR EACH contrato_hd
+  WHERE contrato_hd.fecha_baja >= des_fecha and
+    contrato_hd.fecha_baja <= has_fecha AND contrato_hd.Estado = "A":
+    FIND FIRST cliente OF contrato_hd NO-ERROR.
+    FIND FIRST administrador WHERE administrador.nro_cliente = cliente.nro_admin NO-ERROR.
+    FIND FIRST tipo_evento where contrato_hd.nro_tipo_evento = tipo_evento.nro_tipo_evento NO-ERROR.
+  FIND tcontratos WHERE tcontratos.nro_contrato = contrato_hd.nro_contrato NO-ERROR.
+  IF AVAILABLE tcontratos then
+      tcontratos.oper = "A Y B".
+  ELSE DO:
+      CREATE tcontratos.
+      ASSIGN 
+          tcontratos.cdg_emp = empresa.cdg_empresa
+          tcontratos.OPER   = "BAJA"           
+          tcontratos.nro_contrato = contrato_hd.nro_contrato     
+          tcontratos.fecha_alta = contrato_hd.fecha_alta       
+          tcontratos.fecha_baja = contrato_hd.fecha_baja       
+          tcontratos.cdg_cliente = cliente.cdg_cliente      
+          tcontratos.direccion = cliente.direccion        
+          tcontratos.nom_cliente = cliente.nom_cliente       
+          tcontratos.imp_total         = contrato_hd.imp_total 
+          tcontratos.motivo_baja       = contrato_hd.motivo_baja
+          tcontratos.cdg_tipo_evento   = tipo_evento.cdg_tipo_evento
+          tcontratos.numero_eventos    = contrato_hd.numero_eventos 
+          tcontratos.resto_periodos = contrato_hd.resto_periodos   
+          tcontratos.rige_desde = contrato_hd.rige_desde       
+          tcontratos.rige_hasta = contrato_hd.rige_hasta       
+          tcontratos.cdg_admin  = administrador.cdg_cliente    
+          tcontratos.administrador = administrador.nom_cliente
+          .
+  END.
+END.
+
+IF p-xfile = "" OR p-xfile = ?
+    THEN p-xfile = tempfile("") + ".xml".
+
+DATASET dset:WRITE-XML ("FILE", p-xfile, TRUE,
+                                     ?,"",YES,YES).

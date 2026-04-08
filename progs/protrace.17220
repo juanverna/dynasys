@@ -1,0 +1,158 @@
+=====================================================
+PROGRESS stack trace as of Mon Apr 13 12:24:14 2020
+=====================================================
+Startup parameters:
+-pf C:\Progress102\OpenEdge\startup.pf,-cpinternal ISO8859-1,-cpstream ISO8859-1,-cpcoll Spanish9,-cpcase Basic,-d dmy,-numsep 46,-numdec 44,(end .pf),-p largar.p,-db c:\bases\dynasys102,-ld sic,-T c:\temp,-basekey INI,-ininame c:\dynasys10\procs\dynasys10.ini,-s 200,-inp 8192,-nb 150,-l 4000,-bibufs 25,-q,-rr
+
+Exception code: E0000003 
+Fault address:  75FEC5AF 01:0000B5AF C:\Windows\syswow64\KERNELBASE.dll
+
+Registers:
+EAX:0018F474
+EBX:00000002
+ECX:004D4570
+EDX:00000000
+ESI:003C4A54
+EDI:00000002
+CS:EIP:0023:75FEC5AF
+SS:ESP:002B:0018F474  EBP:0018F4C4
+DS:002B  ES:002B  FS:0053  GS:002B
+Flags:00200246
+
+Call Stack:
+Address   Frame
+75FEC5AF  00000000  RaiseException+58
+10491764  00000000  dbut_utIsDir+1264
+
+
+** ABL Stack Trace **
+
+--> broker-notify adm/objects/broker.p (C:\Progress102\OpenEdge\gui\adm\objects\broker.r) at line 6329
+    notify p-updspa.w (.\bas\p-updspa.r) at line 1125
+    USER-INTERFACE-TRIGGER p-updspa.w (.\bas\p-updspa.r) at line 1803
+    start-transaction p-updspa.w (.\bas\p-updspa.r) at line 2297
+    USER-INTERFACE-TRIGGER p-updspa.w (.\bas\p-updspa.r) at line 1730
+    w-transf_deuda.w (.\PAU\w-transf_deuda.r) at line 1526
+    ejecutar w-dynasys.w (.\bas\w-dynasys.r) at line 1392
+    tvDoubleClick w-dynasys.w (.\bas\w-dynasys.r) at line 7328
+    tvnodeEvent w-dynasys.w (.\bas\w-dynasys.r) at line 7763
+    picLeftMouseEvent pure4gltv.w (.\bas\pure4gltv.r) at line 7293
+    labLeftMouseEvent pure4gltv.w (.\bas\pure4gltv.r) at line 6139
+    w-tareas-red.w (.\cpy\w-tareas-red.r) at line 1585
+    USER-INTERFACE-TRIGGER w-dynasys.w (.\bas\w-dynasys.r) at line 5977
+    w-dynasys.w (.\bas\w-dynasys.r) at line 6508
+    rundynasys-noquit.p (.\bas\rundynasys-noquit.r) at line 104
+
+** Persistent procedures/Classes **
+
+Handle  File Name
+002824  .\opr\v-evento.r
+002816  .\bas\p-soloedita.r
+002812  .\opr\b-eventocli.r
+002807  .\bas\p-excel.r
+002805  .\fac\v-dsc_cliente.r
+002444  .\opr\v-evento.r
+002436  .\bas\p-soloedita.r
+002432  .\opr\b-eventocli.r
+002427  .\bas\p-excel.r
+002425  .\fac\v-dsc_cliente.r
+002379  .\cpy\v-temp_tareaF.r
+002358  .\bas\p-soloalta.r
+002356  .\cxc\v-observacion-cli.r
+002352  .\cxc\b-observacion-cli.r
+002350  .\fac\v-dsc_cliente.r
+002258  .\cpy\v-tarea-red1.r
+002251  .\cpy\b-busc-tarea.r
+002249  .\fac\v-dsc_cliente.r
+002199  .\PAU\q-domicilio.r
+002188  .\bas\p-updspa.r
+002186  .\fac\v-cliente_contacto.r
+002182  .\fac\b-cliente_contacto.r
+002180  .\PAU\v-dsc_unico-domicilio.r
+002178  .\fac\v-dsc_cliente.r
+002149  .\fac\b-comprobantes1.r
+002147  .\fac\v-dsc_cliente.r
+002048  .\PAU\q-cliente_otros_datos.r
+002037  .\bas\p-updspa.r
+002035  .\PAU\v-otros_datos1.r
+002033  .\fac\v-dsc_cliente.r
+002022  .\bas\p-updspa.r
+002020  .\PAU\vo-cliente.r
+002009  .\bas\p-updspa.r
+002007  .\opr\v-canal.r
+002005  .\PAU\v-consorcios.r
+002001  .\opr\b-canal.r
+001996  .\PAU\b.r
+001993  C:\Progress102\OpenEdge\gui\adm\objects\folder.r
+001990  .\PAU\w-consorcios-cli.r
+001778  .\cxc\b-ctacte-cli.r
+001773  .\PAU\b-consorcios_de_un_administrador.r
+001569  .\tes\b-caja_valor.r
+001565  .\tes\b-valores_rendicion.r
+001561  .\tes\b-comprobante_rendicion-adm.r
+001557  .\afi\b-rendicion_adm.r
+001555  .\PAU\v-resumen.r
+001469  .\PAU\q-domicilio.r
+001458  .\bas\p-updspa.r
+001454  .\fac\b-cliente_contacto.r
+001452  .\fac\v-cliente_contacto_sindir.r
+001450  .\PAU\vo-administraciones.r
+001439  .\bas\p-updspa.r
+001428  .\bas\p-updspa.r
+001426  .\opr\v-canal.r
+001422  .\opr\b-canal.r
+001420  .\PAU\v-administrador.r
+001415  .\PAU\b-administracion.r
+001412  C:\Progress102\OpenEdge\gui\adm\objects\folder.r
+001409  .\PAU\w-administraciones.r
+001288  .\bas\p-soloedita.r
+001283  .\cpy\v-tarea-red11.r
+001280  .\cpy\v-temp_tarea1.r
+001278  .\cpy\v-tarea-red2.r
+001277  .\PAU\q-cliente.r
+001269  .\bas\p-soloedita.r
+001264  .\cpy\v-tarea-redsolotel.r
+001261  .\cpy\v-temp_tarea1.r
+001253  .\cpy\b-tareas-red.r
+001249  C:\Progress102\OpenEdge\gui\adm\objects\folder.r
+001227  C:\Progress102\OpenEdge\gui\adm\objects\broker.r
+001039  .\bas\pure4gltv.r
+001021  .\bas\sfavoritos.r
+001013  C:\Progress102\OpenEdge\gui\adm2\containr.r
+001011  C:\Progress102\OpenEdge\gui\adm2\visual.r
+001006  C:\Progress102\OpenEdge\gui\adm2\smart.r
+001002  .\bas\Winfunc.r
+001001  .\bas\Windows.r
+
+//=====================================================
+PROGRESS stack trace as of Mon Apr 13 12:24:15 2020
+//=====================================================
+Exception code: E0000003 
+Fault address:  75FEC5AF 01:0000B5AF C:\Windows\syswow64\KERNELBASE.dll
+
+Registers:
+EAX:0018F474
+EBX:00000002
+ECX:004D4570
+EDX:00000000
+ESI:003C4A54
+EDI:00000002
+CS:EIP:0023:75FEC5AF
+SS:ESP:002B:0018F4E0  EBP:0018F4C4
+DS:002B  ES:002B  FS:0053  GS:002B
+Flags:00200246
+
+Call Stack:
+Address   Frame
+75FEC5AF  0018F4E8  RaiseException+58
+10021E94  0018F51C  0001:00020E94 C:\Progress102\OpenEdge\bin\prow32.dll
+10023933  0018F560  0001:00022933 C:\Progress102\OpenEdge\bin\prow32.dll
+61662064  0018F604  0003:007B3064 C:\Windows\assembly\NativeImages_v2.0.50727_32\mscorlib\9f895c66454577eff9c77442d0c84f71\mscorlib.ni.dll
+776F0B68  0018F62C  GetComboBoxInfo+28
+776C929A  0018F674  GetWindow+2C
+104266AC  0018F68C  rcUpdateFieldMap+5299C
+104266C8  0018F6B8  rcUpdateFieldMap+529B8
+776C62FA  0018F6F4  gapfnScSendMessage+332
+776C6D91  0018F794  GetThreadDesktop+12E
+776D0D65  0018F7B4  CallWindowProcW+1B
+

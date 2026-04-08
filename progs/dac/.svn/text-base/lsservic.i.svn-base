@@ -1,0 +1,218 @@
+/*===================================================================================*/
+/*             Emite el listado de servicios prestados POR o PARA                    */
+/*===================================================================================*/
+
+DEFINE VARIABLE tr           AS INTEGER.
+DEFINE VARIABLE ctr          AS CHARACTER LABEL "T.Resp.".
+DEFINE VARIABLE que_{&TABLA} LIKE {&TABLA}.cdg_{&TABLA} LABEL "{&TABLA}".
+DEFINE VARIABLE chr_{&TABLA} LIKE {&TABLA}.nom_{&TABLA}.
+DEFINE VARIABLE des_movil    LIKE Movil.cdg_movil LABEL "De Móvil".
+DEFINE VARIABLE has_movil    LIKE Movil.cdg_movil LABEL "A Móvil".
+
+{defvarcolores.i}
+{defvarcoseguro.i}
+
+DEFINE VARIABLE v-domicilio  AS CHARACTER FORMAT "X(25)" COLUMN-LABEL "Domicilio".
+DEFINE VARIABLE v-telefono   AS CHARACTER LABEL "Telefono" FORMAT "X(12)".
+DEFINE VARIABLE v-importe    AS DECIMAL   COLUMN-LABEL "Importe".
+
+DEFINE VARIABLE tot_coseguro AS DECIMAL   COLUMN-LABEL "Importe".
+
+DEFINE VARIABLE tcl_importe  AS DECIMAL   COLUMN-LABEL "Importe".
+DEFINE VARIABLE tcl_coseguro AS DECIMAL   COLUMN-LABEL "Importe".
+DEFINE VARIABLE tcl_fichas   AS INTEGER.
+
+DEFINE FRAME frm-titulo HEADER
+  que_empresa 
+  "{&TITULO-LST}" AT 91 
+  "Pagina:" AT 203 PAGE-NUMBER FORMAT ">9" AT 210
+  SKIP
+  "Filtro:"
+  tit_filtro
+  des_fecha AT 91
+  "al"
+  has_fecha
+  "/"
+  deshas_color 
+  fecha_lis AT 203
+  SKIP
+  chr_{&TABLA} AT 91
+  hora_lis AT 203
+  SKIP(1)
+  WITH WIDTH 222 FRAME frm-titulo TOP-ONLY PAGE-TOP STREAM-IO.
+
+FORM
+  Ficha.fch_alta 
+  Ficha.num_ficha 
+  v-telefono
+  Ficha.nombre_pac FORMAT "X(20)"
+  Ficha.nroafi_pac
+  {&FICHA-CAMPO}
+  Ficha.solicita
+  Ficha.hms_alta
+  v-domicilio
+  Motivo.dsc_motivo FORMAT "X(20)" COLUMN-LABEL "Motivo de Llamado"
+  Diagnostico.dsc_diagnostico FORMAT "X(18)" COLUMN-LABEL "Diagnostico"
+  Destemer.dsc_destino FORMAT "X(15)" COLUMN-LABEL "Destino"
+  Ficha.cdg_proveedor COLUMN-LABEL "(M)" FORMAT ">>9"
+  Ficha.refer_emr
+  v-imp_pago      COLUMN-LABEL "Coseguro!Pagado"
+  v-imp_impago    COLUMN-LABEL "Coseguro!Adeudado"
+  v-importe COLUMN-LABEL "Tarifa"
+  WITH WIDTH 222 DOWN CENTERED FRAME frm-listado USE-TEXT STREAM-IO.
+
+{cargaempresas.i}
+
+UPDATE des_fecha /* COLON 10 */ has_fecha que_{&TABLA} SKIP 
+       des_tipoemr /* COLON 10 */ has_tipoemr lista_empresas 
+       des_movil has_movil SKIP
+/*     ctl_salto  */
+       WITH FRAME aa SIDE-LABELS THREE-D VIEW-AS DIALOG-BOX WIDTH 90 3 COLUMNS CENTERED
+            TITLE "Ingrese parametros del listado: {&TITULO-LST}".
+
+{setvarimpre.i}
+FIND {&TABLA} WHERE {&TABLA}.cdg_{&TABLA} = que_{&TABLA} NO-LOCK.
+ASSIGN chr_{&TABLA} = {&TABLA}.nom_{&TABLA}.
+
+{cerocosegutot.i}
+{cerocosegurec.i}
+
+{deshascolor.i}
+
+tit_filtro = lista_empresas + " - " + STRING(des_movil) + "-" + STRING(has_movil).
+
+{drsalida.i "55"} /* Direcciona la salida de impresión */
+
+FOR EACH Ficha USE-INDEX por_fecha
+    WHERE Ficha.fch_alta <= has_fecha 
+      AND Ficha.fch_alta >= des_fecha
+      AND Ficha.cdg_tipoemr <= has_tipoemr 
+      AND Ficha.cdg_tipoemr >= des_tipoemr
+      AND Ficha.cdg_{&TABLA} = que_{&TABLA}
+      AND Ficha.cdg_movil >= des_movil
+      AND Ficha.cdg_movil <= has_movil
+      AND LOOKUP(Ficha.cdg_empresa,lista_empresas) <> 0
+      AND Ficha.cdg_destino <> "A" NO-LOCK 
+      BREAK BY Ficha.cdg_tipoemr
+            BY Ficha.fch_alta 
+            BY Ficha.num_ficha WITH FRAME f-listado:
+
+    VIEW FRAME frm-titulo.
+
+    FIND Movil       OF Ficha NO-LOCK NO-ERROR.
+    FIND Diagnostico OF Ficha NO-LOCK NO-ERROR.
+    FIND Motivo      OF Ficha NO-LOCK NO-ERROR.
+    FIND Destemer    OF Ficha NO-LOCK NO-ERROR.
+    FIND Localidad   OF Ficha NO-LOCK NO-ERROR.
+
+    v-domicilio = Ficha.calle_emr + " " + Ficha.nropta_emr + "-" + Localidad.dsc_localidad.
+    v-telefono =  Ficha.prefijotel_emr + "-" + Ficha.telefono_emr.
+
+    v-importe = 0.
+    IF INTEGER(Ficha.cdg_tipoemr) <> 0 
+    THEN DO:
+         FIND FIRST {&TABLA_TARIFAS} OF {&TABLA} WHERE  {&TABLA_TARIFAS}.cdg_tipoemr = Ficha.cdg_tipoemr NO-LOCK NO-ERROR.
+         IF Localidad.dentro_zona 
+            THEN v-importe = {&TABLA_TARIFAS}.imp_dentro-zona.
+            ELSE v-importe = {&TABLA_TARIFAS}.imp_fuera-zona.
+    END.         
+
+    {sumacoseguro.i}
+
+    tcl_importe = tcl_importe + v-importe.
+
+    DISPLAY Ficha.fch_alta   WHEN FIRST-OF(Ficha.fch_alta)
+            Ficha.fch_alta 
+            Ficha.num_ficha 
+            v-telefono
+            Ficha.nombre_pac
+            Ficha.nroafi_pac
+            {&FICHA-CAMPO}
+            Ficha.solicita
+            Ficha.hms_alta
+            v-domicilio COLUMN-LABEL "Domicilio"
+            Motivo.dsc_motivo COLUMN-LABEL "Motivo" WHEN AVAILABLE Motivo
+            Diagnostico.dsc_diagnostico WHEN AVAILABLE Diagnostico 
+            Destemer.dsc_destino WHEN AVAILABLE Destemer
+            Ficha.cdg_proveedor
+            Ficha.refer_emr
+            v-importe
+            v-imp_pago      WHEN v-imp_pago <> 0
+            v-imp_impago    WHEN v-imp_impago <> 0
+            WITH FRAME frm-listado.
+
+    DOWN WITH FRAME frm-listado.        
+
+    IF LAST-OF(Ficha.cdg_tipoemr)
+    THEN DO:
+         UNDERLINE Ficha.fch_alta
+                   Ficha.fch_alta 
+                   Ficha.num_ficha 
+                   v-telefono
+                   Ficha.nombre_pac
+                   Ficha.nroafi_pac
+                   {&FICHA-CAMPO}
+                   Ficha.solicita
+                   Ficha.hms_alta
+                   v-domicilio
+                   Motivo.dsc_motivo
+                   Diagnostico.dsc_diagnostico
+                   Destemer.dsc_destino
+                   Ficha.cdg_proveedor
+                   Ficha.refer_emr
+                   v-importe
+                   v-imp_pago 
+                   v-imp_impago 
+                   WITH FRAME frm-listado.
+         
+         FIND Tipcolor OF Ficha NO-LOCK.
+
+         DISPLAY   tcl_fichas @ Ficha.num_ficha 
+                   Tipcolor.color_emr @ v-telefono
+                   tcl_importe @ v-importe 
+                   WITH FRAME frm-listado.
+
+         tcl_fichas = 0.
+         tcl_coseguro = 0 .
+         tcl_importe = 0 .
+
+         IF NOT LAST(Ficha.cdg_tipoemr) THEN PAGE.
+
+    END.
+
+END.            
+
+UNDERLINE Ficha.fch_alta
+          Ficha.fch_alta 
+          Ficha.num_ficha 
+          v-telefono
+          Ficha.nombre_pac
+          Ficha.nroafi_pac
+          {&FICHA-CAMPO}
+          Ficha.solicita
+          Ficha.hms_alta
+          v-domicilio
+          Motivo.dsc_motivo
+          Diagnostico.dsc_diagnostico
+          Destemer.dsc_destino
+          Ficha.cdg_proveedor
+          Ficha.refer_emr
+          v-importe
+          v-imp_pago 
+          v-imp_impago 
+          WITH FRAME frm-listado.
+
+DISPLAY   tmv_fichas @ Ficha.num_ficha 
+          "TOTAL"    @ v-telefono
+          tmv_coseguro-si @ v-imp_pago 
+          tmv_coseguro-no @ v-imp_impago 
+          WITH FRAME frm-listado.
+
+
+OUTPUT CLOSE.
+
+   /* Visualiza en pantalla el archivo de salida */
+
+RUN veresult.w ( INPUT  arch_salida ,  /* Archivo */
+                 INPUT 9 ).            /* FONT a utilizar por default */               
+

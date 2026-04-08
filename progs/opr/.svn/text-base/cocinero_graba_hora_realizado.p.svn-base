@@ -1,0 +1,53 @@
+FUNCTION ahora RETURNS CHAR ( INPUT a AS CHAR):
+DEFINE VAR b AS CHAR.
+b = STRING(INT(a),"9999").
+RETURN SUBSTRING( b , 1 , 2 ) + ":" + SUBSTRING(b, 3 , 2 ).
+END FUNCTION.
+{tiempo.i}
+DEFINE VAR Recurso  AS char.
+DEFINE VAR Fecha    AS CHAR.
+DEFINE VAR nEvento   AS char.
+DEFINE VAR Padre    AS char.
+DEFINE VAR Origen   AS char.
+DEFINE VAR Identif  AS char.
+DEFINE VAR SE       AS char.
+DEFINE VAR TU       AS char.
+DEFINE VAR DUR	    AS char.
+DEFINE VAR ENTRADA  AS char.
+DEFINE VAR SALIDA   AS char.
+DEFINE VAR REAL     AS char.
+
+INPUT FROM "c:\horarios.csv".
+    IMPORT DELIMITER ";"
+         Recurso  
+         Fecha    
+         nEvento   
+         Padre    
+         Origen   
+         Identif  
+         SE       
+         TU       
+         DUR      
+         ENTRADA  
+         SALIDA   
+         REAL     .
+
+REPEAT :
+    IMPORT DELIMITER ";"
+         Recurso  
+         Fecha    
+         nEvento   
+         Padre    
+         Origen   
+         Identif  
+         SE       
+         TU       
+         DUR      
+         ENTRADA  
+         SALIDA   
+         REAL     .
+    
+FIND evento WHERE evento.nro_evento = INT(nevento).
+ASSIGN evento.hora_desde = ajuh(ahora(ENTRADA))
+       evento.hora_hasta = ajuh(ahora(SALIDA)).
+END.

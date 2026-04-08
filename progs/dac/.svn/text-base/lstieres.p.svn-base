@@ -1,0 +1,46 @@
+DEFINE VARIABLE tr  AS INTEGER.
+DEFINE VARIABLE ctr AS CHARACTER LABEL "T.Resp.".
+DEFINE VARIABLE que_cliente LIKE Cliente.cdg_cliente LABEL "Cliente".
+DEFINE VARIABLE des_fecha AS DATE LABEL "De Fecha".
+DEFINE VARIABLE has_fecha AS DATE LABEL "A Fecha".
+DEFINE VARIABLE lista_empresas AS CHARACTER LABEL "Empresas".
+
+FORM        
+    Ficha.fch_alta 
+    Ficha.hms_alta 
+    Ficha.num_ficha 
+    Ficha.cdg_tipoemr VIEW-AS FILL-IN
+    Ficha.cdg_motivo 
+    ctr 
+    Ficha.cdg_movil 
+    Ficha.solicita
+    Ficha.cdg_empresa
+    WITH USE-TEXT STREAM-IO FRAME f-datos.
+
+UPDATE des_fecha has_fecha que_cliente lista_empresas
+       WITH FRAME aa SIDE-LABELS THREE-D VIEW-AS DIALOG-BOX
+            TITLE "Ingrese parametros del listado".
+
+
+FOR EACH Ficha 
+    WHERE Ficha.fch_alta <= has_fecha 
+      AND Ficha.fch_alta >= des_fecha
+      AND LOOKUP(Ficha.cdg_empresa,lista_empresas) <> 0 NO-LOCK 
+      BREAK BY Ficha.fch_alta 
+            BY Ficha.cdg_tipoemr
+            BY Ficha.num_ficha WITH FRAME f-datos:
+
+    tr = hor_arrdom - hor_alta.
+    ctr = STRING(tr,"HH:MM:SS").
+    DISPLAY Ficha.fch_alta 
+            Ficha.hms_alta 
+            Ficha.num_ficha 
+            Ficha.cdg_tipoemr VIEW-AS FILL-IN
+            Ficha.cdg_motivo 
+            ctr 
+            Ficha.cdg_movil 
+            Ficha.solicita
+            Ficha.cdg_empresa
+            WITH FRAME f-datos.
+END.            
+            

@@ -1,0 +1,610 @@
+&ANALYZE-SUSPEND _VERSION-NUMBER UIB_v8r12 GUI
+&ANALYZE-RESUME
+/* Connected Databases 
+          sic              PROGRESS
+*/
+&Scoped-define WINDOW-NAME CURRENT-WINDOW
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CUSTOM _DEFINITIONS B-table-Win 
+/*------------------------------------------------------------------------
+
+  File:  
+
+  Description: from BROWSER.W - Basic SmartBrowser Object Template
+
+  Input Parameters:
+      <none>
+
+  Output Parameters:
+      <none>
+
+------------------------------------------------------------------------*/
+/*          This .W file was created with the Progress UIB.             */
+/*----------------------------------------------------------------------*/
+
+/* Create an unnamed pool to store all the widgets created 
+     by this procedure. This is a good default which assures
+     that this procedure's triggers and internal procedures 
+     will execute in this procedure's storage, and that proper
+     cleanup will occur on deletion of the procedure. */
+
+CREATE WIDGET-POOL.
+
+/* ***************************  Definitions  ************************** */
+
+/* Parameters Definitions ---                                           */
+
+/* Local Variable Definitions ---                                       */
+
+DEFINE VARIABLE rid_tabla AS ROWID.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-PREPROCESSOR-BLOCK 
+
+/* ********************  Preprocessor Definitions  ******************** */
+
+&Scoped-define PROCEDURE-TYPE SmartBrowser
+
+&Scoped-define ADM-SUPPORTED-LINKS Record-Source,Record-Target,TableIO-Target
+
+/* Name of first Frame and/or Browse and/or first Query                 */
+&Scoped-define FRAME-NAME F-Main
+&Scoped-define BROWSE-NAME br_table
+
+/* External Tables                                                      */
+&Scoped-define EXTERNAL-TABLES Oferta-rubro
+&Scoped-define FIRST-EXTERNAL-TABLE Oferta-rubro
+
+
+/* Need to scope the external tables to this procedure                  */
+DEFINE QUERY external_tables FOR Oferta-rubro.
+/* Internal Tables (found by Frame, Query & Browse Queries)             */
+&Scoped-define INTERNAL-TABLES Articulo-oferta Articulo
+
+/* Define KEY-PHRASE in case it is used by any query. */
+&Scoped-define KEY-PHRASE TRUE
+
+/* Definitions for BROWSE br_table                                      */
+&Scoped-define FIELDS-IN-QUERY-br_table Articulo.cdg_articulo ~
+Articulo.descripcion 
+&Scoped-define ENABLED-FIELDS-IN-QUERY-br_table 
+&Scoped-define FIELD-PAIRS-IN-QUERY-br_table
+&Scoped-define OPEN-QUERY-br_table OPEN QUERY br_table FOR EACH Articulo-oferta OF Oferta-rubro WHERE ~{&KEY-PHRASE} NO-LOCK, ~
+      EACH Articulo OF Articulo-oferta NO-LOCK ~
+    BY Articulo.cdg_articulo.
+&Scoped-define TABLES-IN-QUERY-br_table Articulo-oferta Articulo
+&Scoped-define FIRST-TABLE-IN-QUERY-br_table Articulo-oferta
+
+
+/* Definitions for FRAME F-Main                                         */
+
+/* Standard List Definitions                                            */
+&Scoped-Define ENABLED-OBJECTS RECT-8 v-cdg_articulo btn_porclasificacion ~
+btn_eliminar br_table 
+&Scoped-Define DISPLAYED-OBJECTS v-cdg_articulo 
+
+/* Custom List Definitions                                              */
+/* List-1,List-2,List-3,List-4,List-5,List-6                            */
+
+/* _UIB-PREPROCESSOR-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _XFTR "Foreign Keys" B-table-Win _INLINE
+/* Actions: ? adm/support/keyedit.w ? ? ? */
+/* STRUCTURED-DATA
+<KEY-OBJECT>
+&BROWSE-NAME
+</KEY-OBJECT>
+<FOREIGN-KEYS>
+nro_articulo||y|sic.Articulo-oferta.nro_articulo
+cdg_oferta||y|sic.Articulo-oferta.cdg_oferta
+</FOREIGN-KEYS> 
+<EXECUTING-CODE>
+**************************
+* Set attributes related to FOREIGN KEYS
+*/
+RUN set-attribute-list (
+    'Keys-Accepted = ,
+     Keys-Supplied = "nro_articulo,cdg_oferta"':U).
+
+/* Tell the ADM to use the OPEN-QUERY-CASES. */
+&Scoped-define OPEN-QUERY-CASES RUN dispatch ('open-query-cases':U).
+/**************************
+</EXECUTING-CODE> */
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _XFTR "Advanced Query Options" B-table-Win _INLINE
+/* Actions: ? adm/support/advqedit.w ? ? ? */
+/* STRUCTURED-DATA
+<KEY-OBJECT>
+&BROWSE-NAME
+</KEY-OBJECT>
+<SORTBY-OPTIONS>
+</SORTBY-OPTIONS>
+<SORTBY-RUN-CODE>
+************************
+* Set attributes related to SORTBY-OPTIONS */
+RUN set-attribute-list (
+    'SortBy-Options = ""':U).
+/************************
+</SORTBY-RUN-CODE>
+<FILTER-ATTRIBUTES>
+</FILTER-ATTRIBUTES> */   
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+/* ***********************  Control Definitions  ********************** */
+
+
+/* Definitions of the field level widgets                               */
+DEFINE BUTTON btn_eliminar 
+     LABEL "&Eliminar" 
+     SIZE 19 BY .81.
+
+DEFINE BUTTON btn_porclasificacion 
+     LABEL "X &Clasificación" 
+     SIZE 19 BY .81.
+
+DEFINE VARIABLE v-cdg_articulo AS CHARACTER FORMAT "X(10)":U 
+     LABEL "Artículo" 
+     VIEW-AS FILL-IN NATIVE 
+     SIZE 13 BY .81
+     BGCOLOR 14 FGCOLOR 12 FONT 6 NO-UNDO.
+
+DEFINE RECTANGLE RECT-8
+     EDGE-PIXELS 2 GRAPHIC-EDGE  NO-FILL 
+     SIZE 67 BY 1.35.
+
+/* Query definitions                                                    */
+&ANALYZE-SUSPEND
+DEFINE QUERY br_table FOR 
+      Articulo-oferta, 
+      Articulo SCROLLING.
+&ANALYZE-RESUME
+
+/* Browse definitions                                                   */
+DEFINE BROWSE br_table
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _DISPLAY-FIELDS br_table B-table-Win _STRUCTURED
+  QUERY br_table NO-LOCK DISPLAY
+      Articulo.cdg_articulo FORMAT "X(12)"
+      Articulo.descripcion FORMAT "X(50)"
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+    WITH NO-ASSIGN SEPARATORS SIZE 67 BY 11.31
+         BGCOLOR 15 FGCOLOR 9 
+         TITLE BGCOLOR 15 FGCOLOR 9 "Artículos que suman en el presente rubro de oferta".
+
+
+/* ************************  Frame Definitions  *********************** */
+
+DEFINE FRAME F-Main
+     v-cdg_articulo AT ROW 1.27 COL 8 COLON-ALIGNED
+     btn_porclasificacion AT ROW 1.27 COL 25
+     btn_eliminar AT ROW 1.27 COL 46
+     br_table AT ROW 2.62 COL 1
+     RECT-8 AT ROW 1 COL 1
+    WITH 1 DOWN NO-BOX KEEP-TAB-ORDER OVERLAY 
+         SIDE-LABELS NO-UNDERLINE THREE-D 
+         AT COL 1 ROW 1 SCROLLABLE 
+         BGCOLOR 8 FGCOLOR 0 .
+
+
+/* *********************** Procedure Settings ************************ */
+
+&ANALYZE-SUSPEND _PROCEDURE-SETTINGS
+/* Settings for THIS-PROCEDURE
+   Type: SmartBrowser
+   External Tables: sic.Oferta-rubro
+   Allow: Basic,Browse
+   Frames: 1
+   Add Fields to: EXTERNAL-TABLES
+   Other Settings: PERSISTENT-ONLY COMPILE
+ */
+
+/* This procedure should always be RUN PERSISTENT.  Report the error,  */
+/* then cleanup and return.                                            */
+IF NOT THIS-PROCEDURE:PERSISTENT THEN DO:
+  MESSAGE "{&FILE-NAME} should only be RUN PERSISTENT."
+          VIEW-AS ALERT-BOX ERROR BUTTONS OK.
+  RETURN.
+END.
+
+&ANALYZE-RESUME _END-PROCEDURE-SETTINGS
+
+/* *************************  Create Window  ************************** */
+
+&ANALYZE-SUSPEND _CREATE-WINDOW
+/* DESIGN Window definition (used by the UIB) 
+  CREATE WINDOW B-table-Win ASSIGN
+         HEIGHT             = 13.27
+         WIDTH              = 78.57.
+/* END WINDOW DEFINITION */
+                                                                        */
+&ANALYZE-RESUME
+
+
+/* ***************  Runtime Attributes and UIB Settings  ************** */
+
+&ANALYZE-SUSPEND _RUN-TIME-ATTRIBUTES
+/* SETTINGS FOR WINDOW B-table-Win
+  NOT-VISIBLE,,RUN-PERSISTENT                                           */
+/* SETTINGS FOR FRAME F-Main
+   NOT-VISIBLE Size-to-Fit                                              */
+/* BROWSE-TAB br_table btn_eliminar F-Main */
+ASSIGN 
+       FRAME F-Main:SCROLLABLE       = FALSE
+       FRAME F-Main:HIDDEN           = TRUE.
+
+/* _RUN-TIME-ATTRIBUTES-END */
+&ANALYZE-RESUME
+
+
+/* Setting information for Queries and Browse Widgets fields            */
+
+&ANALYZE-SUSPEND _QUERY-BLOCK BROWSE br_table
+/* Query rebuild information for BROWSE br_table
+     _TblList          = "sic.Articulo-oferta OF sic.Oferta-rubro,sic.Articulo OF sic.Articulo-oferta"
+     _Options          = "NO-LOCK KEY-PHRASE"
+     _TblOptList       = ","
+     _OrdList          = "sic.Articulo.cdg_articulo|yes"
+     _FldNameList[1]   > sic.Articulo.cdg_articulo
+"Articulo.cdg_articulo" ? "X(12)" "character" ? ? ? ? ? ? no ?
+     _FldNameList[2]   > sic.Articulo.descripcion
+"Articulo.descripcion" ? "X(50)" "character" ? ? ? ? ? ? no ?
+     _Query            is NOT OPENED
+*/  /* BROWSE br_table */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _QUERY-BLOCK FRAME F-Main
+/* Query rebuild information for FRAME F-Main
+     _Options          = "NO-LOCK"
+     _Query            is NOT OPENED
+*/  /* FRAME F-Main */
+&ANALYZE-RESUME
+
+ 
+
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CUSTOM _INCLUDED-LIB B-table-Win 
+/* ************************* Included-Libraries *********************** */
+
+{setsensitivo.i}
+{src/adm/method/browser.i}
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+
+
+/* ************************  Control Triggers  ************************ */
+
+&Scoped-define BROWSE-NAME br_table
+&Scoped-define SELF-NAME br_table
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL br_table B-table-Win
+ON DELETE-CHARACTER OF br_table IN FRAME F-Main /* Artículos que suman en el presente rubro de oferta */
+DO:
+    DEFINE VARIABLE sino-msg AS LOGICAL.
+    sino-msg = NO.
+    MESSAGE "Desea eliminar este artículo de la oferta?" 
+            VIEW-AS ALERT-BOX QUESTION BUTTONS YES-NO TITLE "Confirmación" UPDATE sino-msg.
+    IF sino-msg
+    THEN DO:
+         DO TRANSACTION:
+            FIND CURRENT Articulo-oferta EXCLUSIVE-LOCK.
+            DELETE Articulo-oferta.
+            RUN dispatch IN THIS-PROCEDURE ('open-query':U).
+         END.
+    END.
+  
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL br_table B-table-Win
+ON ROW-ENTRY OF br_table IN FRAME F-Main /* Artículos que suman en el presente rubro de oferta */
+DO:
+  /* This code displays initial values for newly added or copied rows. */
+  {src/adm/template/brsentry.i}  
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL br_table B-table-Win
+ON ROW-LEAVE OF br_table IN FRAME F-Main /* Artículos que suman en el presente rubro de oferta */
+DO:
+    /* Do not disable this code or no updates will take place except
+     by pressing the Save button on an Update SmartPanel. */
+   {src/adm/template/brsleave.i}
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL br_table B-table-Win
+ON VALUE-CHANGED OF br_table IN FRAME F-Main /* Artículos que suman en el presente rubro de oferta */
+DO:
+  /* This ADM trigger code must be preserved in order to notify other
+     objects when the browser's current row changes. */
+  {src/adm/template/brschnge.i}
+
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME btn_eliminar
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL btn_eliminar B-table-Win
+ON CHOOSE OF btn_eliminar IN FRAME F-Main /* Eliminar */
+DO:
+  APPLY "DELETE-CHARACTER" TO {&BROWSE-NAME}.
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME btn_porclasificacion
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL btn_porclasificacion B-table-Win
+ON CHOOSE OF btn_porclasificacion IN FRAME F-Main /* X Clasificación */
+DO:
+  DEFINE VARIABLE que_clase   AS CHARACTER.
+  DEFINE VARIABLE modo_salida AS INTEGER.
+  RUN d-selclase_articulos.w ( INPUT-OUTPUT que_clase,
+                               INPUT-OUTPUT rid_tabla,
+                               OUTPUT modo_salida).
+  IF modo_salida = 1
+  THEN DO:
+       FIND Articulo WHERE ROWID(Articulo) = rid_tabla NO-LOCK.
+       DISPLAY Articulo.cdg_articulo @ v-cdg_articulo
+               WITH FRAME {&FRAME-NAME}.
+       APPLY "RETURN" TO v-cdg_articulo.
+  END.
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME v-cdg_articulo
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL v-cdg_articulo B-table-Win
+ON * OF v-cdg_articulo IN FRAME F-Main /* Artículo */
+DO:
+  APPLY "CHOOSE" TO btn_porclasificacion.
+  RETURN NO-APPLY.
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL v-cdg_articulo B-table-Win
+ON MOUSE-SELECT-DBLCLICK OF v-cdg_articulo IN FRAME F-Main /* Artículo */
+OR MOUSE-MENU-DOWN,"." OF v-cdg_articulo IN FRAME {&FRAME-NAME}
+DO:
+
+  DEFINE VARIABLE rid_articulo AS ROWID.
+
+  RUN selartic.p ( INPUT-OUTPUT rid_articulo, 
+                   "V",
+                   INPUT YES ).
+
+  IF rid_articulo <> ?
+  THEN DO:
+       FIND Articulo WHERE ROWID(Articulo) = rid_articulo NO-LOCK.
+       DISPLAY Articulo.cdg_articulo  @ v-cdg_articulo
+               WITH FRAME {&FRAME-NAME}.
+       APPLY "RETURN" TO v-cdg_articulo IN FRAME {&FRAME-NAME}.
+  END.
+  RETURN NO-APPLY.
+
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL v-cdg_articulo B-table-Win
+ON RETURN OF v-cdg_articulo IN FRAME F-Main /* Artículo */
+DO:
+
+   ASSIGN FRAME {&FRAME-NAME}
+         v-cdg_articulo.
+
+   FIND Articulo WHERE Articulo.cdg_articulo = v-cdg_articulo NO-LOCK NO-ERROR.
+
+   IF NOT AVAILABLE Articulo
+   THEN DO:
+      RUN PONMENSJ.P (INPUT "FAPR001").
+      RETURN NO-APPLY.
+   END.
+   ELSE DO:
+        DO TRANSACTION:
+            CREATE Articulo-oferta.
+            ASSIGN Articulo-oferta.cdg_oferta   = Oferta-rubro.cdg_oferta
+                   Articulo-oferta.numero_total = Oferta-rubro.numero_total
+                   Articulo-oferta.nro_articulo = Articulo.nro_articulo.
+            RUN dispatch IN THIS-PROCEDURE ('open-query':U).
+        END.
+   END.
+
+   v-cdg_articulo = "".
+   DISPLAY v-cdg_articulo
+           WITH FRAME {&FRAME-NAME}.
+   APPLY "ENTRY" TO v-cdg_articulo  IN FRAME {&FRAME-NAME}.
+   RETURN NO-APPLY.
+
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&UNDEFINE SELF-NAME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CUSTOM _MAIN-BLOCK B-table-Win 
+
+
+/* ***************************  Main Block  *************************** */
+
+&IF DEFINED(UIB_IS_RUNNING) <> 0 &THEN          
+RUN dispatch IN THIS-PROCEDURE ('initialize':U).        
+&ENDIF
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+/* **********************  Internal Procedures  *********************** */
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE adm-open-query-cases B-table-Win adm/support/_adm-opn.p
+PROCEDURE adm-open-query-cases :
+/*------------------------------------------------------------------------------
+  Purpose:     Opens different cases of the query based on attributes
+               such as the 'Key-Name', or 'SortBy-Case'
+  Parameters:  <none>
+------------------------------------------------------------------------------*/
+
+  /* No Foreign keys are accepted by this SmartObject. */
+
+  {&OPEN-QUERY-{&BROWSE-NAME}}
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE adm-row-available B-table-Win _ADM-ROW-AVAILABLE
+PROCEDURE adm-row-available :
+/*------------------------------------------------------------------------------
+  Purpose:     Dispatched to this procedure when the Record-
+               Source has a new row available.  This procedure
+               tries to get the new row (or foriegn keys) from
+               the Record-Source and process it.
+  Parameters:  <none>
+------------------------------------------------------------------------------*/
+
+  /* Define variables needed by this internal procedure.             */
+  {src/adm/template/row-head.i}
+
+  /* Create a list of all the tables that we need to get.            */
+  {src/adm/template/row-list.i "Oferta-rubro"}
+
+  /* Get the record ROWID's from the RECORD-SOURCE.                  */
+  {src/adm/template/row-get.i}
+
+  /* FIND each record specified by the RECORD-SOURCE.                */
+  {src/adm/template/row-find.i "Oferta-rubro"}
+
+  /* Process the newly available records (i.e. display fields,
+     open queries, and/or pass records on to any RECORD-TARGETS).    */
+  {src/adm/template/row-end.i}
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE disable_UI B-table-Win _DEFAULT-DISABLE
+PROCEDURE disable_UI :
+/*------------------------------------------------------------------------------
+  Purpose:     DISABLE the User Interface
+  Parameters:  <none>
+  Notes:       Here we clean-up the user-interface by deleting
+               dynamic widgets we have created and/or hide 
+               frames.  This procedure is usually called when
+               we are ready to "clean-up" after running.
+------------------------------------------------------------------------------*/
+  /* Hide all frames. */
+  HIDE FRAME F-Main.
+  IF THIS-PROCEDURE:PERSISTENT THEN DELETE PROCEDURE THIS-PROCEDURE.
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE send-key B-table-Win adm/support/_key-snd.p
+PROCEDURE send-key :
+/*------------------------------------------------------------------------------
+  Purpose:     Sends a requested KEY value back to the calling
+               SmartObject.
+  Parameters:  <see adm/template/sndkytop.i>
+------------------------------------------------------------------------------*/
+
+  /* Define variables needed by this internal procedure.             */
+  {src/adm/template/sndkytop.i}
+
+  /* Return the key value associated with each key case.             */
+  {src/adm/template/sndkycas.i "nro_articulo" "Articulo-oferta" "nro_articulo"}
+  {src/adm/template/sndkycas.i "cdg_oferta" "Articulo-oferta" "cdg_oferta"}
+
+  /* Close the CASE statement and end the procedure.                 */
+  {src/adm/template/sndkyend.i}
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE send-records B-table-Win _ADM-SEND-RECORDS
+PROCEDURE send-records :
+/*------------------------------------------------------------------------------
+  Purpose:     Send record ROWID's for all tables used by
+               this file.
+  Parameters:  see template/snd-head.i
+------------------------------------------------------------------------------*/
+
+  /* Define variables needed by this internal procedure.               */
+  {src/adm/template/snd-head.i}
+
+  /* For each requested table, put it's ROWID in the output list.      */
+  {src/adm/template/snd-list.i "Oferta-rubro"}
+  {src/adm/template/snd-list.i "Articulo-oferta"}
+  {src/adm/template/snd-list.i "Articulo"}
+
+  /* Deal with any unexpected table requests before closing.           */
+  {src/adm/template/snd-end.i}
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE state-changed B-table-Win 
+PROCEDURE state-changed :
+/* -----------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+-------------------------------------------------------------*/
+  DEFINE INPUT PARAMETER p-issuer-hdl AS HANDLE    NO-UNDO.
+  DEFINE INPUT PARAMETER p-state      AS CHARACTER NO-UNDO.
+
+  CASE p-state:
+      /* Object instance CASEs can go here to replace standard behavior
+         or add new cases. */
+      {src/adm/template/bstates.i}
+  END CASE.
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+

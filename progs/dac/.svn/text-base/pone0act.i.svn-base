@@ -1,0 +1,9 @@
+ASSIGN
+  act_rojo                 = 0
+  act_amarillo             = 0
+  act_celeste              = 0
+  act_verdeadu             = 0
+  act_verdeped             = 0
+  act_naranja              = 0
+  act_azul                 = 0
+  tot_err                  = 0.

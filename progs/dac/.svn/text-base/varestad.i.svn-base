@@ -1,0 +1,79 @@
+/*------------------------------------------------------------------------------------------*/
+/*          DEFINICION DE VARIABLES NECESARIAS PARA CALCULO DE ESTADISTICA DIARIA           */
+/*------------------------------------------------------------------------------------------*/
+
+DEFINE VARIABLE  tr                        AS INTEGER.
+
+DEFINE VARIABLE  cnt_incid                 AS INTEGER FORMAT ">>>>>9" LABEL "Total".
+DEFINE VARIABLE  cnt_rojo                  AS INTEGER FORMAT ">>>>>9" LABEL "Rojo".
+DEFINE VARIABLE  cnt_rojo-tarde            AS INTEGER FORMAT ">>>>>9" LABEL "> 10'".
+DEFINE VARIABLE  cnt_rojo-muytarde         AS INTEGER FORMAT ">>>>>9" LABEL "> 15'".
+DEFINE VARIABLE  cnt_amarillo              AS INTEGER FORMAT ">>>>>9" LABEL "Amarill".
+DEFINE VARIABLE  cnt_amarillo-tarde        AS INTEGER FORMAT ">>>>>9" LABEL "> 20'".
+DEFINE VARIABLE  cnt_amarillo-muytarde     AS INTEGER FORMAT ">>>>>9" LABEL "> 30'".
+DEFINE VARIABLE  cnt_celeste               AS INTEGER FORMAT ">>>>>9" LABEL "Celeste".
+DEFINE VARIABLE  cnt_celeste-tarde         AS INTEGER FORMAT ">>>>>9" LABEL "> 30'".
+DEFINE VARIABLE  cnt_celeste-muytarde      AS INTEGER FORMAT ">>>>>9" LABEL "> 60'".
+DEFINE VARIABLE  cnt_verdeadu              AS INTEGER FORMAT ">>>>>9" LABEL "Adulto".
+DEFINE VARIABLE  cnt_verdeadu-tarde        AS INTEGER FORMAT ">>>>>9" LABEL "> 2H.".
+DEFINE VARIABLE  cnt_verdeadu-muytarde     AS INTEGER FORMAT ">>>>>9" LABEL "> 3H.".
+DEFINE VARIABLE  cnt_verdeped              AS INTEGER FORMAT ">>>>>9" LABEL "Pediat".
+DEFINE VARIABLE  cnt_verdeped-tarde        AS INTEGER FORMAT ">>>>>9" LABEL "> 2H.".
+DEFINE VARIABLE  cnt_verdeped-muytarde     AS INTEGER FORMAT ">>>>>9" LABEL "> 3H.".
+
+DEFINE VARIABLE  cnt_marron                AS INTEGER FORMAT ">>>>>9" LABEL "Seguim".
+DEFINE VARIABLE  cnt_naranja               AS INTEGER FORMAT ">>>>>9" LABEL "Enferm".
+DEFINE VARIABLE  cnt_azul                  AS INTEGER FORMAT ">>>>>9" LABEL "Trasl".
+DEFINE VARIABLE  cnt_gris                  AS INTEGER FORMAT ">>>>>9" LABEL "Evento".
+DEFINE VARIABLE  cnt_otros                 AS INTEGER FORMAT ">>>>>9" LABEL "Otros".
+
+DEFINE VARIABLE  tot_rojo                  AS INTEGER FORMAT ">>>>>9".
+DEFINE VARIABLE  tot_rojo-tarde            AS INTEGER FORMAT ">>>>>9".
+DEFINE VARIABLE  tot_rojo-muytarde         AS INTEGER FORMAT ">>>>>9".
+DEFINE VARIABLE  tot_amarillo              AS INTEGER FORMAT ">>>>>9".
+DEFINE VARIABLE  tot_amarillo-tarde        AS INTEGER FORMAT ">>>>>9".
+DEFINE VARIABLE  tot_amarillo-muytarde     AS INTEGER FORMAT ">>>>>9".
+DEFINE VARIABLE  tot_celeste               AS INTEGER FORMAT ">>>>>9".
+DEFINE VARIABLE  tot_celeste-tarde         AS INTEGER FORMAT ">>>>>9".
+DEFINE VARIABLE  tot_celeste-muytarde      AS INTEGER FORMAT ">>>>>9".
+DEFINE VARIABLE  tot_verdeadu              AS INTEGER FORMAT ">>>>>9".
+DEFINE VARIABLE  tot_verdeadu-tarde        AS INTEGER FORMAT ">>>>>9".
+DEFINE VARIABLE  tot_verdeadu-muytarde     AS INTEGER FORMAT ">>>>>9".
+DEFINE VARIABLE  tot_verdeped              AS INTEGER FORMAT ">>>>>9".
+DEFINE VARIABLE  tot_verdeped-tarde        AS INTEGER FORMAT ">>>>>9".
+DEFINE VARIABLE  tot_verdeped-muytarde     AS INTEGER FORMAT ">>>>>9".
+
+DEFINE VARIABLE  tot_marron                AS INTEGER FORMAT ">>>>>9" LABEL "Trasl".
+DEFINE VARIABLE  tot_naranja               AS INTEGER FORMAT ">>>>>9" LABEL "Enferm".
+DEFINE VARIABLE  tot_azul                  AS INTEGER FORMAT ">>>>>9" LABEL "Seguim".
+DEFINE VARIABLE  tot_gris                  AS INTEGER FORMAT ">>>>>9" LABEL "Evento".
+DEFINE VARIABLE  tot_otros                 AS INTEGER FORMAT ">>>>>9" LABEL "Evento".
+
+DEFINE VARIABLE  act_rojo                  AS INTEGER FORMAT ">>>>>9" LABEL "Rojo".
+DEFINE VARIABLE  act_amarillo              AS INTEGER FORMAT ">>>>>9" LABEL "Amar.".
+DEFINE VARIABLE  act_celeste               AS INTEGER FORMAT ">>>>>9" LABEL "Celes.".
+DEFINE VARIABLE  act_verdeadu              AS INTEGER FORMAT ">>>>>9" LABEL "Adulto".
+DEFINE VARIABLE  act_verdeped              AS INTEGER FORMAT ">>>>>9" LABEL "Pediat".
+
+DEFINE VARIABLE  act_marron                AS INTEGER FORMAT ">>>>>9" LABEL "Seguim".
+DEFINE VARIABLE  act_naranja               AS INTEGER FORMAT ">>>>>9" LABEL "Enferm".
+DEFINE VARIABLE  act_azul                  AS INTEGER FORMAT ">>>>>9" LABEL "Trasl".
+DEFINE VARIABLE  act_gris                  AS INTEGER FORMAT ">>>>>9" LABEL "Gris".
+DEFINE VARIABLE  act_otros                 AS INTEGER FORMAT ">>>>>9" LABEL "Otros".
+
+DEFINE VARIABLE  trp_rojo                  AS INTEGER.
+DEFINE VARIABLE  trp_amarillo              AS INTEGER.
+DEFINE VARIABLE  trp_celeste               AS INTEGER.
+DEFINE VARIABLE  trp_verdeadu              AS INTEGER.
+DEFINE VARIABLE  trp_verdeped              AS INTEGER.
+
+DEFINE VARIABLE  trp_marron                AS INTEGER.
+DEFINE VARIABLE  trp_naranja               AS INTEGER.
+DEFINE VARIABLE  trp_azul                  AS INTEGER.
+DEFINE VARIABLE  trp_gris                  AS INTEGER.
+DEFINE VARIABLE  trp_otros                 AS INTEGER.
+
+DEFINE VARIABLE  min_tieres                AS DECIMAL.
+DEFINE VARIABLE  tot_fichas                AS INTEGER.
+DEFINE VARIABLE  tot_err                   AS INTEGER.
+

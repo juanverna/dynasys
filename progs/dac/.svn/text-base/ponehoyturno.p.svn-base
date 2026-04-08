@@ -1,0 +1,5 @@
+/*-------------- Pone la fecha de hoy en la fecha de volver a llamar -------------------------*/
+
+FOR EACH OTraslado_hd WHERE OTraslado_hd.fch_turno = OTraslado_hd.fch_llamado 
+                        AND OTraslado_hd.fch_turno > TODAY:
+    OTraslado_hd.fch_llamado = TODAY.

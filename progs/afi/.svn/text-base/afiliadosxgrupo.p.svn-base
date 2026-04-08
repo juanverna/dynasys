@@ -1,0 +1,194 @@
+/*=========================================================================================*/
+/*              IMPRIME LOS AFILIADOS DE UN DETERMINADO GRUPO FAMILIAR                     */
+/*=========================================================================================*/
+
+DEFINE INPUT PARAMETER rid_grupo AS ROWID.
+
+{WGLISTAR.I}
+{dfvarimp.i}
+
+DEFINE VARIABLE j                         AS INTEGER.
+DEFINE VARIABLE titulo_lis                AS CHARACTER FORMAT "X(40)".
+DEFINE VARIABLE titulo_det                AS CHARACTER FORMAT "X(40)".
+
+DEFINE VARIABLE que_archivo               AS CHARACTER.
+DEFINE VARIABLE p_printed                 AS LOGICAL.
+
+DEFINE VARIABLE v-importe                 LIKE Grupofam.importe_cuota.
+DEFINE VARIABLE pto_venta-org             LIKE Rec_header.prf_comprob.
+DEFINE VARIABLE cotiza_dolar              AS DECIMAL.
+DEFINE VARIABLE codigo_dolar              LIKE Moneda.cdg_moneda.
+DEFINE VARIABLE v-tip_comprob             LIKE Rec_header.tip_comprob FORMAT "X(3)".
+DEFINE VARIABLE prox_docum                LIKE Parametro.cdg_parametro.
+
+DEFINE VARIABLE v-tipo_compbte            LIKE Grupofam.tipo_compbte FORMAT "X(2)".
+
+DEFINE VARIABLE g-pesos                   AS DECIMAL FORMAT ">,>>>,>>9.99".
+DEFINE VARIABLE g-grupofames              AS INTEGER FORMAT ">>>>9".
+DEFINE VARIABLE a-pesos                   AS DECIMAL FORMAT ">,>>>,>>9.99".
+DEFINE VARIABLE a-grupofames              AS INTEGER FORMAT ">>>>9".
+DEFINE VARIABLE t-pesos                   AS DECIMAL FORMAT ">,>>>,>>9.99".
+DEFINE VARIABLE t-grupofames              AS INTEGER FORMAT ">>>>9".
+DEFINE VARIABLE z-pesos                   AS DECIMAL FORMAT ">,>>>,>>9.99".
+DEFINE VARIABLE z-grupofames              AS INTEGER FORMAT ">>>>9".
+
+DEFINE VARIABLE p-pagina                  AS INTEGER FORMAT ">>>>9".
+
+DEFINE FRAME frm-titulo
+       que_empresa NO-LABEL
+       "Composición de grupo familiar" AT 47
+       p-pagina FORMAT ">>9" AT 139 LABEL "Página"
+       SKIP  
+       fecha_lis  NO-LABEL     
+       titulo_lis AT 47 NO-LABEL
+       hora_lis AT 139 NO-LABEL
+       SKIP
+       titulo_det AT 47  NO-LABEL
+       SKIP(1)
+       Grupofam.cdg_grupofam       COLON 30
+       Grupofam.tipo_grupo         COLON 60
+       SKIP       
+       Grupofam.nom_grupofam       COLON 30
+       SKIP
+       Grupofam.cdg_plan           COLON 30
+       Grupofam.cant_capitas       COLON 60
+       SKIP
+       v-importe                   COLON 30 LABEL "Cuota" 
+       Grupofam.cdg_zonag          COLON 60
+       Grupofam.cdg_cobrador       COLON 90
+       SKIP
+       Grupofam.cdg_estado         COLON 30
+       Grupofam.cdg_motbaja        COLON 60
+       Grupofam.cdg_condiva        COLON 90
+       SKIP
+       Grupofam.fecha_alta         COLON 30  
+       Grupofam.fecha_baja         COLON 60
+       SKIP
+       Grupofam.tipo_ap            COLON 30
+       Grupofam.techo              COLON 60
+       Grupofam.centro_medico      COLON 90
+       SKIP
+       Grupofam.tipo_compbte       COLON 30
+       Grupofam.Usuario-alta       COLON 60
+       Grupofam.Usuario-baja       COLON 90
+       SKIP (3)
+       WITH WIDTH 160 FRAME frm-titulo PAGE-TOP STREAM-IO SIDE-LABELS.
+
+FORM
+       Afiliado.num_integrante      COLUMN-LABEL "Inte-!grante"
+       Afiliado.titular             COLUMN-LABEL "Titu-!lar"
+       Afiliado.cdg_afiliado        FORMAT "X(15)"
+       Afiliado.nom_afiliado 
+       Afiliado.fecha_nac 
+       Afiliado.sexo 
+       Afiliado.tip_documento 
+       Afiliado.num_documento 
+       Afiliado.cdg_estado          COLUMN-LABEL "Es-!tado"
+       Afiliado.fecha_alta          COLUMN-LABEL "Fecha!Alta"
+       Afiliado.fecha_baja          COLUMN-LABEL "Fecha!Baja"
+       Afiliado.num_carnet          FORMAT "X(15)"
+       WITH WIDTH 256 DOWN FRAME frm-listado USE-TEXT STREAM-IO .
+
+FORM
+       t-Grupofames LABEL "Total Grupos"  
+       t-pesos   LABEL "Total Pesos"
+       WITH WIDTH 135 DOWN FRAME frm-resumen USE-TEXT STREAM-IO SIDE-LABELS .
+
+/*=========================================================================================*/
+/*                           B L O Q U E   P R I N C I P A L                               */
+/*=========================================================================================*/
+
+FIND Grupofam WHERE ROWID(Grupofam) = rid_grupo NO-LOCK.
+FIND Empresa OF Grupofam NO-LOCK.
+
+que_empresa = Empresa.nombre.
+
+fecha_lis = STRING(TODAY,"99/99/99").
+hora_lis = STRING(TIME,"HH:MM:SS").
+
+que_archivo = "c:\sic-temp\afiliadosxgrupo.txt".
+
+
+OUTPUT TO VALUE(que_archivo) PAGE-SIZE 72.
+
+DISPLAY
+       que_empresa
+       p-pagina
+       fecha_lis       
+       titulo_lis
+       hora_lis
+       titulo_det
+       Grupofam.cant_capitas 
+       Grupofam.cdg_cobrador 
+       Grupofam.cdg_condiva 
+       Grupofam.cdg_estado 
+       Grupofam.cdg_grupofam 
+       Grupofam.cdg_motbaja 
+       Grupofam.cdg_plan 
+       Grupofam.cdg_zonag 
+       Grupofam.centro_medico 
+       Grupofam.fecha_alta 
+       Grupofam.fecha_baja 
+       v-importe 
+       Grupofam.nom_grupofam 
+       Grupofam.tipo_ap 
+       Grupofam.techo 
+       Grupofam.tipo_compbte 
+       Grupofam.tipo_grupo 
+       Grupofam.Usuario-alta 
+       Grupofam.Usuario-baja
+       WITH FRAME frm-titulo.
+       
+FOR EACH Afiliado OF Grupofam:
+
+    DISPLAY 
+       Afiliado.num_integrante 
+       Afiliado.titular 
+       Afiliado.cdg_afiliado 
+       Afiliado.nom_afiliado 
+       Afiliado.fecha_nac 
+       Afiliado.sexo 
+       Afiliado.tip_documento 
+       Afiliado.num_documento 
+       Afiliado.cdg_estado 
+       Afiliado.fecha_alta 
+       Afiliado.fecha_baja 
+       Afiliado.num_carnet 
+       WITH FRAME frm-listado.
+       
+    DOWN WITH FRAME frm-listado.
+       
+END.
+
+OUTPUT CLOSE.
+
+RUN VERESULT.W ( INPUT que_archivo,
+                 INPUT 2 ).
+
+/*=========================================================================================*/
+/*                           P R O C E D I M I E N T O S                                   */
+/*=========================================================================================*/
+
+PROCEDURE buscar_importe:
+
+    IF Grupofam.tipo_grupo = "G"
+    THEN DO:
+
+        FIND FIRST Plan-capita OF Grupofam  
+                   WHERE Plan-capita.cant_capitas = Grupofam.cant_capitas 
+                         NO-LOCK NO-ERROR.
+
+        IF AVAILABLE Plan-capita
+        THEN DO:
+             v-importe = Plan-capita.precio_neto.
+        END.
+        ELSE DO:
+             v-importe = ?.
+        END.                              
+
+    END.        
+    ELSE DO:
+        v-importe = Grupofam.importe_cuota.       
+    END.
+
+END PROCEDURE.

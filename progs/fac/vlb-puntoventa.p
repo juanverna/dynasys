@@ -1,0 +1,29 @@
+
+/*=========================================================================================*/
+/*                      VALIDACION DE BAJAS DE LA TABLA:Punto-venta                             */
+/*=========================================================================================*/
+
+DEFINE INPUT  PARAMETER rid_Punto-venta AS ROWID.
+DEFINE OUTPUT PARAMETER hay_error  AS LOGICAL.
+
+FIND Punto-venta WHERE ROWID(Punto-venta) = rid_Punto-venta NO-LOCK.
+RUN VALIDAR_BAJA.
+
+RETURN.
+
+PROCEDURE VALIDAR_BAJA:
+
+  hay_error = YES.
+
+  IF CAN-FIND(FIRST Cierre_diario WHERE Cierre_diario.cdg_puntovta = Punto-venta.cdg_puntovta) OR
+     CAN-FIND(FIRST Cobrador_ptovta WHERE Cobrador_ptovta.cdg_puntovta = Punto-venta.cdg_puntovta) OR
+     CAN-FIND(FIRST Tipo_puntovta WHERE Tipo_puntovta.cdg_puntovta = Punto-venta.cdg_puntovta) OR
+     CAN-FIND(FIRST Vigencia_cai WHERE  Vigencia_cai.prf_comprob = Punto-venta.cdg_puntovta) or
+	 can-find(first fac_header where fac_header.prf_comprob = Punto-venta.cdg_puntovta) or
+	 can-find(first cta_cte where cta_cte.prf_comprob = Punto-venta.cdg_puntovta) 
+	 
+     THEN RETURN.
+
+  hay_error = NO.
+
+END PROCEDURE.

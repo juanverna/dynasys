@@ -1,0 +1,527 @@
+&ANALYZE-SUSPEND _VERSION-NUMBER UIB_v8r12 GUI
+&ANALYZE-RESUME
+/* Connected Databases 
+          despacho         PROGRESS
+*/
+&Scoped-define WINDOW-NAME C-Win
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CUSTOM _DEFINITIONS C-Win 
+/*------------------------------------------------------------------------
+
+  File: 
+
+  Description: 
+
+  Input Parameters:
+      <none>
+
+  Output Parameters:
+      <none>
+
+  Author: 
+
+  Created: 
+
+------------------------------------------------------------------------*/
+/*          This .W file was created with the Progress UIB.             */
+/*----------------------------------------------------------------------*/
+
+/* Create an unnamed pool to store all the widgets created 
+     by this procedure. This is a good default which assures
+     that this procedure's triggers and internal procedures 
+     will execute in this procedure's storage, and that proper
+     cleanup will occur on deletion of the procedure. */
+
+CREATE WIDGET-POOL.
+
+/* ***************************  Definitions  ************************** */
+
+/* Parameters Definitions ---                                           */
+
+/* Local Variable Definitions ---                                       */
+
+&IF DEFINED(UIB_is_Running) NE 0
+&THEN
+DEFINE VARIABLE buscar_por   AS CHARACTER.   
+DEFINE VARIABLE clave_buscar AS CHARACTER.   
+DEFINE VARIABLE rid_ficha    AS ROWID.
+DEFINE VARIABLE puso_ok      AS LOGICAL.   
+&ELSE
+DEFINE INPUT  PARAMETER buscar_por   AS CHARACTER.   
+DEFINE INPUT  PARAMETER clave_buscar AS CHARACTER.   
+DEFINE INPUT-OUTPUT PARAMETER rid_ficha    AS ROWID.
+DEFINE OUTPUT PARAMETER puso_ok      AS LOGICAL.   
+&ENDIF
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-PREPROCESSOR-BLOCK 
+
+/* ********************  Preprocessor Definitions  ******************** */
+
+&Scoped-define PROCEDURE-TYPE Window
+
+/* Name of first Frame and/or Browse and/or first Query                 */
+&Scoped-define FRAME-NAME DEFAULT-FRAME
+&Scoped-define BROWSE-NAME br_fichas
+
+/* Internal Tables (found by Frame, Query & Browse Queries)             */
+&Scoped-define INTERNAL-TABLES Ficha
+
+/* Definitions for BROWSE br_fichas                                     */
+&Scoped-define FIELDS-IN-QUERY-br_fichas Ficha.num_ficha Ficha.fch_alta ~
+Ficha.hms_alta Ficha.calle_emr Ficha.nropta_emr Ficha.piso_emr ~
+Ficha.depto_emr Ficha.nombre_pac Ficha.edad_pac Ficha.prefijotel_emr ~
+Ficha.telefono_emr 
+&Scoped-define ENABLED-FIELDS-IN-QUERY-br_fichas 
+&Scoped-define FIELD-PAIRS-IN-QUERY-br_fichas
+&Scoped-define OPEN-QUERY-br_fichas OPEN QUERY br_fichas FOR EACH Ficha NO-LOCK INDEXED-REPOSITION.
+&Scoped-define TABLES-IN-QUERY-br_fichas Ficha
+&Scoped-define FIRST-TABLE-IN-QUERY-br_fichas Ficha
+
+
+/* Definitions for FRAME DEFAULT-FRAME                                  */
+&Scoped-define OPEN-BROWSERS-IN-QUERY-DEFAULT-FRAME ~
+    ~{&OPEN-QUERY-br_fichas}
+
+/* Standard List Definitions                                            */
+&Scoped-Define ENABLED-OBJECTS des_fecha que_calle btn_calle Btn_elegir ~
+has_fecha que_nombre btn_nombre Btn_salir que_prefijo que_telefono ~
+btn_telefono br_fichas 
+&Scoped-Define DISPLAYED-OBJECTS des_fecha que_calle has_fecha que_nombre ~
+que_prefijo que_telefono 
+
+/* Custom List Definitions                                              */
+/* List-1,List-2,List-3,List-4,List-5,List-6                            */
+
+/* _UIB-PREPROCESSOR-BLOCK-END */
+&ANALYZE-RESUME
+
+
+
+/* ***********************  Control Definitions  ********************** */
+
+/* Define the widget handle for the window                              */
+DEFINE VAR C-Win AS WIDGET-HANDLE NO-UNDO.
+
+/* Definitions of the field level widgets                               */
+DEFINE BUTTON btn_calle 
+     LABEL "Buscar por &Calle" 
+     SIZE 20 BY 1.
+
+DEFINE BUTTON Btn_elegir DEFAULT 
+     LABEL "&Elegir y Salir" 
+     SIZE 15 BY 1
+     BGCOLOR 8 .
+
+DEFINE BUTTON btn_nombre 
+     LABEL "Buscar por &Nombre" 
+     SIZE 20 BY 1.
+
+DEFINE BUTTON Btn_salir DEFAULT 
+     LABEL "&Salir sin Elegir" 
+     SIZE 15 BY 1
+     BGCOLOR 8 .
+
+DEFINE BUTTON btn_telefono 
+     LABEL "Buscar por &Teléfono" 
+     SIZE 20 BY 1.
+
+DEFINE VARIABLE des_fecha AS DATE FORMAT "99/99/9999":U 
+     LABEL "Desde Fecha" 
+     VIEW-AS FILL-IN 
+     SIZE 11 BY 1
+     BGCOLOR 15 FGCOLOR 9 FONT 4 NO-UNDO.
+
+DEFINE VARIABLE has_fecha AS DATE FORMAT "99/99/9999":U 
+     LABEL "Hasta Fecha" 
+     VIEW-AS FILL-IN 
+     SIZE 11 BY 1
+     BGCOLOR 15 FGCOLOR 9 FONT 4 NO-UNDO.
+
+DEFINE VARIABLE que_calle AS CHARACTER FORMAT "X(256)":U 
+     LABEL "Calle" 
+     VIEW-AS FILL-IN 
+     SIZE 35 BY 1
+     BGCOLOR 15 FGCOLOR 9 FONT 4 NO-UNDO.
+
+DEFINE VARIABLE que_nombre AS CHARACTER FORMAT "X(256)":U 
+     LABEL "Nombre" 
+     VIEW-AS FILL-IN 
+     SIZE 35 BY 1
+     BGCOLOR 15 FGCOLOR 9 FONT 4 NO-UNDO.
+
+DEFINE VARIABLE que_prefijo AS CHARACTER FORMAT "X(256)":U 
+     LABEL "Teléfono" 
+     VIEW-AS FILL-IN 
+     SIZE 6 BY 1
+     BGCOLOR 15 FGCOLOR 9 FONT 4 NO-UNDO.
+
+DEFINE VARIABLE que_telefono AS CHARACTER FORMAT "X(256)":U 
+     VIEW-AS FILL-IN 
+     SIZE 14 BY 1
+     BGCOLOR 15 FGCOLOR 9 FONT 4 NO-UNDO.
+
+/* Query definitions                                                    */
+&ANALYZE-SUSPEND
+DEFINE QUERY br_fichas FOR 
+      Ficha SCROLLING.
+&ANALYZE-RESUME
+
+/* Browse definitions                                                   */
+DEFINE BROWSE br_fichas
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _DISPLAY-FIELDS br_fichas C-Win _STRUCTURED
+  QUERY br_fichas NO-LOCK DISPLAY
+      Ficha.num_ficha
+      Ficha.fch_alta
+      Ficha.hms_alta
+      Ficha.calle_emr
+      Ficha.nropta_emr
+      Ficha.piso_emr
+      Ficha.depto_emr
+      Ficha.nombre_pac
+      Ficha.edad_pac
+      Ficha.prefijotel_emr
+      Ficha.telefono_emr
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+    WITH NO-ROW-MARKERS SIZE 113 BY 16.42
+         FONT 4
+         TITLE "Fichas que satisfacen la condición de búsqueda".
+
+
+/* ************************  Frame Definitions  *********************** */
+
+DEFINE FRAME DEFAULT-FRAME
+     des_fecha AT ROW 1.27 COL 13 COLON-ALIGNED
+     que_calle AT ROW 1.27 COL 35 COLON-ALIGNED
+     btn_calle AT ROW 1.27 COL 74
+     Btn_elegir AT ROW 1.27 COL 97
+     has_fecha AT ROW 2.62 COL 13 COLON-ALIGNED
+     que_nombre AT ROW 2.62 COL 35 COLON-ALIGNED
+     btn_nombre AT ROW 2.62 COL 74
+     Btn_salir AT ROW 2.62 COL 97
+     que_prefijo AT ROW 3.96 COL 35 COLON-ALIGNED
+     que_telefono AT ROW 3.96 COL 43 COLON-ALIGNED NO-LABEL
+     btn_telefono AT ROW 3.96 COL 74
+     br_fichas AT ROW 5.31 COL 2
+    WITH 1 DOWN NO-BOX KEEP-TAB-ORDER OVERLAY 
+         SIDE-LABELS NO-UNDERLINE THREE-D 
+         AT COL 1 ROW 1
+         SIZE 114.29 BY 21.27
+         FONT 4
+         DEFAULT-BUTTON Btn_elegir.
+
+
+/* *********************** Procedure Settings ************************ */
+
+&ANALYZE-SUSPEND _PROCEDURE-SETTINGS
+/* Settings for THIS-PROCEDURE
+   Type: Window
+   Allow: Basic,Browse,DB-Fields,Window,Query
+   Other Settings: COMPILE
+ */
+&ANALYZE-RESUME _END-PROCEDURE-SETTINGS
+
+/* *************************  Create Window  ************************** */
+
+&ANALYZE-SUSPEND _CREATE-WINDOW
+IF SESSION:DISPLAY-TYPE = "GUI":U THEN
+  CREATE WINDOW C-Win ASSIGN
+         HIDDEN             = YES
+         TITLE              = "Buscar fichas por sus atributos"
+         HEIGHT             = 22.31
+         WIDTH              = 114.29
+         MAX-HEIGHT         = 23.08
+         MAX-WIDTH          = 114.29
+         VIRTUAL-HEIGHT     = 23.08
+         VIRTUAL-WIDTH      = 114.29
+         RESIZE             = yes
+         SCROLL-BARS        = no
+         STATUS-AREA        = no
+         BGCOLOR            = ?
+         FGCOLOR            = ?
+         KEEP-FRAME-Z-ORDER = yes
+         THREE-D            = yes
+         MESSAGE-AREA       = no
+         SENSITIVE          = yes.
+ELSE {&WINDOW-NAME} = CURRENT-WINDOW.
+/* END WINDOW DEFINITION                                                */
+&ANALYZE-RESUME
+
+
+/* ***************  Runtime Attributes and UIB Settings  ************** */
+
+&ANALYZE-SUSPEND _RUN-TIME-ATTRIBUTES
+/* SETTINGS FOR WINDOW C-Win
+  VISIBLE,,RUN-PERSISTENT                                               */
+/* SETTINGS FOR FRAME DEFAULT-FRAME
+                                                                        */
+/* BROWSE-TAB br_fichas btn_telefono DEFAULT-FRAME */
+IF SESSION:DISPLAY-TYPE = "GUI":U AND VALID-HANDLE(C-Win)
+THEN C-Win:HIDDEN = no.
+
+/* _RUN-TIME-ATTRIBUTES-END */
+&ANALYZE-RESUME
+
+
+/* Setting information for Queries and Browse Widgets fields            */
+
+&ANALYZE-SUSPEND _QUERY-BLOCK BROWSE br_fichas
+/* Query rebuild information for BROWSE br_fichas
+     _TblList          = "despacho.Ficha"
+     _Options          = "NO-LOCK INDEXED-REPOSITION"
+     _FldNameList[1]   = despacho.Ficha.num_ficha
+     _FldNameList[2]   = despacho.Ficha.fch_alta
+     _FldNameList[3]   = despacho.Ficha.hms_alta
+     _FldNameList[4]   = despacho.Ficha.calle_emr
+     _FldNameList[5]   = despacho.Ficha.nropta_emr
+     _FldNameList[6]   = despacho.Ficha.piso_emr
+     _FldNameList[7]   = despacho.Ficha.depto_emr
+     _FldNameList[8]   = despacho.Ficha.nombre_pac
+     _FldNameList[9]   = despacho.Ficha.edad_pac
+     _FldNameList[10]   = despacho.Ficha.prefijotel_emr
+     _FldNameList[11]   = despacho.Ficha.telefono_emr
+     _Query            is OPENED
+*/  /* BROWSE br_fichas */
+&ANALYZE-RESUME
+
+ 
+
+
+
+
+/* ************************  Control Triggers  ************************ */
+
+&Scoped-define SELF-NAME C-Win
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL C-Win C-Win
+ON END-ERROR OF C-Win /* Buscar fichas por sus atributos */
+OR ENDKEY OF {&WINDOW-NAME} ANYWHERE DO:
+  /* This case occurs when the user presses the "Esc" key.
+     In a persistently run window, just ignore this.  If we did not, the
+     application would exit. */
+  IF THIS-PROCEDURE:PERSISTENT THEN RETURN NO-APPLY.
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL C-Win C-Win
+ON WINDOW-CLOSE OF C-Win /* Buscar fichas por sus atributos */
+DO:
+  /* This event will close the window and terminate the procedure.  */
+  APPLY "CLOSE":U TO THIS-PROCEDURE.
+  RETURN NO-APPLY.
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME btn_calle
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL btn_calle C-Win
+ON CHOOSE OF btn_calle IN FRAME DEFAULT-FRAME /* Buscar por Calle */
+DO:
+  
+  DO WITH FRAME DEFAULT-FRAME:
+
+     ASSIGN des_fecha has_fecha que_calle.
+     OPEN QUERY br_fichas 
+          FOR EACH Ficha WHERE Ficha.fch_alta <= has_fecha
+                           AND Ficha.fch_alta >= des_fecha
+                           AND Ficha.calle_emr CONTAINS que_calle NO-LOCK.
+
+     br_fichas:TITLE = "Fichas que satisfacen la condición de búsqueda: POR CALLE=" + que_calle.
+     que_calle = "".
+     DISPLAY que_calle.
+
+  END.   
+
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME Btn_elegir
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL Btn_elegir C-Win
+ON CHOOSE OF Btn_elegir IN FRAME DEFAULT-FRAME /* Elegir y Salir */
+DO:
+  
+  rid_ficha = ROWID(Ficha).
+  puso_ok = YES.
+    
+  &IF DEFINED (adm-panel) <> 0 &THEN
+      RUN dispatch IN THIS-PROCEDURE ('exit').
+  &ELSE
+      APPLY "CLOSE":U TO THIS-PROCEDURE.
+  &ENDIF
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME btn_nombre
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL btn_nombre C-Win
+ON CHOOSE OF btn_nombre IN FRAME DEFAULT-FRAME /* Buscar por Nombre */
+DO:
+
+  DO WITH FRAME DEFAULT-FRAME:
+
+     ASSIGN des_fecha has_fecha que_nombre.
+     OPEN QUERY br_fichas 
+          FOR EACH Ficha WHERE Ficha.fch_alta <= has_fecha
+                           AND Ficha.fch_alta >= des_fecha
+                           AND Ficha.nombre_pac CONTAINS que_nombre NO-LOCK.
+
+     br_fichas:TITLE = "Fichas que satisfacen la condición de búsqueda: POR NOMBRE=" + que_nombre.
+     que_nombre = "".
+     DISPLAY que_nombre.
+
+  END.   
+
+
+
+
+  
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME Btn_salir
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL Btn_salir C-Win
+ON CHOOSE OF Btn_salir IN FRAME DEFAULT-FRAME /* Salir sin Elegir */
+DO:
+  
+  rid_ficha = ?.
+  puso_ok = NO.
+    
+  &IF DEFINED (adm-panel) <> 0 &THEN
+      RUN dispatch IN THIS-PROCEDURE ('exit').
+  &ELSE
+      APPLY "CLOSE":U TO THIS-PROCEDURE.
+  &ENDIF
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME btn_telefono
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL btn_telefono C-Win
+ON CHOOSE OF btn_telefono IN FRAME DEFAULT-FRAME /* Buscar por Teléfono */
+DO:
+
+  DO WITH FRAME DEFAULT-FRAME:
+
+     ASSIGN des_fecha has_fecha que_prefijo que_telefono.
+     OPEN QUERY br_fichas 
+          FOR EACH Ficha WHERE Ficha.fch_alta <= has_fecha
+                           AND Ficha.fch_alta >= des_fecha
+                           AND Ficha.prefijotel_emr = que_prefijo
+                           AND Ficha.telefono_emr = que_telefono
+                               NO-LOCK.
+
+     br_fichas:TITLE = "Fichas que satisfacen la condición de búsqueda: POR TELEFONO=" 
+                       + que_prefijo + "-" + que_telefono.
+     que_prefijo = "".
+     que_telefono = "".
+     DISPLAY que_prefijo que_telefono.
+
+  END.   
+
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define BROWSE-NAME br_fichas
+&UNDEFINE SELF-NAME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CUSTOM _MAIN-BLOCK C-Win 
+
+
+/* ***************************  Main Block  *************************** */
+
+/* Set CURRENT-WINDOW: this will parent dialog-boxes and frames.        */
+ASSIGN CURRENT-WINDOW                = {&WINDOW-NAME} 
+       THIS-PROCEDURE:CURRENT-WINDOW = {&WINDOW-NAME}.
+
+/* The CLOSE event can be used from inside or outside the procedure to  */
+/* terminate it.                                                        */
+ON CLOSE OF THIS-PROCEDURE 
+   RUN disable_UI.
+
+/* Best default for GUI applications is...                              */
+PAUSE 0 BEFORE-HIDE.
+
+/* Now enable the interface and wait for the exit condition.            */
+/* (NOTE: handle ERROR and END-KEY so cleanup code will always fire.    */
+
+des_fecha = TODAY.
+has_fecha = TODAY.
+
+MAIN-BLOCK:
+DO ON ERROR   UNDO MAIN-BLOCK, LEAVE MAIN-BLOCK
+   ON END-KEY UNDO MAIN-BLOCK, LEAVE MAIN-BLOCK:
+  RUN enable_UI.
+  IF NOT THIS-PROCEDURE:PERSISTENT THEN
+    WAIT-FOR CLOSE OF THIS-PROCEDURE.
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+/* **********************  Internal Procedures  *********************** */
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE disable_UI C-Win _DEFAULT-DISABLE
+PROCEDURE disable_UI :
+/*------------------------------------------------------------------------------
+  Purpose:     DISABLE the User Interface
+  Parameters:  <none>
+  Notes:       Here we clean-up the user-interface by deleting
+               dynamic widgets we have created and/or hide 
+               frames.  This procedure is usually called when
+               we are ready to "clean-up" after running.
+------------------------------------------------------------------------------*/
+  /* Delete the WINDOW we created */
+  IF SESSION:DISPLAY-TYPE = "GUI":U AND VALID-HANDLE(C-Win)
+  THEN DELETE WIDGET C-Win.
+  IF THIS-PROCEDURE:PERSISTENT THEN DELETE PROCEDURE THIS-PROCEDURE.
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE enable_UI C-Win _DEFAULT-ENABLE
+PROCEDURE enable_UI :
+/*------------------------------------------------------------------------------
+  Purpose:     ENABLE the User Interface
+  Parameters:  <none>
+  Notes:       Here we display/view/enable the widgets in the
+               user-interface.  In addition, OPEN all queries
+               associated with each FRAME and BROWSE.
+               These statements here are based on the "Other 
+               Settings" section of the widget Property Sheets.
+------------------------------------------------------------------------------*/
+  DISPLAY des_fecha que_calle has_fecha que_nombre que_prefijo que_telefono 
+      WITH FRAME DEFAULT-FRAME IN WINDOW C-Win.
+  ENABLE des_fecha que_calle btn_calle Btn_elegir has_fecha que_nombre 
+         btn_nombre Btn_salir que_prefijo que_telefono btn_telefono br_fichas 
+      WITH FRAME DEFAULT-FRAME IN WINDOW C-Win.
+  {&OPEN-BROWSERS-IN-QUERY-DEFAULT-FRAME}
+  VIEW C-Win.
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+

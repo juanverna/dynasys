@@ -1,0 +1,31 @@
+{tt2xls.i}
+DEFINE TEMP-TABLE tt
+FIELD cdg_cliente LIKE cliente.cdg_cliente
+FIELD nom_cliente LIKE cliente.nom_cliente
+FIELD restriccion1 AS CHAR FORMAT "x(30)"
+FIELD restriccion2 AS CHAR FORMAT "x(30)"
+INDEX nom_cliente nom_cliente.
+
+DEF VAR senal AS LOGICAL.
+FOR EACH cliente:
+    senal = FALSE.
+ FOR EACH cliente_restriccion OF cliente:
+    IF NOT senal THEN DO:
+        senal = TRUE.
+        CREATE tt.
+        ASSIGN tt.cdg_cliente = cliente.cdg_cliente
+                tt.nom_cliente = cliente.nom_cliente.
+    END.
+    FIND restriccion no-lock OF cliente_restriccion.
+    IF Restriccion.esRestriccion THEN DO:    
+            restriccion1 = ( IF restriccion1 <> "" THEN restriccion1 + "," ELSE "" ) + restriccion.cdg_restriccion + "[" + cliente_restriccion.valor + "]".
+    END.
+    ELSE
+            restriccion2 = ( IF restriccion2 <> "" THEN restriccion2 + "," ELSE "" ) + restriccion.cdg_restriccion + "[" + cliente_restriccion.valor + "]".
+ END.
+
+END.
+RUN pTT2XLS                                                              
+  ( INPUT TEMP-TABLE tt:DEFAULT-BUFFER-HANDLE,                       
+    INPUT 'c:\adm-rest.xls',                                                   
+    INPUT 'PageSetup:PrintGridlines=Y|PageSetup:PrintTitleRows=$1:$1' ). 

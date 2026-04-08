@@ -1,0 +1,28 @@
+DEFINE VAR soloh AS CHAR.
+DEFINE VAR solog AS INT.
+DEFINE VAR i AS INT.
+
+DEFINE TEMP-TABLE tt NO-UNDO
+    FIELD cdg_tipotarea LIKE tarea.cdg_tipotarea
+    FIELD cdg_recurso LIKE recurso.cdg_recurso
+    INDEX cdg_tipotarea cdg_tipotarea.
+
+FOR EACH Recurso BY Recurso.interno DESCENDING :
+        soloh = "".
+        solog = 0.
+        DO i = 1 TO NUM-ENTRIES(recurso.habilidades):
+            soloh = entry(1,ENTRY(i,recurso.habilidades),"@").
+            solog = int(entry(2,ENTRY(i,recurso.habilidades),"@")) NO-ERROR.
+            IF solog <> 1 THEN NEXT.
+            FIND tt WHERE tt.cdg_tipotare = soloh NO-ERROR.
+            IF NOT AVAILABLE tt THEN DO:
+               CREATE tt.
+               ASSIGN tt.cdg_recurso = recurso.cdg_recurso
+                      tt.cdg_tipotarea = soloh.          
+            END.
+        END.
+END.
+FOR EACH tarea WHERE tarea.estado = "A" AND tarea.cdg_recurso = "":
+FIND tt WHERE tt.cdg_tipotarea = tarea.cdg_tipotarea NO-ERROR.
+    tarea.cdg_recurso = tt.cdg_recurso.
+END.

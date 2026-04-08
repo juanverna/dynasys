@@ -1,0 +1,6 @@
+  /*====================================================================================*/
+  /*       VALIDA LA EJECUCION DE LA IMPRESION DE LA AGENDA TELEFONICA                  */
+  /*====================================================================================*/
+
+  RUN valida_run.p ( INPUT "IMPAGTEL", INPUT "imprimir_agenda.p").
+  

@@ -1,0 +1,14 @@
+        RUN calcular_lapso.p ( INPUT Ficha.hor_alta    , INPUT  Ficha.hor_alta        , OUTPUT Ficha.tie_alta ).
+        RUN calcular_lapso.p ( INPUT Ficha.hor_alta    , INPUT  Ficha.hor_arrbase     , OUTPUT Ficha.tie_arrbase ).
+        RUN calcular_lapso.p ( INPUT Ficha.hor_alta    , INPUT  Ficha.hor_arrdomi     , OUTPUT Ficha.tie_arrdomi ).
+        RUN calcular_lapso.p ( INPUT Ficha.hor_alta    , INPUT  Ficha.hor_arrhosp     , OUTPUT Ficha.tie_arrhosp ).
+        RUN calcular_lapso.p ( INPUT Ficha.hor_alta    , INPUT  Ficha.hor_cierre      , OUTPUT Ficha.tie_cierre ).
+        RUN calcular_lapso.p ( INPUT Ficha.hor_alta    , INPUT  Ficha.hor_despacho    , OUTPUT Ficha.tie_despacho ).
+        RUN calcular_lapso.p ( INPUT Ficha.hor_alta    , INPUT  Ficha.hor_disponible  , OUTPUT Ficha.tie_disponible ).
+        RUN calcular_lapso.p ( INPUT Ficha.hor_alta    , INPUT  Ficha.hor_internacion , OUTPUT Ficha.tie_internacion ).
+        RUN calcular_lapso.p ( INPUT Ficha.hor_llamado , INPUT  Ficha.hor_alta        , OUTPUT Ficha.tie_llamado ).
+        RUN calcular_lapso.p ( INPUT Ficha.hor_alta    , INPUT  Ficha.hor_predesp     , OUTPUT Ficha.tie_predesp ).
+        RUN calcular_lapso.p ( INPUT Ficha.hor_alta    , INPUT  Ficha.hor_resoluc     , OUTPUT Ficha.tie_resoluc ).
+        RUN calcular_lapso.p ( INPUT Ficha.hor_alta    , INPUT  Ficha.hor_salbase     , OUTPUT Ficha.tie_salbase ).
+        RUN calcular_lapso.p ( INPUT Ficha.hor_alta    , INPUT  Ficha.hor_saldomi     , OUTPUT Ficha.tie_saldomi ).
+        RUN calcular_lapso.p ( INPUT Ficha.hor_alta    , INPUT  Ficha.hor_salhosp     , OUTPUT Ficha.tie_salhosp ).

@@ -1,0 +1,166 @@
+PROCEDURE anula:
+DEFINE INPUT PARAM                     tip_forma  AS CHAR NO-UNDO.
+DEFINE INPUT PARAM                     pto_venta  AS INT NO-UNDO.
+DEFINE INPUT PARAM                     des_forma  AS INT NO-UNDO.
+CREATE Fac_header.
+     ASSIGN Fac_header.fecha       = TODAY
+            Fac_header.cdg_empresa = Empresa.cdg_empresa
+            Fac_header.tip_comprob = tip_forma
+            Fac_header.prf_comprob = pto_venta
+            Fac_header.nro_comprob = des_forma 
+            Fac_header.origen      = "A"
+            Fac_header.anulado     = YES
+            Fac_header.nro_factura = NEXT-VALUE(proxima_transaccion)
+            Fac_header.impreso     = "S".
+
+     CREATE Sub_header_vta.
+     ASSIGN
+            Sub_header_vta.cdg_empresa = Fac_header.cdg_empresa
+            Sub_header_vta.tip_comprob = Fac_header.tip_comprob
+            Sub_header_vta.prf_comprob = Fac_header.prf_comprob
+            Sub_header_vta.nro_comprob = Fac_header.nro_comprob
+            Sub_header_vta.fecha       = Fac_header.fecha
+            Sub_header_vta.anulado     = YES.
+
+END.
+
+PROCEDURE cambio:
+{findempresa.i}
+DEFINE INPUT PARAM                     v-vie_tip_comprob  AS CHAR NO-UNDO.
+DEFINE INPUT PARAM                     v-vie_prf_comprob  AS INT NO-UNDO.
+DEFINE INPUT PARAM                     v-vie_nro_comprob  AS INT NO-UNDO.
+DEFINE INPUT PARAM                     v-vie_nro_comprob-2    AS INT NO-UNDO.      
+DEFINE INPUT PARAM                     v-nue_tip_comprob AS CHAR NO-UNDO.
+DEFINE INPUT PARAM                     v-nue_prf_comprob  AS INT NO-UNDO.
+DEFINE INPUT PARAM                     v-nue_nro_comprob    AS INT NO-UNDO.
+DEFINE VAR k AS INT NO-UNDO.
+DO k = v-nue_nro_comprob TO v-nue_nro_comprob + v-vie_nro_comprob-2 - v-vie_nro_comprob :
+            IF CAN-FIND(Fac_header WHERE Fac_header.cdg_empresa = Empresa.cdg_empresa
+                                 AND Fac_header.tip_comprob = v-nue_tip_comprob 
+                                 AND Fac_header.prf_comprob = v-nue_prf_comprob
+                                 AND Fac_header.nro_comprob = k )
+            THEN DO:
+                MESSAGE "Ya existe un comprobante con el número " v-nue_tip_comprob "-" v-nue_prf_comprob "-" k
+                    VIEW-AS ALERT-BOX ERROR TITLE "Error de Numeración".
+                RETURN NO-APPLY.
+            END.
+END.
+DO k = 0 TO  v-vie_nro_comprob-2 - v-vie_nro_comprob :
+            FIND Fac_header WHERE Fac_header.cdg_empresa = Empresa.cdg_empresa
+                                  AND Fac_header.tip_comprob = v-vie_tip_comprob 
+                                  AND Fac_header.prf_comprob = v-vie_prf_comprob
+                                  AND Fac_header.nro_comprob = v-vie_nro_comprob + k
+                                      EXCLUSIVE-LOCK.
+                ASSIGN Fac_header.tip_comprob = v-nue_tip_comprob 
+                       Fac_header.prf_comprob = v-nue_prf_comprob
+                       Fac_header.nro_comprob = v-nue_nro_comprob + k.
+                RELEASE Fac_header.
+
+                FOR EACH Sub_header_vta WHERE Sub_header_vta.cdg_empresa = Empresa.cdg_empresa
+                                          AND Sub_header_vta.tip_comprob = v-vie_tip_comprob 
+                                          AND Sub_header_vta.prf_comprob = v-vie_prf_comprob
+                                          AND Sub_header_vta.nro_comprob = v-vie_nro_comprob + k
+                                              EXCLUSIVE-LOCK:
+
+                    ASSIGN Sub_header_vta.tip_comprob = v-nue_tip_comprob 
+                           Sub_header_vta.prf_comprob = v-nue_prf_comprob
+                           Sub_header_vta.nro_comprob = v-nue_nro_comprob + k .
+
+                END.
+
+                FOR EACH Sub_detalle_vta WHERE Sub_detalle_vta.cdg_empresa = Empresa.cdg_empresa
+                                          AND Sub_detalle_vta.tip_comprob = v-vie_tip_comprob 
+                                          AND Sub_detalle_vta.prf_comprob = v-vie_prf_comprob
+                                          AND Sub_detalle_vta.nro_comprob = v-vie_nro_comprob + k
+                                              EXCLUSIVE-LOCK:
+
+                    ASSIGN Sub_detalle_vta.tip_comprob = v-nue_tip_comprob 
+                           Sub_detalle_vta.prf_comprob = v-nue_prf_comprob
+                           Sub_detalle_vta.nro_comprob = v-nue_nro_comprob + k .
+
+                END.
+
+                FOR EACH Cta_cte WHERE Cta_cte.cdg_empresa = Empresa.cdg_empresa
+                                   AND Cta_cte.tip_comprob = v-vie_tip_comprob 
+                                   AND Cta_cte.prf_comprob = v-vie_prf_comprob
+                                   AND Cta_cte.nro_comprob = v-vie_nro_comprob + k
+                                              EXCLUSIVE-LOCK:
+
+                    ASSIGN Cta_cte.tip_comprob = v-nue_tip_comprob 
+                           Cta_cte.prf_comprob = v-nue_prf_comprob
+                           Cta_cte.nro_comprob = v-nue_nro_comprob + k.
+
+                END.
+
+                FOR EACH Rec_detalle WHERE Rec_detalle.cdg_emprecancela = Empresa.cdg_empresa
+                                       AND Rec_detalle.tip_cancela = v-vie_tip_comprob
+                                       AND Rec_detalle.prf_cancela = v-vie_prf_comprob
+                                       AND Rec_detalle.nro_cancela = v-vie_nro_comprob + k
+                                              EXCLUSIVE-LOCK:
+
+                    ASSIGN Rec_detalle.tip_cancela = v-nue_tip_comprob 
+                           Rec_detalle.prf_cancela = v-nue_prf_comprob
+                           Rec_detalle.nro_cancela = v-nue_nro_comprob + k .
+
+                END.
+
+                FOR EACH Cct_stock WHERE Cct_stock.cdg_empresa = Empresa.cdg_empresa
+                                     AND Cct_stock.tip_comprob = v-vie_tip_comprob 
+                                     AND Cct_stock.prf_comprob = v-vie_prf_comprob
+                                     AND Cct_stock.nro_comprob = v-vie_nro_comprob + k
+                                              EXCLUSIVE-LOCK:
+
+                    ASSIGN Cct_stock.tip_comprob = v-nue_tip_comprob 
+                           Cct_stock.prf_comprob = v-nue_prf_comprob
+                           Cct_stock.nro_comprob = v-nue_nro_comprob + k.
+
+                END. 
+END.
+END.
+
+DEFINE VAR vv AS DECIMAL NO-UNDO.
+DEFINE VAR vv1 AS DECIMAL NO-UNDO.
+DEFINE VAR vvc AS INT NO-UNDO.
+{findempresa.i}
+
+DEFINE BUFFER b_fac_header FOR fac_header.
+DEFINE BUFFER bbfac_header FOR fac_header.
+DEFINE VAR vie AS INT NO-UNDO.
+FIND articulo WHERE articulo.cdg_articulo = "23F".
+FIND Parametro WHERE Parametro.cdg_empresa   = Empresa.cdg_empresa
+                     AND Parametro.cdg_parametro = "PFAB0001" .
+
+FOR EACH bbfac_header WHERE bbfac_header.fecha > 01/02/2011 AND bbfac_header.prf_comprob = 1 AND bbfac_header.tip_comprob = "FB"
+AND NOT bbfac_header.anulado AND bbfac_header.nro_comprob <= 107438  AND bbfac_header.nro_comprob >= 107438:
+vv = 0.
+vvc = 0.
+vv1 = 0.
+/*
+FOR EACH fac_detalle OF bbfac_header:
+vv = vv + round(fac_detalle.subtotal_gral_cf,0).
+vv1 = vv1 + fac_detalle.subtotal_gral_cf.
+vvc = vvc + 1.
+END.
+
+IF vv1 = bbfac_header.imp_total THEN NEXT.
+*/
+vie = bbfac_header.nro_comprob.
+RUN cambio ( bbfac_header.tip_comprob,
+             bbfac_header.prf_comprob,
+             bbfac_header.nro_comprob,
+             bbfac_header.nro_comprob,
+             bbfac_header.tip_comprob,
+             bbfac_header.prf_comprob,
+             Parametro.valor_n).
+RUN anula ( bbfac_header.tip_comprob,
+             bbfac_header.prf_comprob,
+             vie).
+FIND b_fac_header WHERE b_fac_header.tip_comprob = bbfac_header.tip_comprob AND
+b_fac_header.prf_comprob = bbfac_header.prf_comprob AND
+b_fac_header.nro_comprob = Parametro.valor_n.
+FOR EACH fac_detalle OF b_fac_header:
+fac_detalle.subtotal_gral_cf = round(fac_detalle.subtotal_gral_cf,0).
+END.
+b_fac_header.impreso = "N".
+Parametro.valor_n = Parametro.valor_n + 1.
+END.

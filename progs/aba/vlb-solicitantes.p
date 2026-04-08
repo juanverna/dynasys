@@ -1,0 +1,28 @@
+/*=========================================================================================*/
+/*                      VALIDACION DE BAJAS DE SOLICITANTES                                */
+/*=========================================================================================*/
+
+DEFINE INPUT  PARAMETER rid_solicitante AS ROWID.
+DEFINE OUTPUT PARAMETER hay_error  AS LOGICAL.
+
+FIND Solicitante WHERE ROWID(Solicitante) = rid_solicitante NO-LOCK.
+RUN VALIDAR_BAJA.
+
+RETURN.
+
+PROCEDURE VALIDAR_BAJA:
+
+  hay_error = YES.
+
+  IF CAN-FIND(FIRST Emb_header_prv WHERE Emb_header_prv.cdg_solicitante = Solicitante.cdg_solicitante) OR
+     CAN-FIND(FIRST Ocm_header WHERE Ocm_header.cdg_solicitante = Solicitante.cdg_solicitante) OR
+     CAN-FIND(FIRST Ped_header WHERE Ped_header.cdg_solicitante = Solicitante.cdg_solicitante) OR
+     CAN-FIND(FIRST Rem_header WHERE Rem_header.cdg_solicitante = Solicitante.cdg_solicitante) OR
+     CAN-FIND(FIRST Rem_header_prv WHERE Rem_header_prv.cdg_solicitante = Solicitante.cdg_solicitante) OR
+     CAN-FIND(FIRST Rqs_header WHERE Rqs_header.cdg_solicitante = Solicitante.cdg_solicitante) 
+     THEN RETURN.
+
+  hay_error = NO.
+
+END PROCEDURE.
+

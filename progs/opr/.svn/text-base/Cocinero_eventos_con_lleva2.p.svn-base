@@ -1,0 +1,13 @@
+DEFINE BUFFER aviso FOR evento.
+FIND restriccion WHERE restriccion.cdg_restriccion = "AVISOF".
+FOR EACH evento WHERE periodo = 200909 AND NOT anulado:
+FIND contrato_restriccion WHERE contrato_restriccion.nro_contrato = evento.nro_identificacion AND 
+    contrato_restriccion.sub_evento = evento.sub_evento AND
+    contrato_restriccion.nro_restriccion = restriccion.nro_restriccion NO-ERROR.
+IF NOT AVAILABLE contrato_restriccion THEN NEXT.
+    IF entry(3,contrato_restriccion.valor,"|") <> "L" THEN 
+        NEXT.
+    FIND aviso WHERE aviso.refevento = evento.nro_evento.
+       DISPLAY evento.nro_evento evento.fasignado aviso.nro_evento aviso.fasignado aviso.frealizado aviso.fmin.
+END.
+

@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="" xmlns:prodata="urn:schemas-progress-com:xml-prodata:0001">
+  <xsd:element name="dset" prodata:proDataSet="true">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="listado" minOccurs="0" maxOccurs="unbounded" prodata:undo="true">
+          <xsd:complexType>
+            <xsd:sequence>
+              <xsd:element name="cdg_cliente" type="xsd:string" nillable="true" prodata:label="C.Cliente" prodata:columnLabel="Código!Cliente" prodata:help="Codigo de Cliente"/>
+              <xsd:element name="nom_cliente" type="xsd:string" nillable="true" prodata:format="X(40)" prodata:label="Razón Social" prodata:columnLabel="Razón!Social" prodata:help="Razon Social del cliente"/>
+              <xsd:element name="DIR_cliente" type="xsd:string" nillable="true" prodata:format="X(45)" prodata:label="Direccion" prodata:columnLabel="Direccion" prodata:help="Direccion"/>
+              <xsd:element name="cdg_administrador" type="xsd:string" nillable="true" prodata:label="C.Cliente" prodata:columnLabel="Código!Cliente" prodata:help="Codigo de Cliente"/>
+              <xsd:element name="nom_administrador" type="xsd:string" nillable="true" prodata:format="X(40)" prodata:label="Razón Social" prodata:columnLabel="Razón!Social" prodata:help="Razon Social del cliente"/>
+              <xsd:element name="ListaArticulos" type="xsd:string" nillable="true" prodata:format="X(20)"/>
+              <xsd:element name="prf_contrato" type="xsd:int" nillable="true" prodata:format="9999" prodata:label="Prefijo" prodata:columnLabel="Pre-!fijo" prodata:help="Prefijo de 4 digitos del comprobante"/>
+              <xsd:element name="num_contrato" type="xsd:int" nillable="true" prodata:format="ZZZZZZZ9" prodata:label="Número" prodata:columnLabel="Número!Contrato" prodata:help="Nro. de contrato"/>
+              <xsd:element name="importe_factura" type="xsd:decimal" nillable="true" prodata:format="->>>,>>>,>>9.99" prodata:label="v-importe_factura" prodata:decimals="0"/>
+              <xsd:element name="saldo_cc_anterior" type="xsd:decimal" nillable="true" prodata:format="->>>,>>>,>>9.99" prodata:decimals="0"/>
+              <xsd:element name="rige_desde" type="xsd:date" nillable="true" prodata:format="99/99/9999" prodata:label="Desde" prodata:columnLabel="Rige!Desde" prodata:help="Fecha en la comienza a regir el contrato"/>
+              <xsd:element name="rige_hasta" type="xsd:date" nillable="true" prodata:format="99/99/9999" prodata:label="Hasta" prodata:columnLabel="Rige!Hasta" prodata:help="Fecha hasta la que rige esta oferta"/>
+              <xsd:element name="primer_ano" type="xsd:int" nillable="true" prodata:format="9999" prodata:label="Primer Año" prodata:columnLabel="Primer!Año" prodata:help="Primer año en que se factura"/>
+              <xsd:element name="primer_mes" type="xsd:int" nillable="true" prodata:format="99" prodata:label="Primer Mes" prodata:columnLabel="Primer!Mes" prodata:help="Primer mes en que se factura"/>
+              <xsd:element name="resto_periodos" type="xsd:int" nillable="true" prodata:format=">>>>9" prodata:label="Restan Períodos" prodata:columnLabel="Restan!Períodos" prodata:help="Cantidad de períodos que resta facturar"/>
+              <xsd:element name="tip_contrato" type="xsd:string" nillable="true" prodata:format="X(3)" prodata:label="Tipo" prodata:columnLabel="Ti-!po" prodata:help="Tipo de contrato"/>
+              <xsd:element name="cuit" type="xsd:string" nillable="true" prodata:format="99-99999999-9" prodata:label="C.U.I.T." prodata:columnLabel="C.U.I.T.!Cliente" prodata:help="C.U.I.T."/>
+            </xsd:sequence>
+          </xsd:complexType>
+        </xsd:element>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+</xsd:schema>

@@ -1,0 +1,15 @@
+/*=========================================================================*/
+/*                   SELECCION DE TIPOS DE COMPROBANTE                     */
+/*=========================================================================*/
+
+&GLOBAL-DEFINE TABLA           Tipocomprobante
+&GLOBAL-DEFINE CODIGO          cdg_comprobante
+&GLOBAL-DEFINE FORMATO-CODIGO  FORMAT "X(12)"
+&GLOBAL-DEFINE NOMBRE          dsc_comprobante
+&GLOBAL-DEFINE CONDICION       Tipocomprobante.cdg_empresa = que_empresa
+&GLOBAL-DEFINE TITULO-BROWSE   Seleccione el Comprobante o ingrese nombre
+&GLOBAL-DEFINE TITULO-FRAME    Seleccion de Comprobantes
+&GLOBAL-DEFINE PROCESO         ACTBONIF
+&GLOBAL-DEFINE ULT_REGISTRO    ult_bonific
+
+{SELBROWS.I}

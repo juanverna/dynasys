@@ -1,0 +1,32 @@
+/*============================================================================================*/
+/*                                   SELECCION DE prefijos                                  */
+/*============================================================================================*/
+{findempresa.i}
+FUNCTION acumulado RETURNS DECIMAL (INPUT parm1 AS INTEGER):
+   FIND usuario WHERE usuario.cdg_usuario = USERID("sic") NO-LOCK.
+   FIND sic.Usuario_funcion OF usuario WHERE Usuario_funcion.cdg_funcion = "EFAC" AND usuario_funcion.permiso =  "A"
+      AND Usuario_funcion.cdg_empresa = empresa.cdg_empresa NO-LOCK NO-ERROR.
+   IF NOT AVAILABLE Usuario_funcion THEN RETURN 999999.99.
+   FIND categMono WHERE categMono.categoria = punto-venta.categ NO-LOCK.
+   FIND Acumulado_punto_venta WHERE Acumulado_punto_venta.cdg_empresa = empresa.cdg_empresa and
+                                     Acumulado_punto_venta.cdg_puntovta = parm1 AND
+                                     Acumulado_punto_venta.periodo = year(today) * 100 + month(today) NO-LOCK NO-ERROR.
+   RETURN IF AVAILABLE Acumulado_punto_venta THEN categMono.limiteCuatrimestre / 4 + Acumulado_punto_venta.importe ELSE categMono.limiteCuatrimestre / 4.
+END FUNCTION.
+
+&GLOBAL-DEFINE TABLA           punto-venta
+&GLOBAL-DEFINE CODIGO          cdg_puntovta
+&GLOBAL-DEFINE NOMBRE          dsc_puntovta
+&GLOBAL-DEFINE EXTRA           acumulado(punto-venta.cdg_puntovta) COLUMN-LABEL "RESTO"
+&GLOBAL-DEFINE WHERE           AND punto-venta.TP = "M" AND Punto-venta.Habilitado
+&GLOBAL-DEFINE FORMATO-CODIGO  FORMAT "9999" 
+&GLOBAL-DEFINE TITULO-BROWSE   Seleccione De Prefijos
+&GLOBAL-DEFINE TITULO-FRAME    Seleccion de Prefijo
+&GLOBAL-DEFINE PROCESO         ACBRWVEN
+&GLOBAL-DEFINE ULT_REGISTRO    ult_puntovta
+&GLOBAL-DEFINE CONDICION       Punto-venta.Habilitado
+
+{SELBROWSESP.I}
+
+
+  

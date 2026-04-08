@@ -1,0 +1,12 @@
+DEFINE BUFFER adm1 FOR cliente.
+DEFINE BUFFER adm2 FOR cliente.
+FIND adm1 WHERE adm1.cdg_cliente = "A2130".
+FIND adm2 WHERE adm2.cdg_cliente = "A2032".
+FOR cliente WHERE cliente.nom_cliente  >= adm1.nom_cliente AND cliente.nom_cliente <= adm2.nom_cliente  , 
+ EACH fac_header WHERE fac_header.tip_comprob BEGINS "F" AND fac_header.fecha >= 05/01/2010 AND fac_header.fecha <= 05/31/2010 AND NOT anulado AND fac_header.nro_admin = cliente.nro_cliente 
+ BY cliente.nom_cliente :
+    FIND FIRST fac_detalle OF fac_header.
+    FIND articulo OF fac_detalle.
+    IF INT(articulo.cdg_articulo) < 11 THEN NEXT.
+    fac_header.estado_2_impresion = "".
+END.

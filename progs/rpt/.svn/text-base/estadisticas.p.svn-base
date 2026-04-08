@@ -1,0 +1,59 @@
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+{crystal_dyna.p} 
+  DEFINE VARIABLE primer_nodo       AS CHARACTER.
+
+  DEFINE VARIABLE ver_por           AS LOGICAL.
+  DEFINE VARIABLE des_fecha         AS DATE.
+  DEFINE VARIABLE has_fecha         AS DATE.
+  DEFINE VARIABLE error_rango       AS LOGICAL.
+  DEFINE VARIABLE error_fecha       AS LOGICAL.
+  DEFINE VARIABLE hay_error         AS LOGICAL.
+  DEFINE VARIABLE p-cdg_moneda      AS CHARACTER.
+  DEFINE VARIABLE p-lista_atributos AS CHARACTER.
+  DEFINE VARIABLE p-ver_cotizacion  AS INTEGER.  
+  DEFINE VARIABLE p-fecha           AS DATE.    
+
+  
+    
+  DEFINE VAR xfile AS CHAR NO-UNDO.
+    
+  DEFINE VARIABLE chParamDefs   AS COM-HANDLE NO-UNDO.
+  DEFINE VARIABLE chParamDef   AS COM-HANDLE NO-UNDO.
+  DEFINE VARIABLE cFullPath     AS CHARACTER NO-UNDO. 
+  DEFINE VARIABLE xFullPath     AS CHARACTER NO-UNDO. 
+  DEFINE VARIABLE exportFileName AS CHARACTER NO-UNDO. 
+  
+  xfile = "c:\sic-temp\estadisticas.xml".
+        RUN fullPath ("clasificacion", '.rpt':U, OUTPUT cFullPath).
+        IF cFullPath = ? THEN DO:
+        RUN ponmensj.p("CRY000").
+        RETURN ERROR.
+        END.
+
+       CREATE "CrystalRuntime.Application" chApplication.
+       chReport = chApplication:OpenReport(cFullPath, {&crOpenReportByTempCopy}).
+       RUN fullpath ( INPUT xfile, INPUT "", OUTPUT xFullPath ).
+       chReport:Database:Tables:item(1):setTableLocation(xFullPath, '', '').
+       /* setParametro( chReport , "primer_nodo" , primer_nodo ).
+        setParametro( chReport , "desde" ,STRING(des_fecha ) ).
+        setParametro( chReport , "hasta" , string(has_fecha) ).
+        setParametro( chReport , "moneda" , Moneda.descripcion ).
+        */
+       
+        RUN crearReporte(chReport,"pdf",/*ViewReport*/ TRUE,/*PrinterName*/ "",
+                         /*exportToDisk*/ TRUE, INPUT-OUTPUT exportFileName ). 
+        MESSAGE exportFileName
+            VIEW-AS ALERT-BOX INFO BUTTONS OK.
+        /*RUN borra-temp (xfile).         
+        RUN borra-temp (exportFileName).*/
+        RELEASE OBJECT chReport. 
+        chReport = ?.
+        RELEASE OBJECT chApplication.
+        chApplication = ?.
+
+
+       

@@ -1,0 +1,101 @@
+For instance:
+
+You have a table tDialog, fields  inFunctionFrom, inFunctionTo and 
+inDialogNum (all INTEGER). inFunctionFrom and  inFunctionTo are FK fields.
+  In table tFunction you can find the titles of the functions, the titles 
+related to inFunctionFrom and  inFunctionTo you want to see in your 
+dynbrowser instance. So you create two calc-fields in the SDO and write 
+functions to get these titles. In 9.1A you need to rewrite the generated 
+data.calculate so that every assign is separated, to eliminate compile-error
+196 with the generated data.calculate procedure caused by the preprocessor 
+(needed for an index-supported search) you define in the definitionssection
+of your SDO:
+
+&SCOPED-DEFINE rowobjindex INDEX TitleFrom calc INDEX TitleTo calc-2
+
+PROCEDURE DATA.CALCULATE :
+/*------------------------------------------------------------------------------
+  Purpose:     Calculate all the Calculated Expressions found in the
+               SmartDataObject.
+  Parameters:  <none>
+------------------------------------------------------------------------------*/
+ rowObject.CALC = TitleFrom().
+ rowObject.CALC-2 = TitleTo().
+END PROCEDURE.
+
+If you want to sort on CALC fields, you need to provide a
+rowidWhereoverride of rowidWhere in the SDO, in this example:
+
+FUNCTION rowidWhere RETURNS CHARACTER
+  ( INPUT pcWhere AS CHARACTER) :
+/*------------------------------------------------------------------------------
+  Purpose:     Super Override
+  Notes:       
+------------------------------------------------------------------------------*/
+
+  /* Code placed here will execute PRIOR to standard behavior. */
+
+  DEFINE VARIABLE rCustomRowid        AS ROWID   NO-UNDO.
+  DEFINE VARIABLE cRowids             AS CHAR    NO-UNDO.
+  DEFINE VARIABLE cSearchFld          AS CHAR    NO-UNDO.
+  DEFINE VARIABLE cDataQuerySort      AS CHAR    NO-UNDO.
+  DEFINE VARIABLE iRecord             AS INT     NO-UNDO.
+  DEFINE VARIABLE iTarget             AS INT     NO-UNDO.
+  DEFINE VARIABLE hTarget             AS HANDLE  NO-UNDO.  
+  DEFINE VARIABLE hBrowse             AS HANDLE  NO-UNDO.   
+ 
+  {get DataQuerySort cDataQuerySort}.
+  ASSIGN cSearchFld = REPLACE(cDataQuerySort,'BY':U,'':U). 
+         cSearchFld = TRIM(cSearchFld).
+  
+  FOR EACH tFunction NO-LOCK WHERE 
+     tFunction.chtitle >= TRIM(ENTRY(2,REPLACE(pcWhere,'~'':U,'':U),'=':U)),
+    EACH tDialog NO-LOCK WHERE 
+      IF cSearchFld = 'CALC':u THEN tDialog.inFunctionFrom = tFunction.inFunction
+      ELSE /* CALC-2 */ tDialog.inFunctionTo = tFunction.inFunction:
+      ASSIGN rCustomRowid = ROWID(tDialog)
+             cRowids      = IF cRowids NE '' THEN cRowids + ',' + STRING(rCustomRowid)
+                            ELSE STRING(rCustomRowid)
+             iRecord      = iRecord + 1.
+    IF iRecord = 200 THEN LEAVE. /* Make sure cRowids is not blown up */
+  END.
+  IF cRowids NE '' THEN {set CustomRowidString cRowids}.
+
+ RETURN SUPER( INPUT pcWhere ).
+
+END FUNCTION.
+
+override of initializeObject:
+
+PROCEDURE initializeObject:
+  DEFINE VARIABLE cDataQuerySort   AS CHARACTER NO-UNDO.
+  DEFINE VARIABLE cDataQueryString AS CHARACTER NO-UNDO.
+  /* Code placed here will execute PRIOR to standard behavior. */
+
+  cDataQuerySort = ' BY CALC':U.
+  {set DataQuerySort cDataQuerySort}. 
+
+  {get DataQueryString cDataQueryString}. 
+  ASSIGN cDataQueryString = IF INDEX(cDataQueryString,"INDEXED-REPOSITION":U) NE 0 THEN
+                              REPLACE(cDataQueryString,"INDEXED-REPOSITION":U,'':U)
+                            ELSE cDataQueryString.
+  {set DataQueryString cDataQueryString}.  
+
+
+  /* Code placed here will execute PRIOR to standard behavior. */
+
+  RUN SUPER.
+
+  /* Code placed here will execute AFTER standard behavior.    */
+
+END PROCEDURE.
+
+The where clause you are generating in rowidWhere with the rowids is 
+expensive. If you know a better solution or have other remarks, please 
+send it to me and I'll upgrade the zipfile.
+Don't forget to place all adm2-customcode in customdirectories.
+
+Regards,
+
+Stefan (shoutzager@eql.nl).
+

@@ -1,0 +1,327 @@
+/*=========================================================================================*/
+/*                IMPORTA EL ARCHIVO DE AFILIADOS Y AREAS PROTEGIDAS                       */
+/*=========================================================================================*/
+
+DEFINE VARIABLE linea                     AS CHARACTER FORMAT "X(132)".
+DEFINE VARIABLE V-CODIGO-DE-EMPRESA       AS CHARACTER FORMAT "X(1)".  
+DEFINE VARIABLE V-N-SOCIO                 AS CHARACTER FORMAT "X(6)".	
+DEFINE VARIABLE V-N-INT-ARP               AS CHARACTER FORMAT "X(2)".	
+DEFINE VARIABLE V-NOMBRE                  AS CHARACTER FORMAT "X(25)".	
+DEFINE VARIABLE V-FECHA-NAC               AS CHARACTER FORMAT "X(8)".
+DEFINE VARIABLE V-SEXO                    AS CHARACTER FORMAT "X(1)".
+DEFINE VARIABLE V-TEST-BAJA               AS CHARACTER FORMAT "X(1)".
+DEFINE VARIABLE V-FECHA-BAJA              AS CHARACTER FORMAT "X(8)".
+DEFINE VARIABLE V-CALLE                   AS CHARACTER FORMAT "X(21)".	
+DEFINE VARIABLE V-NUMERO                  AS CHARACTER FORMAT "X(5)".	
+DEFINE VARIABLE V-PISO                    AS CHARACTER FORMAT "X(2)".	
+DEFINE VARIABLE V-DEPARTAMENTO            AS CHARACTER FORMAT "X(2)".	
+DEFINE VARIABLE V-LOCALIDAD               AS CHARACTER FORMAT "X(25)".	
+DEFINE VARIABLE V-TELEFONO                AS CHARACTER FORMAT "X(9)".	
+DEFINE VARIABLE V-ENTRE-CALLE             AS CHARACTER FORMAT "X(21)".	
+DEFINE VARIABLE V-Y-CALLE                 AS CHARACTER FORMAT "X(21)".
+DEFINE VARIABLE V-CODIGO-POSTAL           AS CHARACTER FORMAT "X(5)".
+DEFINE VARIABLE V-COD-PLAN                AS CHARACTER FORMAT "X(3)".
+DEFINE VARIABLE V-FECHA-ULT-PAGO          AS CHARACTER FORMAT "X(6)".
+DEFINE VARIABLE V-OBSERV                  AS CHARACTER FORMAT "X(83)".
+
+DEFINE VARIABLE numeros                   AS CHARACTER INITIAL "0123456789".	
+DEFINE VARIABLE V-AFILIADO                AS CHARACTER FORMAT "X(9)".	
+DEFINE VARIABLE V-DUMMY                   AS CHARACTER FORMAT "X(9)".	
+DEFINE VARIABLE V-PREFIJO                 AS CHARACTER FORMAT "X(9)".	
+
+DEFINE VARIABLE c                         AS INTEGER.
+DEFINE VARIABLE v-aux_fecha               AS DATE.
+
+DEFINE VARIABLE sino                      AS LOGICAL.
+
+DEFINE STREAM Errores.
+
+FORM 
+            V-CODIGO-DE-EMPRESA       COLON 30
+            V-N-SOCIO                 COLON 30
+            V-N-INT-ARP               COLON 30
+            V-NOMBRE                  COLON 30
+            V-FECHA-NAC               COLON 30
+            V-SEXO                    COLON 30
+            V-TEST-BAJA               COLON 30
+            V-FECHA-BAJA              COLON 30
+            V-CALLE                   COLON 30
+            V-NUMERO                  COLON 30
+            V-PISO                    COLON 30
+            V-DEPARTAMENTO            COLON 30
+            V-LOCALIDAD               COLON 30
+            V-PREFIJO                 COLON 30
+            V-TELEFONO                COLON 30
+            V-ENTRE-CALLE             COLON 30
+            V-Y-CALLE                 COLON 30
+            V-CODIGO-POSTAL           COLON 30
+            V-COD-PLAN                COLON 30
+            V-FECHA-ULT-PAGO          COLON 30
+            V-OBSERV /*FORMAT "x(20)"*/   COLON 30 VIEW-AS EDITOR SIZE 30 BY 5
+  WITH FRAME A 1 DOWN FONT 2 SIDE-LABELS VIEW-AS DIALOG-BOX.
+
+SESSION:IMMEDIATE-DISPLAY = YES.
+
+RUN mensaje_padron_ucrem.p ( OUTPUT sino ).
+
+IF sino
+THEN DO:    
+    /*
+    FOR EACH Afiliado WHERE Afiliado.cdg_cliente = 1 EXCLUSIVE-LOCK:
+        DELETE Afiliado.
+    END.
+    */
+    
+    INPUT FROM "d:\txts\export.azu".
+    OUTPUT STREAM Errores TO "d:\txts\export-azu.100".
+    
+    REPEAT WHILE c < 100 :
+    
+        IMPORT  DELIMITER ","
+                V-CODIGO-DE-EMPRESA       
+                V-N-SOCIO                 
+                V-N-INT-ARP               
+                V-NOMBRE                  
+                V-FECHA-NAC               
+                V-SEXO                    
+                V-TEST-BAJA               
+                V-FECHA-BAJA              
+                V-CALLE                   
+                V-NUMERO                  
+                V-PISO                    
+                V-DEPARTAMENTO            
+                V-LOCALIDAD               
+                V-TELEFONO                
+                V-ENTRE-CALLE             
+                V-Y-CALLE                 
+                V-DUMMY
+                V-CODIGO-POSTAL           
+                V-COD-PLAN                
+                V-FECHA-ULT-PAGO          
+                ^
+                V-OBSERV.                  
+
+        EXPORT STREAM Errores  DELIMITER ","
+                V-CODIGO-DE-EMPRESA       
+                V-N-SOCIO                 
+                V-N-INT-ARP               
+                V-NOMBRE                  
+                V-FECHA-NAC               
+                V-SEXO                    
+                V-TEST-BAJA               
+                V-FECHA-BAJA              
+                V-CALLE                   
+                V-NUMERO                  
+                V-PISO                    
+                V-DEPARTAMENTO            
+                V-LOCALIDAD               
+                V-TELEFONO                
+                V-ENTRE-CALLE             
+                V-Y-CALLE                 
+                V-DUMMY
+                V-CODIGO-POSTAL           
+                V-COD-PLAN                
+                V-FECHA-ULT-PAGO          
+                V-OBSERV.
+
+    
+        PAUSE 0 BEFORE-HIDE.
+        c = c + 1.
+        IF LENGTH(V-OBSERV) > 40
+        THEN DO:
+            DISPLAY C WITH 1 DOWN USE-TEXT.
+            RUN mostrar.
+        END.
+    
+    END.   
+    
+    MESSAGE "TERMINO LA CARGA DEL PADRON" VIEW-AS ALERT-BOX MESSAGE TITLE "POR FIN!!!".
+END.
+
+/*=========================================================================================*/
+/*                                    PROCEDIMIENTOS                                       */
+/*=========================================================================================*/
+
+/*
+PROCEDURE acceder_afiliado:
+
+    FIND Afiliado WHERE Afiliado.cdg_afiliado = V-AFILIADO 
+                    AND Afiliado.cdg_cliente = 1 EXCLUSIVE-LOCK NO-ERROR.
+    IF NOT AVAILABLE Afiliado
+       THEN CREATE Afiliado.
+
+    ASSIGN Afiliado.barrio_emr      = "" 
+           Afiliado.calle_emr       = V-CALLE
+           Afiliado.casa_emr        = ""
+           Afiliado.cdg_afiliado    = V-AFILIADO
+           Afiliado.cdg_cliente     = 1
+           Afiliado.cdg_estado      = V-TEST-BAJA
+           Afiliado.cdg_localidad   = ""
+           Afiliado.cdg_postal      = V-CODIGO-POSTAL
+           Afiliado.cdg_provincia   = "01"
+           Afiliado.depto_emr       = V-DEPARTAMENTO
+           Afiliado.entre1_emr      = V-ENTRE-CALLE
+           Afiliado.entre2_emr      = V-Y-CALLE
+           Afiliado.fecha_alta      = TODAY
+           Afiliado.monoblk_emr     = ""
+           Afiliado.nom_afiliado    = V-NOMBRE
+           Afiliado.num_carnet      = V-N-INT-ARP
+           Afiliado.nropta_emr      = V-NUMERO
+           Afiliado.nro_afiliado    = NEXT-VALUE(proximo_afiliado)
+           Afiliado.piso_emr        = V-PISO
+           Afiliado.prefijotel_emr  = V-PREFIJO
+           Afiliado.refer_emr       = ""
+           Afiliado.sexo            = V-SEXO
+           Afiliado.telefono_emr    = V-TELEFONO. 
+
+    v-aux_fecha = DATE(SUBSTRING(V-FECHA-BAJA,7,2) + "/" + 
+                       SUBSTRING(V-FECHA-BAJA,5,2) + "/" + 
+                       SUBSTRING(V-FECHA-BAJA,1,4)) NO-ERROR.
+
+    ASSIGN Afiliado.fecha_baja      = IF ERROR-STATUS:ERROR THEN ? ELSE v-aux_fecha.
+
+    v-aux_fecha = DATE(SUBSTRING(V-FECHA-NAC,1,2) + "/" + 
+                       SUBSTRING(V-FECHA-NAC,3,2) + "/" + 
+                       SUBSTRING(V-FECHA-NAC,5,4)) NO-ERROR.
+
+    ASSIGN Afiliado.fecha_nac      = IF ERROR-STATUS:ERROR THEN ? ELSE v-aux_fecha.
+
+    v-aux_fecha = DATE(SUBSTRING(V-FECHA-ULT-PAGO,1,2) + "/" + 
+                       SUBSTRING(V-FECHA-ULT-PAGO,3,2) + "/" + 
+                       SUBSTRING(V-FECHA-ULT-PAGO,5,4)) NO-ERROR.
+
+    ASSIGN Afiliado.fecha_ultpago  = IF ERROR-STATUS:ERROR THEN ? ELSE v-aux_fecha.
+
+END PROCEDURE.
+
+PROCEDURE planchar_datos:
+
+    IF INDEX(V-Y-CALLE," Y ") <> 0
+    THEN RUN dividir_calle ( INPUT V-Y-CALLE, 
+                             INPUT INDEX(V-Y-CALLE," Y "), 
+                             OUTPUT V-ENTRE-CALLE,
+                             OUTPUT V-Y-CALLE).
+    ELSE  IF INDEX(V-Y-CALLE," E ") <> 0
+    THEN RUN dividir_calle ( INPUT V-Y-CALLE, 
+                             INPUT INDEX(V-Y-CALLE," E "), 
+                             OUTPUT V-ENTRE-CALLE,
+                             OUTPUT V-Y-CALLE).
+
+    IF NUM-ENTRIES(V-TELEFONO,"-") = 2 
+    THEN  ASSIGN
+                  V-PREFIJO = ENTRY(1,V-TELEFONO,"-")
+                  V-TELEFONO = ENTRY(2,V-TELEFONO,"-").
+    ELSE     IF NUM-ENTRIES(V-TELEFONO," ") >= 2 
+             THEN  ASSIGN
+                          V-PREFIJO = ENTRY(1,V-TELEFONO," ")
+                          V-TELEFONO = ENTRY(2,V-TELEFONO," ").
+             ELSE V-PREFIJO = "".
+             
+   IF LENGTH(V-PREFIJO) = 3 AND SUBSTRING(V-PREFIJO,1,1) <> "0"
+      THEN V-PREFIJO = "4" + V-PREFIJO.
+
+   V-CALLE = TRIM(V-CALLE). 
+   IF V-CALLE <> ""
+      THEN IF INDEX(numeros,SUBSTRING(V-CALLE,LENGTH(V-CALLE),1)) <> 0
+              THEN RUN separar_numero.
+
+   V-CALLE = REPLACE(V-CALLE,"¥","Ñ").
+   V-CALLE = REPLACE(V-CALLE,"š","U").
+   V-CALLE = REPLACE(V-CALLE,"¤","Ñ").
+
+   V-NOMBRE = REPLACE(V-NOMBRE,"¥","Ñ").
+   V-NOMBRE = REPLACE(V-NOMBRE,"š","U").
+   V-NOMBRE = REPLACE(V-NOMBRE,"¤","Ñ").
+
+END PROCEDURE.
+
+
+PROCEDURE separar_numero:
+
+    DEFINE VARIABLE pu AS INTEGER.
+
+    pu = LENGTH(V-CALLE).
+    DO WHILE INDEX(numeros,SUBSTRING(V-CALLE,pu,1)) <> 0:
+       pu = pu - 1.
+    END.
+    
+    V-NUMERO = SUBSTRING(V-CALLE,pu + 1).
+    V-CALLE  = SUBSTRING(V-CALLE,1,pu).
+
+END PROCEDURE.
+
+
+PROCEDURE dividir_calle:
+
+    DEFINE INPUT   PARAMETER calle   AS CHARACTER.
+    DEFINE INPUT   PARAMETER p       AS INTEGER. 
+    DEFINE OUTPUT  PARAMETER entre1  AS CHARACTER. 
+    DEFINE OUTPUT  PARAMETER entre2  AS CHARACTER. 
+
+    entre1 = SUBSTRING(calle,1, p - 1).
+    entre2 = SUBSTRING(calle, p + 3).
+
+END PROCEDURE.
+*/
+PROCEDURE mostrar:
+
+
+    DISPLAY         
+            V-CODIGO-DE-EMPRESA       
+            V-N-SOCIO                 
+            V-N-INT-ARP               
+            V-NOMBRE                  
+            V-FECHA-NAC               
+            V-SEXO                    
+            V-TEST-BAJA               
+            V-FECHA-BAJA              
+            V-CALLE                   
+            V-NUMERO                  
+            V-PISO                    
+            V-DEPARTAMENTO            
+            V-LOCALIDAD               
+            V-PREFIJO                
+            V-TELEFONO                
+            V-ENTRE-CALLE             
+            V-Y-CALLE                 
+            V-CODIGO-POSTAL           
+            V-COD-PLAN                
+            V-FECHA-ULT-PAGO          
+            V-OBSERV FORMAT "x(20)"
+            WITH FRAME A USE-TEXT WIDTH 96.
+
+    DOWN WITH FRAME A.
+    PAUSE.
+
+
+END PROCEDURE.
+ 
+PROCEDURE desarmar_registro:
+ 
+
+    /*  
+    IMPORT UNFORMATTED linea. c = 1.
+    V-CODIGO-DE-EMPRESA       = SUBSTRING(linea,c,1).   c = c + 1.  
+    V-N-SOCIO                 = SUBSTRING(linea,c,6).   c = c + 6.	
+    V-N-INT-ARP               = SUBSTRING(linea,c,2).   c = c + 2.	
+    V-NOMBRE                  = SUBSTRING(linea,c,25).  c = c + 25.	
+    V-FECHA-NAC               = SUBSTRING(linea,c,8).   c = c + 8.
+    V-SEXO                    = SUBSTRING(linea,c,1).   c = c + 1.
+    V-TEST-BAJA               = SUBSTRING(linea,c,1).   c = c + 1.
+    V-FECHA-BAJA              = SUBSTRING(linea,c,8).   c = c + 8.
+    V-CALLE                   = SUBSTRING(linea,c,21).  c = c + 21.	
+    V-NUMERO                  = SUBSTRING(linea,c,5).   c = c + 5.	
+    V-PISO                    = SUBSTRING(linea,c,2).   c = c + 2.	
+    V-DEPARTAMENTO            = SUBSTRING(linea,c,2).   c = c + 2.	
+    V-LOCALIDAD               = SUBSTRING(linea,c,25).  c = c + 25.	
+    V-TELEFONO                = SUBSTRING(linea,c,9).   c = c + 9.	
+    V-ENTRE-CALLE             = SUBSTRING(linea,c,21).  c = c + 21.	
+    V-Y-CALLE                 = SUBSTRING(linea,c,21).  c = c + 21.
+    V-CODIGO-POSTAL           = SUBSTRING(linea,c,5).   c = c + 5.
+    V-COD-PLAN                = SUBSTRING(linea,c,3).   c = c + 3.
+    V-FECHA-ULT-PAGO          = SUBSTRING(linea,c,6).   c = c + 6.
+    V-OBSERV                  = SUBSTRING(linea,c,83).  c = c + 83.
+    */
+ 
+ 
+END PROCEDURE.

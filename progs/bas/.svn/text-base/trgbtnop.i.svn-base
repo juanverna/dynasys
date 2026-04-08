@@ -1,0 +1,6 @@
+ON CHOOSE OF {1}
+DO:
+  DISABLE ALL WITH FRAME frm-logo.
+  RUN {2}.
+  RUN PONER_SESION.
+END.

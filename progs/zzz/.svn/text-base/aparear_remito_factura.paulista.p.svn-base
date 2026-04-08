@@ -1,0 +1,20 @@
+    STOP.
+    FOR EACH REM_HEADER WHERE ESTADO = "e":
+    FIND fac_header WHERE
+            fac_header.nro_cliente = rem_header.nro_cliente AND
+            fac_header.direccion = rem_header.direccion AND
+            fac_header.fecha > 11/10/2006 AND 
+            fac_header.prf_comprob = rem_header.prf_comprob NO-ERROR.
+    IF NOT AVAILABLE fac_header THEN NEXT.
+    FIND fac_detalle OF fac_header.
+    FIND rem_detalle OF rem_header.
+    DISPLAY rem_header.nro_remito 
+            fac_header.nro_factura
+            fac_header.direccion
+            rem_header.direccion
+            Fac_detalle.precio  rem_detalle.precio.
+    fac_header.prf_comprob.  
+    rem_header.nro_factura = fac_header.nro_factura.
+    fac_header.nro_remito = rem_header.nro_remito.
+    rem_header.estado = "P".
+END.

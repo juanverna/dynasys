@@ -1,0 +1,232 @@
+{tiempo.i}
+{advtexto.i}
+{crystal_dyna.p}
+{html.i}
+
+PROCEDURE enviaemailJ:
+/*------------------------------------------------------------------------------
+  Purpose:  Envia un email prefijado para cada tipo de tarea   
+  Parameters:  <none>
+  Notes: 
+------------------------------------------------------------------------------*/
+DO:
+{findempresa.i} 
+{nommeses.i}
+
+DEFINE VAR ERROR_nro AS INT NO-UNDO.
+DEF VAR xfile AS CHAR NO-UNDO.
+DEF VAR ReportePath AS CHAR NO-UNDO.
+DEF VAR cFullPath AS CHAR NO-UNDO.
+DEF VAR xFullPath AS CHAR NO-UNDO.
+DEF VAR exportFileName AS CHAR NO-UNDO.
+
+DEFINE VAR fr AS DATE NO-UNDO.
+DEFINE VAR ffr AS CHAR NO-UNDO.
+
+DEFINE VARIABLE chApplication AS COM-HANDLE.
+DEFINE VARIABLE chReport      AS COM-HANDLE.
+DEF VARIABLE oSuccessful  AS LOGICAL NO-UNDO.
+DEF VARIABLE vmessage  AS CHAR NO-UNDO.
+DEFINE VAR i AS INT NO-UNDO.
+DEFINE VAR msg1 AS CHAR NO-UNDO.
+DEFINE VAR msg2 AS CHAR NO-UNDO.
+DEFINE VAR msg3 AS CHAR NO-UNDO.
+DEFINE VAR msg4 AS CHAR NO-UNDO.
+DEFINE VAR msg5 AS CHAR NO-UNDO.
+DEFINE VAR firma AS CHAR NO-UNDO.
+DEFINE VAR exfile AS CHAR NO-UNDO.
+DEFINE VAR img64 AS CHAR NO-UNDO.
+DEFINE VAR objMessage AS COM-HANDLE.
+DEFINE VAR objConf AS COM-HANDLE.
+DEFINE VAR objField AS COM-HANDLE.
+DEFINE VAR objBP AS COM-HANDLE.
+
+DEFINE VAR one AS LOGICAL INIT YES.
+DEFINE VAR savdir AS CHARACTER NO-UNDO.
+DEFINE VAR logo AS CHAR INITIAL "logopau.jpg" NO-UNDO.
+DEFINE VAR logof AS CHAR NO-UNDO.
+DEFINE BUFFER administracion FOR cliente.
+savdir = getCurrentDirectory().
+RUN fullpath ( logo, INPUT "", OUTPUT logof ).
+FIND usuario WHERE usuario.cdg_usuario = USERID("sic").
+FOR EACH user_empresa OF usuario BY  User_empresa.rige_desde DESC:
+    LEAVE.
+END.
+IF NOT AVAILABLE USER_empresa THEN DO:
+    MESSAGE "Usted no tiene la direccion de email registrada" skip
+            "no se enviara email" VIEW-AS ALERT-BOX ERROR.
+    RETURN NO-APPLY.
+END.
+IF USER_empresa.email = "" THEN DO:
+    MESSAGE "Usted no tiene direccion de email registrada" SKIP
+            "no se enviara el email" VIEW-AS ALERT-BOX ERROR.
+    RETURN NO-APPLY.
+END.
+/*a quien le enviamos a partir del evento buscar administracion y preferido*/
+FIND administracion WHERE administracion.nro_cliente = cliente.nro_admin NO-LOCK NO-ERROR.
+IF NOT AVAILABLE administracion THEN LEAVE.
+FIND FIRST domicilio OF administracion.
+FOR each Cliente-contacto OF Domicilio , Persona OF Cliente-contacto WHERE persona.email <> "" AND cliente-contacto.preferido :
+        LEAVE.
+END.
+IF NOT AVAILABLE persona THEN LEAVE.
+/*listo enviar email a la persona seleccionada*/
+FIND restriccion WHERE restriccion.cdg_restriccion BEGINS "EMAILRL" AND restriccion.nro_tipo_evento = tarea.nro_tipo_evento NO-LOCK NO-ERROR.
+IF NOT AVAILABLE restriccion THEN RETURN.
+IF persona.email = "" THEN do:
+    tarea.descripcion = agregaAdvTexto("ERROR EMAIL Certificado la persona " + persona.nombre + " sin email" , tarea.descripcion  ).
+    LEAVE.
+END.
+IF num-entries(persona.email,"@") <> 2 THEN DO:
+          tarea.descripcion = agregaAdvTexto("ERROR EMAIL Certificado la persona " + persona.nombre + " email invalido" , tarea.descripcion ).
+          leave.
+      END.
+IF NUM-ENTRIES( entry( 2 , persona.email, "@" ) , ".") < 2 THEN DO:
+          tarea.descripcion = agregaAdvTexto("ERROR EMAIL Certificado la persona " + persona.nombre + " email invalido" , tarea.descripcion ).
+          LEAVE.
+END.
+
+FIND cliente_restriccion OF restriccion WHERE cliente_restriccion.nro_cliente = administracion.nro_cliente NO-LOCK NO-ERROR.
+IF AVAILABLE contrato_restriccion THEN 
+        IF cliente_restriccion.valor <> "S" THEN RETURN.
+
+RUN setCurrentDirectoryA(savDir).
+
+msg1 = '<HTML><HEAD><TITLE></TITLE><META HTTP-EQUIV="Content-Type" content="text/html; charset=UTF-8"></HEAD><BODY><p><font face=Tahoma>Atte Adm. '  + html-encode(administracion.nom_cliente) + '</font></p>'.
+msg2 = '<p><font face=Tahoma>Ref: ' + html-encode(cliente.direccion) + '. </font></p>'.
+msg3 = '<p><font face=Tahoma>Informamos que el d&iacute; ' + string(evento.frealizado) + ' se realiz&oacute; la limpieza reglamentaria de tanques de agua potable en el domicilio citado, y no estaba disponible el Libro de Control Sanitaria (Disp. 3882) a requerimiento de nuestro personal</font></p>'.
+msg4 = '<p><font face=Tahoma>Agradeceremos nos informen donde se encuentra el mencionado libro a fin de realizar el registro del trabajo efectuado</font></p>'.
+msg5 = '<p><font face=Tahoma>Recuerde comunicarnos cualquier inquietud relacionada con nuestros servicios, nuestra pol&iacute;tica de calidad persigue su entera satisfacci&oacute;n y la de sus clientes.</font></p><p><font face=Tahoma>Aprovechamos la oportunidad para saludarlo atte.</font></p><p><font face=Tahoma>' + 'Paulista' + '</font></p>'.
+firma= '<p><span><img width=87 height=67 src="cid:logopau.jpg" v:shapes="_x0000_s1026"></span><font face=Tahoma>Tel: 4961-1900</font></p><p><font face=Tahoma><a href="mailto:info@paulistaservicios.com.ar" title="mailto:info@paulistaservicios.com.ar">info@paulistaservicios.com.ar</a></font></p><p><font face=Tahoma><a href="skype:paulistaservicios" title="Skype:paulistaservicios">Skype:paulistaservicios</font></p><p></BODY></HTML>'.
+
+/*mandando el email*/
+CREATE "CDO.Message" objMessage.
+CREATE "CDO.Configuration" objConf.
+objField = objConf:FIELDS.
+/*
+objField:Item( "http://schemas.microsoft.com/cdo/configuration/sendusing" ) = 1. /*cdoSendUsingPickup*/
+objField:Item( "http://schemas.microsoft.com/cdo/configuration/smtpserverpickupdirectory" ) = "c:\temp\pickup" .*/
+objField:Item("http://schemas.microsoft.com/cdo/configuration/sendusing") = 2. /*cdoSendUsingPort*/
+objField:Item("http://schemas.microsoft.com/cdo/configuration/smtpserver") = "smtp.gmail.com". 
+objField:Item("http://schemas.microsoft.com/cdo/configuration/smtpserverport") = 465. 
+objField:Item("http://schemas.microsoft.com/cdo/configuration/smtpauthenticate") = 1.      
+objField:Item("http://schemas.microsoft.com/cdo/configuration/sendusername") = "alejandra@paulistaservicios.com.ar".
+objField:Item("http://schemas.microsoft.com/cdo/configuration/sendpassword") = "acabrera3568".      
+objField:Item("http://schemas.microsoft.com/cdo/configuration/smtpusessl") = TRUE.
+objField:Item("http://schemas.microsoft.com/cdo/configuration/smtpconnectiontimeout") = 10.  
+objField:Update.
+objMessage:Configuration = objConf.
+objMessage:TO = persona.email.
+objMessage:FROM =  USER_empresa.email.
+objMessage:Subject = "Paulista - Certificado " + html-encode(cliente.direccion).
+objMessage:HTMLBody = msg1 + msg3 + msg4 + msg5 + firma.
+/* desde un archivo 'objMessage.CreateMHTMLBody "file://c|/temp/test.htm"*/
+objMessage:AddAttachment( "file://" + exportFileName,"","" ).
+objBP = objMessage:AddRelatedBodyPart("file://" + logof, logo, 0, , ).
+objBP:Fields:Item("urn:schemas:mailheader:Content-ID") = "<" + logo + ">".
+objBP:Fields:Update.
+objMessage:Send.
+tarea.descripcion = agregaAdvTexto("EMAIL TareaJ " + persona.email , tarea.descripcion ).
+RELEASE OBJECT objField NO-ERROR.
+RELEASE OBJECT objBP NO-ERROR.
+RELEASE OBJECT objMessage NO-ERROR.
+RELEASE OBJECT objConf NO-ERROR.
+objConf=?.
+objMessage=?.  
+objBP=?. 
+objField = ?.
+MESSAGE "Email Enviado" VIEW-AS ALERT-BOX.
+END.
+
+END PROCEDURE.
+
+/*crea tareas de un evento*/
+/*para se fija si tiene que enviar email por el momento solo lo hace con la tarea J*/
+
+DEFINE INPUT PARAMETER p-evento LIKE evento.nro_evento  NO-UNDO.
+DEFINE INPUT PARAMETER p-nro_cliente LIKE cliente.nro_cliente NO-UNDO.
+DEFINE INPUT PARAMETER p-cdg_tipotarea LIKE tarea.cdg_tipotarea  NO-UNDO.
+DEFINE INPUT PARAMETER p-titulo LIKE tarea.titulo  NO-UNDO.
+DEFINE INPUT PARAMETER p-descripcion LIKE tarea.descripcion  NO-UNDO.
+DEFINE INPUT PARAMETER pvisualizar AS DATE  NO-UNDO.
+DEFINE INPUT PARAMETER pcdg_cargo LIKE cargo.cdg_cargo  NO-UNDO.
+DEFINE OUTPUT PARAMETER rok LIKE tarea.nro_tarea NO-UNDO.
+
+DEFINE VAR i AS INT NO-UNDO.
+DEFINE VAR soloh AS CHAR NO-UNDO.
+DEFINE VAR solog AS INT NO-UNDO.
+DEFINE TEMP-TABLE tt NO-UNDO
+    FIELD cdg_recurso LIKE recurso.cdg_recurso
+    FIELD nom_recurso LIKE Recurso.nom_recurso
+    FIELD grado AS INT
+    INDEX grado grado.
+  FOR EACH Recurso BY Recurso.interno DESCENDING :
+        soloh = "".
+        solog = 0.
+    DO i = 1 TO NUM-ENTRIES(recurso.habilidades):
+                soloh = entry(1,ENTRY(i,recurso.habilidades),"@").
+                solog = int(entry(2,ENTRY(i,recurso.habilidades),"@")) NO-ERROR.
+               IF NOT CAN-DO(soloh, p-cdg_tipotarea ) THEN next.
+               CREATE tt.
+               ASSIGN tt.cdg_recurso = recurso.cdg_recurso
+                      tt.nom_recurso = Recurso.nom_recurso.
+                      tt.grado = solog.
+    END.
+  END.
+rok = ?.
+
+
+IF p-evento <> 0 THEN DO:
+    FIND evento WHERE evento.nro_evento = p-evento.
+    FIND cliente OF evento.
+END.
+ELSE
+    FIND cliente WHERE cliente.nro_cliente = p-nro_cliente.
+
+
+FIND FIRST cliente-contacto OF cliente WHERE cliente-contacto.cdg_cargo = pcdg_cargo NO-LOCK NO-ERROR.
+CREATE tarea.
+   ASSIGN
+
+          Tarea.nro_evento = p-evento
+          tarea.origen = IF p-evento <> 0 THEN evento.origen ELSE "MANUAL"
+          Tarea.cdg_tipotarea = p-cdg_tipotarea
+          Tarea.comunicarsepor = "T".
+          tarea.descripcion = agregaAdvTexto(( IF p-descripcion = "" THEN p-titulo ELSE p-descripcion ) , tarea.descripcion ).
+   ASSIGN
+          Tarea.direccion = cliente.direccion 
+          Tarea.estado = "A" 
+          Tarea.fecha_alta = TODAY 
+          Tarea.visualizar = pvisualizar
+          Tarea.hora_alta = string(time,"HH:MM") 
+          Tarea.fecha_reportado = TODAY 
+          Tarea.fecha_resuelto = ? 
+          Tarea.geolat = cliente.geolat
+          Tarea.geolong = cliente.geolong
+          Tarea.geoX = cliente.geoX
+          Tarea.geoY = cliente.geoY
+          Tarea.horas_estimadas = ?
+          Tarea.localidad = cliente.localidad
+          Tarea.nom_cliente = Cliente.nom_cliente
+          Tarea.nro_cliente = cliente.nro_cliente
+          Tarea.nro_tarea = NEXT-VALUE(proxima_tarea)
+          Tarea.telefonos = cliente.telefono
+          tarea.nro_admini = cliente.nro_admin
+          Tarea.cdg_proyecto = "G"
+          Tarea.datos-template = ?
+          Tarea.titulo = p-titulo
+          Tarea.fecha_prevista  = ?
+          tarea.nro_identificacion = p-evento
+          tarea.origen = "EVENTO".
+          FOR EACH tt BY tt.grado:
+                tarea.cdg_recurso = tt.cdg_recurso.
+                LEAVE.
+          END.
+          IF AVAILABLE cliente-contacto THEN DO:
+                  tarea.nro_persona = cliente-contacto.nro_persona.
+                  tarea.cdg_cargo = pcdg_cargo.
+          END.
+          rok = tarea.nro_tarea.
+          tarea.turnogestion = aturno(cliente.horario_de_atencion).
+          IF tarea.cdg_tipotarea = "J" THEN RUN enviaemailJ.
+

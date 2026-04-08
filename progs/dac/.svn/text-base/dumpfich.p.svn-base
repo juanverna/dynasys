@@ -1,0 +1,5 @@
+output to ".\tempdsp\fichas.txt".
+FOR EACH Ficha:
+    EXPORT Ficha.
+END.
+OUTPUT CLOSE.    

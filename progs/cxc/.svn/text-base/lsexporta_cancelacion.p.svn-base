@@ -1,0 +1,556 @@
+/*=================================================================================*/
+/*           LISTADO DE DERECHOS PENDIENTES POR FECHA DE VENCIMIENTO               */
+/*=================================================================================*/
+
+/*---------------------------------------------------------------------------------*/
+/* Antes de ver este còdigo, tomese un antivomitivo. Es lo que pido el cliente     */
+/*---------------------------------------------------------------------------------*/
+
+DEFINE INPUT PARAMETER v-lista_empresas  AS CHARACTER.
+DEFINE INPUT PARAMETER des_codigo        LIKE Cliente.cdg_cliente.
+DEFINE INPUT PARAMETER has_codigo        LIKE Cliente.cdg_cliente.
+DEFINE INPUT PARAMETER des_fecha         AS DATE.
+DEFINE INPUT PARAMETER has_fecha         AS DATE.
+
+/*=================================================================================*/
+/*                                    VARIABLES                                    */
+/*=================================================================================*/
+
+
+{parlocales.i}
+
+DEFINE VARIABLE nombre_columna         AS CHARACTER FORMAT "X(16)".
+DEFINE VARIABLE v-total_caja           AS DECIMAL FORMAT "->>,>>>,>>9.99".
+DEFINE VARIABLE v-total_recibo         AS DECIMAL FORMAT "->>,>>>,>>9.99".
+DEFINE VARIABLE v-total_difcambio      AS DECIMAL FORMAT "->>,>>>,>>9.99".
+DEFINE VARIABLE v-total_aplicado       AS DECIMAL FORMAT "->>,>>>,>>9.99".
+DEFINE VARIABLE v-total_mes            AS DECIMAL FORMAT "->>,>>>,>>9.99" EXTENT 50.
+
+DEFINE VARIABLE v-subtot_pendiente     AS LOGICAL.
+DEFINE VARIABLE ntcols_excel           AS INTEGER INITIAL 0.
+DEFINE VARIABLE v-color_subtotal       AS INTEGER INITIAL 8. /* Subtotales en celeste */
+
+DEFINE VARIABLE c-fila                 AS INTEGER INITIAL 0.
+DEFINE VARIABLE mes_anterior           AS INTEGER.
+DEFINE VARIABLE que_sector             LIKE Area.cdg_area.
+
+DEFINE VARIABLE ipcTemplate            AS CHARACTER INITIAL "Cancelacion_pagos.xlt".
+
+DEFINE VARIABLE chExcelApplication      AS COM-HANDLE.
+DEFINE VARIABLE chWorkbook              AS COM-HANDLE.
+DEFINE VARIABLE chWorksheet             AS COM-HANDLE.
+
+DEFINE VARIABLE ppass AS CHARACTER NO-UNDO initial "".
+
+DEFINE VARIABLE cDirctr AS CHARACTER NO-UNDO.
+/*get-key-value section "Instalacion" key "Directorio" value cDirctr. */
+
+DEFINE VARIABLE cColmn AS CHARACTER NO-UNDO.
+DEFINE VARIABLE iFil   AS INTEGER NO-UNDO.
+
+{fnexcel.i}
+
+DEFINE STREAM Seguimiento.
+
+DEFINE BUFFER Moneda_detalle FOR Moneda.
+DEFINE BUFFER Moneda_caja    FOR Moneda.
+
+/*=================================================================================*/
+/*                                    FRAMES                                       */
+/*=================================================================================*/
+
+/*=================================================================================*/
+/*                          B L O Q U E   P R I N C I P A L                        */
+/*=================================================================================*/
+
+SESSION:NUMERIC-FORMAT = "AMERICAN".
+
+RUN LISTAR_TODO.
+
+/*RUN exportaexcel.p ( INPUT "Cancelacion_pagos.xlt" ,INPUT TABLE ttReprt ).*/
+
+/* launch Excel so it is visible to the user */
+chExcelApplication:Visible = TRUE.
+
+SESSION:NUMERIC-FORMAT = "AMERICAN".
+
+RETURN.
+
+/*=================================================================================*/
+/*                          P R O C E D I M I E N T O S                            */
+/*=================================================================================*/
+
+PROCEDURE LISTAR_TODO:
+
+  {findempresa.i}
+  
+  {findsector.i}
+  que_sector = Area.cdg_area.
+
+  RUN getparametro_o.p ( INPUT "DIRINPLA", OUTPUT v-observacion).
+  IF v-observacion <> ?
+      THEN cDirctr = v-observacion.
+      ELSE cDirctr = "c:\sic-temp\".
+
+  IF SUBSTRING(cDirctr,LENGTH(cDirctr),1) <> "\"
+      THEN cDirctr = cDirctr + "\".
+
+  IF SEARCH(cDirctr + ipcTemplate) = ?
+  THEN DO: 
+      MESSAGE cDirctr + ipcTemplate
+          VIEW-AS ALERT-BOX ERROR TITLE "Template no encontrado".
+      RETURN.
+  END.
+
+  ASSIGN v-total_recibo = 0
+         v-total_aplicado = 0
+         c-fila = 9.
+
+  RUN agregar_columna ( INPUT "FechaFactura",    INPUT-OUTPUT ntcols_excel ).
+  RUN agregar_columna ( INPUT "Tipo",            INPUT-OUTPUT ntcols_excel ).
+  RUN agregar_columna ( INPUT "NroFactura",      INPUT-OUTPUT ntcols_excel ).
+  RUN agregar_columna ( INPUT "Vencimiento",     INPUT-OUTPUT ntcols_excel ).
+  RUN agregar_columna ( INPUT "Mora",            INPUT-OUTPUT ntcols_excel ).
+  RUN agregar_columna ( INPUT "ImpTotalFactura", INPUT-OUTPUT ntcols_excel ).
+  RUN agregar_columna ( INPUT "ImpPesos",        INPUT-OUTPUT ntcols_excel ).
+  RUN agregar_columna ( INPUT "Cambiocomp",      INPUT-OUTPUT ntcols_excel ).
+  RUN agregar_columna ( INPUT "Cambiorecb",      INPUT-OUTPUT ntcols_excel ).
+  RUN agregar_columna ( INPUT "ImpDolares",      INPUT-OUTPUT ntcols_excel ).
+  RUN agregar_columna ( INPUT "Emision",         INPUT-OUTPUT ntcols_excel ).
+  RUN agregar_columna ( INPUT "Recibo",          INPUT-OUTPUT ntcols_excel ).
+  RUN agregar_columna ( INPUT "FechaCheque",     INPUT-OUTPUT ntcols_excel ).
+  RUN agregar_columna ( INPUT "ImporteCheque",   INPUT-OUTPUT ntcols_excel ).
+  RUN agregar_columna ( INPUT "Efectivo",        INPUT-OUTPUT ntcols_excel ).
+/*RUN agregar_columna ( INPUT "Canje",           INPUT-OUTPUT ntcols_excel ).*/
+  RUN agregar_columna ( INPUT "ImpBonos",        INPUT-OUTPUT ntcols_excel ).
+  RUN agregar_columna ( INPUT "ImpRetiva",       INPUT-OUTPUT ntcols_excel ).
+  RUN agregar_columna ( INPUT "ImpRetgan",       INPUT-OUTPUT ntcols_excel ).
+  RUN agregar_columna ( INPUT "ImpRetibrutos",   INPUT-OUTPUT ntcols_excel ).
+/*RUN agregar_columna ( INPUT "ImpRetibrBAS",    INPUT-OUTPUT ntcols_excel ).*/
+  RUN agregar_columna ( INPUT "ImpRetsus",       INPUT-OUTPUT ntcols_excel ).
+  RUN agregar_columna ( INPUT "ImpRedondeo",     INPUT-OUTPUT ntcols_excel ).
+  RUN agregar_columna ( INPUT "TotalCobrado",    INPUT-OUTPUT ntcols_excel ).
+  RUN agregar_columna ( INPUT "TotalDifcambio",  INPUT-OUTPUT ntcols_excel ).
+  RUN agregar_columna ( INPUT "PorcDesfasaje",   INPUT-OUTPUT ntcols_excel ).
+  RUN agregar_columna ( INPUT "DBCambio",        INPUT-OUTPUT ntcols_excel ).
+  RUN agregar_columna ( INPUT "PorcAjuste",      INPUT-OUTPUT ntcols_excel ).
+  RUN agregar_columna ( INPUT "CRCambio",        INPUT-OUTPUT ntcols_excel ).
+  RUN agregar_columna ( INPUT "CambioCheque",    INPUT-OUTPUT ntcols_excel ).
+  RUN agregar_columna ( INPUT "NDebito",         INPUT-OUTPUT ntcols_excel ).
+  RUN agregar_columna ( INPUT "NCredito",        INPUT-OUTPUT ntcols_excel ).
+  RUN agregar_columna ( INPUT "SaldoFactura",    INPUT-OUTPUT ntcols_excel ).
+
+
+  /* create a new Excel Application object */
+  CREATE "Excel.Application" chExcelApplication.
+
+  /* launch Excel so it is visible to the user */
+  chExcelApplication:Visible = FALSE.
+
+  /* create a new Workbook */
+  chWorkbook = chExcelApplication:Workbooks:Add(cDirctr + ipcTemplate).
+
+  FOR EACH Cliente 
+      WHERE Cliente.cdg_cliente >= des_codigo 
+        AND Cliente.cdg_cliente <= has_codigo /* 
+        AND LOOKUP(que_sector, Cliente.lista_sectores) <> 0 */ NO-LOCK:  
+
+      RUN insertar_hoja_cliente.
+      ASSIGN v-total_recibo = 0
+             v-total_aplicado = 0
+             c-fila = 8
+             mes_anterior = 0
+             v-total_mes = 0 /* Vector de totales */.
+
+      FOR EACH Rec_header OF Cliente
+            WHERE /* CAN-DO(v-lista_empresas,Rec_header.cdg_empresa)
+              AND */ Rec_header.fecha >= des_fecha
+              AND Rec_header.fecha  <= has_fecha
+              AND Rec_header.tip_comprob BEGINS "R"
+           /* AND CAN-DO (Usuario.lista_empresas,Rec_header.cdg_empresa) */
+              AND NOT Rec_header.anulado NO-LOCK
+                 BREAK BY Rec_header.cdg_empresa
+                       BY Rec_header.fecha 
+                       BY Rec_header.tip_comprob
+                       BY Rec_header.prf_comprob
+                       BY Rec_header.nro_comprob: 
+
+          IF MONTH(Rec_header.fecha) <> mes_anterior AND mes_anterior <> 0
+          THEN DO:
+              RUN poner_subtotal_mes.
+          END.
+          mes_anterior = MONTH(Rec_header.fecha).
+
+          RUN poner_aplicacion.
+
+          chWorkSheet:Range(axcol(c-fila,Nom2Num("Emision"))):Value = STRING(Rec_header.fecha,"99/99/9999").
+          chWorkSheet:Range(axcol(c-fila,Nom2Num("Recibo"))):Value = STRING(Rec_header.nro_comprob,"99999999").
+          chWorkSheet:Range(axcol(c-fila,Nom2Num("TotalCobrado"))):Value = STRING(Rec_header.imp_pesos + Rec_header.imp_difcambio,"->>>>>>>>>9.99").
+          chWorkSheet:Range(axcol(c-fila,Nom2Num("TotalDifcambio"))):Value = STRING(Rec_header.imp_difcambio,"->>>>>>>>>9.99").
+          chWorkSheet:Range(axcol(c-fila,Nom2Num("PorcDesfasaje"))):Value = STRING(Rec_header.imp_difcambio / Rec_header.imp_pesos * 100,"->>>>>>>>>9.99").
+
+          v-total_mes [ Nom2Num("TotalCobrado") ] = v-total_mes [ Nom2Num("TotalCobrado") ] + Rec_header.imp_pesos + Rec_header.imp_difcambio.
+          v-total_mes [ Nom2Num("TotalDifcambio") ] = v-total_mes [ Nom2Num("TotalDifcambio") ] + Rec_header.imp_difcambio.
+
+          RUN poner_retenciones.       
+          RUN poner_valores.
+
+          c-fila = c-fila + 1. 
+
+      END.
+  
+      RUN poner_subtotal_mes.
+
+      RUN poner_pendiente.
+
+  END.
+
+END PROCEDURE.
+
+PROCEDURE agregar_columna:
+
+    DEFINE INPUT PARAMETER p-renglon AS CHARACTER.
+    DEFINE INPUT-OUTPUT PARAMETER p-ntcols AS INTEGER.
+
+    p-ntcols = p-ntcols + 1.
+
+    CREATE ttDefcolumnas.
+    ASSIGN ttDefcolumnas.ttnumero_columna = p-ntcols
+           ttDefcolumnas.ttnombre_columna = p-renglon.
+
+END PROCEDURE.
+
+PROCEDURE insertar_hoja_cliente:
+
+    /* Agrega una hoja */
+    /*chExcelApplication:Sheets("Modelo"):Select.*/
+    /*chExcelApplication:Sheets("Modelo"):Copy(1,).*/
+      chExcelApplication:Sheets:ADD. /*[ <anytype>-Var = ] <com-handle>: Add ( 
+	  <anytype>-Before,
+	  <anytype>-After,
+	  <anytype>-Count,
+	  <anytype>-Type ).
+      /* ("xlChart",2,2).*/           */
+
+      /* Le cambia de nombre */
+      chExcelApplication:Sheets(1):Name = Cliente.nom_cliente.
+
+      /* Selecciona el modelo */
+      chWorkSheet = chExcelApplication:Sheets:Item("Modelo").
+      chExcelApplication:Sheets("Modelo"):Select.
+
+      /* Selecciona las celdas a copiar */
+      chWorkSheet:Columns("A:AG"):Select.
+    /*chExcelApplication:Selection.Copy
+      chExcelApplication:Sheets(Cliente.nom_cliente).Select
+      chWorkSheet:Range("A1").Select
+      chWorkSheet:ActiveSheet.Paste*/
+
+    /*chWorkSheet:Range("A1:AC8"):Select().*/
+
+      /* Copia las celdas */
+      chExcelApplication:Selection:Copy.
+
+      /* Selecciona la hoja recien creada */
+      chWorkSheet = chExcelApplication:Sheets:Item(Cliente.nom_cliente).
+      chExcelApplication:Sheets(Cliente.nom_cliente):Select.
+
+      /* Se para en la primera celda del rango */
+      chWorkSheet:Range("A1"):Select().
+
+      /* Pega la seleccion */
+      chWorkSheet:Paste.
+
+      /* Selecciona la hoja del cliente */
+      chWorkSheet = chExcelApplication:Sheets:Item(Cliente.nom_cliente).
+      chExcelApplication:Sheets(Cliente.nom_cliente):Select.
+
+      /* Selecciona A9 para deseleccionar Se para en la primera celda del rango */
+      chWorkSheet:Range("A9"):Select().
+
+      /* Pone el nombre de la seleccion en D5 */
+      chWorkSheet:Range("D5"):Value = Cliente.nom_cliente.
+      chWorkSheet:Range("B5"):Value = Cliente.cdg_cliente.
+
+      /* Pone la condicion de venta en D8*/
+      FIND Condicion_venta WHERE Condicion_venta.cdg_cndventa = Cliente.dfl_cndventa NO-LOCK.
+      chWorkSheet:Range("G5"):Value = Condicion_venta.descripcion.
+    
+END PROCEDURE.
+
+PROCEDURE poner_aplicacion:
+
+    FOR EACH Rec_detalle OF Rec_header NO-LOCK, 
+            FIRST Moneda_detalle OF Rec_detalle NO-LOCK,
+                  FIRST Cta_cte 
+                        WHERE Cta_cte.cdg_empresa     = Rec_header.cdg_empresa
+                          AND Cta_cte.tip_comprob     = Rec_detalle.tip_cancela
+                          AND Cta_cte.prf_comprob     = Rec_detalle.prf_cancela
+                          AND Cta_cte.nro_comprob     = Rec_detalle.nro_cancela
+                          AND Cta_cte.nro_vencimiento = Rec_detalle.nro_vencimiento
+                              BY Rec_detalle.es_difcambio: /* BY Hace que si hay dif. de cambio salga última */
+
+        c-fila = c-fila + 1.
+    
+        FIND Tipocomprobante OF Cta_cte NO-LOCK.
+
+        chWorkSheet:Range(axcol(c-fila,Nom2Num("FechaFactura"))):Value = STRING(Cta_cte.fecha_emision,"99/99/9999").
+        chWorkSheet:Range(axcol(c-fila,Nom2Num("Tipo"))):Value = Cta_cte.tip_comprob.
+        chWorkSheet:Range(axcol(c-fila,Nom2Num("NroFactura"))):Value = STRING(Cta_cte.nro_comprob,">>>>>>>>9").
+        chWorkSheet:Range(axcol(c-fila,Nom2Num("Vencimiento"))):Value = STRING(Cta_cte.fecha_vencimiento,"99/99/9999").
+        chWorkSheet:Range(axcol(c-fila,Nom2Num("Mora"))):Value = STRING(Rec_header.fecha - Cta_cte.fecha_vencimiento,"->>>9").
+        IF Tipocomprobante.debita
+        THEN DO:
+            chWorkSheet:Range(axcol(c-fila,Nom2Num("ImpTotalFactura"))):Value = STRING(Cta_cte.debito,"->>>>>>>>>9.99").
+            IF NOT Rec_detalle.es_difcambio
+                THEN chWorkSheet:Range(axcol(c-fila,Nom2Num("SaldoFactura"))):Value = STRING(Cta_cte.debito - Rec_detalle.importe,"->>>>>>>>>9.99").
+        END.
+        ELSE DO:
+            chWorkSheet:Range(axcol(c-fila,Nom2Num("ImpTotalFactura"))):Value = STRING(Cta_cte.credito,"->>>>>>>>>9.99").
+            IF NOT Rec_detalle.es_difcambio
+                THEN chWorkSheet:Range(axcol(c-fila,Nom2Num("SaldoFactura"))):Value = STRING(Cta_cte.credito + Rec_detalle.importe,"->>>>>>>>>9.99").
+        END.
+           
+
+        IF Moneda_detalle.es_local
+        THEN DO:
+            IF Rec_detalle.es_difcambio
+            THEN DO:
+                IF Tipocomprobante.debita
+                   THEN chWorkSheet:Range(axcol(c-fila,Nom2Num("DBCambio"))):Value = STRING(Rec_detalle.difcambio,"->>>>>>>>>9.99").
+                   ELSE chWorkSheet:Range(axcol(c-fila,Nom2Num("CRCambio"))):Value = STRING(Rec_detalle.difcambio,"->>>>>>>>>9.99").
+            END.
+            ELSE DO:
+                chWorkSheet:Range(axcol(c-fila,Nom2Num("ImpPesos"))):Value = STRING(Rec_detalle.importe,"->>>>>>>>>9.99").
+                IF Rec_detalle.clausula_dolar
+                THEN DO:
+                    chWorkSheet:Range(axcol(c-fila,Nom2Num("Cambiocomp"))):Value = STRING(Rec_detalle.cambio_dolar,"->>>>>>9.9999").
+                    chWorkSheet:Range(axcol(c-fila,Nom2Num("Cambiorecb"))):Value = STRING(Rec_detalle.new_cambio_dolar,"->>>>>>9.9999").
+                    IF Rec_detalle.difcambio <> 0
+                    THEN DO:
+                        chWorkSheet:Range(axcol(c-fila,Nom2Num("PorcAjuste"))):Value = STRING(Rec_detalle.prc_difcambio,"->>>>>>>>>9.99").
+                        chWorkSheet:Range(axcol(c-fila,Nom2Num("Porcdesfasaje"))):Value = STRING(Rec_detalle.prc_mincambio,"->>>>>>>>>9.99").
+                        IF Rec_detalle.difcambio > 0
+                            THEN chWorkSheet:Range(axcol(c-fila,Nom2Num("DBCambio"))):Value = STRING(Rec_detalle.difcambio,"->>>>>>>>>9.99").
+                            ELSE chWorkSheet:Range(axcol(c-fila,Nom2Num("CRCambio"))):Value = STRING(Rec_detalle.difcambio,"->>>>>>>>>9.99").
+                    END.
+                END.
+            END.
+        END.
+        ELSE DO:
+            chWorkSheet:Range(axcol(c-fila,Nom2Num("Cambiocomp"))):Value = STRING(Rec_detalle.cambio,"->>>>>>9.9999").
+            chWorkSheet:Range(axcol(c-fila,Nom2Num("Cambiorecb"))):Value = STRING(Rec_detalle.new_cambio,"->>>>>>9.9999").
+            chWorkSheet:Range(axcol(c-fila,Nom2Num("ImpDolares"))):Value = STRING(Rec_detalle.importe,"->>>>>>>>>9.99").
+            chWorkSheet:Range(axcol(c-fila,Nom2Num("ImpPesos"))):Value = STRING(Rec_detalle.imp_pesos,"->>>>>>>>>9.99").
+            IF Rec_detalle.difcambio <> 0
+            THEN DO:
+                chWorkSheet:Range(axcol(c-fila,Nom2Num("PorcAjuste"))):Value = STRING(Rec_detalle.prc_difcambio,"->>>>>>>>>9.99").
+                chWorkSheet:Range(axcol(c-fila,Nom2Num("Porcdesfasaje"))):Value = STRING(Rec_detalle.prc_mincambio,"->>>>>>>>>9.99").
+                IF Rec_detalle.difcambio > 0
+                   THEN chWorkSheet:Range(axcol(c-fila,Nom2Num("DBCambio"))):Value = STRING(Rec_detalle.difcambio,"->>>>>>>>>9.99").
+                   ELSE chWorkSheet:Range(axcol(c-fila,Nom2Num("CRCambio"))):Value = STRING(Rec_detalle.difcambio,"->>>>>>>>>9.99").
+            END.
+        END.
+
+        chWorkSheet:Range(axcol(c-fila,Nom2Num("SaldoFactura"))):Interior:ColorIndex = 35.
+      
+    END. /* Del detalle de aplicacion */
+
+END PROCEDURE.
+
+PROCEDURE poner_valores:
+
+    DEFINE VARIABLE v-importe_valores AS DECIMAL.
+
+    v-importe_valores = 0.
+
+    FOR EACH Caj_detalle 
+          WHERE Caj_detalle.nro_transaccion = Rec_header.nro_transaccion 
+            AND (    Caj_detalle.cdg_rubro = 2    
+                  OR Caj_detalle.cdg_rubro = 3  ) NO-LOCK:
+
+        chWorkSheet:Range(axcol(c-fila,Nom2Num("ImporteCheque"))):Value = STRING(Caj_detalle.importe,"->>>>>>>>>9.99").
+        FIND Valor OF Caj_detalle NO-LOCK NO-ERROR.
+        IF AVAILABLE Valor
+        THEN DO:
+            FIND LAST Cotizacion 
+                WHERE Cotizacion.nro_moneda = 2 
+                  AND Cotizacion.cdg_empresa = "B" 
+                  AND Cotizacion.fch_cotizacion <= Valor.fecha_emision 
+                      NO-LOCK.
+            chWorkSheet:Range(axcol(c-fila,Nom2Num("FechaCheque"))):Value = STRING(Valor.fecha_emision,"99/99/9999").
+            chWorkSheet:Range(axcol(c-fila,Nom2Num("CambioCheque"))):Value = STRING(Cotizacion.cambio,"->>>>>>9.9999").
+        END.
+        v-importe_valores = v-importe_valores + Caj_detalle.importe.
+
+        c-fila = c-fila + 1.
+
+    END. 
+
+    v-total_mes [ Nom2Num("ImporteCheque") ] = v-total_mes [ Nom2Num("ImporteCheque") ] + v-importe_valores.
+
+END PROCEDURE.
+
+PROCEDURE poner_retenciones:
+
+    DEFINE VARIABLE v-importe_retencion AS DECIMAL.
+
+    v-importe_retencion = 0.
+    
+    FOR EACH Caj_detalle 
+          WHERE Caj_detalle.nro_transaccion = Rec_header.nro_transaccion 
+            AND (    Caj_detalle.cdg_rubro = 1     
+                  OR Caj_detalle.cdg_rubro = 141   
+                  OR Caj_detalle.cdg_rubro = 212   
+                  OR Caj_detalle.cdg_rubro = 222   
+                  OR Caj_detalle.cdg_rubro = 223   
+                  OR Caj_detalle.cdg_rubro = 301   
+                  OR Caj_detalle.cdg_rubro = 302   
+                  OR Caj_detalle.cdg_rubro = 970   
+                  OR Caj_detalle.cdg_rubro = 999 ) NO-LOCK BREAK BY Caj_detalle.cdg_rubro:
+
+        nombre_columna = "".
+        CASE Caj_detalle.cdg_rubro:
+            WHEN 1    THEN nombre_columna = "Efectivo".        
+            WHEN 141  THEN nombre_columna = "ImpRetgan".       
+            WHEN 212  THEN nombre_columna = "ImpRetibrutos".    
+            WHEN 222  THEN nombre_columna = "ImpRetiva".       
+            WHEN 223  THEN nombre_columna = "ImpBonos".        
+            WHEN 301  THEN nombre_columna = "ImpRetibrutos".    
+            WHEN 302  THEN nombre_columna = "ImpRetsus".       
+            WHEN 970  THEN nombre_columna = "NCredito".        
+            WHEN 999  THEN nombre_columna = "ImpRedondeo".     
+        END CASE.
+
+        v-importe_retencion = v-importe_retencion + Caj_detalle.importe.
+
+        IF LAST-OF(Caj_detalle.cdg_rubro)
+        THEN DO:
+            IF nombre_columna <> ""
+            THEN DO:
+                chWorkSheet:Range(axcol(c-fila,Nom2Num(nombre_columna))):Value = STRING(v-importe_retencion,"->>>>>>>>>9.99").
+                v-total_mes [ Nom2Num(nombre_columna) ] = v-total_mes [ Nom2Num(nombre_columna) ] + v-importe_retencion.
+            END.
+            v-importe_retencion = 0.
+        END.
+
+    END.
+
+END PROCEDURE.
+
+PROCEDURE poner_pendiente:
+
+    v-total_aplicado = 0.
+    FOR EACH Cta_cte OF Cliente 
+      WHERE CAN-DO(v-lista_empresas,Cta_cte.cdg_empresa)
+        AND Cta_cte.fecha_emision >= des_fecha
+        AND Cta_cte.fecha_emision <= has_fecha
+        AND CAN-DO (User-id.lista_empresas,Cta_cte.cdg_empresa) 
+        AND Cta_cte.debito <> Cta_cte.credito NO-LOCK,
+            FIRST Moneda_detalle OF Cta_cte NO-LOCK:
+    
+        chWorkSheet:Range(axcol(c-fila,Nom2Num("FechaFactura"))):Value = STRING(Cta_cte.fecha_emision,"99/99/9999").
+        chWorkSheet:Range(axcol(c-fila,Nom2Num("Tipo"))):Value = Cta_cte.tip_comprob.
+        chWorkSheet:Range(axcol(c-fila,Nom2Num("NroFactura"))):Value = STRING(Cta_cte.nro_comprob,">>>>>>>>9").
+        chWorkSheet:Range(axcol(c-fila,Nom2Num("Vencimiento"))):Value = STRING(Cta_cte.fecha_vencimiento,"99/99/9999").
+        chWorkSheet:Range(axcol(c-fila,Nom2Num("Mora"))):Value = STRING(Rec_header.fecha - Cta_cte.fecha_vencimiento,"->>>9").
+        
+        IF Moneda_detalle.es_local
+        THEN DO:
+            chWorkSheet:Range(axcol(c-fila,Nom2Num("ImpPesos"))):Value = STRING(Cta_cte.debito - Cta_cte.credito,"->>>>>>>>>9.99").
+            IF Cta_cte.clausula_dolar
+               THEN chWorkSheet:Range(axcol(c-fila,Nom2Num("Cambiocomp"))):Value = STRING(Cta_cte.cambio_dolar,"->>>>>>9.9999").
+               ELSE chWorkSheet:Range(axcol(c-fila,Nom2Num("Cambiocomp"))):Value = STRING(Cta_cte.cambio,"->>>>>>9.9999").
+        END.
+        ELSE DO:
+            chWorkSheet:Range(axcol(c-fila,Nom2Num("ImpDolares"))):Value = STRING(Cta_cte.debito - Cta_cte.credito,"->>>>>>>>>9.99").
+            chWorkSheet:Range(axcol(c-fila,Nom2Num("Cambiocomp"))):Value = STRING(Cta_cte.cambio,"->>>>>>9.9999").
+        END.
+        
+        chWorkSheet:Range(axcol(c-fila,Nom2Num("Mora"))):Value = STRING(TODAY - Cta_cte.fecha_vencimiento,"->>>9").
+        
+        c-fila = c-fila + 1.
+        
+        v-total_aplicado = v-total_aplicado + (Cta_cte.debito - Cta_cte.credito) * Cta_cte.cambio.
+    
+    END.
+
+END PROCEDURE.
+
+PROCEDURE poner_subtotal_mes:
+
+    c-fila = c-fila + 1.
+
+    chWorkSheet:Range(axcol(c-fila,Nom2Num("ImporteCheque"     ))):Value = STRING(v-total_mes [ Nom2Num("ImporteCheque"  ) ],"->>>>>>9.9999").        
+    chWorkSheet:Range(axcol(c-fila,Nom2Num("Efectivo"          ))):Value = STRING(v-total_mes [ Nom2Num("Efectivo"       ) ],"->>>>>>9.9999").        
+  /*chWorkSheet:Range(axcol(c-fila,Nom2Num("Canje"             ))):Value = STRING(v-total_mes [ Nom2Num("Canje"          ) ],"->>>>>>9.9999"). */
+    chWorkSheet:Range(axcol(c-fila,Nom2Num("ImpBonos"          ))):Value = STRING(v-total_mes [ Nom2Num("ImpBonos"       ) ],"->>>>>>9.9999").        
+    chWorkSheet:Range(axcol(c-fila,Nom2Num("ImpRetiva"         ))):Value = STRING(v-total_mes [ Nom2Num("ImpRetiva"      ) ],"->>>>>>9.9999").       
+    chWorkSheet:Range(axcol(c-fila,Nom2Num("ImpRetgan"         ))):Value = STRING(v-total_mes [ Nom2Num("ImpRetgan"      ) ],"->>>>>>9.9999").       
+    chWorkSheet:Range(axcol(c-fila,Nom2Num("ImpRetibrutos"     ))):Value = STRING(v-total_mes [ Nom2Num("ImpRetibrutos"   ) ],"->>>>>>9.9999").    
+  /*chWorkSheet:Range(axcol(c-fila,Nom2Num("ImpRetibrBAS"      ))):Value = STRING(v-total_mes [ Nom2Num("ImpRetibrBAS"   ) ],"->>>>>>9.9999").  */  
+    chWorkSheet:Range(axcol(c-fila,Nom2Num("ImpRetsus"         ))):Value = STRING(v-total_mes [ Nom2Num("ImpRetsus"      ) ],"->>>>>>9.9999").       
+    chWorkSheet:Range(axcol(c-fila,Nom2Num("ImpRedondeo"       ))):Value = STRING(v-total_mes [ Nom2Num("ImpRedondeo"    ) ],"->>>>>>9.9999").
+    chWorkSheet:Range(axcol(c-fila,Nom2Num("TotalCobrado"      ))):Value = STRING(v-total_mes [ Nom2Num("TotalCobrado"   ) ],"->>>>>>9.9999").
+    chWorkSheet:Range(axcol(c-fila,Nom2Num("TotalDifcambio"    ))):Value = STRING(v-total_mes [ Nom2Num("TotalDifcambio" ) ],"->>>>>>9.9999").
+    chWorkSheet:Range(axcol(c-fila,Nom2Num("PorcDesfasaje"     ))):Value = STRING(v-total_mes [ Nom2Num("PorcDesfasaje"  ) ],"->>>>>>9.9999").
+    chWorkSheet:Range(axcol(c-fila,Nom2Num("DBCambio"          ))):Value = STRING(v-total_mes [ Nom2Num("DBCambio"       ) ],"->>>>>>9.9999").
+    chWorkSheet:Range(axcol(c-fila,Nom2Num("PorcAjuste"        ))):Value = STRING(v-total_mes [ Nom2Num("PorcAjuste"     ) ],"->>>>>>9.9999").
+    chWorkSheet:Range(axcol(c-fila,Nom2Num("CRCambio"          ))):Value = STRING(v-total_mes [ Nom2Num("CRCambio"       ) ],"->>>>>>9.9999").
+    chWorkSheet:Range(axcol(c-fila,Nom2Num("CambioCheque"      ))):Value = STRING(v-total_mes [ Nom2Num("CambioCheque"   ) ],"->>>>>>9.9999").
+    chWorkSheet:Range(axcol(c-fila,Nom2Num("NDebito"           ))):Value = STRING(v-total_mes [ Nom2Num("NDebito"        ) ],"->>>>>>9.9999").
+    chWorkSheet:Range(axcol(c-fila,Nom2Num("NCredito"          ))):Value = STRING(v-total_mes [ Nom2Num("NCredito"       ) ],"->>>>>>9.9999").
+    chWorkSheet:Range(axcol(c-fila,Nom2Num("ImpTotalFactura"   ))):Value = STRING(v-total_mes [ Nom2Num("ImpTotalFactura") ],"->>>>>>9.9999").     
+    chWorkSheet:Range(axcol(c-fila,Nom2Num("SaldoFactura"      ))):Value = STRING(v-total_mes [ Nom2Num("SaldoFactura"   ) ],"->>>>>>9.9999").
+
+    chWorkSheet:Range(axcol(c-fila,Nom2Num("ImporteCheque"     ))):Interior:ColorIndex = v-color_subtotal.
+    chWorkSheet:Range(axcol(c-fila,Nom2Num("ImporteCheque"     ))):Interior:ColorIndex = v-color_subtotal.
+    chWorkSheet:Range(axcol(c-fila,Nom2Num("Efectivo"          ))):Interior:ColorIndex = v-color_subtotal. 
+  /*chWorkSheet:Range(axcol(c-fila,Nom2Num("Canje"             ))):Interior:ColorIndex = v-color_subtotal. */
+    chWorkSheet:Range(axcol(c-fila,Nom2Num("ImpBonos"          ))):Interior:ColorIndex = v-color_subtotal. 
+    chWorkSheet:Range(axcol(c-fila,Nom2Num("ImpRetiva"         ))):Interior:ColorIndex = v-color_subtotal. 
+    chWorkSheet:Range(axcol(c-fila,Nom2Num("ImpRetgan"         ))):Interior:ColorIndex = v-color_subtotal. 
+    chWorkSheet:Range(axcol(c-fila,Nom2Num("ImpRetibrutos"      ))):Interior:ColorIndex = v-color_subtotal. 
+  /*chWorkSheet:Range(axcol(c-fila,Nom2Num("ImpRetibrBAS"      ))):Interior:ColorIndex = v-color_subtotal. */
+    chWorkSheet:Range(axcol(c-fila,Nom2Num("ImpRetsus"         ))):Interior:ColorIndex = v-color_subtotal. 
+    chWorkSheet:Range(axcol(c-fila,Nom2Num("ImpRedondeo"       ))):Interior:ColorIndex = v-color_subtotal. 
+    chWorkSheet:Range(axcol(c-fila,Nom2Num("TotalCobrado"      ))):Interior:ColorIndex = v-color_subtotal.
+    chWorkSheet:Range(axcol(c-fila,Nom2Num("TotalDifcambio"    ))):Interior:ColorIndex = v-color_subtotal.
+    chWorkSheet:Range(axcol(c-fila,Nom2Num("PorcDesfasaje"     ))):Interior:ColorIndex = v-color_subtotal.
+    chWorkSheet:Range(axcol(c-fila,Nom2Num("DBCambio"          ))):Interior:ColorIndex = v-color_subtotal.
+    chWorkSheet:Range(axcol(c-fila,Nom2Num("PorcAjuste"        ))):Interior:ColorIndex = v-color_subtotal.
+    chWorkSheet:Range(axcol(c-fila,Nom2Num("CRCambio"          ))):Interior:ColorIndex = v-color_subtotal.
+    chWorkSheet:Range(axcol(c-fila,Nom2Num("CambioCheque"      ))):Interior:ColorIndex = v-color_subtotal.
+    chWorkSheet:Range(axcol(c-fila,Nom2Num("NDebito"           ))):Interior:ColorIndex = v-color_subtotal.
+    chWorkSheet:Range(axcol(c-fila,Nom2Num("NCredito"          ))):Interior:ColorIndex = v-color_subtotal.
+    chWorkSheet:Range(axcol(c-fila,Nom2Num("ImpTotalFactura"   ))):Interior:ColorIndex = v-color_subtotal.     
+    chWorkSheet:Range(axcol(c-fila,Nom2Num("SaldoFactura"      ))):Interior:ColorIndex = v-color_subtotal.
+
+    chWorkSheet:Range(axcol(c-fila,Nom2Num("ImporteCheque"     ))):Font:Bold = TRUE.
+    chWorkSheet:Range(axcol(c-fila,Nom2Num("ImporteCheque"     ))):Font:Bold = TRUE.
+    chWorkSheet:Range(axcol(c-fila,Nom2Num("Efectivo"          ))):Font:Bold = TRUE. 
+  /*chWorkSheet:Range(axcol(c-fila,Nom2Num("Canje"             ))):Font:Bold = TRUE. */
+    chWorkSheet:Range(axcol(c-fila,Nom2Num("ImpBonos"          ))):Font:Bold = TRUE. 
+    chWorkSheet:Range(axcol(c-fila,Nom2Num("ImpRetiva"         ))):Font:Bold = TRUE. 
+    chWorkSheet:Range(axcol(c-fila,Nom2Num("ImpRetgan"         ))):Font:Bold = TRUE. 
+    chWorkSheet:Range(axcol(c-fila,Nom2Num("ImpRetibrutos"     ))):Font:Bold = TRUE. 
+  /*chWorkSheet:Range(axcol(c-fila,Nom2Num("ImpRetibrBAS"      ))):Font:Bold = TRUE. */
+    chWorkSheet:Range(axcol(c-fila,Nom2Num("ImpRetsus"         ))):Font:Bold = TRUE. 
+    chWorkSheet:Range(axcol(c-fila,Nom2Num("ImpRedondeo"       ))):Font:Bold = TRUE. 
+    chWorkSheet:Range(axcol(c-fila,Nom2Num("TotalCobrado"      ))):Font:Bold = TRUE.
+    chWorkSheet:Range(axcol(c-fila,Nom2Num("TotalDifcambio"    ))):Font:Bold = TRUE.
+    chWorkSheet:Range(axcol(c-fila,Nom2Num("PorcDesfasaje"     ))):Font:Bold = TRUE.
+    chWorkSheet:Range(axcol(c-fila,Nom2Num("DBCambio"          ))):Font:Bold = TRUE.
+    chWorkSheet:Range(axcol(c-fila,Nom2Num("PorcAjuste"        ))):Font:Bold = TRUE.
+    chWorkSheet:Range(axcol(c-fila,Nom2Num("CRCambio"          ))):Font:Bold = TRUE.
+    chWorkSheet:Range(axcol(c-fila,Nom2Num("CambioCheque"      ))):Font:Bold = TRUE.
+    chWorkSheet:Range(axcol(c-fila,Nom2Num("NDebito"           ))):Font:Bold = TRUE.
+    chWorkSheet:Range(axcol(c-fila,Nom2Num("NCredito"          ))):Font:Bold = TRUE.
+    chWorkSheet:Range(axcol(c-fila,Nom2Num("ImpTotalFactura"   ))):Font:Bold = TRUE.     
+    chWorkSheet:Range(axcol(c-fila,Nom2Num("SaldoFactura"      ))):Font:Bold = TRUE.
+
+    c-fila = c-fila + 2.
+
+    v-total_mes = 0.
+    
+END PROCEDURE.

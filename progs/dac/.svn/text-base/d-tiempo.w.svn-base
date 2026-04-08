@@ -1,0 +1,565 @@
+&ANALYZE-SUSPEND _VERSION-NUMBER UIB_v8r12 GUI
+&ANALYZE-RESUME
+&Scoped-define WINDOW-NAME CURRENT-WINDOW
+&Scoped-define FRAME-NAME D-Dialog
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CUSTOM _DEFINITIONS D-Dialog 
+/*------------------------------------------------------------------------
+
+  File: 
+
+  Description: from cntnrdlg.w - ADM SmartDialog Template
+
+  Input Parameters:
+      <none>
+
+  Output Parameters:
+      <none>
+
+  Author: 
+
+  Created: 
+------------------------------------------------------------------------*/
+/*          This .W file was created with the Progress UIB.             */
+/*----------------------------------------------------------------------*/
+
+/* Create an unnamed pool to store all the widgets created 
+     by this procedure. This is a good default which assures
+     that this procedure's triggers and internal procedures 
+     will execute in this procedure's storage, and that proper
+     cleanup will occur on deletion of the procedure. */
+
+CREATE WIDGET-POOL.
+
+/* ***************************  Definitions  ************************** */
+
+/* Parameters Definitions ---                                           */
+
+DEFINE INPUT PARAMETER rid_ficha AS ROWID.
+
+/* Local Variable Definitions ---                                       */
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-PREPROCESSOR-BLOCK 
+
+/* ********************  Preprocessor Definitions  ******************** */
+
+&Scoped-define PROCEDURE-TYPE SmartDialog
+
+&Scoped-define ADM-CONTAINER DIALOG-BOX
+
+/* Name of first Frame and/or Browse and/or first Query                 */
+&Scoped-define FRAME-NAME D-Dialog
+
+/* Standard List Definitions                                            */
+&Scoped-Define ENABLED-OBJECTS RECT-13 Btn_OK Btn_Cancel 
+&Scoped-Define DISPLAYED-OBJECTS v-hh-despacho v-mm-despacho v-hh-salbase ~
+v-mm-salbase v-hh-arrdom v-mm-arrdom v-hh-saldom v-mm-saldom v-hh-arrhosp ~
+v-mm-arrhosp v-hh-salhosp v-mm-salhosp v-hh-arrbase v-mm-arrbase ~
+v-hh-disponible v-mm-disponible v-hh-cierre v-mm-cierre 
+
+/* Custom List Definitions                                              */
+/* List-1,List-2,List-3,List-4,List-5,List-6                            */
+
+/* _UIB-PREPROCESSOR-BLOCK-END */
+&ANALYZE-RESUME
+
+
+
+/* ***********************  Control Definitions  ********************** */
+
+/* Define a dialog box                                                  */
+
+/* Definitions of the field level widgets                               */
+DEFINE BUTTON Btn_Cancel AUTO-END-KEY 
+     LABEL "Cancel" 
+     SIZE 14 BY 1.15
+     BGCOLOR 8 .
+
+DEFINE BUTTON Btn_OK AUTO-GO 
+     LABEL "OK" 
+     SIZE 14 BY 1.15
+     BGCOLOR 8 .
+
+DEFINE VARIABLE v-hh-arrbase AS INTEGER FORMAT "99":U INITIAL 0 
+     LABEL "Arribo a Base" 
+     VIEW-AS FILL-IN 
+     SIZE 4 BY 1
+     BGCOLOR 15 FGCOLOR 9  NO-UNDO.
+
+DEFINE VARIABLE v-hh-arrdom AS INTEGER FORMAT "99":U INITIAL 0 
+     LABEL "Arribo a Domicilio" 
+     VIEW-AS FILL-IN 
+     SIZE 4 BY 1
+     BGCOLOR 15 FGCOLOR 9  NO-UNDO.
+
+DEFINE VARIABLE v-hh-arrhosp AS INTEGER FORMAT "99":U INITIAL 0 
+     LABEL "Arribo a Hospital" 
+     VIEW-AS FILL-IN 
+     SIZE 4 BY 1
+     BGCOLOR 15 FGCOLOR 9  NO-UNDO.
+
+DEFINE VARIABLE v-hh-cierre AS INTEGER FORMAT "99":U INITIAL 0 
+     LABEL "Cierre Ficha" 
+     VIEW-AS FILL-IN 
+     SIZE 4 BY 1
+     BGCOLOR 15 FGCOLOR 9  NO-UNDO.
+
+DEFINE VARIABLE v-hh-despacho AS INTEGER FORMAT "99":U INITIAL 0 
+     LABEL "Despacho" 
+     VIEW-AS FILL-IN 
+     SIZE 4 BY 1
+     BGCOLOR 15 FGCOLOR 9  NO-UNDO.
+
+DEFINE VARIABLE v-hh-disponible AS INTEGER FORMAT "99":U INITIAL 0 
+     LABEL "Móvil Disponible" 
+     VIEW-AS FILL-IN 
+     SIZE 4 BY 1
+     BGCOLOR 15 FGCOLOR 9  NO-UNDO.
+
+DEFINE VARIABLE v-hh-salbase AS INTEGER FORMAT "99":U INITIAL 0 
+     LABEL "Salida Base" 
+     VIEW-AS FILL-IN 
+     SIZE 4 BY 1
+     BGCOLOR 15 FGCOLOR 9  NO-UNDO.
+
+DEFINE VARIABLE v-hh-saldom AS INTEGER FORMAT "99":U INITIAL 0 
+     LABEL "Salida de Domicilio" 
+     VIEW-AS FILL-IN 
+     SIZE 4 BY 1
+     BGCOLOR 15 FGCOLOR 9  NO-UNDO.
+
+DEFINE VARIABLE v-hh-salhosp AS INTEGER FORMAT "99":U INITIAL 0 
+     LABEL "Salida de Hospital" 
+     VIEW-AS FILL-IN 
+     SIZE 4 BY 1
+     BGCOLOR 15 FGCOLOR 9  NO-UNDO.
+
+DEFINE VARIABLE v-mm-arrbase AS INTEGER FORMAT "99":U INITIAL 0 
+     VIEW-AS FILL-IN 
+     SIZE 4 BY 1
+     BGCOLOR 15 FGCOLOR 9  NO-UNDO.
+
+DEFINE VARIABLE v-mm-arrdom AS INTEGER FORMAT "99":U INITIAL 0 
+     VIEW-AS FILL-IN 
+     SIZE 4 BY 1
+     BGCOLOR 15 FGCOLOR 9  NO-UNDO.
+
+DEFINE VARIABLE v-mm-arrhosp AS INTEGER FORMAT "99":U INITIAL 0 
+     VIEW-AS FILL-IN 
+     SIZE 4 BY 1
+     BGCOLOR 15 FGCOLOR 9  NO-UNDO.
+
+DEFINE VARIABLE v-mm-cierre AS INTEGER FORMAT "99":U INITIAL 0 
+     VIEW-AS FILL-IN 
+     SIZE 4 BY 1
+     BGCOLOR 15 FGCOLOR 9  NO-UNDO.
+
+DEFINE VARIABLE v-mm-despacho AS INTEGER FORMAT "99":U INITIAL 0 
+     VIEW-AS FILL-IN 
+     SIZE 4 BY 1
+     BGCOLOR 15 FGCOLOR 9  NO-UNDO.
+
+DEFINE VARIABLE v-mm-disponible AS INTEGER FORMAT "99":U INITIAL 0 
+     VIEW-AS FILL-IN 
+     SIZE 4 BY 1
+     BGCOLOR 15 FGCOLOR 9  NO-UNDO.
+
+DEFINE VARIABLE v-mm-salbase AS INTEGER FORMAT "99":U INITIAL 0 
+     VIEW-AS FILL-IN 
+     SIZE 4 BY 1
+     BGCOLOR 15 FGCOLOR 9  NO-UNDO.
+
+DEFINE VARIABLE v-mm-saldom AS INTEGER FORMAT "99":U INITIAL 0 
+     VIEW-AS FILL-IN 
+     SIZE 4 BY 1
+     BGCOLOR 15 FGCOLOR 9  NO-UNDO.
+
+DEFINE VARIABLE v-mm-salhosp AS INTEGER FORMAT "99":U INITIAL 0 
+     VIEW-AS FILL-IN 
+     SIZE 4 BY 1
+     BGCOLOR 15 FGCOLOR 9  NO-UNDO.
+
+DEFINE RECTANGLE RECT-13
+     EDGE-PIXELS 2 GRAPHIC-EDGE  NO-FILL 
+     SIZE 38 BY 13.46.
+
+
+/* ************************  Frame Definitions  *********************** */
+
+DEFINE FRAME D-Dialog
+     v-hh-despacho AT ROW 2.08 COL 23 COLON-ALIGNED AUTO-RETURN 
+     v-mm-despacho AT ROW 2.08 COL 30 COLON-ALIGNED NO-LABEL AUTO-RETURN 
+     v-hh-salbase AT ROW 3.15 COL 23 COLON-ALIGNED AUTO-RETURN 
+     v-mm-salbase AT ROW 3.15 COL 30 COLON-ALIGNED NO-LABEL AUTO-RETURN 
+     v-hh-arrdom AT ROW 4.23 COL 23 COLON-ALIGNED AUTO-RETURN 
+     v-mm-arrdom AT ROW 4.23 COL 30 COLON-ALIGNED NO-LABEL AUTO-RETURN 
+     v-hh-saldom AT ROW 5.31 COL 23 COLON-ALIGNED AUTO-RETURN 
+     v-mm-saldom AT ROW 5.31 COL 30 COLON-ALIGNED NO-LABEL AUTO-RETURN 
+     v-hh-arrhosp AT ROW 6.38 COL 23 COLON-ALIGNED AUTO-RETURN 
+     v-mm-arrhosp AT ROW 6.38 COL 30 COLON-ALIGNED NO-LABEL AUTO-RETURN 
+     v-hh-salhosp AT ROW 7.46 COL 23 COLON-ALIGNED AUTO-RETURN 
+     v-mm-salhosp AT ROW 7.46 COL 30 COLON-ALIGNED NO-LABEL AUTO-RETURN 
+     v-hh-arrbase AT ROW 8.54 COL 23 COLON-ALIGNED AUTO-RETURN 
+     v-mm-arrbase AT ROW 8.54 COL 30 COLON-ALIGNED NO-LABEL AUTO-RETURN 
+     v-hh-disponible AT ROW 9.62 COL 23 COLON-ALIGNED AUTO-RETURN 
+     v-mm-disponible AT ROW 9.62 COL 30 COLON-ALIGNED NO-LABEL AUTO-RETURN 
+     v-hh-cierre AT ROW 10.69 COL 23 COLON-ALIGNED AUTO-RETURN 
+     v-mm-cierre AT ROW 10.69 COL 30 COLON-ALIGNED NO-LABEL AUTO-RETURN 
+     Btn_OK AT ROW 12.85 COL 7
+     Btn_Cancel AT ROW 12.85 COL 22
+     RECT-13 AT ROW 1.27 COL 3
+     SPACE(2.13) SKIP(0.53)
+    WITH VIEW-AS DIALOG-BOX KEEP-TAB-ORDER 
+         SIDE-LABELS NO-UNDERLINE THREE-D  SCROLLABLE 
+         TITLE "Completar Tiempos a Mano"
+         DEFAULT-BUTTON Btn_OK CANCEL-BUTTON Btn_Cancel.
+
+
+/* *********************** Procedure Settings ************************ */
+
+&ANALYZE-SUSPEND _PROCEDURE-SETTINGS
+/* Settings for THIS-PROCEDURE
+   Type: SmartDialog
+   Allow: Basic,Browse,DB-Fields,Query,Smart
+   Other Settings: COMPILE
+ */
+&ANALYZE-RESUME _END-PROCEDURE-SETTINGS
+
+
+/* ***************  Runtime Attributes and UIB Settings  ************** */
+
+&ANALYZE-SUSPEND _RUN-TIME-ATTRIBUTES
+/* SETTINGS FOR DIALOG-BOX D-Dialog
+                                                                        */
+ASSIGN 
+       FRAME D-Dialog:SCROLLABLE       = FALSE
+       FRAME D-Dialog:HIDDEN           = TRUE.
+
+/* SETTINGS FOR FILL-IN v-hh-arrbase IN FRAME D-Dialog
+   NO-ENABLE                                                            */
+/* SETTINGS FOR FILL-IN v-hh-arrdom IN FRAME D-Dialog
+   NO-ENABLE                                                            */
+/* SETTINGS FOR FILL-IN v-hh-arrhosp IN FRAME D-Dialog
+   NO-ENABLE                                                            */
+/* SETTINGS FOR FILL-IN v-hh-cierre IN FRAME D-Dialog
+   NO-ENABLE                                                            */
+/* SETTINGS FOR FILL-IN v-hh-despacho IN FRAME D-Dialog
+   NO-ENABLE                                                            */
+/* SETTINGS FOR FILL-IN v-hh-disponible IN FRAME D-Dialog
+   NO-ENABLE                                                            */
+/* SETTINGS FOR FILL-IN v-hh-salbase IN FRAME D-Dialog
+   NO-ENABLE                                                            */
+/* SETTINGS FOR FILL-IN v-hh-saldom IN FRAME D-Dialog
+   NO-ENABLE                                                            */
+/* SETTINGS FOR FILL-IN v-hh-salhosp IN FRAME D-Dialog
+   NO-ENABLE                                                            */
+/* SETTINGS FOR FILL-IN v-mm-arrbase IN FRAME D-Dialog
+   NO-ENABLE                                                            */
+/* SETTINGS FOR FILL-IN v-mm-arrdom IN FRAME D-Dialog
+   NO-ENABLE                                                            */
+/* SETTINGS FOR FILL-IN v-mm-arrhosp IN FRAME D-Dialog
+   NO-ENABLE                                                            */
+/* SETTINGS FOR FILL-IN v-mm-cierre IN FRAME D-Dialog
+   NO-ENABLE                                                            */
+/* SETTINGS FOR FILL-IN v-mm-despacho IN FRAME D-Dialog
+   NO-ENABLE                                                            */
+/* SETTINGS FOR FILL-IN v-mm-disponible IN FRAME D-Dialog
+   NO-ENABLE                                                            */
+/* SETTINGS FOR FILL-IN v-mm-salbase IN FRAME D-Dialog
+   NO-ENABLE                                                            */
+/* SETTINGS FOR FILL-IN v-mm-saldom IN FRAME D-Dialog
+   NO-ENABLE                                                            */
+/* SETTINGS FOR FILL-IN v-mm-salhosp IN FRAME D-Dialog
+   NO-ENABLE                                                            */
+/* _RUN-TIME-ATTRIBUTES-END */
+&ANALYZE-RESUME
+
+
+/* Setting information for Queries and Browse Widgets fields            */
+
+&ANALYZE-SUSPEND _QUERY-BLOCK DIALOG-BOX D-Dialog
+/* Query rebuild information for DIALOG-BOX D-Dialog
+     _Options          = "SHARE-LOCK"
+     _Query            is NOT OPENED
+*/  /* DIALOG-BOX D-Dialog */
+&ANALYZE-RESUME
+
+ 
+
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CUSTOM _INCLUDED-LIB D-Dialog 
+/* ************************* Included-Libraries *********************** */
+
+{src/adm/method/containr.i}
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+
+
+/* ************************  Control Triggers  ************************ */
+
+&Scoped-define SELF-NAME D-Dialog
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL D-Dialog D-Dialog
+ON WINDOW-CLOSE OF FRAME D-Dialog /* Completar Tiempos a Mano */
+DO:  
+  /* Add Trigger to equate WINDOW-CLOSE to END-ERROR. */
+  APPLY "END-ERROR":U TO SELF.
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME v-mm-arrdom
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL v-mm-arrdom D-Dialog
+ON LEAVE OF v-mm-arrdom IN FRAME D-Dialog
+DO:
+  FIND CURRENT Ficha EXCLUSIVE-LOCK.
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&UNDEFINE SELF-NAME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CUSTOM _MAIN-BLOCK D-Dialog 
+
+
+/* ***************************  Main Block  *************************** */
+
+SESSION:DATA-ENTRY-RETURN = YES.
+
+{src/adm/template/dialogmn.i}
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+/* **********************  Internal Procedures  *********************** */
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE adm-create-objects D-Dialog _ADM-CREATE-OBJECTS
+PROCEDURE adm-create-objects :
+/*------------------------------------------------------------------------------
+  Purpose:     Create handles for all SmartObjects used in this procedure.
+               After SmartObjects are initialized, then SmartLinks are added.
+  Parameters:  <none>
+------------------------------------------------------------------------------*/
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE adm-row-available D-Dialog _ADM-ROW-AVAILABLE
+PROCEDURE adm-row-available :
+/*------------------------------------------------------------------------------
+  Purpose:     Dispatched to this procedure when the Record-
+               Source has a new row available.  This procedure
+               tries to get the new row (or foriegn keys) from
+               the Record-Source and process it.
+  Parameters:  <none>
+------------------------------------------------------------------------------*/
+
+  /* Define variables needed by this internal procedure.             */
+  {src/adm/template/row-head.i}
+
+  /* Process the newly available records (i.e. display fields,
+     open queries, and/or pass records on to any RECORD-TARGETS).    */
+  {src/adm/template/row-end.i}
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE disable_UI D-Dialog _DEFAULT-DISABLE
+PROCEDURE disable_UI :
+/*------------------------------------------------------------------------------
+  Purpose:     DISABLE the User Interface
+  Parameters:  <none>
+  Notes:       Here we clean-up the user-interface by deleting
+               dynamic widgets we have created and/or hide 
+               frames.  This procedure is usually called when
+               we are ready to "clean-up" after running.
+------------------------------------------------------------------------------*/
+  /* Hide all frames. */
+  HIDE FRAME D-Dialog.
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE enable_UI D-Dialog _DEFAULT-ENABLE
+PROCEDURE enable_UI :
+/*------------------------------------------------------------------------------
+  Purpose:     ENABLE the User Interface
+  Parameters:  <none>
+  Notes:       Here we display/view/enable the widgets in the
+               user-interface.  In addition, OPEN all queries
+               associated with each FRAME and BROWSE.
+               These statements here are based on the "Other 
+               Settings" section of the widget Property Sheets.
+------------------------------------------------------------------------------*/
+  DISPLAY v-hh-despacho v-mm-despacho v-hh-salbase v-mm-salbase v-hh-arrdom 
+          v-mm-arrdom v-hh-saldom v-mm-saldom v-hh-arrhosp v-mm-arrhosp 
+          v-hh-salhosp v-mm-salhosp v-hh-arrbase v-mm-arrbase v-hh-disponible 
+          v-mm-disponible v-hh-cierre v-mm-cierre 
+      WITH FRAME D-Dialog.
+  ENABLE RECT-13 Btn_OK Btn_Cancel 
+      WITH FRAME D-Dialog.
+  VIEW FRAME D-Dialog.
+  {&OPEN-BROWSERS-IN-QUERY-D-Dialog}
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE local-destroy D-Dialog 
+PROCEDURE local-destroy :
+/*------------------------------------------------------------------------------
+  Purpose:     Override standard ADM method
+  Notes:       
+------------------------------------------------------------------------------*/
+
+  /* Code placed here will execute PRIOR to standard behavior. */
+
+  /* Dispatch standard ADM method.                             */
+  RUN dispatch IN THIS-PROCEDURE ( INPUT 'destroy':U ) .
+
+  /* Code placed here will execute AFTER standard behavior.    */
+
+  IF last-event:LABEL = "GO" 
+  THEN DO:
+
+       DO TRANSACTION WITH FRAME D-Dialog:
+
+          FIND CURRENT Ficha EXCLUSIVE-LOCK.
+ 
+          {asighora.i "despacho"}
+          {asighora.i "salbase"}
+          {asighora.i "arrdom"}
+          {asighora.i "saldom"}
+          {asighora.i "arrhosp"}
+          {asighora.i "salhosp"}
+          {asighora.i "arrbase"}
+          {asighora.i "disponible"}
+          {asighora.i "cierre"}
+
+       END. 
+
+  END.     
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE local-enable D-Dialog 
+PROCEDURE local-enable :
+/*------------------------------------------------------------------------------
+  Purpose:     Override standard ADM method
+  Notes:       
+------------------------------------------------------------------------------*/
+
+  /* Code placed here will execute PRIOR to standard behavior. */
+
+  /* Dispatch standard ADM method.                             */
+  RUN dispatch IN THIS-PROCEDURE ( INPUT 'enable':U ) .
+
+  /* Code placed here will execute AFTER standard behavior.    */
+
+  DO WITH FRAME {&FRAME-NAME}:
+     {sensithora.i "despacho"}
+     {sensithora.i "salbase"}
+     {sensithora.i "arrdom"}
+     {sensithora.i "saldom"}
+     {sensithora.i "arrhosp"}
+     {sensithora.i "salhosp"}
+     {sensithora.i "arrbase"}
+     {sensithora.i "disponible"}
+     {sensithora.i "cierre"}
+  END.
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE local-initialize D-Dialog 
+PROCEDURE local-initialize :
+/*------------------------------------------------------------------------------
+  Purpose:     Override standard ADM method
+  Notes:       
+------------------------------------------------------------------------------*/
+
+  /* Code placed here will execute PRIOR to standard behavior. */
+
+  FIND Ficha WHERE ROWID(Ficha) = rid_ficha NO-LOCK.
+  
+  {inithora.i "despacho"}
+  {inithora.i "salbase"}
+  {inithora.i "arrdom"}
+  {inithora.i "saldom"}
+  {inithora.i "arrhosp"}
+  {inithora.i "salhosp"}
+  {inithora.i "arrbase"}
+  {inithora.i "disponible"}
+  {inithora.i "cierre"}
+
+  /* Dispatch standard ADM method.                             */
+  RUN dispatch IN THIS-PROCEDURE ( INPUT 'initialize':U ) .
+
+  /* Code placed here will execute AFTER standard behavior.    */
+  
+ 
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE send-records D-Dialog _ADM-SEND-RECORDS
+PROCEDURE send-records :
+/*------------------------------------------------------------------------------
+  Purpose:     Send record ROWID's for all tables used by
+               this file.
+  Parameters:  see template/snd-head.i
+------------------------------------------------------------------------------*/
+
+  /* SEND-RECORDS does nothing because there are no External
+     Tables specified for this SmartDialog, and there are no
+     tables specified in any contained Browse, Query, or Frame. */
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE state-changed D-Dialog 
+PROCEDURE state-changed :
+/* -----------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+-------------------------------------------------------------*/
+  DEFINE INPUT PARAMETER p-issuer-hdl AS HANDLE NO-UNDO.
+  DEFINE INPUT PARAMETER p-state AS CHARACTER NO-UNDO.
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+

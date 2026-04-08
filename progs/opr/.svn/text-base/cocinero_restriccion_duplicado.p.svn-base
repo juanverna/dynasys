@@ -1,0 +1,22 @@
+DEFINE TEMP-TABLE tt 
+FIELD nro_restriccion AS INT
+FIELD sub_evento AS INT.
+
+FOR EACH contrato_hd WHERE contrato_hd.estado = "A" AND Contrato_hd.fecha_baja = ?  AND Contrato_hd.rige_hasta > TODAY AND
+     ( contrato_hd.cant_periodos  = contrato_hd.resto_periodos OR
+       contrato_hd.resto_periodos > 0 ):
+    EMPTY TEMP-TABLE tt.
+    FOR EACH contrato_restriccion WHERE contrato_restriccion.nro_contrato = contrato_hd.nro_contrato :
+        FIND tt WHERE tt.nro_restriccion = contrato_restriccion.nro_restriccion and
+                tt.sub_evento = contrato_restriccion.sub_evento NO-LOCK NO-ERROR.
+        IF NOT AVAILABLE tt THEN DO:
+                CREATE tt.
+                ASSIGN tt.nro_restriccion = contrato_restriccion.nro_restriccion
+                       tt.sub_evento = contrato_restriccion.sub_evento.
+        END.
+        ELSE do:
+            DISPLAY contrato_hd.nro_contrato contrato_hd.numero_eventos contrato_restriccion.nro_restriccion contrato_restriccion.sub_evento contrato_restriccion.valor.
+        END.
+    END.
+END.
+

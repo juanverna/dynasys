@@ -1,0 +1,39 @@
+/*audita si se han impreso los recibos*/
+DEF VAR per AS INT NO-UNDO.
+DEF VAR aa AS CHAR NO-UNDO.
+DEFINE VAR lista AS CHAR.
+FOR EACH fac_header WHERE fecha > 05/01/2010 AND NOT anulado :
+    IF fac_header.nro_contrato = 0 THEN NEXT.
+    FIND contrato_hd WHERE contrato_hd.nro_contrato = fac_header.nro_contrato AND NOT contrato_hd.anulado NO-ERROR.
+    IF NOT AVAILABLE contrato_hd THEN NEXT.
+    IF contrato_hd.resto_periodos + 1 = contrato_hd.cant_periodos OR
+       contrato_hd.cant_periodos = 0 THEN do:
+        per = year(fac_header.fecha) * 100 + month(fac_header.fecha).
+        FIND evento WHERE evento.origen = "CONTRATO" and NOT evento.anulado AND
+                              evento.nro_identificacion = contrato_hd.nro_contrato and
+                              evento.periodo = per AND evento.sub_evento = 1 and
+                              evento.nro_tipo_evento = contrato_hd.nro_tipo_evento NO-ERROR.
+        IF AVAILABLE evento THEN DO:
+                IF evento.frealizado <> ? THEN do:
+                     IF fac_header.estado_2 <> "I" AND fac_header.estado_2 <> "OT" THEN do:
+                       DISPLAY "Realiz" @ aa fac_header.prf_comprob fac_header.nro_comprob fac_header.estado_2 evento.nro_evento.
+                       lista = lista + "," + string(evento.nro_evento).
+                     END.
+                     IF fac_header.estado_2 = "OT" THEN DO:
+                       DISPLAY "Espera OT" @ aa fac_header.prf_comprob fac_header.nro_comprob fac_header.estado_2 evento.nro_evento.
+
+                     END.
+                END.
+                ELSE do:
+                        IF fac_header.estado_2 <> "OT" THEN do:
+                        DISPLAY "No real" @ aa fac_header.prf_comprob fac_header.nro_comprob fac_header.estado_2 .
+                        END.
+                END.
+        END.
+        ELSE DISPLAY "Sin evento" @ aa fac_header.prf_comprob fac_header.nro_comprob fac_header.estado_2.
+    END.
+END.
+OUTPUT TO "CLIPBOARD".
+PUT UNFORMATTED substring(lista,2).
+OUTPUT CLOSE.
+/*para la impresion con cocinero_impresion_recibos_que_no_salieron.p*/

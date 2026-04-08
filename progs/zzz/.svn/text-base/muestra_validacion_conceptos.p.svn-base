@@ -1,0 +1,25 @@
+DEFINE VARIABLE nok AS LOGICAL EXTENT 20.     
+     
+FIND Imputacion WHERE cdg_imputacion = 6.
+     
+     nok [ 01 ] = CAN-FIND(FIRST Ajusteinv_hd WHERE Ajusteinv_hd.cdg_imputacion = Imputacion.cdg_imputacion) .
+     nok [ 02 ] = CAN-FIND(FIRST Comprobante_concepto WHERE Comprobante_concepto.cdg_imputacion = Imputacion.cdg_imputacion) .
+     nok [ 03 ] = CAN-FIND(FIRST Cta_cte WHERE Cta_cte.cdg_imputacion = Imputacion.cdg_imputacion) .
+     nok [ 04 ] = CAN-FIND(FIRST Cta_cte_com WHERE Cta_cte_com.cdg_imputacion = Imputacion.cdg_imputacion) .
+     nok [ 05 ] = CAN-FIND(FIRST Cta_cte_prv WHERE Cta_cte_prv.cdg_imputacion = Imputacion.cdg_imputacion) .
+     nok [ 06 ] = CAN-FIND(FIRST Emb_header_prv WHERE Emb_header_prv.cdg_imputacion = Imputacion.cdg_imputacion) .
+     nok [ 07 ] = CAN-FIND(FIRST Fac_header WHERE Fac_header.cdg_imputacion = Imputacion.cdg_imputacion) .
+     nok [ 08 ] = CAN-FIND(FIRST Fac_header_prv WHERE Fac_header_prv.cdg_imputacion = Imputacion.cdg_imputacion) .
+     nok [ 09 ] = CAN-FIND(FIRST Familia_cuenta WHERE Familia_cuenta.cdg_imputacion = Imputacion.cdg_imputacion) .
+     nok [ 10 ] = CAN-FIND(FIRST Impuesto_concepto WHERE Impuesto_concepto.cdg_imputacion = Imputacion.cdg_imputacion) .
+     nok [ 11 ] = CAN-FIND(FIRST Oci_header WHERE Oci_header.cdg_imputacion = Imputacion.cdg_imputacion) .
+     nok [ 12 ] = CAN-FIND(FIRST Ocm_header WHERE Ocm_header.cdg_imputacion = Imputacion.cdg_imputacion) .
+     nok [ 13 ] = CAN-FIND(FIRST Opg_header WHERE Opg_header.cdg_imputacion = Imputacion.cdg_imputacion) .
+     nok [ 14 ] = CAN-FIND(FIRST Ped_header WHERE Ped_header.cdg_imputacion = Imputacion.cdg_imputacion) .
+     nok [ 15 ] = CAN-FIND(FIRST Rec_header WHERE Rec_header.cdg_imputacion = Imputacion.cdg_imputacion) .
+     nok [ 16 ] = CAN-FIND(FIRST Rem_header WHERE Rem_header.cdg_imputacion = Imputacion.cdg_imputacion) .
+     nok [ 17 ] = CAN-FIND(FIRST Rem_header_prv WHERE Rem_header_prv.cdg_imputacion = Imputacion.cdg_imputacion) .
+     nok [ 18 ] = CAN-FIND(FIRST Transdep_hd WHERE Transdep_hd.cdg_imputacion = Imputacion.cdg_imputacion) .
+     nok [ 19 ] = CAN-FIND(FIRST Valeinv_hd WHERE Valeinv_hd.cdg_imputacion = Imputacion.cdg_imputacion).
+
+     DISPLAY NOK WITH SIDE-LABELS.

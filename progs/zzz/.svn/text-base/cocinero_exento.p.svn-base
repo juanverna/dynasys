@@ -1,0 +1,5 @@
+FOR EACH fac_header WHERE fac_header.cdg_condiva = 3:
+FIND cliente OF fac_header NO-ERROR.
+IF NOT AVAILABLE cliente THEN next.
+RUN regenerar_subdiario_ventas.p( ROWID(fac_header)).
+END.

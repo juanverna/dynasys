@@ -1,0 +1,4 @@
+  FIND FIRST Ficha 
+       WHERE Ficha.cdg_cliente = 2 /* Poner el cliente de IHS!!!!! */
+         AND Ficha.num_referencia = {1}
+         AND Ficha.abierta {2}.

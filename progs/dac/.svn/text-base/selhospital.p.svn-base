@@ -1,0 +1,13 @@
+/*=================================================================================*/
+/*                                                                                 */
+/*                      SELECCION DE HOSPITALES                                    */
+/*                                                                                 */
+/*=================================================================================*/
+
+&GLOBAL-DEFINE TABLA           Hospital
+&GLOBAL-DEFINE CODIGO          cdg_hospital
+&GLOBAL-DEFINE NOMBRE          nom_hospital
+&GLOBAL-DEFINE TITULO-BROWSE   Tipee un nombre o seleccione de la lista
+&GLOBAL-DEFINE TITULO-FRAME    Seleccion de Hospitales
+
+{SELBROWS.I}

@@ -1,0 +1,8 @@
+compile prfichad.p save.
+find last ficha NO-LOCK.
+find prev ficha no-lock.
+find prev ficha no-lock.
+find prev ficha no-lock.
+
+run prfichad.p ( input rowid(ficha)).
+

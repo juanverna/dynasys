@@ -1,0 +1,216 @@
+[Startup]
+V6Display=no
+;ImmediateDisplay=yes
+;MultitaskingInterval=100
+DefaultFont=MS Sans Serif, size=8
+DefaultFixedFont=Courier New, size=8
+DLC=C:\Archivos de programa\Progress
+Use-3D-Size=Yes
+PROBUILD=C:\Archivos de programa\Progress\PROBUILD
+PROPATH=D:\Desa\dac\Version 9,C:\Archivos de programa\Progress\gui,C:\Archivos de programa\Progress\gui\adecomm.pl,C:\Archivos de programa\Progress\gui\adecomp.pl,C:\Archivos de programa\Progress\gui\adedesk.pl,C:\Archivos de programa\Progress\gui\adedict.pl,C:\Archivos de programa\Progress\gui\adeedit.pl,C:\Archivos de programa\Progress\gui\adeicon.pl,C:\Archivos de programa\Progress\gui\adeshar.pl,C:\Archivos de programa\Progress\gui\adeuib.pl,C:\Archivos de programa\Progress\gui\adeweb.pl,C:\Archivos de programa\Progress\gui\adexml.pl,C:\Archivos de programa\Progress\gui\prodict.pl,C:\Archivos de programa\Progress\gui\protools.pl,C:\Archivos de programa\Progress,C:\Archivos de programa\Progress\bin,C:\Archivos de programa\Progress\PROBUILD\EUCAPP\EUC.PL,C:\Archivos de programa\Progress\PROBUILD\EUCAPP
+OLD-PROPATH=D:\Desa\dac\Version ,C:\Archivos de programa\Progress\gui,C:\Archivos de programa\Progress,C:\Archivos de programa\Progress\bin,C:\Archivos de programa\Progress\PROBUILD\EUCAPP\EUC.PL,C:\Archivos de programa\Progress\PROBUILD\EUCAPP,.\FUENTES,.\OBJETOS,.\IMAGENES
+
+[Colors]
+;******************************************************************************
+; THE DEFINITION OF COLOR 0 THROUGH 15 IS PRIVATE TO THE Progress ADE.  
+; MODIFYING COLORS 0 THROUGH 15 MAY PREVENT THE Progress ADE FROM RUNNING.
+; The following color definitions correspond to the ADE standards.
+;  0 to 15  - reserved
+color0=0,0,0
+color1=0,0,128
+color2=0,128,0
+color3=0,128,128
+color4=128,0,0
+color5=128,0,128
+color6=128,128,0
+color7=128,128,128
+color8=192,192,192
+color9=0,0,255
+color10=0,255,0
+color11=0,255,255
+color12=255,0,0
+color13=255,0,255
+color14=255,255,0
+color15=255,255,255
+color16=255,156,9
+color17=176,138,60
+color18=176,138,60
+
+NORMAL=0,15
+INPUT=15,0
+MESSAGES=15,1
+
+[Default Window]
+;x=
+;y=
+;rows=
+;columns=
+
+[fonts]
+;******************************************************************************
+; THE DEFINITION OF FONT 0 THROUGH 7 IS PRIVATE TO THE Progress ADE.  
+; MODIFYING FONTS 0 THROUGH 7 MAY PREVENT THE Progress ADE FROM RUNNING.
+; The following fonts definitions correspond to the ADE standards.
+;       ?  - DefaultFont from Startup Section
+;       0  - DefaultFixedFont from Startup Section (1 char per PPU)  
+;       1  - Proportional System Font
+;       2  - Editor Font for 4GL program entry
+;       3  - TTY Simulator (should be fixed)
+;       4  - Dynamically-sized widgets, eg status-line, selection-list
+;       5  - Static widgets, eg. combo-boxes
+;       6  - Dynamic, bold (TranMan2)
+;       7  - Reserved
+font0=FixedSys
+font1=System
+font2=Courier New, size=8
+font3=Courier New, size=8
+font4=MS Sans Serif, size=8
+font5=MS Sans Serif, size=10
+font6=MS Sans Serif, size=8, bold
+font7=System
+font8=Courier New, size 8
+font9=Courier New, size 8 bold
+font10=Courier New, size 7
+font11=Courier New, size 8 italic bold
+font12=Arial, size 7
+font13=Courier New, size 8 bold
+font14=Courier New, size 7
+font15=Arial, size 8 bold
+font16=Arial, size 10 bold
+font17=Courier New, size 9
+font18=Courier New, size 10
+font19=MS Sans Serif, size=8 bold
+font20=Courier New, size 6
+font21=Courier New, size 7
+font22=Courier New, size 8
+font23=Courier New, size 9
+font24=Courier New, size 10
+
+[WinChar Startup]
+;DLC=
+;PROCFG=
+;PROMSGS=
+;PROPATH=
+DLC=C:\Archivos de programa\Progress
+PROBUILD=C:\Archivos de programa\Progress\PROBUILD
+PROPATH=.,C:\Archivos de programa\Progress\PROBUILD\EUCAPP\EUC.PL,C:\Archivos de programa\Progress\PROBUILD\EUCAPP,.,.\bas,.\adp,.\com,.\exp,.\cxc,.\cxp,.\dsp,.\fac,.\gla,.\cps,.\imp,.\inv,.\seg,.\tes,.\utl,.\mxp
+
+
+[WinChar Colors]
+color0=WHITE/BLUE          "NORMAL"
+color1=BLACK/GRAY          "INPUT, UNDERLINE"   
+color2=BLACK/GRAY          "MESSAGES, REVERSE"
+color3=BLUE/WHITE          "HIGHLITE, HELP"
+color4=BLINK-RED/WHITE     "URGENT"
+
+;NORMAL=WHITE/BLUE
+;INPUT=BLACK/GRAY 
+;MESSAGES=BLACK/GRAY 
+
+[WinChar Default Window]
+;rows=25
+;rows=50
+
+[WinChar Keys]
+;GO=F1,CTRL-X
+
+[Debug-Init]
+;******************************************************************************
+; THE FOLLOWING INFORMATION IS PRIVATE TO THE DEBUGGER. IT SHOULD NEVER BE
+; MODIFIED EXCEPT BY THE DEBUGGER PROGRAM.
+;
+Location=1,146,15,460,464
+Pane0=1,46," "
+Pane1=1,14,""
+Pane2=1,16,"Commands in Queue: 0"
+Pane3=1,25,""
+DebuggerName=PRODEBUG.EXE
+
+[Debug-Macros]
+Macro0=r, run &file
+Macro1=c, continue
+Macro2=s, step
+Macro3=n, next
+Macro4=b, break &file &line
+Macro5=cb, cancel break &file &line
+Macro6=sb, show breaks
+Macro7=ss, show stack
+Macro8=u, up
+Macro9=d, down
+Macro10=di, display &text
+Macro11=sm, show macros
+
+[Debug-Buttons]
+Button0=Run,run &file
+Button1=Cont,continue
+Button2=Step,step
+Button3=Next,next
+Button4=Break,break &file &line
+Button5=Stack,show stack
+Button6=Up,up
+Button7=Down,down
+Button8=Disp,display &text
+Button9=Exit,exit
+
+[ProADE]
+;DividerFgColor=15
+;DividerBgColor=1
+;OKBoxFgColor=1
+;OKBoxBgColor=8
+;FillinFgColor=0
+;FillinBgColor=8
+;Editor4GLFgColor=DEFAULT
+;Editor4GLBgColor=DEFAULT
+;Editor4GLFgSmallColor=0
+;Editor4GLBgSmallColor=8
+;FixedFont=0
+;StandardFont=1
+;Editor4GLFont=2
+;EditorTabStop=4
+
+[Proedit]
+SaveSettings=yes
+BufList=
+ExitWarning=yes
+SaveBufList=no
+MinimizeBeforeRun=no
+RestoreAfterRun=yes
+PauseAfterRun=yes
+AutoCleanup=yes
+MostRecentlyUsedFileList=yes
+MRUEntries=4
+EditorFont=2
+MRUFile1=D:\Desa\dac\Version 9\runxml.p
+MRUFile2=D:\Desa\dac\R3.8\fuentes\crr\runxml.p
+MRUFile3=D:\Desa\dac\Version 9\nrorelea.i
+
+[SmartPanel]
+AdviseTransactionUsage=no
+
+[Procomp]
+SaveSettings=yes
+FileSpec01=.\fuentes\accsic,*.p *.w
+DefFileSpec=*.p *.w
+LogFile=compile.log
+ShowStatus=yes
+RemoveOldRs=yes
+IfNoR=no
+SubDirs=no
+SaveNewRs=yes
+XrefAppend=no
+ListAppend=no
+PageLength=60
+PageWidth=80
+V6Frame=No
+StreamIO=no
+
+
+[ProUIB]
+Disabled_Cue_Cards=SmartViewer,SmartDialog,SmartBrowser
+
+[Debug-Temp-Macros]
+[ProAB]
+MRUFile1=D:\Desa\dac\Version 9\c-logon.w
+MRUFile2=D:\Desa\dac\R3.8\fuentes\c-logon.w
+MRUFile3=D:\Desa\dac\v-interface-xml.w
+MRUFile4=D:\Desa\dac\Version 9\v-interface-xml.w

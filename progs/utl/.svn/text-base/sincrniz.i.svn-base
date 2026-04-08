@@ -1,0 +1,2 @@
+FIND LAST {2} NO-LOCK.
+CURRENT-VALUE({1}) = {2}.{3}.

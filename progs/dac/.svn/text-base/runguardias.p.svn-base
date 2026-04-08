@@ -1,0 +1,21 @@
+/*======================================================================================*/
+/*        REALIZA LA CONECCION (OPCIONAL) DE LA BASE DE AFILIADOS E INVOCA EL MENU      */
+/*======================================================================================*/
+
+DEFINE VARIABLE hubo_logon AS LOGICAL.
+
+SESSION:TIME-SOURCE = "despacho".
+SESSION:DATA-ENTRY-RETURN = YES.
+
+connect -pf ./procs/svafiliados.pf NO-ERROR.
+
+IF NOT CONNECTED('padron')
+THEN DO:
+      MESSAGE "No pudo conectarse la base de datos Auxiliar. No estarán disponibles"
+              "las funciones de Afiliados, Agenda Telefónica y Registro de Novedades."
+              VIEW-AS ALERT-BOX WARNING TITLE "Base Auxiliar NO Conectada".
+END.                 
+
+RUN c-logon.w ( OUTPUT hubo_logon).
+IF hubo_logon THEN RUN w-dotaci.w.
+quit.

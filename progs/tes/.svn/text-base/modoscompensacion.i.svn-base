@@ -1,0 +1,3 @@
+DEFINE VARIABLE MDCOM_DEBITO_CC   LIKE Rubro_comprobcc.modo_relacion INITIAL "DEB".
+DEFINE VARIABLE MDCOM_CREDITO_CC  LIKE Rubro_comprobcc.modo_relacion INITIAL "CRD".
+DEFINE VARIABLE MDCOM_CHEQUERECH  LIKE Rubro_comprobcc.modo_relacion INITIAL "CHR".

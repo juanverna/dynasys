@@ -1,0 +1,7 @@
+
+    FOR EACH recurso_agenda:
+        FIND evento OF recurso_agenda NO-ERROR.
+        IF NOT AVAILABLE evento THEN NEXT.
+        IF evento.anulado THEN DELETE recurso_agenda.
+    END.
+

@@ -1,0 +1,3584 @@
+&ANALYZE-SUSPEND _VERSION-NUMBER UIB_v8r12 GUI
+&ANALYZE-RESUME
+/* Connected Databases 
+          sic              PROGRESS
+*/
+&Scoped-define WINDOW-NAME C-Win
+
+
+/* Temp-Table and Buffer definitions                                    */
+DEFINE BUFFER Moneda_detalle FOR Moneda.
+DEFINE BUFFER Moneda_totales FOR Moneda.
+DEFINE TEMP-TABLE T-Asn_detalle NO-UNDO LIKE Asn_detalle.
+DEFINE TEMP-TABLE T-Asn_header NO-UNDO LIKE Asn_header.
+DEFINE TEMP-TABLE T-Asn_totales NO-UNDO LIKE Asn_totales.
+DEFINE TEMP-TABLE T-Caja-imputacion NO-UNDO LIKE Caja-imputacion.
+DEFINE TEMP-TABLE T-Caj_detalle NO-UNDO LIKE Caj_detalle.
+DEFINE TEMP-TABLE T-Caj_header NO-UNDO LIKE Caj_header.
+DEFINE TEMP-TABLE T-Cheque NO-UNDO LIKE Cheque.
+DEFINE TEMP-TABLE T-Cta_cte NO-UNDO LIKE Cta_cte.
+DEFINE TEMP-TABLE T-Fac_detalle NO-UNDO LIKE Fac_detalle.
+DEFINE TEMP-TABLE T-Rec_detalle NO-UNDO LIKE Rec_detalle.
+DEFINE NEW SHARED TEMP-TABLE T-Rec_header NO-UNDO LIKE Rec_header.
+DEFINE TEMP-TABLE T-Totales_recibo NO-UNDO LIKE Totales_recibo.
+DEFINE TEMP-TABLE T-Valor NO-UNDO LIKE Valor.
+
+
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CUSTOM _DEFINITIONS C-Win 
+/*------------------------------------------------------------------------
+
+  File: 
+
+  Description: 
+
+  Input Parameters:
+      <none>
+
+  Output Parameters:
+      <none>
+
+  Author: 
+
+  Created: 
+
+------------------------------------------------------------------------*/
+/*          This .W file was created with the Progress UIB.             */
+/*----------------------------------------------------------------------*/
+
+/* Create an unnamed pool to store all the widgets created 
+     by this procedure. This is a good default which assures
+     that this procedure's triggers and internal procedures 
+     will execute in this procedure's storage, and that proper
+     cleanup will occur on deletion of the procedure. */
+
+CREATE WIDGET-POOL.
+
+/* ***************************  Definitions  ************************** */
+
+/* Parameters Definitions ---                                           */
+&IF DEFINED(UIB_is_Running) NE 0
+&THEN
+DEFINE VARIABLE                rid_recibo     AS ROWID.
+DEFINE VARIABLE                modo           AS INTEGER.
+&ELSE
+DEFINE INPUT-OUTPUT PARAMETER  rid_recibo     AS ROWID.
+DEFINE INPUT        PARAMETER  modo           AS INTEGER.
+&ENDIF
+
+/* Local Variable Definitions ---                                       */
+
+{VRSHARED.I "NEW"}
+
+{nrorelea.i}
+{valoresmodo.i}
+{valoressalida.i}
+
+DEFINE VARIABLE cotiza_dolar              AS DECIMAL.
+DEFINE VARIABLE codigo_dolar              LIKE Moneda.cdg_moneda.
+DEFINE VARIABLE v-tip_comprob             AS CHARACTER.
+DEFINE VARIABLE dfl_leyenda               AS CHARACTER.
+
+DEFINE VARIABLE sino-msg                  AS LOGICAL NO-UNDO.
+DEFINE VARIABLE st_seleccionado           AS CHARACTER.
+
+DEFINE VARIABLE v-prox_docum              LIKE Parametro.cdg_parametro INITIAL "PROXNASN".
+DEFINE VARIABLE v-debito                  AS CHARACTER FORMAT "X(14)".
+DEFINE VARIABLE v-credito                 AS CHARACTER FORMAT "X(14)".
+
+DEFINE VARIABLE rid_tabla                 AS ROWID.
+
+DEFINE VARIABLE v-nro_linea               AS INTEGER.
+DEFINE VARIABLE v-nro_cuenta              AS INTEGER.
+DEFINE VARIABLE aux_importe               AS DECIMAL.
+DEFINE VARIABLE codigo_iva                AS INTEGER INITIAL 1.
+DEFINE VARIABLE mod_cambio                AS LOGICAL.
+
+DEFINE VARIABLE credebfc                  AS LOGICAL.
+DEFINE VARIABLE saldo_importe             LIKE Rec_detalle.importe.
+DEFINE VARIABLE prop_importe              LIKE Rec_detalle.importe.
+DEFINE VARIABLE v-pto_venta-org           LIKE Rec_header.prf_comprob.
+DEFINE VARIABLE que_sector                LIKE Area.cdg_area.
+DEFINE VARIABLE v-debito_cambio           LIKE Tipocomprobante.cdg_comprobante.
+DEFINE VARIABLE v-credito_cambio          LIKE Tipocomprobante.cdg_comprobante.
+
+DEFINE TEMP-TABLE T-Fac_header            NO-UNDO LIKE Fac_header.
+/*DEFINE TEMP-TABLE T-Fac_detalle           NO-UNDO LIKE Fac_detalle.*/
+DEFINE TEMP-TABLE T-Sub_header_vta        NO-UNDO LIKE Sub_header_vta.
+DEFINE TEMP-TABLE T-Sub_detalle_vta       NO-UNDO LIKE Sub_detalle_vta.
+DEFINE TEMP-TABLE T-Fac_header_impuesto   NO-UNDO LIKE Fac_header_impuesto.
+DEFINE TEMP-TABLE T-Fac_detalle_impuesto  NO-UNDO LIKE Fac_detalle_impuesto.
+DEFINE TEMP-TABLE T-Fac_header-bon        NO-UNDO LIKE Fac_header-bon.
+DEFINE TEMP-TABLE T-Fac_detalle-bon       NO-UNDO LIKE Fac_detalle-bon.
+
+DEFINE BUFFER B-Sub_header_vta            FOR T-Sub_header_vta.
+DEFINE BUFFER B-Sub_detalle_vta           FOR T-Sub_detalle_vta.
+DEFINE BUFFER Moneda_local                FOR Moneda.
+DEFINE BUFFER Comprobante_cambio          FOR Tipocomprobante.
+
+DEFINE VARIABLE fecha_inicial             AS DATE.
+DEFINE VARIABLE fecha_elegida             AS DATE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-PREPROCESSOR-BLOCK 
+
+/* ********************  Preprocessor Definitions  ******************** */
+
+&Scoped-define PROCEDURE-TYPE Window
+&Scoped-define DB-AWARE no
+
+/* Name of designated FRAME-NAME and/or first browse and/or first query */
+&Scoped-define FRAME-NAME DEFAULT-FRAME
+&Scoped-define BROWSE-NAME BROWSE-6
+
+/* Internal Tables (found by Frame, Query & Browse Queries)             */
+&Scoped-define INTERNAL-TABLES T-Rec_detalle Moneda_detalle ~
+T-Totales_recibo Moneda_totales T-Rec_header
+
+/* Definitions for BROWSE BROWSE-6                                      */
+&Scoped-define FIELDS-IN-QUERY-BROWSE-6 T-Rec_detalle.tip_cancela ~
+T-Rec_detalle.prf_cancela T-Rec_detalle.nro_cancela ~
+T-Rec_detalle.nro_vencimiento Moneda_detalle.abrevia T-Rec_detalle.importe ~
+T-Rec_detalle.imp_pesos T-Rec_detalle.cambio T-Rec_detalle.new_cambio ~
+T-Rec_detalle.difcambio T-Rec_detalle.clausula_dolar ~
+T-Rec_detalle.prc_difcambio T-Rec_detalle.prc_mincambio ~
+T-Rec_detalle.leyenda 
+&Scoped-define ENABLED-FIELDS-IN-QUERY-BROWSE-6 
+&Scoped-define QUERY-STRING-BROWSE-6 FOR EACH T-Rec_detalle OF T-Rec_header NO-LOCK, ~
+      EACH Moneda_detalle OF T-Rec_detalle NO-LOCK INDEXED-REPOSITION
+&Scoped-define OPEN-QUERY-BROWSE-6 OPEN QUERY BROWSE-6 FOR EACH T-Rec_detalle OF T-Rec_header NO-LOCK, ~
+      EACH Moneda_detalle OF T-Rec_detalle NO-LOCK INDEXED-REPOSITION.
+&Scoped-define TABLES-IN-QUERY-BROWSE-6 T-Rec_detalle Moneda_detalle
+&Scoped-define FIRST-TABLE-IN-QUERY-BROWSE-6 T-Rec_detalle
+&Scoped-define SECOND-TABLE-IN-QUERY-BROWSE-6 Moneda_detalle
+
+
+/* Definitions for BROWSE BRW-TOTALES                                   */
+&Scoped-define FIELDS-IN-QUERY-BRW-TOTALES Moneda_totales.descripcion ~
+T-Totales_recibo.imp_total T-Totales_recibo.imp_difcambio ~
+T-Totales_recibo.imp_pesos 
+&Scoped-define ENABLED-FIELDS-IN-QUERY-BRW-TOTALES 
+&Scoped-define QUERY-STRING-BRW-TOTALES FOR EACH T-Totales_recibo OF T-Rec_header NO-LOCK, ~
+      EACH Moneda_totales OF T-Rec_header NO-LOCK INDEXED-REPOSITION
+&Scoped-define OPEN-QUERY-BRW-TOTALES OPEN QUERY BRW-TOTALES FOR EACH T-Totales_recibo OF T-Rec_header NO-LOCK, ~
+      EACH Moneda_totales OF T-Rec_header NO-LOCK INDEXED-REPOSITION.
+&Scoped-define TABLES-IN-QUERY-BRW-TOTALES T-Totales_recibo Moneda_totales
+&Scoped-define FIRST-TABLE-IN-QUERY-BRW-TOTALES T-Totales_recibo
+&Scoped-define SECOND-TABLE-IN-QUERY-BRW-TOTALES Moneda_totales
+
+
+/* Definitions for FRAME DEFAULT-FRAME                                  */
+&Scoped-define FIELDS-IN-QUERY-DEFAULT-FRAME T-Rec_header.tip_comprob ~
+T-Rec_header.prf_comprob T-Rec_header.nro_comprob T-Rec_header.fecha ~
+T-Rec_header.fch_cambio T-Rec_header.mes T-Rec_header.ano ~
+T-Rec_header.tipo_pago T-Rec_header.cambio T-Rec_header.calcular_cambio ~
+T-Rec_header.cambio_dolar T-Rec_header.nro_rendicion T-Rec_header.imp_pesos ~
+T-Rec_header.imp_bruto T-Rec_header.imp_difcambio T-Rec_header.imp_total 
+&Scoped-define OPEN-BROWSERS-IN-QUERY-DEFAULT-FRAME ~
+    ~{&OPEN-QUERY-BROWSE-6}~
+    ~{&OPEN-QUERY-BRW-TOTALES}
+&Scoped-define QUERY-STRING-DEFAULT-FRAME FOR EACH T-Rec_header SHARE-LOCK
+&Scoped-define OPEN-QUERY-DEFAULT-FRAME OPEN QUERY DEFAULT-FRAME FOR EACH T-Rec_header SHARE-LOCK.
+&Scoped-define TABLES-IN-QUERY-DEFAULT-FRAME T-Rec_header
+&Scoped-define FIRST-TABLE-IN-QUERY-DEFAULT-FRAME T-Rec_header
+
+
+/* Standard List Definitions                                            */
+&Scoped-Define ENABLED-OBJECTS RECT-10 RECT-11 RECT-12 RECT-13 RECT-2 ~
+RECT-3 RECT-4 RECT-5 RECT-6 RECT-7 RECT-8 RECT-9 Btn_salir v-importe ~
+BRW-TOTALES BROWSE-6 
+&Scoped-Define DISPLAYED-FIELDS T-Rec_header.tip_comprob ~
+T-Rec_header.prf_comprob T-Rec_header.nro_comprob T-Rec_header.fecha ~
+T-Rec_header.fch_cambio T-Rec_header.mes T-Rec_header.ano ~
+T-Rec_header.tipo_pago T-Rec_header.cambio T-Rec_header.calcular_cambio ~
+T-Rec_header.cambio_dolar T-Rec_header.nro_rendicion T-Rec_header.imp_pesos ~
+T-Rec_header.imp_bruto T-Rec_header.imp_difcambio T-Rec_header.imp_total 
+&Scoped-define DISPLAYED-TABLES T-Rec_header
+&Scoped-define FIRST-DISPLAYED-TABLE T-Rec_header
+&Scoped-Define DISPLAYED-OBJECTS v-anulado v-importe v-cdg_cliente ~
+v-dsc_cliente v-cdg_domicilio v-dsc_domicilio v-abv_provincia v-cdg_moneda ~
+v-dsc_moneda v-cdg_condicion_impos v-dsc_condicion_impos v-cdg_imputacion ~
+v-dsc_imputacion v-cdg_cobrador v-dsc_cobrador a-tip_comprob a-prf_comprob ~
+a-nro_comprob a-nro_vencimiento 
+
+/* Custom List Definitions                                              */
+/* List-1,List-2,List-3,List-4,List-5,List-6                            */
+
+/* _UIB-PREPROCESSOR-BLOCK-END */
+&ANALYZE-RESUME
+
+
+
+/* ***********************  Control Definitions  ********************** */
+
+/* Define the widget handle for the window                              */
+DEFINE VAR C-Win AS WIDGET-HANDLE NO-UNDO.
+
+/* Definitions of the field level widgets                               */
+DEFINE BUTTON btn_anular 
+     LABEL "&Anular" 
+     SIZE 21 BY 1.33.
+
+DEFINE BUTTON btn_cancel 
+     LABEL "&Cancelar" 
+     SIZE 21 BY 1.33.
+
+DEFINE BUTTON btn_grabar 
+     LABEL "&Grabar" 
+     SIZE 21 BY 1.33.
+
+DEFINE BUTTON btn_imprim 
+     LABEL "&Reimprimir" 
+     SIZE 21 BY 1.33.
+
+DEFINE BUTTON btn_leyenda 
+     LABEL "&Leyenda" 
+     SIZE 21 BY 1.33.
+
+DEFINE BUTTON btn_observ 
+     LABEL "&Observación" 
+     SIZE 21 BY 1.33.
+
+DEFINE BUTTON Btn_salir DEFAULT 
+     LABEL "&Salir" 
+     SIZE 20 BY 1.33
+     BGCOLOR 8 .
+
+DEFINE BUTTON btn_valores 
+     LABEL "&Ver Movimiento de Caja" 
+     SIZE 30 BY 1.
+
+DEFINE VARIABLE a-nro_comprob AS INTEGER FORMAT ">>>>>>>9" INITIAL 0 
+     VIEW-AS FILL-IN NATIVE 
+     SIZE 13 BY 1
+     BGCOLOR 15 FGCOLOR 9 .
+
+DEFINE VARIABLE a-nro_vencimiento AS INTEGER FORMAT ">>9" INITIAL 0 
+     VIEW-AS FILL-IN NATIVE 
+     SIZE 5 BY 1
+     BGCOLOR 15 FGCOLOR 9 .
+
+DEFINE VARIABLE a-prf_comprob AS INTEGER FORMAT ">>>9" INITIAL 0 
+     VIEW-AS FILL-IN NATIVE 
+     SIZE 8 BY 1
+     BGCOLOR 15 FGCOLOR 9 .
+
+DEFINE VARIABLE a-tip_comprob AS CHARACTER FORMAT "X(3)" 
+     LABEL "Aplicación" 
+     VIEW-AS FILL-IN NATIVE 
+     SIZE 8 BY 1
+     BGCOLOR 15 FGCOLOR 9 .
+
+DEFINE VARIABLE v-abv_provincia AS CHARACTER FORMAT "X(50)" 
+     VIEW-AS FILL-IN 
+     SIZE 20 BY 1
+     BGCOLOR 7 FGCOLOR 15 .
+
+DEFINE VARIABLE v-anulado AS CHARACTER FORMAT "X(256)":U 
+     VIEW-AS FILL-IN 
+     SIZE 19 BY 1
+     FGCOLOR 12 FONT 6 NO-UNDO.
+
+DEFINE VARIABLE v-cdg_cliente AS CHARACTER FORMAT "X(8)" 
+     LABEL "Cliente" 
+     VIEW-AS FILL-IN NATIVE 
+     SIZE 15 BY 1
+     BGCOLOR 15 FGCOLOR 9 .
+
+DEFINE VARIABLE v-cdg_cobrador AS CHARACTER FORMAT "X(4)" 
+     LABEL "Cobr." 
+     VIEW-AS FILL-IN NATIVE 
+     SIZE 13 BY 1
+     BGCOLOR 15 FGCOLOR 9 .
+
+DEFINE VARIABLE v-cdg_condicion_impos AS INTEGER FORMAT "->,>>>,>>9" INITIAL 0 
+     LABEL "C.Iva." 
+     VIEW-AS FILL-IN NATIVE 
+     SIZE 13 BY 1
+     BGCOLOR 15 FGCOLOR 9 .
+
+DEFINE VARIABLE v-cdg_domicilio AS INTEGER FORMAT ">>>>>>9" INITIAL 0 
+     LABEL "Domicilio" 
+     VIEW-AS FILL-IN NATIVE 
+     SIZE 15 BY 1
+     BGCOLOR 15 FGCOLOR 9 .
+
+DEFINE VARIABLE v-cdg_imputacion AS INTEGER FORMAT "->,>>>,>>9" INITIAL 0 
+     LABEL "Imputación" 
+     VIEW-AS FILL-IN NATIVE 
+     SIZE 15 BY 1
+     BGCOLOR 15 FGCOLOR 9 .
+
+DEFINE VARIABLE v-cdg_moneda AS CHARACTER FORMAT "X(3)" 
+     LABEL "Moneda" 
+     VIEW-AS FILL-IN NATIVE 
+     SIZE 15 BY 1
+     BGCOLOR 15 FGCOLOR 9 .
+
+DEFINE VARIABLE v-dsc_cliente AS CHARACTER FORMAT "X(40)" 
+     VIEW-AS FILL-IN 
+     SIZE 82 BY 1
+     BGCOLOR 7 FGCOLOR 15 .
+
+DEFINE VARIABLE v-dsc_cobrador AS CHARACTER FORMAT "X(20)" 
+     VIEW-AS FILL-IN 
+     SIZE 50 BY 1
+     BGCOLOR 7 FGCOLOR 15 .
+
+DEFINE VARIABLE v-dsc_condicion_impos AS CHARACTER FORMAT "X(25)" 
+     VIEW-AS FILL-IN 
+     SIZE 50 BY 1
+     BGCOLOR 7 FGCOLOR 15 .
+
+DEFINE VARIABLE v-dsc_domicilio AS CHARACTER FORMAT "X(40)" 
+     VIEW-AS FILL-IN 
+     SIZE 82 BY 1
+     BGCOLOR 7 FGCOLOR 15 .
+
+DEFINE VARIABLE v-dsc_imputacion AS CHARACTER FORMAT "X(30)" 
+     VIEW-AS FILL-IN 
+     SIZE 49 BY 1
+     BGCOLOR 7 FGCOLOR 15 .
+
+DEFINE VARIABLE v-dsc_moneda AS CHARACTER FORMAT "X(20)" 
+     VIEW-AS FILL-IN 
+     SIZE 34 BY 1
+     BGCOLOR 7 FGCOLOR 15 .
+
+DEFINE VARIABLE v-importe AS DECIMAL FORMAT ">>,>>>,>>9.99":U INITIAL 0 
+     LABEL "Importe" 
+     VIEW-AS FILL-IN NATIVE 
+     SIZE 18 BY 1
+     BGCOLOR 15 FGCOLOR 9  NO-UNDO.
+
+DEFINE RECTANGLE RECT-10
+     EDGE-PIXELS 2 GRAPHIC-EDGE  NO-FILL   
+     SIZE 35 BY 4.05.
+
+DEFINE RECTANGLE RECT-11
+     EDGE-PIXELS 2 GRAPHIC-EDGE  NO-FILL   
+     SIZE 156 BY 8.81.
+
+DEFINE RECTANGLE RECT-12
+     EDGE-PIXELS 2 GRAPHIC-EDGE  NO-FILL   
+     SIZE 83 BY 6.19.
+
+DEFINE RECTANGLE RECT-13
+     EDGE-PIXELS 2 GRAPHIC-EDGE  NO-FILL   
+     SIZE 72 BY 1.43.
+
+DEFINE RECTANGLE RECT-2
+     EDGE-PIXELS 2 GRAPHIC-EDGE  NO-FILL   
+     SIZE 134 BY 1.86.
+
+DEFINE RECTANGLE RECT-3
+     EDGE-PIXELS 2 GRAPHIC-EDGE  NO-FILL   
+     SIZE 22 BY 1.86.
+
+DEFINE RECTANGLE RECT-4
+     EDGE-PIXELS 2 GRAPHIC-EDGE  NO-FILL   
+     SIZE 134 BY 3.81.
+
+DEFINE RECTANGLE RECT-5
+     EDGE-PIXELS 2 GRAPHIC-EDGE  NO-FILL   
+     SIZE 19 BY 1.86.
+
+DEFINE RECTANGLE RECT-6
+     EDGE-PIXELS 2 GRAPHIC-EDGE  NO-FILL   
+     SIZE 21 BY 3.81.
+
+DEFINE RECTANGLE RECT-7
+     EDGE-PIXELS 2 GRAPHIC-EDGE  NO-FILL   
+     SIZE 156 BY 4.05.
+
+DEFINE RECTANGLE RECT-8
+     EDGE-PIXELS 2 GRAPHIC-EDGE  NO-FILL   
+     SIZE 72 BY 4.52.
+
+DEFINE RECTANGLE RECT-9
+     EDGE-PIXELS 2 GRAPHIC-EDGE  NO-FILL   
+     SIZE 34 BY 4.05.
+
+/* Query definitions                                                    */
+&ANALYZE-SUSPEND
+DEFINE QUERY BROWSE-6 FOR 
+      T-Rec_detalle, 
+      Moneda_detalle SCROLLING.
+
+DEFINE QUERY BRW-TOTALES FOR 
+      T-Totales_recibo, 
+      Moneda_totales SCROLLING.
+
+DEFINE QUERY DEFAULT-FRAME FOR 
+      T-Rec_header SCROLLING.
+&ANALYZE-RESUME
+
+/* Browse definitions                                                   */
+DEFINE BROWSE BROWSE-6
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _DISPLAY-FIELDS BROWSE-6 C-Win _STRUCTURED
+  QUERY BROWSE-6 NO-LOCK DISPLAY
+      T-Rec_detalle.tip_cancela FORMAT "X(3)":U
+      T-Rec_detalle.prf_cancela FORMAT "ZZZ9":U
+      T-Rec_detalle.nro_cancela FORMAT "ZZZZZZZZ9":U
+      T-Rec_detalle.nro_vencimiento FORMAT ">>9":U
+      Moneda_detalle.abrevia FORMAT "X(5)":U
+      T-Rec_detalle.importe FORMAT "->,>>>,>>>,>>9.99":U
+      T-Rec_detalle.imp_pesos FORMAT "->,>>>,>>>,>>9.99":U
+      T-Rec_detalle.cambio FORMAT "->>,>>9.9999":U
+      T-Rec_detalle.new_cambio FORMAT "->>,>>9.9999":U
+      T-Rec_detalle.difcambio FORMAT "->,>>>,>>>,>>9.99":U
+      T-Rec_detalle.clausula_dolar FORMAT "yes/no":U
+      T-Rec_detalle.prc_difcambio FORMAT ">>9.99":U
+      T-Rec_detalle.prc_mincambio FORMAT ">>9.99":U
+      T-Rec_detalle.leyenda FORMAT "X(15)":U
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+    WITH NO-ROW-MARKERS SIZE 153 BY 8.1
+         TITLE "Comprobantes cancelados con el presente Recibo" FIT-LAST-COLUMN.
+
+DEFINE BROWSE BRW-TOTALES
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _DISPLAY-FIELDS BRW-TOTALES C-Win _STRUCTURED
+  QUERY BRW-TOTALES NO-LOCK DISPLAY
+      Moneda_totales.descripcion FORMAT "X(20)":U
+      T-Totales_recibo.imp_total FORMAT "->,>>>,>>>,>>9.99":U
+      T-Totales_recibo.imp_difcambio FORMAT "->,>>>,>>>,>>9.99":U
+      T-Totales_recibo.imp_pesos FORMAT "->,>>>,>>>,>>9.99":U
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+    WITH NO-ROW-MARKERS SEPARATORS SIZE 80 BY 5.71.
+
+
+/* ************************  Frame Definitions  *********************** */
+
+DEFINE FRAME DEFAULT-FRAME
+     btn_cancel AT ROW 1.48 COL 27
+     btn_anular AT ROW 1.48 COL 49
+     btn_leyenda AT ROW 1.48 COL 71
+     btn_observ AT ROW 1.48 COL 93
+     btn_imprim AT ROW 1.48 COL 115
+     Btn_salir AT ROW 1.48 COL 138
+     btn_grabar AT ROW 1.52 COL 5
+     v-anulado AT ROW 3.57 COL 137 COLON-ALIGNED NO-LABEL
+     T-Rec_header.tip_comprob AT ROW 3.62 COL 15 COLON-ALIGNED
+          VIEW-AS FILL-IN NATIVE 
+          SIZE 6 BY 1
+          BGCOLOR 15 FGCOLOR 9 
+     T-Rec_header.prf_comprob AT ROW 3.62 COL 22 COLON-ALIGNED NO-LABEL
+          VIEW-AS FILL-IN NATIVE 
+          SIZE 8 BY 1
+          BGCOLOR 15 FGCOLOR 9 
+     T-Rec_header.nro_comprob AT ROW 3.62 COL 31 COLON-ALIGNED NO-LABEL
+          VIEW-AS FILL-IN NATIVE 
+          SIZE 16 BY 1
+          BGCOLOR 15 FGCOLOR 9 
+     T-Rec_header.fecha AT ROW 3.62 COL 56 COLON-ALIGNED
+          VIEW-AS FILL-IN NATIVE 
+          SIZE 17 BY 1
+          BGCOLOR 15 FGCOLOR 9 
+     v-importe AT ROW 3.62 COL 86 COLON-ALIGNED
+     T-Rec_header.fch_cambio AT ROW 3.62 COL 118 COLON-ALIGNED
+          LABEL "Cambio Al" FORMAT "99/99/99"
+          VIEW-AS FILL-IN NATIVE 
+          SIZE 16 BY 1
+          BGCOLOR 15 FGCOLOR 9 
+     v-cdg_cliente AT ROW 4.81 COL 15 COLON-ALIGNED
+     v-dsc_cliente AT ROW 4.81 COL 31 COLON-ALIGNED NO-LABEL
+     T-Rec_header.mes AT ROW 4.81 COL 118 COLON-ALIGNED
+          LABEL "Per"
+          VIEW-AS FILL-IN NATIVE 
+          SIZE 7 BY 1
+          BGCOLOR 15 FGCOLOR 9 
+     T-Rec_header.ano AT ROW 4.81 COL 126 COLON-ALIGNED NO-LABEL
+          VIEW-AS FILL-IN NATIVE 
+          SIZE 8 BY 1
+          BGCOLOR 15 FGCOLOR 9 
+     T-Rec_header.tipo_pago AT ROW 5 COL 140 NO-LABEL
+          VIEW-AS RADIO-SET VERTICAL
+          RADIO-BUTTONS 
+                    "Cancelación", 1,
+"A Imputar", 2
+          SIZE 17 BY 1.33
+     v-cdg_domicilio AT ROW 6 COL 15 COLON-ALIGNED
+     v-dsc_domicilio AT ROW 6 COL 31 COLON-ALIGNED NO-LABEL
+     v-abv_provincia AT ROW 6 COL 114 COLON-ALIGNED NO-LABEL
+     v-cdg_moneda AT ROW 7.67 COL 15 COLON-ALIGNED
+     v-dsc_moneda AT ROW 7.67 COL 31 COLON-ALIGNED NO-LABEL
+     T-Rec_header.cambio AT ROW 7.67 COL 66 COLON-ALIGNED NO-LABEL
+          VIEW-AS FILL-IN NATIVE 
+          SIZE 14 BY 1
+          BGCOLOR 15 FGCOLOR 9 
+     v-cdg_condicion_impos AT ROW 7.67 COL 91 COLON-ALIGNED
+     v-dsc_condicion_impos AT ROW 7.67 COL 105 COLON-ALIGNED NO-LABEL
+     v-cdg_imputacion AT ROW 8.86 COL 15 COLON-ALIGNED
+     v-dsc_imputacion AT ROW 8.86 COL 31 COLON-ALIGNED NO-LABEL
+     v-cdg_cobrador AT ROW 8.86 COL 91 COLON-ALIGNED
+     v-dsc_cobrador AT ROW 8.86 COL 105 COLON-ALIGNED NO-LABEL
+     T-Rec_header.calcular_cambio AT ROW 10.05 COL 47 NO-LABEL
+          VIEW-AS RADIO-SET HORIZONTAL
+          RADIO-BUTTONS 
+                    "Si", yes,
+"No", no
+          SIZE 15 BY 1.1
+     T-Rec_header.cambio_dolar AT ROW 10.05 COL 66 COLON-ALIGNED
+          VIEW-AS FILL-IN NATIVE 
+          SIZE 14 BY 1
+          BGCOLOR 15 FGCOLOR 9 
+     btn_valores AT ROW 10.05 COL 93
+     T-Rec_header.nro_rendicion AT ROW 10.05 COL 138 COLON-ALIGNED
+          VIEW-AS FILL-IN NATIVE 
+          SIZE 17 BY 1
+          BGCOLOR 15 FGCOLOR 9 
+     BRW-TOTALES AT ROW 11.95 COL 5
+     T-Rec_header.imp_pesos AT ROW 13.38 COL 102 COLON-ALIGNED
+          LABEL "Eq.Cobrado"
+          VIEW-AS FILL-IN 
+          SIZE 17 BY 1
+          BGCOLOR 7 FGCOLOR 15 
+    WITH 1 DOWN NO-BOX KEEP-TAB-ORDER OVERLAY 
+         SIDE-LABELS NO-UNDERLINE THREE-D 
+         AT COL 1 ROW 1
+         SIZE 160 BY 27.67.
+
+/* DEFINE FRAME statement is approaching 4K Bytes.  Breaking it up   */
+DEFINE FRAME DEFAULT-FRAME
+     T-Rec_header.imp_bruto AT ROW 13.38 COL 138 COLON-ALIGNED
+          VIEW-AS FILL-IN NATIVE 
+          SIZE 17 BY 1
+          BGCOLOR 7 FGCOLOR 14 
+     T-Rec_header.imp_difcambio AT ROW 14.57 COL 102 COLON-ALIGNED
+          LABEL "Dif.Cambio"
+          VIEW-AS FILL-IN 
+          SIZE 17 BY 1
+          BGCOLOR 7 FGCOLOR 15 
+     T-Rec_header.imp_total AT ROW 14.57 COL 138 COLON-ALIGNED
+          LABEL "Total Neto"
+          VIEW-AS FILL-IN NATIVE 
+          SIZE 17 BY 1
+          BGCOLOR 7 FGCOLOR 14 
+     a-tip_comprob AT ROW 16.71 COL 118 COLON-ALIGNED HELP
+          "Tipo de comprobante"
+     a-prf_comprob AT ROW 16.71 COL 127 COLON-ALIGNED HELP
+          "Prefijo de 4 digitos del comprobante" NO-LABEL
+     a-nro_comprob AT ROW 16.71 COL 136 COLON-ALIGNED HELP
+          "Nro. de comprobante" NO-LABEL
+     a-nro_vencimiento AT ROW 16.71 COL 150 COLON-ALIGNED HELP
+          "Numero de vencimiento del documento" NO-LABEL
+     BROWSE-6 AT ROW 18.38 COL 5
+     "Calcular diferencia de cambio:" VIEW-AS TEXT
+          SIZE 29 BY .95 AT ROW 10.05 COL 18
+     "   Total Cobrado Equivalente" VIEW-AS TEXT
+          SIZE 31 BY .86 AT ROW 12.19 COL 90
+          BGCOLOR 5 FGCOLOR 15 FONT 4
+     "    Importes de este Recibo" VIEW-AS TEXT
+          SIZE 33 BY .86 AT ROW 12.19 COL 124
+          BGCOLOR 5 FGCOLOR 15 FONT 4
+     RECT-10 AT ROW 11.95 COL 123
+     RECT-11 AT ROW 18.14 COL 3
+     RECT-12 AT ROW 11.71 COL 3
+     RECT-13 AT ROW 16.48 COL 87
+     RECT-2 AT ROW 1.24 COL 3
+     RECT-3 AT ROW 1.24 COL 137
+     RECT-4 AT ROW 3.38 COL 3
+     RECT-5 AT ROW 4.71 COL 139
+     RECT-6 AT ROW 3.38 COL 138
+     RECT-7 AT ROW 7.43 COL 3
+     RECT-8 AT ROW 11.71 COL 87
+     RECT-9 AT ROW 11.95 COL 88
+    WITH 1 DOWN NO-BOX KEEP-TAB-ORDER OVERLAY 
+         SIDE-LABELS NO-UNDERLINE THREE-D 
+         AT COL 1 ROW 1
+         SIZE 160 BY 27.67.
+
+
+/* *********************** Procedure Settings ************************ */
+
+&ANALYZE-SUSPEND _PROCEDURE-SETTINGS
+/* Settings for THIS-PROCEDURE
+   Type: Window
+   Allow: Basic,Browse,DB-Fields,Window,Query
+   Other Settings: COMPILE
+   Temp-Tables and Buffers:
+      TABLE: Moneda_detalle B "?" ? sic Moneda
+      TABLE: Moneda_totales B "?" ? sic Moneda
+      TABLE: T-Asn_detalle T "?" NO-UNDO sic Asn_detalle
+      TABLE: T-Asn_header T "?" NO-UNDO sic Asn_header
+      TABLE: T-Asn_totales T "?" NO-UNDO sic Asn_totales
+      TABLE: T-Caja-imputacion T "?" NO-UNDO sic Caja-imputacion
+      TABLE: T-Caj_detalle T "?" NO-UNDO sic Caj_detalle
+      TABLE: T-Caj_header T "?" NO-UNDO sic Caj_header
+      TABLE: T-Cheque T "?" NO-UNDO sic Cheque
+      TABLE: T-Cta_cte T "?" NO-UNDO sic Cta_cte
+      TABLE: T-Fac_detalle T "?" NO-UNDO sic Fac_detalle
+      TABLE: T-Rec_detalle T "?" NO-UNDO sic Rec_detalle
+      TABLE: T-Rec_header T "NEW SHARED" NO-UNDO sic Rec_header
+      TABLE: T-Totales_recibo T "?" NO-UNDO sic Totales_recibo
+      TABLE: T-Valor T "?" NO-UNDO sic Valor
+   END-TABLES.
+ */
+&ANALYZE-RESUME _END-PROCEDURE-SETTINGS
+
+/* *************************  Create Window  ************************** */
+
+&ANALYZE-SUSPEND _CREATE-WINDOW
+IF SESSION:DISPLAY-TYPE = "GUI":U THEN
+  CREATE WINDOW C-Win ASSIGN
+         HIDDEN             = YES
+         TITLE              = "Recibos de Clientes"
+         HEIGHT             = 27.67
+         WIDTH              = 160
+         MAX-HEIGHT         = 27.67
+         MAX-WIDTH          = 160
+         VIRTUAL-HEIGHT     = 27.67
+         VIRTUAL-WIDTH      = 160
+         RESIZE             = yes
+         SCROLL-BARS        = no
+         STATUS-AREA        = no
+         BGCOLOR            = ?
+         FGCOLOR            = ?
+         KEEP-FRAME-Z-ORDER = yes
+         THREE-D            = yes
+         MESSAGE-AREA       = no
+         SENSITIVE          = yes.
+ELSE {&WINDOW-NAME} = CURRENT-WINDOW.
+/* END WINDOW DEFINITION                                                */
+&ANALYZE-RESUME
+
+
+
+/* ***********  Runtime Attributes and AppBuilder Settings  *********** */
+
+&ANALYZE-SUSPEND _RUN-TIME-ATTRIBUTES
+/* SETTINGS FOR WINDOW C-Win
+  VISIBLE,,RUN-PERSISTENT                                               */
+/* SETTINGS FOR FRAME DEFAULT-FRAME
+   FRAME-NAME                                                           */
+/* BROWSE-TAB BRW-TOTALES nro_rendicion DEFAULT-FRAME */
+/* BROWSE-TAB BROWSE-6 a-nro_vencimiento DEFAULT-FRAME */
+/* SETTINGS FOR FILL-IN a-nro_comprob IN FRAME DEFAULT-FRAME
+   NO-ENABLE                                                            */
+/* SETTINGS FOR FILL-IN a-nro_vencimiento IN FRAME DEFAULT-FRAME
+   NO-ENABLE                                                            */
+/* SETTINGS FOR FILL-IN a-prf_comprob IN FRAME DEFAULT-FRAME
+   NO-ENABLE                                                            */
+/* SETTINGS FOR FILL-IN a-tip_comprob IN FRAME DEFAULT-FRAME
+   NO-ENABLE                                                            */
+/* SETTINGS FOR FILL-IN T-Rec_header.ano IN FRAME DEFAULT-FRAME
+   NO-ENABLE                                                            */
+/* SETTINGS FOR BUTTON btn_anular IN FRAME DEFAULT-FRAME
+   NO-ENABLE                                                            */
+/* SETTINGS FOR BUTTON btn_cancel IN FRAME DEFAULT-FRAME
+   NO-ENABLE                                                            */
+/* SETTINGS FOR BUTTON btn_grabar IN FRAME DEFAULT-FRAME
+   NO-ENABLE                                                            */
+/* SETTINGS FOR BUTTON btn_imprim IN FRAME DEFAULT-FRAME
+   NO-ENABLE                                                            */
+/* SETTINGS FOR BUTTON btn_leyenda IN FRAME DEFAULT-FRAME
+   NO-ENABLE                                                            */
+/* SETTINGS FOR BUTTON btn_observ IN FRAME DEFAULT-FRAME
+   NO-ENABLE                                                            */
+/* SETTINGS FOR BUTTON btn_valores IN FRAME DEFAULT-FRAME
+   NO-ENABLE                                                            */
+/* SETTINGS FOR RADIO-SET T-Rec_header.calcular_cambio IN FRAME DEFAULT-FRAME
+   NO-ENABLE                                                            */
+/* SETTINGS FOR FILL-IN T-Rec_header.cambio IN FRAME DEFAULT-FRAME
+   NO-ENABLE                                                            */
+/* SETTINGS FOR FILL-IN T-Rec_header.cambio_dolar IN FRAME DEFAULT-FRAME
+   NO-ENABLE                                                            */
+/* SETTINGS FOR FILL-IN T-Rec_header.fch_cambio IN FRAME DEFAULT-FRAME
+   NO-ENABLE EXP-LABEL EXP-FORMAT                                       */
+/* SETTINGS FOR FILL-IN T-Rec_header.fecha IN FRAME DEFAULT-FRAME
+   NO-ENABLE                                                            */
+/* SETTINGS FOR FILL-IN T-Rec_header.imp_bruto IN FRAME DEFAULT-FRAME
+   NO-ENABLE                                                            */
+/* SETTINGS FOR FILL-IN T-Rec_header.imp_difcambio IN FRAME DEFAULT-FRAME
+   NO-ENABLE EXP-LABEL                                                  */
+/* SETTINGS FOR FILL-IN T-Rec_header.imp_pesos IN FRAME DEFAULT-FRAME
+   NO-ENABLE EXP-LABEL                                                  */
+/* SETTINGS FOR FILL-IN T-Rec_header.imp_total IN FRAME DEFAULT-FRAME
+   NO-ENABLE EXP-LABEL                                                  */
+/* SETTINGS FOR FILL-IN T-Rec_header.mes IN FRAME DEFAULT-FRAME
+   NO-ENABLE EXP-LABEL                                                  */
+/* SETTINGS FOR FILL-IN T-Rec_header.nro_comprob IN FRAME DEFAULT-FRAME
+   NO-ENABLE                                                            */
+/* SETTINGS FOR FILL-IN T-Rec_header.nro_rendicion IN FRAME DEFAULT-FRAME
+   NO-ENABLE                                                            */
+/* SETTINGS FOR FILL-IN T-Rec_header.prf_comprob IN FRAME DEFAULT-FRAME
+   NO-ENABLE                                                            */
+/* SETTINGS FOR RADIO-SET T-Rec_header.tipo_pago IN FRAME DEFAULT-FRAME
+   NO-ENABLE                                                            */
+/* SETTINGS FOR FILL-IN T-Rec_header.tip_comprob IN FRAME DEFAULT-FRAME
+   NO-ENABLE                                                            */
+/* SETTINGS FOR FILL-IN v-abv_provincia IN FRAME DEFAULT-FRAME
+   NO-ENABLE                                                            */
+/* SETTINGS FOR FILL-IN v-anulado IN FRAME DEFAULT-FRAME
+   NO-ENABLE                                                            */
+/* SETTINGS FOR FILL-IN v-cdg_cliente IN FRAME DEFAULT-FRAME
+   NO-ENABLE                                                            */
+/* SETTINGS FOR FILL-IN v-cdg_cobrador IN FRAME DEFAULT-FRAME
+   NO-ENABLE                                                            */
+/* SETTINGS FOR FILL-IN v-cdg_condicion_impos IN FRAME DEFAULT-FRAME
+   NO-ENABLE                                                            */
+/* SETTINGS FOR FILL-IN v-cdg_domicilio IN FRAME DEFAULT-FRAME
+   NO-ENABLE                                                            */
+/* SETTINGS FOR FILL-IN v-cdg_imputacion IN FRAME DEFAULT-FRAME
+   NO-ENABLE                                                            */
+/* SETTINGS FOR FILL-IN v-cdg_moneda IN FRAME DEFAULT-FRAME
+   NO-ENABLE                                                            */
+/* SETTINGS FOR FILL-IN v-dsc_cliente IN FRAME DEFAULT-FRAME
+   NO-ENABLE                                                            */
+/* SETTINGS FOR FILL-IN v-dsc_cobrador IN FRAME DEFAULT-FRAME
+   NO-ENABLE                                                            */
+/* SETTINGS FOR FILL-IN v-dsc_condicion_impos IN FRAME DEFAULT-FRAME
+   NO-ENABLE                                                            */
+/* SETTINGS FOR FILL-IN v-dsc_domicilio IN FRAME DEFAULT-FRAME
+   NO-ENABLE                                                            */
+/* SETTINGS FOR FILL-IN v-dsc_imputacion IN FRAME DEFAULT-FRAME
+   NO-ENABLE                                                            */
+/* SETTINGS FOR FILL-IN v-dsc_moneda IN FRAME DEFAULT-FRAME
+   NO-ENABLE                                                            */
+IF SESSION:DISPLAY-TYPE = "GUI":U AND VALID-HANDLE(C-Win)
+THEN C-Win:HIDDEN = no.
+
+/* _RUN-TIME-ATTRIBUTES-END */
+&ANALYZE-RESUME
+
+
+/* Setting information for Queries and Browse Widgets fields            */
+
+&ANALYZE-SUSPEND _QUERY-BLOCK BROWSE BROWSE-6
+/* Query rebuild information for BROWSE BROWSE-6
+     _TblList          = "Temp-Tables.T-Rec_detalle OF Temp-Tables.T-Rec_header,Moneda_detalle OF Temp-Tables.T-Rec_detalle"
+     _Options          = "NO-LOCK INDEXED-REPOSITION"
+     _FldNameList[1]   = Temp-Tables.T-Rec_detalle.tip_cancela
+     _FldNameList[2]   = Temp-Tables.T-Rec_detalle.prf_cancela
+     _FldNameList[3]   = Temp-Tables.T-Rec_detalle.nro_cancela
+     _FldNameList[4]   = Temp-Tables.T-Rec_detalle.nro_vencimiento
+     _FldNameList[5]   = Temp-Tables.Moneda_detalle.abrevia
+     _FldNameList[6]   = Temp-Tables.T-Rec_detalle.importe
+     _FldNameList[7]   = Temp-Tables.T-Rec_detalle.imp_pesos
+     _FldNameList[8]   = Temp-Tables.T-Rec_detalle.cambio
+     _FldNameList[9]   = Temp-Tables.T-Rec_detalle.new_cambio
+     _FldNameList[10]   = Temp-Tables.T-Rec_detalle.difcambio
+     _FldNameList[11]   = Temp-Tables.T-Rec_detalle.clausula_dolar
+     _FldNameList[12]   = Temp-Tables.T-Rec_detalle.prc_difcambio
+     _FldNameList[13]   = Temp-Tables.T-Rec_detalle.prc_mincambio
+     _FldNameList[14]   = Temp-Tables.T-Rec_detalle.leyenda
+     _Query            is OPENED
+*/  /* BROWSE BROWSE-6 */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _QUERY-BLOCK BROWSE BRW-TOTALES
+/* Query rebuild information for BROWSE BRW-TOTALES
+     _TblList          = "Temp-Tables.T-Totales_recibo OF Temp-Tables.T-Rec_header,Moneda_totales OF Temp-Tables.T-Rec_header"
+     _Options          = "NO-LOCK INDEXED-REPOSITION"
+     _FldNameList[1]   = Temp-Tables.Moneda_totales.descripcion
+     _FldNameList[2]   = Temp-Tables.T-Totales_recibo.imp_total
+     _FldNameList[3]   = Temp-Tables.T-Totales_recibo.imp_difcambio
+     _FldNameList[4]   = Temp-Tables.T-Totales_recibo.imp_pesos
+     _Query            is OPENED
+*/  /* BROWSE BRW-TOTALES */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _QUERY-BLOCK FRAME DEFAULT-FRAME
+/* Query rebuild information for FRAME DEFAULT-FRAME
+     _TblList          = "Temp-Tables.T-Rec_header"
+     _Query            is OPENED
+*/  /* FRAME DEFAULT-FRAME */
+&ANALYZE-RESUME
+
+ 
+
+
+
+/* ************************  Control Triggers  ************************ */
+
+&Scoped-define SELF-NAME C-Win
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL C-Win C-Win
+ON END-ERROR OF C-Win /* Recibos de Clientes */
+OR ENDKEY OF {&WINDOW-NAME} ANYWHERE DO:
+  /* This case occurs when the user presses the "Esc" key.
+     In a persistently run window, just ignore this.  If we did not, the
+     application would exit. */
+  IF THIS-PROCEDURE:PERSISTENT THEN RETURN NO-APPLY.
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL C-Win C-Win
+ON WINDOW-CLOSE OF C-Win /* Recibos de Clientes */
+DO:
+  /* This event will close the window and terminate the procedure.  */
+  /* APPLY "CLOSE":U TO THIS-PROCEDURE. */
+  APPLY "CHOOSE":U TO Btn_salir IN FRAME {&FRAME-NAME}.
+  RETURN NO-APPLY.
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME a-nro_comprob
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL a-nro_comprob C-Win
+ON MOUSE-SELECT-DBLCLICK OF a-nro_comprob IN FRAME DEFAULT-FRAME
+OR MOUSE-MENU-DOWN,"." OF a-nro_comprob IN FRAME {&FRAME-NAME}
+DO:
+  APPLY "MOUSE-SELECT-DBLCLICK" TO a-nro_vencimiento IN FRAME {&FRAME-NAME}.
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME a-nro_vencimiento
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL a-nro_vencimiento C-Win
+ON MOUSE-SELECT-DBLCLICK OF a-nro_vencimiento IN FRAME DEFAULT-FRAME
+OR MOUSE-MENU-DOWN,"." OF a-nro_vencimiento IN FRAME {&FRAME-NAME}
+DO:
+
+  RUN d-selctactecli.w ( INPUT ROWID(Cliente), 
+                         INPUT ?,
+                         INPUT st_seleccionado,
+                         INPUT-OUTPUT TABLE T-Cta_cte ).
+
+  FOR EACH T-Cta_cte OF Cliente WHERE T-Cta_cte.user-id-sel = st_seleccionado
+      BY T-Cta_cte.fecha_emision:
+
+     DISPLAY T-Cta_cte.tip_comprob     @ a-tip_comprob
+             T-Cta_cte.prf_comprob     @ a-prf_comprob     
+             T-Cta_cte.nro_comprob     @ a-nro_comprob
+             T-Cta_cte.nro_vencimiento @ a-nro_vencimiento 
+             WITH FRAME {&FRAME-NAME}.
+
+     APPLY "RETURN" TO a-nro_vencimiento IN FRAME {&FRAME-NAME}.
+
+  END.
+  RETURN NO-APPLY.
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL a-nro_vencimiento C-Win
+ON RETURN OF a-nro_vencimiento IN FRAME DEFAULT-FRAME
+OR TAB OF a-nro_vencimiento  IN FRAME {&FRAME-NAME}
+DO:
+
+   ASSIGN FRAME {&FRAME-NAME}
+         a-tip_comprob 
+         a-prf_comprob
+         a-nro_comprob
+         a-nro_vencimiento.
+
+   FIND T-Cta_cte WHERE T-Cta_cte.nro_cliente     = T-Rec_header.nro_cliente 
+                  AND T-Cta_cte.cdg_empresa     = T-Rec_header.cdg_empresa
+                  AND T-Cta_cte.tip_comprob     = a-tip_comprob 
+                  AND T-Cta_cte.prf_comprob     = a-prf_comprob
+                  AND T-Cta_cte.nro_comprob     = a-nro_comprob
+                  AND T-Cta_cte.nro_vencimiento = a-nro_vencimiento
+                      EXCLUSIVE-LOCK NO-ERROR.
+
+   IF NOT AVAILABLE T-Cta_cte
+   THEN DO:
+      IF LOCKED T-Cta_cte
+      THEN DO:
+         RUN PONMENSJ.P (INPUT "RECB006").
+         RETURN NO-APPLY.
+      END.
+      ELSE DO:
+         RUN PONMENSJ.P (INPUT "RECB001").
+         RETURN NO-APPLY.
+      END.
+   END.
+
+   IF CAN-DO(str_debitan,"FA,FB,FC,FE,DA,DB,DC,DE,CA,CB,CC,CE,RA,RB,RC,RE")
+   THEN DO:
+      RUN PONMENSJ.P (INPUT "RECB017").
+      RETURN NO-APPLY.
+   END.
+
+   IF T-Cta_cte.nro_cliente <> Cliente.nro_cliente
+   THEN DO:
+      RUN PONMENSJ.P (INPUT "RECB002").
+      RETURN NO-APPLY.
+   END.
+
+   IF T-Cta_cte.credito = T-Cta_cte.debito
+   THEN DO:
+      RUN PONMENSJ.P (INPUT "RECB003").
+      RETURN NO-APPLY.
+   END.
+
+   IF CAN-FIND(FIRST T-Rec_detalle OF T-Rec_header
+                     WHERE T-Rec_detalle.tip_cancela     = T-Cta_cte.tip_comprob
+                       AND T-Rec_detalle.prf_cancela     = T-Cta_cte.prf_comprob
+                       AND T-Rec_detalle.nro_cancela     = T-Cta_cte.nro_comprob
+                       AND T-Rec_detalle.nro_vencimiento = T-Cta_cte.nro_vencimiento)
+   THEN DO:
+      RUN PONMENSJ.P (INPUT "RECB004").
+      RETURN NO-APPLY.
+   END.
+
+   IF T-Cta_cte.imputado
+   THEN DO:
+      RUN PONMENSJ.P (INPUT "RECB005").
+      RETURN NO-APPLY.
+   END.
+   
+   T-Cta_cte.imputado = YES.
+   T-Cta_cte.selectado = NO.   
+   T-Cta_cte.user-id-sel = "".   
+   
+   RUN crear_detalle.
+   
+   {&OPEN-QUERY-{&BROWSE-NAME}}
+   
+   DISPLAY " " @ a-tip_comprob
+           " " @ a-prf_comprob
+           " " @ a-nro_comprob
+           " " @ a-nro_vencimiento
+           WITH FRAME {&FRAME-NAME}.
+   APPLY "ENTRY" TO a-tip_comprob  IN FRAME {&FRAME-NAME}.
+   RETURN NO-APPLY.
+      
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME a-prf_comprob
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL a-prf_comprob C-Win
+ON MOUSE-SELECT-DBLCLICK OF a-prf_comprob IN FRAME DEFAULT-FRAME
+OR MOUSE-MENU-DOWN,"." OF a-prf_comprob IN FRAME {&FRAME-NAME}
+DO:
+  APPLY "MOUSE-SELECT-DBLCLICK" TO a-nro_vencimiento IN FRAME  {&FRAME-NAME}.
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME a-tip_comprob
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL a-tip_comprob C-Win
+ON MOUSE-SELECT-DBLCLICK OF a-tip_comprob IN FRAME DEFAULT-FRAME /* Aplicación */
+OR MOUSE-MENU-DOWN,"." OF a-tip_comprob IN FRAME {&FRAME-NAME}
+DO:
+  APPLY "MOUSE-SELECT-DBLCLICK" TO a-nro_vencimiento IN FRAME  {&FRAME-NAME}.
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define BROWSE-NAME BROWSE-6
+&Scoped-define SELF-NAME BROWSE-6
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL BROWSE-6 C-Win
+ON DELETE-CHARACTER OF BROWSE-6 IN FRAME DEFAULT-FRAME /* Comprobantes cancelados con el presente Recibo */
+DO:
+    IF modo = MD_ALTA
+    THEN DO:
+         sino-msg = NO.
+         MESSAGE "Desea eliminar este renglón de detalle?" 
+                 VIEW-AS ALERT-BOX QUESTION BUTTONS YES-NO TITLE "Confirmación" UPDATE sino-msg.
+         IF sino-msg
+         THEN DO:
+              DELETE T-Rec_detalle.
+              {&OPEN-QUERY-{&BROWSE-NAME}}
+              RUN calculos.
+         END.
+    END.  
+    ELSE DO:
+         BELL.
+    END.
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL BROWSE-6 C-Win
+ON MOUSE-SELECT-DBLCLICK OF BROWSE-6 IN FRAME DEFAULT-FRAME /* Comprobantes cancelados con el presente Recibo */
+OR RETURN OF {&BROWSE-NAME} IN FRAME {&FRAME-NAME}
+DO:
+    RUN corregir_detalle.
+    {&OPEN-QUERY-{&BROWSE-NAME}}
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME btn_anular
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL btn_anular C-Win
+ON CHOOSE OF btn_anular IN FRAME DEFAULT-FRAME /* Anular */
+DO:
+
+    DEFINE VARIABLE pudo_anular AS INTEGER.
+    sino-msg = NO.
+    RUN mensajepregunta.p ( INPUT "este recibo",INPUT "PREG004", INPUT-OUTPUT sino-msg ). 
+    IF sino-msg
+    THEN DO:
+         RUN anular_recibo.p (INPUT ROWID(Rec_header), OUTPUT pudo_anular).
+         IF pudo_anular = 0
+         THEN DO:
+                    MESSAGE "borrando...."
+                        VIEW-AS ALERT-BOX INFO BUTTONS OK.
+             RUN borrar_tablas_temporales.
+             MESSAGE "El recibo de pago sido anulado" 
+                      VIEW-AS ALERT-BOX MESSAGE TITLE "Aviso".
+         END.
+        &IF DEFINED (adm-panel) <> 0 &THEN
+            RUN dispatch IN THIS-PROCEDURE ('exit').
+        &ELSE
+/*          APPLY "CLOSE":U TO THIS-PROCEDURE.*/
+            ASSIGN codigo_salir = CD_GRABAR.
+            APPLY "U1":U TO THIS-PROCEDURE.
+
+        &ENDIF
+
+    END.
+  
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME btn_cancel
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL btn_cancel C-Win
+ON CHOOSE OF btn_cancel IN FRAME DEFAULT-FRAME /* Cancelar */
+DO:
+    sino-msg = NO.
+    RUN mensajepregunta.p ( INPUT "",INPUT "PREG002", INPUT-OUTPUT sino-msg ). 
+    IF sino-msg
+    THEN DO:
+
+        RUN desmarcar_todos.
+        RUN borrar_tablas_temporales.
+
+        ASSIGN codigo_salir = CD_CANCELAR.
+        APPLY "U1" TO THIS-PROCEDURE.
+
+    END.
+
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME btn_grabar
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL btn_grabar C-Win
+ON CHOOSE OF btn_grabar IN FRAME DEFAULT-FRAME /* Grabar */
+DO:
+
+  ASSIGN FRAME {&FRAME-NAME}
+         T-Rec_header.nro_comprob 
+         T-Rec_header.prf_comprob 
+         T-Rec_header.tip_comprob
+         T-Rec_header.ano 
+         T-Rec_header.fecha 
+         T-Rec_header.mes 
+         T-Rec_header.tipo_pago
+         T-Rec_header.cambio
+         T-Rec_header.imp_total
+         T-Rec_header.nro_rendicion
+         T-Rec_header.calcular_cambio.
+
+  RUN validar_datos ( OUTPUT hay_error).
+  IF NOT hay_error
+  THEN DO:
+
+       IF NOT T-Rec_header.anulado /* No es una anulación */
+       THEN DO:
+            IF NOT AVAILABLE T-Caj_header
+            THEN DO:
+                 RUN crear_caja.
+            END.
+            ELSE DO:
+                 RUN asignar_caja.
+            END.   
+            
+            RUN d-valores_movimiento.w ( INPUT-OUTPUT TABLE T-Caj_header,
+                                         INPUT-OUTPUT TABLE T-Caj_detalle,
+                                         INPUT-OUTPUT TABLE T-Caja-imputacion,
+                                         INPUT-OUTPUT TABLE T-Cheque,
+                                         INPUT-OUTPUT TABLE T-Valor,
+                                         INPUT 0).
+
+            FIND FIRST T-Caj_header EXCLUSIVE-LOCK.
+            IF T-Caj_header.importe <> T-Caj_header.ingreso THEN RETURN NO-APPLY.
+       END.
+     
+       RUN grabar_datos.
+
+       ASSIGN codigo_salir = CD_GRABAR.
+       APPLY "U1" TO THIS-PROCEDURE.
+  
+  END.
+
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME btn_imprim
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL btn_imprim C-Win
+ON CHOOSE OF btn_imprim IN FRAME DEFAULT-FRAME /* Reimprimir */
+DO:
+    sino-msg = NO.
+    MESSAGE "Desea REIMPRIMIR este recibo?" 
+            VIEW-AS ALERT-BOX QUESTION BUTTONS YES-NO TITLE "Confirmación" UPDATE sino-msg.
+    IF sino-msg
+    THEN DO:
+         RUN imprimir_recibo.p (ROWID(Rec_header)).
+    END.
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME btn_leyenda
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL btn_leyenda C-Win
+ON CHOOSE OF btn_leyenda IN FRAME DEFAULT-FRAME /* Leyenda */
+DO:
+
+   DEFINE VARIABLE puso_ok AS LOGICAL.
+   RUN c-edttexto.w ( INPUT-OUTPUT T-Rec_header.leyenda,
+                      INPUT "Leyenda del Recibo",
+                      INPUT modo,
+                      OUTPUT puso_ok).
+   RETURN NO-APPLY.
+  
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME btn_observ
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL btn_observ C-Win
+ON CHOOSE OF btn_observ IN FRAME DEFAULT-FRAME /* Observación */
+DO:
+
+   DEFINE VARIABLE puso_ok AS LOGICAL.
+   RUN c-edttexto.w ( INPUT-OUTPUT T-Rec_header.observacion,
+                      INPUT "Observaciones del Recibo",
+                      INPUT modo,
+                      OUTPUT puso_ok).
+   RETURN NO-APPLY.
+  
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME Btn_salir
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL Btn_salir C-Win
+ON CHOOSE OF Btn_salir IN FRAME DEFAULT-FRAME /* Salir */
+DO:
+
+    sino-msg = NO.
+    RUN mensajepregunta.p ( INPUT "",INPUT "PREG001", INPUT-OUTPUT sino-msg ). 
+    IF sino-msg
+    THEN DO:
+         RUN desmarcar_todos.
+        &IF DEFINED (adm-panel) <> 0 &THEN
+            RUN dispatch IN THIS-PROCEDURE ('exit').
+        &ELSE
+/*          APPLY "CLOSE":U TO THIS-PROCEDURE.*/
+            ASSIGN codigo_salir = CD_SALIR.
+            APPLY "U1":U TO THIS-PROCEDURE.
+
+        &ENDIF
+
+    END.
+  
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME btn_valores
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL btn_valores C-Win
+ON CHOOSE OF btn_valores IN FRAME DEFAULT-FRAME /* Ver Movimiento de Caja */
+DO:
+    RUN d-valores_movimiento.w ( INPUT-OUTPUT TABLE T-Caj_header,
+                                 INPUT-OUTPUT TABLE T-Caj_detalle,
+                                 INPUT-OUTPUT TABLE T-Caja-imputacion,
+                                 INPUT-OUTPUT TABLE T-Cheque,
+                                 INPUT-OUTPUT TABLE T-Valor,
+                                 INPUT 2).
+  
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME T-Rec_header.calcular_cambio
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL T-Rec_header.calcular_cambio C-Win
+ON VALUE-CHANGED OF T-Rec_header.calcular_cambio IN FRAME DEFAULT-FRAME
+DO:
+  ASSIGN FRAME {&FRAME-NAME} T-Rec_header.calcular_cambio.
+  RUN calculos.
+  {&OPEN-QUERY-{&BROWSE-NAME}}
+  RUN abre_query_totales.
+
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME T-Rec_header.cambio
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL T-Rec_header.cambio C-Win
+ON LEAVE OF T-Rec_header.cambio IN FRAME DEFAULT-FRAME /* cambio */
+DO:
+  ASSIGN FRAME {&FRAME-NAME} T-Rec_header.cambio.
+  RUN calculos.
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME T-Rec_header.fch_cambio
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL T-Rec_header.fch_cambio C-Win
+ON LEAVE OF T-Rec_header.fch_cambio IN FRAME DEFAULT-FRAME /* Cambio Al */
+DO:
+    ASSIGN T-Rec_header.fch_cambio.
+    RUN asignar_cambio.
+    RUN calculos.  
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL T-Rec_header.fch_cambio C-Win
+ON MOUSE-MENU-DOWN OF T-Rec_header.fch_cambio IN FRAME DEFAULT-FRAME /* Cambio Al */
+DO:
+    fecha_inicial = DATE(T-Rec_header.fch_cambio:SCREEN-VALUE IN FRAME {&FRAME-NAME}) NO-ERROR.
+    IF fecha_inicial = ? THEN fecha_inicial = TODAY.
+    RUN d-calendario.w ( INPUT fecha_inicial, OUTPUT fecha_elegida).
+    IF fecha_elegida <> ?
+    THEN DO:
+         DISPLAY fecha_elegida @ T-Rec_header.fch_cambio 
+                 WITH FRAME {&FRAME-NAME}.
+         APPLY "TAB" TO SELF.        
+    END.               
+  
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME T-Rec_header.fecha
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL T-Rec_header.fecha C-Win
+ON LEAVE OF T-Rec_header.fecha IN FRAME DEFAULT-FRAME /* Fecha */
+DO:
+  ASSIGN T-Rec_header.fecha.
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL T-Rec_header.fecha C-Win
+ON MOUSE-MENU-DOWN OF T-Rec_header.fecha IN FRAME DEFAULT-FRAME /* Fecha */
+DO:
+    fecha_inicial = DATE(T-Rec_header.fecha:SCREEN-VALUE IN FRAME {&FRAME-NAME}) NO-ERROR.
+    IF fecha_inicial = ? THEN fecha_inicial = TODAY.
+    RUN d-calendario.w ( INPUT fecha_inicial, OUTPUT fecha_elegida).
+    IF fecha_elegida <> ?
+    THEN DO:
+         DISPLAY fecha_elegida @ T-Rec_header.fecha 
+                 WITH FRAME {&FRAME-NAME}.
+         APPLY "TAB" TO SELF.        
+    END.               
+  
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME T-Rec_header.imp_total
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL T-Rec_header.imp_total C-Win
+ON LEAVE OF T-Rec_header.imp_total IN FRAME DEFAULT-FRAME /* Total Neto */
+DO:
+  ASSIGN FRAME {&FRAME-NAME} T-Rec_header.imp_total.
+  RUN calculos.
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME T-Rec_header.nro_comprob
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL T-Rec_header.nro_comprob C-Win
+ON MOUSE-SELECT-DBLCLICK OF T-Rec_header.nro_comprob IN FRAME DEFAULT-FRAME /* nro_comprob */
+OR MOUSE-MENU-DOWN,"." OF T-Rec_header.nro_comprob IN FRAME {&FRAME-NAME}
+DO:
+  IF modo <> MD_ALTA
+  THEN DO:
+    DEFINE VARIABLE lista_estados AS CHARACTER.
+    DEFINE VARIABLE titulo_window AS CHARACTER.
+  
+    CASE modo:
+       WHEN MD_ALTA          
+       THEN DO:
+            titulo_window = "".     /* Esta opcion la contemplamos por unicidad pero no debería producirse nunca */
+            lista_estados = "".
+       END.
+       WHEN MD_MULTIPLE      
+       THEN DO:
+            titulo_window = "Selección de Recibos de Pago".
+            lista_estados = " ,E".
+       END.
+       WHEN MD_DEFINIDA             /* Esta opcion la contemplamos por unicidad pero no debería producirse nunca */
+       THEN DO:
+            titulo_window = "".
+            lista_estados = "".
+       END.
+       WHEN MD_RELACION             /* Esta opcion la contemplamos por unicidad pero no debería producirse nunca */
+       THEN DO:
+            titulo_window = "".
+            lista_estados = "".
+       END.
+       WHEN MD_READONLY      
+       THEN DO:
+            titulo_window = "Selección Recibos de Pago".
+            lista_estados = " ,E".
+       END.
+       WHEN MD_CAMBIO        
+       THEN DO:
+            titulo_window = "".
+            lista_estados = "".
+       END.
+       WHEN MD_ANULACION        
+       THEN DO:
+            titulo_window = "Selección de Recibos de Pago".
+            lista_estados = "E".
+       END.
+       WHEN MD_EMISION        
+       THEN DO:
+            titulo_window = "Selección de Recibos de Pago".
+            lista_estados = "".
+       END.
+    END CASE.     
+  
+    RUN d-seleccionar_recibo.w (INPUT titulo_window, INPUT lista_estados, INPUT "R*", OUTPUT rid_recibo).
+    IF rid_recibo <> ?
+    THEN DO:
+       FIND Rec_header WHERE ROWID(Rec_header) = rid_recibo NO-LOCK.
+       DISPLAY Rec_header.tip_comprob @ T-Rec_header.tip_comprob 
+               Rec_header.prf_comprob @ T-Rec_header.prf_comprob
+               Rec_header.nro_comprob @ T-Rec_header.nro_comprob
+               WITH FRAME {&FRAME-NAME}.
+       IF modo = MD_ANULACION AND Rec_header.anulado
+       THEN DO:
+            RUN PONMENSJ.P (INPUT "DOCS002").
+            RETURN NO-APPLY.
+       END.
+       ELSE DO:
+            RUN traer_documento.
+       END.
+    END.  
+    RETURN NO-APPLY.  
+  END.
+  ELSE DO:
+    BELL.
+    RETURN NO-APPLY.
+  END.
+
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL T-Rec_header.nro_comprob C-Win
+ON RETURN OF T-Rec_header.nro_comprob IN FRAME DEFAULT-FRAME /* nro_comprob */
+DO:
+
+  IF modo <> MD_ALTA
+  THEN DO:
+    IF LOOKUP(INPUT FRAME {&FRAME-NAME} T-Rec_header.tip_comprob,"DA,DB,DC,DE") <> 0 
+    THEN DO:
+       RUN PONMENSJ.P (INPUT "DOCS010").
+       RETURN NO-APPLY.
+    END.
+ 
+    FIND Rec_header 
+         WHERE Rec_header.cdg_empresa = Empresa.cdg_empresa
+           AND Rec_header.tip_comprob = INPUT T-Rec_header.tip_comprob 
+           AND Rec_header.prf_comprob = INPUT T-Rec_header.prf_comprob
+           AND Rec_header.nro_comprob = INPUT T-Rec_header.nro_comprob
+               NO-ERROR.
+ 
+    IF NOT AVAILABLE Rec_header 
+    THEN DO:
+         IF LOCKED Rec_header
+            THEN RUN PONMENSJ.P (INPUT "DOCS000").
+            ELSE RUN PONMENSJ.P (INPUT "DOCS001").
+         RETURN NO-APPLY.
+    END.
+    ELSE DO:
+         IF modo = MD_ANULACION AND Rec_header.anulado
+         THEN DO:
+              RUN PONMENSJ.P (INPUT "DOCS002").
+              RETURN NO-APPLY.
+         END.
+         ELSE DO:
+             rid_recibo = ROWID(Rec_header).
+             RUN traer_documento.
+         END.
+    END.
+  END.
+  ELSE DO:
+    BELL.
+    RETURN NO-APPLY.
+  END.
+
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME T-Rec_header.prf_comprob
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL T-Rec_header.prf_comprob C-Win
+ON MOUSE-SELECT-DBLCLICK OF T-Rec_header.prf_comprob IN FRAME DEFAULT-FRAME /* prf_comprob */
+OR MOUSE-MENU-DOWN,"." OF T-Rec_header.prf_comprob IN FRAME {&FRAME-NAME}
+DO:
+  APPLY "MOUSE-SELECT-DBLCLICK" TO T-Rec_header.tip_comprob IN FRAME {&FRAME-NAME}.
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME T-Rec_header.tipo_pago
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL T-Rec_header.tipo_pago C-Win
+ON VALUE-CHANGED OF T-Rec_header.tipo_pago IN FRAME DEFAULT-FRAME
+DO:
+  ASSIGN FRAME {&FRAME-NAME} T-Rec_header.tipo_pago.
+  IF T-Rec_header.tipo_pago = 1
+     THEN RUN color_ctacte.
+     ELSE RUN color_total.
+  
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME T-Rec_header.tip_comprob
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL T-Rec_header.tip_comprob C-Win
+ON LEAVE OF T-Rec_header.tip_comprob IN FRAME DEFAULT-FRAME /* Tipo */
+DO:
+  SELF:SCREEN-VALUE = CAPS(SELF:SCREEN-VALUE).
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL T-Rec_header.tip_comprob C-Win
+ON MOUSE-SELECT-DBLCLICK OF T-Rec_header.tip_comprob IN FRAME DEFAULT-FRAME /* Tipo */
+OR MOUSE-MENU-DOWN,"." OF T-Rec_header.tip_comprob IN FRAME {&FRAME-NAME}
+DO:
+  APPLY "MOUSE-SELECT-DBLCLICK" TO T-Rec_header.tip_comprob IN FRAME {&FRAME-NAME}.
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME v-cdg_cliente
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL v-cdg_cliente C-Win
+ON MOUSE-SELECT-DBLCLICK OF v-cdg_cliente IN FRAME DEFAULT-FRAME /* Cliente */
+OR "." OF v-cdg_cliente IN FRAME {&FRAME-NAME}
+OR MOUSE-MENU-DOWN OF v-cdg_cliente IN FRAME {&FRAME-NAME}
+DO:
+
+   {helptabla.i "cliente" "cdg_cliente" "SELCLIEN.P"}
+  
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL v-cdg_cliente C-Win
+ON RETURN OF v-cdg_cliente IN FRAME DEFAULT-FRAME /* Cliente */
+DO:
+/*    &SCOPED-DEFINE PONER-TABLA RUN poner_cliente.          */
+/*    {traducetabla.i "cliente" "cdg_cliente" "nom_cliente"} */
+/*    &UNDEFINE PONER-TABLA                                  */
+/* END.                                                      */
+
+IF v-cdg_cliente:SCREEN-VALUE IN FRAME {&FRAME-NAME} <> ""
+  THEN DO:
+
+        FIND Cliente WHERE Cliente.cdg_cliente = INPUT FRAME {&FRAME-NAME} v-cdg_cliente 
+            AND LOOKUP(que_sector, Cliente.lista_sectores) <> 0 NO-LOCK NO-ERROR.
+        IF NOT AVAILABLE Cliente 
+        THEN DO:
+             RUN PONMENSJ.P ( 'IREF002' ).
+             RETURN NO-APPLY.
+        END.
+        
+        v-dsc_cliente = Cliente.nom_cliente.
+        DISPLAY v-dsc_cliente 
+                WITH FRAME {&FRAME-NAME}. 
+        RUN poner_cliente.    
+  END.
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME v-cdg_cobrador
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL v-cdg_cobrador C-Win
+ON MOUSE-SELECT-DBLCLICK OF v-cdg_cobrador IN FRAME DEFAULT-FRAME /* Cobr. */
+OR "." OF v-cdg_cobrador IN FRAME {&FRAME-NAME}
+OR MOUSE-MENU-DOWN OF v-cdg_cobrador IN FRAME {&FRAME-NAME}
+DO:
+
+   {helptabla.i "Cobrador" "cdg_cobrador" "SELCOBRA.P"}
+  
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL v-cdg_cobrador C-Win
+ON RETURN OF v-cdg_cobrador IN FRAME DEFAULT-FRAME /* Cobr. */
+DO:
+   {traducetabla.i "Cobrador" "cdg_cobrador" "nom_cobrador"} 
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME v-cdg_condicion_impos
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL v-cdg_condicion_impos C-Win
+ON MOUSE-SELECT-DBLCLICK OF v-cdg_condicion_impos IN FRAME DEFAULT-FRAME /* C.Iva. */
+OR "." OF v-cdg_condicion_impos IN FRAME {&FRAME-NAME}
+OR MOUSE-MENU-DOWN OF v-cdg_condicion_impos IN FRAME {&FRAME-NAME}
+DO:
+
+   {helptabla.i "condicion_impos" "cdg_condiva" "SELCNDIV-v.P"}
+  
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL v-cdg_condicion_impos C-Win
+ON RETURN OF v-cdg_condicion_impos IN FRAME DEFAULT-FRAME /* C.Iva. */
+DO:
+   {traducetabla.i "condicion_impos" "cdg_condiva" "descripcion"} 
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME v-cdg_domicilio
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL v-cdg_domicilio C-Win
+ON MOUSE-MENU-DOWN OF v-cdg_domicilio IN FRAME DEFAULT-FRAME /* Domicilio */
+DO:
+  DEFINE VARIABLE x-domicilio LIKE Domicilio.nro_domicilio.
+  RUN d-seldomicilio_cliente.w ( INPUT ROWID(Cliente) , OUTPUT x-domicilio).
+  IF x-domicilio <> ?
+  THEN DO:
+       DISPLAY x-domicilio @ v-cdg_domicilio
+               WITH FRAME {&FRAME-NAME}.
+       APPLY "RETURN" TO v-cdg_domicilio IN FRAME {&FRAME-NAME}.
+  END.
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL v-cdg_domicilio C-Win
+ON RETURN OF v-cdg_domicilio IN FRAME DEFAULT-FRAME /* Domicilio */
+DO:
+  FIND Domicilio OF Cliente WHERE Domicilio.nro_domicilio = INPUT FRAME {&FRAME-NAME} v-cdg_domicilio NO-ERROR.
+  IF AVAILABLE Domicilio
+  THEN DO:
+      FIND Provincia OF Domicilio NO-LOCK.
+      ASSIGN  T-Rec_header.nro_domicilio = Domicilio.nro_domicilio
+              T-Rec_header.direccion     = Domicilio.direccion
+              T-Rec_header.cdg_provincia = Domicilio.cdg_provincia
+              T-Rec_header.localidad     = Domicilio.localidad
+              T-Rec_header.cdg_postal    = Domicilio.cdg_postal
+              T-Rec_header.cdg_zonag     = Domicilio.cdg_zonag
+              v-cdg_domicilio            = Domicilio.nro_domicilio
+              v-dsc_domicilio            = Domicilio.nombre
+              v-abv_provincia            = Provincia.nombre.
+      DISPLAY v-cdg_domicilio 
+              v-dsc_domicilio
+              v-abv_provincia
+              WITH FRAME {&FRAME-NAME}.  
+      RUN calculos.
+  END.
+  ELSE DO:
+      RUN PONMENSJ.P (INPUT "FACT006").
+      RETURN NO-APPLY.
+  END.
+  
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME v-cdg_imputacion
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL v-cdg_imputacion C-Win
+ON MOUSE-SELECT-DBLCLICK OF v-cdg_imputacion IN FRAME DEFAULT-FRAME /* Imputación */
+OR "." OF v-cdg_imputacion IN FRAME {&FRAME-NAME}
+OR MOUSE-MENU-DOWN OF v-cdg_imputacion IN FRAME {&FRAME-NAME}
+DO:
+
+   {helptabla.i "imputacion" "cdg_imputacion" "SELCNDOC.P"}
+  
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL v-cdg_imputacion C-Win
+ON RETURN OF v-cdg_imputacion IN FRAME DEFAULT-FRAME /* Imputación */
+DO:
+   &SCOPED-DEFINE PONER-TABLA RUN asignar_imputacion.
+   
+   {traducetabla.i "imputacion" "cdg_imputacion" "dsc_imputacion"} 
+  
+   &UNDEFINE PONER-TABLA
+   
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME v-cdg_moneda
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL v-cdg_moneda C-Win
+ON MOUSE-SELECT-DBLCLICK OF v-cdg_moneda IN FRAME DEFAULT-FRAME /* Moneda */
+OR "." OF v-cdg_moneda IN FRAME {&FRAME-NAME}
+OR MOUSE-MENU-DOWN OF v-cdg_moneda IN FRAME {&FRAME-NAME}
+DO:
+
+   {helptabla.i "Moneda" "cdg_moneda" "SELMONED.P"}
+  
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL v-cdg_moneda C-Win
+ON RETURN OF v-cdg_moneda IN FRAME DEFAULT-FRAME /* Moneda */
+DO:
+   &SCOPED-DEFINE PONER-TABLA RUN asignar_moneda.
+   {traducetabla.i "Moneda" "cdg_moneda" "abrevia"} 
+   &UNDEFINE PONER-TABLA
+
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME v-importe
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL v-importe C-Win
+ON LEAVE OF v-importe IN FRAME DEFAULT-FRAME /* Importe */
+DO:
+  ASSIGN v-importe.
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&UNDEFINE SELF-NAME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CUSTOM _MAIN-BLOCK C-Win 
+
+
+/* ***************************  Main Block  *************************** */
+
+/* Set CURRENT-WINDOW: this will parent dialog-boxes and frames.        */
+ASSIGN CURRENT-WINDOW                = {&WINDOW-NAME} 
+       THIS-PROCEDURE:CURRENT-WINDOW = {&WINDOW-NAME}.
+
+/* The CLOSE event can be used from inside or outside the procedure to  */
+/* terminate it.                                                        */
+ON CLOSE OF THIS-PROCEDURE 
+   RUN disable_UI.
+
+{findempresa.i}
+{findsector.i}
+que_sector = Area.cdg_area.
+/* Best default for GUI applications is...                              */
+PAUSE 0 BEFORE-HIDE.
+
+/* Now enable the interface and wait for the exit condition.            */
+/* (NOTE: handle ERROR and END-KEY so cleanup code will always fire.    */
+MAIN-BLOCK:
+REPEAT TRANSACTION
+       ON ERROR   UNDO MAIN-BLOCK, LEAVE MAIN-BLOCK
+       ON END-KEY UNDO MAIN-BLOCK, LEAVE MAIN-BLOCK:
+
+  RUN enable_UI.
+  RUN iniciar_documento.
+  RUN frame_sensitiva ( INPUT NO ).  
+  CLEAR FRAME {&FRAME-NAME} ALL.
+  RUN crear_registro.
+  IF modo = MD_DEFINIDA
+     THEN RUN traer_documento.
+     ELSE RUN frame_sensitiva ( INPUT YES ).
+  IF modo = MD_ALTA THEN APPLY "ENTRY" TO v-cdg_cliente.
+  WAIT-FOR U1 OF THIS-PROCEDURE.
+  CASE codigo_salir:
+       WHEN CD_SALIR THEN UNDO,LEAVE.
+       WHEN CD_CANCELAR THEN UNDO,RETRY.
+       WHEN CD_GRABAR THEN NEXT.
+  END CASE.
+   
+END.
+APPLY "CLOSE" TO THIS-PROCEDURE. /* hay que ver si realmente hace falta */
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+/* **********************  Internal Procedures  *********************** */
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE abre_query_totales C-Win 
+PROCEDURE abre_query_totales :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+
+  OPEN QUERY BRW-TOTALES
+      FOR EACH T-Totales_recibo OF T-Rec_header, FIRST Moneda_totales OF T-Totales_recibo NO-LOCK.
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE asignar_caja C-Win 
+PROCEDURE asignar_caja :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+
+    ASSIGN T-Caj_header.nro_cuenta      = Familia_cliente.nro_cuenta
+           T-Caj_header.nro_cliente     = T-Rec_header.nro_cliente
+           T-Caj_header.cdg_empresa     = T-Rec_header.cdg_empresa
+           T-Caj_header.prf_comprob     = T-Rec_header.prf_comprob
+           T-Caj_header.tip_comprob     = T-Rec_header.tip_comprob
+           T-Caj_header.importe         = T-Rec_header.imp_pesos + 
+                                          T-Rec_header.imp_difcambio
+           T-Caj_header.fecha           = T-Rec_header.fecha.
+
+    EMPTY TEMP-TABLE T-Caja-imputacion.
+    RUN crear_caja_imputacion.
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE asignar_cambio C-Win 
+PROCEDURE asignar_cambio :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+
+  DEFINE VARIABLE p-xx AS DATE . /* Por Compatibilidad */
+
+  RUN cotizar_moneda.p ( INPUT  Moneda.cdg_moneda,
+                         INPUT  T-Rec_header.cdg_empresa, 
+                         INPUT  T-Rec_header.fch_cambio,       
+                         OUTPUT T-Rec_header.cambio,  
+                         OUTPUT T-Rec_header.fch_cambio ).
+
+  RUN cotizar_moneda.p ( INPUT  codigo_dolar,
+                         INPUT  T-Rec_header.cdg_empresa, 
+                         INPUT  T-Rec_header.fecha,       
+                         OUTPUT T-Rec_header.cambio_dolar,  
+                         OUTPUT p-xx ).
+
+
+  DISPLAY T-Rec_header.cambio 
+          T-Rec_header.cambio_dolar
+          T-Rec_header.fch_cambio 
+          WITH FRAME {&FRAME-NAME}.
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE asignar_condicion C-Win 
+PROCEDURE asignar_condicion :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+
+  v-tip_comprob = "R" + Condicion_impos.tipo_factura.
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE asignar_imputacion C-Win 
+PROCEDURE asignar_imputacion :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+
+  T-Rec_header.cdg_imputacion = Imputacion.cdg_imputacion.
+  /*
+  T-Rec_header.T-Cta_cte        = Imputacion.T-Cta_cte.
+  */
+  
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE asignar_moneda C-Win 
+PROCEDURE asignar_moneda :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+  
+  T-Rec_header.nro_moneda = Moneda.nro_moneda.
+  T-Rec_header.fch_cambio = T-Rec_header.fecha - 1.
+  RUN levantar_cuenta_corriente.
+  RUN asignar_cambio.
+  RUN calculos.
+  
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE borrar_diferencia_cambio C-Win 
+PROCEDURE borrar_diferencia_cambio :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+   
+   DEFINE VARIABLE p-punto_venta  AS INTEGER.
+   DEFINE VARIABLE p-cdg_concepto AS INTEGER.
+   DEFINE VARIABLE x-proporcion   AS DECIMAL DECIMALS 6.
+   DEFINE VARIABLE x-delta_cambio LIKE Rec_header.cambio.
+
+   EMPTY TEMP-TABLE T-Fac_header.               
+   EMPTY TEMP-TABLE T-Fac_detalle.              
+   EMPTY TEMP-TABLE T-Sub_header_vta.           
+   EMPTY TEMP-TABLE T-Sub_detalle_vta.          
+   EMPTY TEMP-TABLE T-Fac_header_impuesto.      
+   EMPTY TEMP-TABLE T-Fac_detalle_impuesto.     
+
+   /* Borramos diferencias de cambio que se hubieran generado con cambios anteriores */
+
+   FOR EACH T-Rec_detalle OF T-Rec_header:
+       T-Rec_detalle.difcambio = 0.
+   END.
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE borrar_tablas_temporales C-Win 
+PROCEDURE borrar_tablas_temporales :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+
+ EMPTY TEMP-TABLE T-Rec_header            NO-ERROR.
+ EMPTY TEMP-TABLE T-Rec_detalle           NO-ERROR.
+ EMPTY TEMP-TABLE T-Totales_recibo        NO-ERROR.
+
+ EMPTY TEMP-TABLE T-Fac_header            NO-ERROR.
+ EMPTY TEMP-TABLE T-Fac_detalle           NO-ERROR.
+ EMPTY TEMP-TABLE T-Sub_header_vta        NO-ERROR. 
+ EMPTY TEMP-TABLE T-Sub_detalle_vta       NO-ERROR.
+ EMPTY TEMP-TABLE T-Fac_header_impuesto   NO-ERROR.
+ EMPTY TEMP-TABLE T-Fac_detalle_impuesto  NO-ERROR.
+
+ EMPTY TEMP-TABLE T-Caja-imputacion       NO-ERROR.
+ EMPTY TEMP-TABLE T-Caj_header            NO-ERROR.
+ EMPTY TEMP-TABLE T-Caj_detalle           NO-ERROR.
+ EMPTY TEMP-TABLE T-Valor                 NO-ERROR. 
+ EMPTY TEMP-TABLE T-Cheque                NO-ERROR.
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE calcular_cambio C-Win 
+PROCEDURE calcular_cambio :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+   
+   DEFINE VARIABLE p-punto_venta  AS INTEGER.
+   DEFINE VARIABLE p-cdg_concepto AS INTEGER.
+   DEFINE VARIABLE x-proporcion   AS DECIMAL DECIMALS 6.
+   DEFINE VARIABLE x-delta_cambio LIKE Rec_header.cambio.
+
+   EMPTY TEMP-TABLE T-Fac_header.               
+   EMPTY TEMP-TABLE T-Fac_detalle.              
+   EMPTY TEMP-TABLE T-Sub_header_vta.           
+   EMPTY TEMP-TABLE T-Sub_detalle_vta.          
+   EMPTY TEMP-TABLE T-Fac_header_impuesto.      
+   EMPTY TEMP-TABLE T-Fac_detalle_impuesto.     
+
+   RUN getparametro_n.p (  INPUT  "DFCAMPVT", OUTPUT p-punto_venta ).
+   RUN getparametro_n.p (  INPUT  "DFCAMCON", OUTPUT p-cdg_concepto ).
+
+   RUN getparametro.p (  INPUT  "DFCAMCNV",
+                         OUTPUT v-valor_c,
+                         OUTPUT v-valor_d,
+                         OUTPUT v-valor_l,
+                         OUTPUT v-valor_n,
+                         OUTPUT v-observacion ).
+
+   FIND Condicion_venta WHERE Condicion_venta.cdg_cndventa = v-valor_c NO-LOCK.
+   
+   RUN getparametro.p (  INPUT  "DFCAMART",
+                         OUTPUT v-valor_c,
+                         OUTPUT v-valor_d,
+                         OUTPUT v-valor_l,
+                         OUTPUT v-valor_n,
+                         OUTPUT v-observacion ).
+
+   FIND Articulo WHERE Articulo.cdg_articulo = v-valor_c NO-LOCK.
+
+   FIND Domicilio OF T-Rec_header NO-LOCK.
+   FIND FIRST Moneda_local WHERE Moneda_local.es_local NO-LOCK.
+
+   RUN getparametro.p (  INPUT  "DFDEPOSI",
+                         OUTPUT v-valor_c,
+                         OUTPUT v-valor_d,
+                         OUTPUT v-valor_l,
+                         OUTPUT v-valor_n,
+                         OUTPUT v-observacion ).
+   FIND Deposito WHERE Deposito.cdg_deposito = v-valor_c NO-LOCK.
+
+   CREATE T-Fac_header.
+   BUFFER-COPY T-Rec_header TO T-Fac_header 
+        ASSIGN T-Fac_header.origen            = "R"
+               T-Fac_header.cdg_comprobante   = v-debito_cambio
+               T-Fac_header.estado            = "P"
+               T-Fac_header.cta_cte           = YES 
+               T-Fac_header.nro_factura       = 1
+               T-Fac_header.fecha             = T-Rec_header.fecha
+               T-Fac_header.fecha_iva         = T-Fac_header.fecha
+               T-Fac_header.fecha_precios     = T-Fac_header.fecha
+               T-Fac_header.cdg_imputacion    = p-cdg_concepto
+               T-Fac_header.impreso           = ""
+               T-Fac_header.cambio            = 1
+               T-Fac_header.nro_cndventa      = Condicion_venta.nro_cndventa
+               T-Fac_header.nro_moneda        = Moneda_local.nro_moneda
+               T-Fac_header.nombre            = Cliente.nom_cliente
+               T-Fac_header.direccion_leg     = Cliente.direccion
+               T-Fac_header.localidad_leg     = Cliente.localidad
+               T-Fac_header.cdg_postal_leg    = Cliente.cdg_postal
+               T-Fac_header.cdg_provincia_leg = Cliente.cdg_provincia
+               T-Fac_header.cdg_condiva       = Cliente.cdg_condiva
+               T-Fac_header.nro_vendedor      = Cliente.nro_vendedor
+               T-Fac_header.nombre_domicilio  = Domicilio.nombre
+               T-Fac_header.nro_domicilio     = Domicilio.nro_domicilio
+               T-Fac_header.direccion         = Domicilio.direccion
+               T-Fac_header.cdg_provincia     = Domicilio.cdg_provincia
+               T-Fac_header.localidad         = Domicilio.localidad
+               T-Fac_header.cdg_postal        = Domicilio.cdg_postal
+               T-Fac_header.cdg_zonag         = Domicilio.cdg_zonag
+               T-Fac_header.imp_total         = 0
+               T-Fac_header.mes               = MONTH(T-Fac_header.fecha) 
+               T-Fac_header.ano               = YEAR(T-Fac_header.fecha)
+               T-Fac_header.nro_deposito      = Deposito.nro_deposito 
+               T-Fac_header.prf_comprob       = p-punto_venta
+               T-Fac_header.nro_comprob       = T-Fac_header.nro_factura.
+
+   FIND Comprobante_cambio OF T-Fac_header NO-LOCK.
+
+   /* Borramos diferencias de cambio que se hubieran generado con cambios anteriores */
+
+   FOR EACH T-Rec_detalle OF T-Rec_header, FIRST Moneda_detalle OF T-Rec_detalle NO-LOCK:
+
+       IF Moneda_detalle.es_local
+       THEN DO:
+           T-Rec_detalle.imp_pesos = T-Rec_detalle.importe.
+           IF T-Rec_detalle.clausula_dolar
+           THEN DO:     
+               ASSIGN T-Rec_detalle.difcambio = ( T-Rec_detalle.new_cambio_dolar - T-Rec_detalle.cambio_dolar ) * 
+                                                  T-Rec_detalle.importe / T-Rec_detalle.cambio_dolar * 
+                                                  T-Rec_detalle.prc_difcambio / 100.
+           END.
+           ELSE DO:
+               ASSIGN T-Rec_detalle.difcambio = 0.
+           END.
+
+       END.
+       ELSE DO:
+
+           ASSIGN T-Rec_detalle.imp_pesos = T-Rec_detalle.importe * T-Rec_detalle.cambio
+                  T-Rec_detalle.difcambio = ( T-Rec_detalle.new_cambio - T-Rec_detalle.cambio ) * 
+                                              T-Rec_detalle.importe * T-Rec_detalle.prc_difcambio / 100.
+       END.
+
+       IF ABS(T-Rec_detalle.difcambio / T-Rec_detalle.imp_pesos) >= T-Rec_detalle.prc_mincambio / 100
+       THEN DO:
+         /*T-Fac_header.imp_total = T-Fac_header.imp_total + T-Rec_detalle.difcambio.    */
+           CREATE T-Fac_detalle.
+           ASSIGN T-Fac_header.ultima_linea  = T-Fac_header.ultima_linea + 1
+                  T-Fac_detalle.nro_factura  = T-Fac_header.nro_factura
+                  T-Fac_detalle.nro_linea    = T-Fac_header.ultima_linea
+                  T-Fac_detalle.cantidad     = IF T-Rec_detalle.difcambio > 0 THEN 1 ELSE -1
+                  T-Fac_detalle.granel       = 1
+                  T-Fac_detalle.nro_articulo = Articulo.nro_articulo
+                  T-Fac_detalle.detallada    = T-Rec_detalle.tip_cancela + "-" + STRING(T-Rec_detalle.prf_cancela,"9999") + "-" + STRING(T-Rec_detalle.nro_cancela,"99999999") 
+                                               + " " + STRING(T-Rec_detalle.importe,">>>>>9.99-") 
+                                               + " " + STRING(T-Rec_detalle.prc_difcambio,">>9.99")
+                                               + " " + STRING(T-Rec_detalle.new_cambio,">>>>9.9999")
+                                               + " " + STRING(T-Rec_detalle.cambio,">>>>9.9999").
+           IF Comprobante_cambio.aplica_impuestos
+           THEN DO:
+               FIND Condicion_impos OF T-Fac_header NO-LOCK.
+               OPEN QUERY q-iva
+                   FOR EACH Impuesto_condicion OF Condicion_impos NO-LOCK, 
+                       FIRST Impuesto OF Impuesto_condicion
+                             WHERE Impuesto.es_iva NO-LOCK.
+               GET FIRST q-iva.
+               ASSIGN T-Fac_detalle.precio = ABS(T-Rec_detalle.difcambio) / ( 1 + Impuesto_condicion.tasa / 100.0 ).
+           END.
+           ELSE DO:
+               ASSIGN T-Fac_detalle.precio = ABS(T-Rec_detalle.difcambio).
+           END.
+
+       END.
+       ELSE DO:
+           T-Rec_detalle.difcambio = 0.
+       END.
+
+       T-Fac_header.imp_total = T-Fac_header.imp_total + T-Rec_detalle.difcambio.
+           
+   END.
+
+   FIND FIRST T-Fac_header NO-ERROR. /* No esta disponible cuando sale del lazo */
+   IF AVAILABLE T-Fac_header
+   THEN DO:
+       IF T-Fac_header.imp_total < 0
+       THEN DO:
+           ASSIGN
+               T-Fac_header.cdg_comprobante = v-credito_cambio.
+       END.
+
+       RUN calcular_comprobante_cliente.p ( 
+                                INPUT-OUTPUT TABLE T-Fac_header,
+                                INPUT-OUTPUT TABLE T-Fac_detalle,
+                                INPUT-OUTPUT TABLE T-Sub_header_vta,
+                                INPUT-OUTPUT TABLE T-Sub_detalle_vta,
+                                INPUT-OUTPUT TABLE T-Fac_header-bon,
+                                INPUT-OUTPUT TABLE T-Fac_detalle-bon,
+                                INPUT-OUTPUT TABLE T-Fac_header_impuesto,
+                                INPUT-OUTPUT TABLE T-Fac_detalle_impuesto,
+                                INPUT-OUTPUT TABLE T-Asn_header,
+                                INPUT-OUTPUT TABLE T-Asn_detalle,
+                                INPUT-OUTPUT TABLE T-Asn_totales
+                                ).
+
+       FIND FIRST T-Fac_header.
+
+   END.
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE calculos C-Win 
+PROCEDURE calculos :
+/*------------------------------------------------------------------------------
+  Purpose: Realiza el calculo del importe final de una factura     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+  DEFINE VARIABLE o-importe AS DECIMAL    NO-UNDO.
+  
+  EMPTY TEMP-TABLE T-Sub_header_vta NO-ERROR.
+  EMPTY TEMP-TABLE T-Sub_detalle_vta NO-ERROR.
+  
+  IF T-Rec_header.calcular_cambio
+  THEN DO:
+ 
+      IF T-Rec_header.tipo_pago = 1 
+          THEN RUN calcular_cambio.
+      
+
+      RUN calcular_recibo.p ( INPUT-OUTPUT TABLE T-Rec_header,
+                              INPUT-OUTPUT TABLE T-Rec_detalle,
+                              INPUT-OUTPUT TABLE T-Totales_recibo).
+
+      FIND FIRST T-Rec_header.
+
+  END.
+  ELSE DO:
+      RUN calcular_recibo.p ( INPUT-OUTPUT TABLE T-Rec_header,
+                              INPUT-OUTPUT TABLE T-Rec_detalle,
+                              INPUT-OUTPUT TABLE T-Totales_recibo).
+      FIND FIRST T-Rec_header.
+
+      ASSIGN T-Rec_header.imp_difcambio = 0.
+      RUN borrar_diferencia_cambio.
+  END.
+
+  RUN abre_query_totales.
+
+  DISPLAY T-Rec_header.imp_difcambio 
+          T-Rec_header.imp_pesos 
+          WITH FRAME {&FRAME-NAME}.
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE color_ctacte C-Win 
+PROCEDURE color_ctacte :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+
+  DO WITH FRAME {&FRAME-NAME}:
+        ASSIGN
+           T-Rec_header.imp_total:BGCOLOR   = 7
+           T-Rec_header.imp_total:FGCOLOR   = 15
+
+           a-tip_comprob:BGCOLOR            = 15
+           a-prf_comprob:BGCOLOR            = 15
+           a-nro_comprob:BGCOLOR            = 15
+           a-nro_vencimiento:BGCOLOR        = 15
+
+           a-tip_comprob:FGCOLOR            = 9
+           a-prf_comprob:FGCOLOR            = 9
+           a-nro_comprob:FGCOLOR            = 9
+           a-nro_vencimiento:FGCOLOR        = 9.
+
+  END.
+  
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE color_total C-Win 
+PROCEDURE color_total :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+
+  DO WITH FRAME {&FRAME-NAME}:
+        ASSIGN
+           T-Rec_header.imp_total:BGCOLOR   = 15
+           T-Rec_header.imp_total:FGCOLOR   = 9
+
+           a-tip_comprob:BGCOLOR            = 7
+           a-prf_comprob:BGCOLOR            = 7
+           a-nro_comprob:BGCOLOR            = 7
+           a-nro_vencimiento:BGCOLOR        = 7 
+
+           a-tip_comprob:FGCOLOR            = 15
+           a-prf_comprob:FGCOLOR            = 15
+           a-nro_comprob:FGCOLOR            = 15
+           a-nro_vencimiento:FGCOLOR        = 15.
+           
+  END.
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE corregir_detalle C-Win 
+PROCEDURE corregir_detalle :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+  
+     IF modo = MD_ALTA
+     THEN DO:
+
+         RUN d-detalle_recibo.w ( INPUT  T-Rec_detalle.tip_cancela,
+                                  INPUT  T-Rec_detalle.prf_cancela,
+                                  INPUT  T-Rec_detalle.nro_cancela,
+                                  INPUT  T-Rec_detalle.nro_vencimiento,
+                                  INPUT  0, 
+                                  INPUT  T-Rec_detalle.nro_linea,
+                                  INPUT  modo,
+                                  INPUT  MD_CAMBIO,
+                                  OUTPUT v-nro_linea,
+                                  INPUT-OUTPUT TABLE T-Rec_header,
+                                  INPUT-OUTPUT TABLE T-Rec_detalle).
+
+         FIND FIRST T-Rec_header.
+         IF v-nro_linea <> 0
+         THEN DO:
+             RUN calculos.
+             {&OPEN-QUERY-{&BROWSE-NAME}}
+         END.
+
+     END.
+     ELSE DO:
+
+         RUN d-detalle_recibo.w ( INPUT  T-Rec_detalle.tip_cancela,
+                                  INPUT  T-Rec_detalle.prf_cancela,
+                                  INPUT  T-Rec_detalle.nro_cancela,
+                                  INPUT  T-Rec_detalle.nro_vencimiento,
+                                  INPUT  0, 
+                                  INPUT  T-Rec_detalle.nro_linea,
+                                  INPUT  modo,
+                                  INPUT  MD_READONLY,
+                                  OUTPUT v-nro_linea,
+                                  INPUT-OUTPUT TABLE T-Rec_header,
+                                  INPUT-OUTPUT TABLE T-Rec_detalle).
+
+         FIND FIRST T-Rec_header.
+
+     END.                              
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE crear_caja C-Win 
+PROCEDURE crear_caja :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+
+    CREATE T-Caj_header.
+    BUFFER-COPY T-Rec_header TO T-Caj_header
+        ASSIGN T-Caj_header.fecha             = T-Rec_header.fecha
+               T-Caj_header.hora              = TIME
+               T-Caj_header.ultima_linea      = 0
+               T-Caj_header.nro_transaccion   = NEXT-VALUE(proxima_txncaja)
+               T-Caj_header.importe           = T-Rec_header.imp_pesos + 
+                                                T-Rec_header.imp_difcambio
+               T-Caj_header.emitir            = NO
+               T-Caj_header.cdg_caja          = Caja.cdg_caja
+               T-Caj_header.nro_cuenta        = Familia_cliente.nro_cuenta
+               T-Caj_header.observacion       = Cliente.cdg_cliente + 
+                                                "-" + Cliente.nom_cliente
+               T-Caj_header.tipo_mov          = "I"
+               T-Rec_header.nro_transaccion   = T-Caj_header.nro_transaccion.
+
+    EMPTY TEMP-TABLE T-Caja-imputacion.
+    RUN crear_caja_imputacion.
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE crear_caja_imputacion C-Win 
+PROCEDURE crear_caja_imputacion :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+
+    CREATE T-Caja-imputacion.
+    ASSIGN T-Caja-imputacion.nro_cuenta       = Familia_cliente.nro_cuenta
+           T-Caja-imputacion.nro_entidad      = Caja.nro_entidad
+           T-Caja-imputacion.nro_obra         = 0
+           T-Caja-imputacion.nro_transaccion  = T-Caj_header.nro_transaccion
+           T-Caja-imputacion.observacion      = ""
+           T-Caja-imputacion.valor            = T-Caj_header.importe.
+
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE crear_detalle C-Win 
+PROCEDURE crear_detalle :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+
+    DEFINE VARIABLE x-importe LIKE Rec_detalle.importe.
+
+    x-importe  = IF v-importe <> 0 
+                    THEN MINIMUM(T-Cta_cte.debito - T-Cta_cte.credito,v-importe)
+                    ELSE T-Cta_cte.debito - T-Cta_cte.credito.
+
+    RUN d-detalle_recibo.w ( INPUT  a-tip_comprob,
+                             INPUT  a-prf_comprob,
+                             INPUT  a-nro_comprob,
+                             INPUT  a-nro_vencimiento,
+                             INPUT  x-importe, 
+                             INPUT  0,
+                             INPUT  modo,
+                             INPUT  MD_ALTA,
+                             OUTPUT v-nro_linea,
+                             INPUT-OUTPUT TABLE T-Rec_header,
+                             INPUT-OUTPUT TABLE T-Rec_detalle).
+
+     FIND FIRST T-Rec_header.
+
+     IF v-nro_linea <> 0
+     THEN DO:
+         RUN calculos.
+         {&OPEN-QUERY-{&BROWSE-NAME}}
+         v-importe = v-importe - T-Rec_detalle.importe.
+         IF v-importe < 0 THEN v-importe = 0.
+         DISPLAY v-importe WITH FRAME {&FRAME-NAME}.
+         RUN calculos.                                           
+         T-Rec_header.tipo_pago:SENSITIVE IN FRAME {&FRAME-NAME} = NO.
+         v-cdg_moneda:SENSITIVE IN FRAME {&FRAME-NAME} = NO.
+     END.
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE crear_registro C-Win 
+PROCEDURE crear_registro :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+
+  DO TRANSACTION:
+    
+      CREATE T-Rec_header.
+      ASSIGN T-Rec_header.cdg_comprobante   = "RECIBCLI"
+             T-Rec_header.nro_usuario       = Usuario.nro_usuario 
+             T-Rec_header.cdg_empresa       = Empresa.cdg_empresa
+             T-Rec_header.fecha             = TODAY 
+             T-Rec_header.fch_cambio        = TODAY - 1
+             T-Rec_header.mes               = MONTH(T-Rec_header.fecha) 
+             T-Rec_header.ano               = YEAR(T-Rec_header.fecha)
+             T-Rec_header.cdg_empresa       = Empresa.cdg_empresa 
+             T-Rec_header.tip_comprob       = "" 
+             T-Rec_header.nro_recibo        = 0  
+             T-Rec_header.estado            = "E"  
+             T-Rec_header.nro_comprob       = T-Rec_header.nro_recibo
+             T-Rec_header.prf_comprob       = 0
+             T-Rec_header.nro_moneda        = Moneda.nro_moneda 
+             T-Rec_header.cambio            = Moneda.cambio  
+             T-Rec_header.cdg_imputacion    = Imputacion.cdg_imputacion
+             T-Rec_header.num_sucursal      = sucursal-id    
+             T-Rec_header.origen            = "M"
+             T-Rec_header.tipo_pago         = 1
+             T-Rec_header.calcular_cambio   = YES
+             v-cdg_moneda                   = Moneda.cdg_moneda
+             v-dsc_moneda                   = Moneda.abrevia
+             v-cdg_imputacion               = Imputacion.cdg_imputacion
+             v-dsc_imputacion               = Imputacion.dsc_imputacion. 
+      
+      RUN asignar_cambio.
+
+  END.
+
+  DISPLAY
+         T-Rec_header.fecha   
+         T-Rec_header.fch_cambio   
+         T-Rec_header.mes      
+         T-Rec_header.ano
+         T-Rec_header.cambio  
+         T-Rec_header.tipo_pago
+         v-cdg_imputacion
+         v-dsc_imputacion
+         v-cdg_moneda
+         v-dsc_moneda 
+         WITH FRAME {&FRAME-NAME}.
+
+  codigo_salir = ?.
+
+  IF    modo = MD_MULTIPLE
+     OR modo = MD_ANULACION
+     OR modo = MD_EMISION
+  THEN DO:
+       DO WITH FRAME {&FRAME-NAME}:
+          T-Rec_header.tip_comprob:FGCOLOR = 9.
+          T-Rec_header.tip_comprob:BGCOLOR = 15.
+
+          T-Rec_header.prf_comprob:FGCOLOR = 9.
+          T-Rec_header.prf_comprob:BGCOLOR = 15.
+
+          T-Rec_header.nro_comprob:FGCOLOR = 9.
+          T-Rec_header.nro_comprob:BGCOLOR = 15.
+       END.
+  END.
+
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE desmarcar_todos C-Win 
+PROCEDURE desmarcar_todos :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+
+  FOR EACH T-Cta_cte OF Cliente WHERE T-Cta_cte.user-id-sel = st_seleccionado:
+
+      T-Cta_cte.user-id-sel = "".
+      T-Cta_cte.selectado   = NO.
+      T-Cta_cte.imputado    = NO.
+      
+  END.
+
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE disable_UI C-Win  _DEFAULT-DISABLE
+PROCEDURE disable_UI :
+/*------------------------------------------------------------------------------
+  Purpose:     DISABLE the User Interface
+  Parameters:  <none>
+  Notes:       Here we clean-up the user-interface by deleting
+               dynamic widgets we have created and/or hide 
+               frames.  This procedure is usually called when
+               we are ready to "clean-up" after running.
+------------------------------------------------------------------------------*/
+  /* Delete the WINDOW we created */
+  IF SESSION:DISPLAY-TYPE = "GUI":U AND VALID-HANDLE(C-Win)
+  THEN DELETE WIDGET C-Win.
+  IF THIS-PROCEDURE:PERSISTENT THEN DELETE PROCEDURE THIS-PROCEDURE.
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE enable_UI C-Win  _DEFAULT-ENABLE
+PROCEDURE enable_UI :
+/*------------------------------------------------------------------------------
+  Purpose:     ENABLE the User Interface
+  Parameters:  <none>
+  Notes:       Here we display/view/enable the widgets in the
+               user-interface.  In addition, OPEN all queries
+               associated with each FRAME and BROWSE.
+               These statements here are based on the "Other 
+               Settings" section of the widget Property Sheets.
+------------------------------------------------------------------------------*/
+
+  {&OPEN-QUERY-DEFAULT-FRAME}
+  GET FIRST DEFAULT-FRAME.
+  DISPLAY v-anulado v-importe v-cdg_cliente v-dsc_cliente v-cdg_domicilio 
+          v-dsc_domicilio v-abv_provincia v-cdg_moneda v-dsc_moneda 
+          v-cdg_condicion_impos v-dsc_condicion_impos v-cdg_imputacion 
+          v-dsc_imputacion v-cdg_cobrador v-dsc_cobrador a-tip_comprob 
+          a-prf_comprob a-nro_comprob a-nro_vencimiento 
+      WITH FRAME DEFAULT-FRAME IN WINDOW C-Win.
+  IF AVAILABLE T-Rec_header THEN 
+    DISPLAY T-Rec_header.tip_comprob T-Rec_header.prf_comprob 
+          T-Rec_header.nro_comprob T-Rec_header.fecha T-Rec_header.fch_cambio 
+          T-Rec_header.mes T-Rec_header.ano T-Rec_header.tipo_pago 
+          T-Rec_header.cambio T-Rec_header.calcular_cambio 
+          T-Rec_header.cambio_dolar T-Rec_header.nro_rendicion 
+          T-Rec_header.imp_pesos T-Rec_header.imp_bruto 
+          T-Rec_header.imp_difcambio T-Rec_header.imp_total 
+      WITH FRAME DEFAULT-FRAME IN WINDOW C-Win.
+  ENABLE RECT-10 RECT-11 RECT-12 RECT-13 RECT-2 RECT-3 RECT-4 RECT-5 RECT-6 
+         RECT-7 RECT-8 RECT-9 Btn_salir v-importe BRW-TOTALES BROWSE-6 
+      WITH FRAME DEFAULT-FRAME IN WINDOW C-Win.
+  {&OPEN-BROWSERS-IN-QUERY-DEFAULT-FRAME}
+  VIEW C-Win.
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE frame_sensitiva C-Win 
+PROCEDURE frame_sensitiva :
+/*------------------------------------------------------------------------------
+  Purpose: habilita o deshabilita los campos de la frame para el estado inicial
+           de la misma que se da cuando comienza el ciclo de transaccion. El es-
+           tado definitivo de los campos lo ajusta la rutina habilitar_campos ( INPUT YES ).   
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+
+  DEFINE INPUT PARAMETER habilitado AS LOGICAL.
+
+  DO WITH FRAME {&FRAME-NAME}:
+
+     IF NOT habilitado
+     THEN DO:
+          ASSIGN
+                btn_grabar:SENSITIVE                      = NO
+                btn_leyenda:SENSITIVE                     = NO
+                btn_cancel:SENSITIVE                      = NO
+                btn_anular:SENSITIVE                      = NO
+                btn_observ:SENSITIVE                      = NO
+                btn_imprim:SENSITIVE                      = NO
+                T-Rec_header.tip_comprob:SENSITIVE        = NO
+                T-Rec_header.prf_comprob:SENSITIVE        = NO
+                T-Rec_header.nro_comprob:SENSITIVE        = NO
+                T-Rec_header.fecha:SENSITIVE              = NO
+                T-Rec_header.fch_cambio:SENSITIVE         = NO
+                T-Rec_header.ano:SENSITIVE                = NO
+                T-Rec_header.cambio:SENSITIVE             = NO
+                T-Rec_header.cambio_dolar:SENSITIVE       = NO
+                T-Rec_header.mes:SENSITIVE                = NO
+                v-cdg_condicion_impos:SENSITIVE           = NO
+                v-cdg_domicilio:SENSITIVE                 = NO
+                v-cdg_imputacion:SENSITIVE                = NO
+                v-cdg_moneda:SENSITIVE                    = NO
+                v-cdg_cliente:SENSITIVE                   = NO
+              /*btn_verimputacion:SENSITIVE               = NO*/
+                a-tip_comprob:SENSITIVE                   = NO
+                a-prf_comprob:SENSITIVE                   = NO
+                a-nro_comprob:SENSITIVE                   = NO
+                a-nro_vencimiento:SENSITIVE               = NO.
+                
+     END.
+     ELSE DO:
+
+                    /* Deshabilitamos todo y después habilitamos según cada caso */
+
+
+            RUN frame_sensitiva ( NO ).
+
+
+            CASE modo:
+       
+                WHEN MD_ALTA          
+                THEN DO:
+                     ASSIGN
+                        v-cdg_cliente:SENSITIVE                 = YES
+                        T-Rec_header.tipo_pago:SENSITIVE        = YES.
+
+         
+                END.
+                WHEN MD_MULTIPLE      
+                THEN DO:
+                     ASSIGN
+                        T-Rec_header.tip_comprob:SENSITIVE        = YES
+                        T-Rec_header.prf_comprob:SENSITIVE        = YES
+                        T-Rec_header.nro_comprob:SENSITIVE        = YES.
+                END.
+                WHEN MD_DEFINIDA      
+                THEN DO:
+                     /* Nada habilitado */         
+                END.
+                WHEN MD_RELACION      
+                THEN DO:
+                     /* Nada habilitado */         
+         
+                END.
+                WHEN MD_READONLY      
+                THEN DO:
+                     /* Nada habilitado */         
+         
+                END.
+                WHEN MD_CAMBIO        
+                THEN DO:
+                     /* Nada habilitado */         
+                END.
+                WHEN MD_ANULACION        
+                THEN DO:
+                     ASSIGN
+                        T-Rec_header.tip_comprob:SENSITIVE        = YES
+                        T-Rec_header.prf_comprob:SENSITIVE        = YES
+                        T-Rec_header.nro_comprob:SENSITIVE        = YES.
+         
+                END.
+                WHEN MD_EMISION        
+                THEN DO:
+                     ASSIGN
+                        T-Rec_header.tip_comprob:SENSITIVE        = YES
+                        T-Rec_header.prf_comprob:SENSITIVE        = YES
+                        T-Rec_header.nro_comprob:SENSITIVE        = YES.         
+                END.
+       
+           END CASE.     
+     END.
+  END.
+  
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE grabar_datos C-Win 
+PROCEDURE grabar_datos :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+
+    DO TRANSACTION:
+        
+        IF T-Rec_header.tipo_pago = 1
+        THEN DO:
+            IF T-Rec_header.calcular_cambio
+            THEN DO:
+
+                FIND FIRST T-Fac_header NO-ERROR.
+                IF AVAILABLE T-Fac_header AND T-Fac_header.imp_total <> 0
+                THEN DO:
+                    FIND Tipocomprobante OF T-Fac_header NO-LOCK.
+                    /*
+                    FIND FIRST Tipo_puntovta OF Tipocomprobante
+                        WHERE Tipo_puntovta.preferido 
+                          AND Tipo_puntovta.cdg_empresa = T-Fac_header.cdg_empresa NO-LOCK.
+                    T-Fac_header.prf_comprob = Tipo_puntovta.cdg_puntovta.
+                    */
+    
+                    RUN emitir_diferencia_cambio.p ( INPUT-OUTPUT TABLE T-Fac_header,
+                                                     INPUT TABLE T-Fac_detalle,
+                                                     INPUT TABLE T-Sub_header_vta, 
+                                                     INPUT TABLE T-Sub_detalle_vta,
+                                                     INPUT TABLE T-Fac_header_impuesto,
+                                                     INPUT TABLE T-Fac_detalle_impuesto).
+
+                    FIND Moneda WHERE Moneda.es_local NO-LOCK.
+    
+                    FOR EACH T-Fac_header, Tipocomprobante OF T-Fac_header:
+    
+                        T-Rec_header.ultima_linea = T-Rec_header.ultima_linea + 1.
+                        CREATE T-Rec_detalle.
+                        ASSIGN T-Rec_detalle.nro_recibo       = T-Rec_header.nro_recibo
+                               T-Rec_detalle.nro_linea        = T-Rec_header.ultima_linea
+                               T-Rec_detalle.cdg_emprecancela = T-Rec_header.cdg_empresa
+                               T-Rec_detalle.tip_cancela      = T-Fac_header.tip_comprob
+                               T-Rec_detalle.prf_cancela      = T-Fac_header.prf_comprob
+                               T-Rec_detalle.nro_cancela      = T-Fac_header.nro_comprob
+                               T-Rec_detalle.nro_vencimiento  = 1
+                               T-Rec_detalle.nro_moneda       = Moneda.nro_moneda
+                               T-Rec_detalle.cambio           = 1
+                               T-Rec_detalle.importe          = 0
+                               T-Rec_detalle.imp_pesos        = 0
+                               T-Rec_detalle.difcambio        = 
+                                    IF Tipocomprobante.debita 
+                                       THEN T-Fac_header.imp_total
+                                       ELSE T-Fac_header.imp_total * ( - 1 ) 
+                               T-Rec_detalle.es_difcambio     = YES.
+    
+                    END.
+                END.
+            END.
+        END.
+
+        RUN completar_auditoria.p ( OUTPUT T-Rec_header.nro_usuario,
+                                    OUTPUT T-Rec_header.fecha_grab,
+                                    OUTPUT T-Rec_header.hora_grab,
+                                    OUTPUT T-Rec_header.pc_name).
+
+        CREATE Rec_header.
+        BUFFER-COPY T-Rec_header TO Rec_header
+            ASSIGN  Rec_header.nro_recibo = NEXT-VALUE(proxima_transaccion).
+
+        FOR EACH T-Rec_detalle:
+            CREATE Rec_detalle.
+            BUFFER-COPY T-Rec_detalle TO Rec_detalle
+                ASSIGN  Rec_detalle.nro_recibo = Rec_header.nro_recibo.
+        END.
+
+        FOR EACH T-Totales_recibo:
+            CREATE Totales_recibo.
+            BUFFER-COPY T-Totales_recibo TO Totales_recibo
+                ASSIGN  Totales_recibo.nro_recibo = Rec_header.nro_recibo.
+        END.
+
+        IF TRUE /* Rec_header.nro_transaccion <> 0 */ /* tiene tx caja asociada */
+        THEN DO:
+
+            CREATE Caj_header.
+            BUFFER-COPY T-Caj_header TO Caj_header
+                ASSIGN Caj_header.nro_transaccion = NEXT-VALUE(proxima_transaccion)
+                       Caj_header.cdg_empresa = Rec_header.cdg_empresa
+                       Caj_header.tip_comprob = Rec_header.tip_comprob
+                       Caj_header.prf_comprob = Rec_header.prf_comprob
+                       Caj_header.nro_comprob = Rec_header.nro_comprob
+                       Rec_header.nro_transaccion = Caj_header.nro_transaccion.
+
+            FOR EACH T-Caja-imputacion:
+                CREATE Caja-imputacion.
+                BUFFER-COPY T-Caja-imputacion TO Caja-imputacion
+                    ASSIGN Caja-imputacion.nro_transaccion = Caj_header.nro_transaccion.
+            END.
+
+            FOR EACH T-Caj_detalle OF T-Caj_header, Rubro OF T-Caj_detalle:
+
+                CREATE Caj_detalle.
+                BUFFER-COPY T-Caj_detalle TO Caj_detalle
+                    ASSIGN Caj_detalle.nro_transaccion = Caj_header.nro_transaccion.
+
+                CASE Rubro.tipo:
+                    WHEN "P" 
+                    THEN DO:
+                        FIND T-Cheque OF T-Caj_detalle NO-LOCK.
+                        CREATE Cheque.
+                        BUFFER-COPY T-Cheque TO Cheque
+                            ASSIGN Cheque.nro_transaccion = Caj_header.nro_transaccion
+                                   Cheque.nro_cheque = NEXT-VALUE(proximo_cheque)
+                                   Caj_detalle.nro_cheque = Cheque.nro_cheque.
+                        RELEASE Cheque.
+                    END.
+                    WHEN "V" 
+                    THEN DO:
+                        FIND T-Valor OF T-Caj_detalle NO-LOCK.
+                        CREATE Valor.
+                        BUFFER-COPY T-Valor TO Valor
+                            ASSIGN Valor.nro_transaccion = Caj_header.nro_transaccion
+                                   Valor.nro_valor = NEXT-VALUE(proximo_valor)
+                                   Valor.fecha_recepcion = Caj_header.fecha
+                                   Valor.nro_cliente = Cliente.nro_cliente
+                                   Valor.cdg_caja = Caj_header.cdg_caja
+                                   Valor.estado = "00"
+                                   Caj_detalle.nro_valor = Valor.nro_valor.
+                        RELEASE Valor.
+                    END.
+
+                END CASE.
+                RELEASE Caj_detalle.
+
+            END.
+
+            RUN emitir_movcaja.p ( INPUT ROWID(Caj_header)).
+            RELEASE Caj_header.    
+
+        END.
+
+        RUN emitir_recibo.p ( ROWID(Rec_header)).
+
+        RUN borrar_tablas_temporales.    
+
+   END.
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE habilitar_campos C-Win 
+PROCEDURE habilitar_campos :
+/*------------------------------------------------------------------------------
+  Purpose: habilita o deshabilita los campos de la frame para el estado final
+           de la misma que se da cuando se ejecuta el ciclo de transaccion. El es-
+           tado inicial de los campos lo ajusta la rutina frame_sensitiva.   
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+
+  DEFINE INPUT PARAMETER habilitado AS LOGICAL.
+
+  DO WITH FRAME {&FRAME-NAME}:
+
+                  /* Deshabilitamos todo y después habilitamos según cada caso */
+
+     ASSIGN
+          btn_grabar:SENSITIVE                      = NO
+          btn_leyenda:SENSITIVE                     = NO
+          btn_cancel:SENSITIVE                      = NO
+          btn_anular:SENSITIVE                      = NO
+          btn_observ:SENSITIVE                      = NO
+          btn_imprim:SENSITIVE                      = NO
+          T-Rec_header.tip_comprob:SENSITIVE        = NO
+          T-Rec_header.prf_comprob:SENSITIVE        = NO
+          T-Rec_header.nro_comprob:SENSITIVE        = NO
+          T-Rec_header.fecha:SENSITIVE              = NO
+          T-Rec_header.fch_cambio:SENSITIVE         = NO
+          T-Rec_header.ano:SENSITIVE                = NO
+          T-Rec_header.cambio:SENSITIVE             = NO
+          T-Rec_header.cambio_dolar:SENSITIVE       = NO
+          T-Rec_header.calcular_cambio:SENSITIVE    = NO
+          T-Rec_header.mes:SENSITIVE                = NO
+          v-cdg_condicion_impos:SENSITIVE           = NO
+          v-cdg_domicilio:SENSITIVE                 = NO
+          v-cdg_imputacion:SENSITIVE                = NO
+          v-cdg_moneda:SENSITIVE                    = NO
+          v-cdg_cliente:SENSITIVE                   = NO
+          /*btn_verimputacion:SENSITIVE               = NO*/.
+
+     CASE modo:
+
+       WHEN MD_ALTA          
+       THEN DO:
+            ASSIGN
+                  btn_grabar:SENSITIVE                      = YES
+                  btn_leyenda:SENSITIVE                     = YES
+                  btn_cancel:SENSITIVE                      = YES
+                  btn_anular:SENSITIVE                      = NO
+                  btn_observ:SENSITIVE                      = YES
+                  btn_imprim:SENSITIVE                      = NO
+                  T-Rec_header.tip_comprob:SENSITIVE        = YES
+                  T-Rec_header.prf_comprob:SENSITIVE        = YES
+                  T-Rec_header.nro_comprob:SENSITIVE        = YES
+                  T-Rec_header.fecha:SENSITIVE              = YES
+                  T-Rec_header.fch_cambio:SENSITIVE         = YES
+                  T-Rec_header.ano:SENSITIVE                = YES
+                  T-Rec_header.cambio:SENSITIVE             = mod_cambio
+                  T-Rec_header.cambio_dolar:SENSITIVE       = YES
+                  T-Rec_header.calcular_cambio:SENSITIVE    = YES
+                  T-Rec_header.mes:SENSITIVE                = YES
+                  T-Rec_header.tipo_pago:SENSITIVE          = NO
+                  v-cdg_condicion_impos:SENSITIVE           = YES
+                  v-cdg_domicilio:SENSITIVE                 = YES
+                  v-cdg_imputacion:SENSITIVE                = YES
+                  v-cdg_moneda:SENSITIVE                    = YES
+                  v-cdg_cliente:SENSITIVE                   = NO
+                  v-cdg_cobrador:SENSITIVE                  = YES
+                  /*btn_verimputacion:SENSITIVE               = NO*/.
+
+       END.
+       WHEN MD_MULTIPLE      
+       THEN DO:
+            ASSIGN
+                btn_cancel:SENSITIVE                      = YES
+                btn_observ:SENSITIVE                      = YES
+                btn_leyenda:SENSITIVE                     = YES
+                btn_imprim:SENSITIVE                      = YES
+              /*btn_verimputacion:SENSITIVE               = YES*/
+                btn_valores:SENSITIVE                     = T-Rec_header.nro_transaccion <> 0.
+
+       END.
+       WHEN MD_DEFINIDA      
+       THEN DO:
+            ASSIGN
+                btn_observ:SENSITIVE                      = YES
+                btn_imprim:SENSITIVE                      = YES
+                btn_leyenda:SENSITIVE                     = YES
+                /*btn_verimputacion:SENSITIVE               = YES*/
+                btn_valores:SENSITIVE                     = T-Rec_header.nro_transaccion <> 0.
+       END.
+       WHEN MD_RELACION      
+       THEN DO:
+            ASSIGN
+                btn_observ:SENSITIVE                      = YES
+                btn_imprim:SENSITIVE                      = YES
+                btn_leyenda:SENSITIVE                     = YES
+                /*btn_verimputacion:SENSITIVE               = YES*/
+                btn_valores:SENSITIVE                     = T-Rec_header.nro_transaccion <> 0.
+       END.
+       WHEN MD_READONLY      
+       THEN DO:
+            ASSIGN
+                btn_observ:SENSITIVE                      = YES
+                btn_imprim:SENSITIVE                      = YES
+                btn_leyenda:SENSITIVE                     = YES
+                /*btn_verimputacion:SENSITIVE               = YES*/
+                btn_valores:SENSITIVE                     = T-Rec_header.nro_transaccion <> 0.
+       END.
+       WHEN MD_CAMBIO        
+       THEN DO:
+            ASSIGN
+                btn_observ:SENSITIVE                      = YES
+                btn_imprim:SENSITIVE                      = YES
+                btn_leyenda:SENSITIVE                     = YES
+                /*btn_verimputacion:SENSITIVE               = YES*/
+                btn_valores:SENSITIVE                     = T-Rec_header.nro_transaccion <> 0.
+       END.
+       WHEN MD_ANULACION        
+       THEN DO:
+            ASSIGN
+                btn_cancel:SENSITIVE                      = YES
+                btn_anular:SENSITIVE                      = YES
+                btn_observ:SENSITIVE                      = YES
+                btn_imprim:SENSITIVE                      = YES
+                btn_leyenda:SENSITIVE                     = YES
+                /*btn_verimputacion:SENSITIVE               = YES*/
+                btn_valores:SENSITIVE                     = T-Rec_header.nro_transaccion <> 0.
+       END.
+       WHEN MD_EMISION        
+       THEN DO:
+            ASSIGN
+                btn_grabar:SENSITIVE                      = YES
+                btn_observ:SENSITIVE                      = YES
+                btn_imprim:SENSITIVE                      = YES
+                btn_leyenda:SENSITIVE                     = YES
+                /*btn_verimputacion:SENSITIVE               = YES*/
+                btn_valores:SENSITIVE                     = T-Rec_header.nro_transaccion <> 0.
+       END.
+
+    END CASE.     
+
+  END.
+  
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE habilitar_ctacte C-Win 
+PROCEDURE habilitar_ctacte :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+
+  DO WITH FRAME {&FRAME-NAME}:
+
+      ASSIGN           
+           a-tip_comprob:SENSITIVE          = YES
+           a-prf_comprob:SENSITIVE          = YES
+           a-nro_comprob:SENSITIVE          = YES
+           a-nro_vencimiento:SENSITIVE      = YES
+           T-Rec_header.imp_total:SENSITIVE = NO.
+           
+  END.
+  
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE habilitar_total C-Win 
+PROCEDURE habilitar_total :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+
+  DO WITH FRAME {&FRAME-NAME}:
+
+        ASSIGN
+           T-Rec_header.imp_total:SENSITIVE = YES
+           a-tip_comprob:SENSITIVE          = NO
+           a-prf_comprob:SENSITIVE          = NO
+           a-nro_comprob:SENSITIVE          = NO
+           a-nro_vencimiento:SENSITIVE      = NO.
+           
+  END.
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE iniciar_documento C-Win 
+PROCEDURE iniciar_documento :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+
+   RUN getparametro.p (  INPUT  "MDCAMBIO",
+                          OUTPUT v-valor_c,
+                          OUTPUT v-valor_d,
+                          OUTPUT v-valor_l,
+                          OUTPUT v-valor_n,
+                          OUTPUT v-observacion ).
+   IF v-valor_l = ? 
+      THEN mod_cambio = NO.
+      ELSE mod_cambio = v-valor_l.
+
+   RUN getparametro.p (  INPUT  "DFMONEDA",
+                         OUTPUT v-valor_c,
+                         OUTPUT v-valor_d,
+                         OUTPUT v-valor_l,
+                         OUTPUT v-valor_n,
+                         OUTPUT v-observacion ).
+   FIND Moneda WHERE Moneda.cdg_moneda = v-valor_c NO-LOCK.
+
+   RUN getparametro.p (  INPUT  "CDGDOLAR",
+                         OUTPUT v-valor_c,
+                         OUTPUT v-valor_d,
+                         OUTPUT v-valor_l,
+                         OUTPUT v-valor_n,
+                         OUTPUT v-observacion ).
+   codigo_dolar = v-valor_c.
+
+   RUN getparametro.p (  INPUT  "DFNROCAJ",
+                         OUTPUT v-valor_c,
+                         OUTPUT v-valor_d,
+                         OUTPUT v-valor_l,
+                         OUTPUT v-valor_n,
+                         OUTPUT v-observacion ).
+    
+   FIND Caja WHERE Caja.cdg_caja = v-valor_n NO-LOCK.
+   act_caja = ROWID(Caja).
+   
+   RUN getparametro.p (  INPUT  "DFCNCCTE",
+                         OUTPUT v-valor_c,
+                         OUTPUT v-valor_d,
+                         OUTPUT v-valor_l,
+                         OUTPUT v-valor_n,
+                         OUTPUT v-observacion ).
+
+   FIND Imputacion WHERE Imputacion.cdg_imputacion = v-valor_n NO-LOCK.
+   
+   RUN getparametro_c.p (  INPUT  "DFCAMDEB", OUTPUT v-debito_cambio ).
+   RUN getparametro_c.p (  INPUT  "DFCAMCRD", OUTPUT v-credito_cambio ).
+
+   IF v-debito_cambio = ? OR v-credito_cambio = ? 
+       THEN MESSAGE "No se encuentra la definicion de los débitos y créditos por diferencia de cambio"
+                    VIEW-AS ALERT-BOX ERROR TITLE "ERROR DE IMPLEMENTACION".
+
+   st_seleccionado = "REC-" + USERID("SIC").
+   RUN titulo_window ( INPUT "Recibos de Clientes" ).
+   v-importe = 0.
+   DISPLAY v-importe WITH FRAME {&FRAME-NAME}.
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE levantar_cuenta_corriente C-Win 
+PROCEDURE levantar_cuenta_corriente :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+
+   EMPTY TEMP-TABLE T-Cta_cte NO-ERROR.
+               
+   FOR EACH Cta_cte NO-LOCK OF Cliente
+        WHERE Cta_cte.cdg_empresa = T-Rec_header.cdg_empresa
+          /*AND Cta_cte.nro_moneda = T-Rec_header.nro_moneda*/
+          AND Cta_cte.debito <> Cta_cte.credito:
+           
+       CREATE T-Cta_cte.
+       BUFFER-COPY Cta_cte TO T-Cta_cte.
+
+   END.        
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE poner_cliente C-Win 
+PROCEDURE poner_cliente :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+
+    IF NOT CAN-DO(Cliente.lista_empresas,Empresa.cdg_empresa)
+    THEN DO:
+        RUN PONMENSJ.P ( INPUT "CLIE050" ).
+        no_aplicar = YES.
+        RETURN ERROR.
+    END.
+    ELSE DO:
+        IF LOOKUP(Cliente.cdg_estado,",A") = 0
+        THEN DO:
+            RUN PONMENSJ.P ( INPUT "CLIE051" ).
+            no_aplicar = YES.
+            RETURN ERROR.
+        END.
+        ELSE DO:
+            FIND Condicion_venta WHERE Condicion_venta.cdg_cndventa = Cliente.dfl_cndventa NO-LOCK.
+            FIND Familia_cliente OF Cliente NO-LOCK.
+            FIND Condicion_impos   OF Cliente NO-LOCK.
+          
+            DISPLAY "R" + Condicion_impos.tipo_factura @ T-Rec_header.tip_comprob
+                  WITH FRAME {&FRAME-NAME}.
+            ASSIGN
+              T-Rec_header.cdg_condiva          = Condicion_impos.cdg_condiva
+              T-Rec_header.nro_cndventa         = Condicion_venta.nro_cndventa
+              T-Rec_header.nombre               = Cliente.nom_cliente
+              T-Rec_header.cuit                 = Cliente.cuit
+              T-Rec_header.nro_cliente          = Cliente.nro_cliente
+              T-Rec_header.nro_cobrador         = Cliente.nro_cobrador.
+        
+            RUN traer_cliente.
+            RUN traer_imputacion.
+            RUN traer_condicion_impos.
+            RUN traer_cobrador.
+            
+            DISPLAY  v-cdg_cliente 
+                     v-dsc_cliente
+        
+                     v-cdg_imputacion
+                     v-dsc_imputacion
+        
+                     v-cdg_condicion_impos
+                     v-dsc_condicion_impos
+        
+                     v-cdg_cobrador
+                     v-dsc_cobrador
+        
+                   WITH FRAME {&FRAME-NAME}.
+                   
+                IF T-Rec_header.tipo_pago = 1
+                   THEN RUN habilitar_ctacte.
+                   ELSE RUN habilitar_total.
+                    
+             FIND FIRST Domicilio OF Cliente NO-LOCK NO-ERROR.
+             IF AVAILABLE Domicilio 
+             THEN DO:
+                 FIND Provincia OF Domicilio NO-LOCK.
+                 ASSIGN  T-Rec_header.nro_domicilio = Domicilio.nro_domicilio
+                         T-Rec_header.direccion     = Domicilio.direccion
+                         T-Rec_header.cdg_provincia = Domicilio.cdg_provincia
+                         T-Rec_header.localidad     = Domicilio.localidad
+                         T-Rec_header.cdg_postal    = Domicilio.cdg_postal
+                         T-Rec_header.cdg_zonag     = Domicilio.cdg_zonag
+                         v-cdg_domicilio            = Domicilio.nro_domicilio
+                         v-dsc_domicilio            = Domicilio.nombre.
+                 DISPLAY v-cdg_domicilio
+                         v-dsc_domicilio
+                         WITH FRAME {&FRAME-NAME}.
+                 IF CAN-FIND(Domicilio OF Cliente)
+                    THEN DISABLE v-cdg_domicilio WITH FRAME {&FRAME-NAME}.      
+             END.
+             ELSE DO:  /* No hay ninguno o hay mas de uno */
+                 ASSIGN  T-Rec_header.nro_domicilio = 0
+                         T-Rec_header.direccion     = ""
+                         T-Rec_header.cdg_provincia = ""
+                         T-Rec_header.localidad     = ""
+                         T-Rec_header.cdg_postal    = ""
+                         T-Rec_header.cdg_zonag     = ""
+                         v-cdg_domicilio            = 0
+                         v-dsc_domicilio            = "".
+                 DISPLAY v-cdg_domicilio
+                         v-dsc_domicilio
+                         WITH FRAME {&FRAME-NAME}.
+                 ENABLE v-cdg_domicilio WITH FRAME {&FRAME-NAME}.
+             END.   
+
+             RUN levantar_cuenta_corriente.
+             RUN habilitar_campos ( YES ).
+        END.
+    END.
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE titulo_window C-Win 
+PROCEDURE titulo_window :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+
+ DEFINE INPUT PARAMETER txtitulo AS CHARACTER.
+
+ DEFINE VARIABLE v-txtitulo AS CHARACTER.
+
+ CASE modo:
+    
+     WHEN MD_ALTA      THEN v-txtitulo = " Ingreso de " + txtitulo.
+     WHEN MD_MULTIPLE  THEN v-txtitulo = " Consulta Múltiple de " + txtitulo.
+     WHEN MD_DEFINIDA  THEN v-txtitulo = " Consulta Individual de " + txtitulo.
+     WHEN MD_RELACION  THEN v-txtitulo = " Consulta Relacionada de " + txtitulo.
+     WHEN MD_READONLY  THEN v-txtitulo = " Consulta Sólo Lectura de " + txtitulo.
+     WHEN MD_CAMBIO    THEN v-txtitulo = " Modificación y Reemisión de " + txtitulo.
+     WHEN MD_ANULACION THEN v-txtitulo = " Anulación de " + txtitulo.
+     WHEN MD_EMISION   THEN v-txtitulo = " Emisión de " + txtitulo + "Pendientes".
+
+ END CASE.     
+
+ {&WINDOW-NAME}:TITLE = "DYNASYS/CXC " + NRO_RELEASE + " - " + Usuario.cdg_empresa + " - " + v-txtitulo + " User:" + USERID("sic").
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE traer_cliente C-Win 
+PROCEDURE traer_cliente :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+
+    FIND Cliente OF T-Rec_header NO-LOCK.
+    ASSIGN
+        v-cdg_cliente   = Cliente.cdg_cliente
+        v-dsc_cliente   = Cliente.nom_cliente.
+    
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE traer_cobrador C-Win 
+PROCEDURE traer_cobrador :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+
+    FIND Cobrador    OF T-Rec_header   NO-LOCK.
+    ASSIGN
+        v-cdg_cobrador  = Cobrador.cdg_cobrador
+        v-dsc_cobrador  = Cobrador.nom_cobrador.
+         
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE traer_condicion_impos C-Win 
+PROCEDURE traer_condicion_impos :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+
+    FIND Condicion_impos  OF T-Rec_header NO-LOCK.
+    ASSIGN
+        v-cdg_condicion_impos = Condicion_impos.cdg_condiva
+        v-dsc_condicion_impos = Condicion_impos.descripcion.
+    
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE traer_documento C-Win 
+PROCEDURE traer_documento :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+
+   FIND Rec_header WHERE ROWID(Rec_header) = rid_recibo NO-LOCK.
+   BUFFER-COPY Rec_header TO T-Rec_header.
+   FOR EACH Rec_detalle OF Rec_header:
+       CREATE T-Rec_detalle.
+       BUFFER-COPY Rec_detalle TO T-Rec_detalle.
+   END.    
+
+   FOR EACH Totales_recibo OF Rec_header:
+       CREATE T-Totales_recibo.
+       BUFFER-COPY Totales_recibo TO T-Totales_recibo.
+   END.    
+
+   IF T-Rec_header.tipo_pago = 1
+      THEN RUN color_ctacte.
+      ELSE RUN color_total.
+
+   RUN traer_tablas.
+   IF T-Rec_header.nro_transaccion <> 0
+       THEN RUN traer_movimiento_caja.p ( INPUT T-Rec_header.nro_transaccion,
+                                          OUTPUT TABLE T-Caj_header,
+                                          OUTPUT TABLE T-Caj_detalle,
+                                          OUTPUT TABLE T-Caja-imputacion,
+                                          OUTPUT TABLE T-Cheque,
+                                          OUTPUT TABLE T-Valor).
+
+   v-anulado = IF T-Rec_header.anulado THEN "ANULADA" ELSE "".
+   DISPLAY
+        T-Rec_header.ano 
+        T-Rec_header.cambio 
+        T-Rec_header.cambio_dolar 
+        T-Rec_header.calcular_cambio
+        T-Rec_header.fecha 
+        T-Rec_header.imp_total 
+        T-Rec_header.imp_bruto 
+        T-Rec_header.imp_difcambio 
+        T-Rec_header.imp_pesos 
+        T-Rec_header.mes 
+        T-Rec_header.nro_comprob 
+        T-Rec_header.prf_comprob 
+        T-Rec_header.tip_comprob 
+        T-Rec_header.tipo_pago
+        T-Rec_header.nro_rendicion
+        v-cdg_condicion_impos 
+        v-cdg_domicilio 
+        v-cdg_imputacion 
+        v-cdg_moneda 
+        v-cdg_cliente 
+        v-cdg_cobrador 
+        v-dsc_condicion_impos 
+        v-dsc_domicilio 
+        v-dsc_imputacion 
+        v-dsc_moneda 
+        v-dsc_cliente 
+        v-dsc_cobrador 
+        v-anulado
+        WITH FRAME {&FRAME-NAME}.
+
+   {&OPEN-QUERY-{&BROWSE-NAME}}
+
+   RUN abre_query_totales.
+       
+   RUN habilitar_campos ( INPUT YES ).
+   
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE traer_domicilio C-Win 
+PROCEDURE traer_domicilio :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+
+    FIND Domicilio OF T-Rec_header NO-LOCK.
+    ASSIGN
+        v-cdg_domicilio = Domicilio.nro_domicilio
+        v-dsc_domicilio = Domicilio.nombre.
+    
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE traer_imputacion C-Win 
+PROCEDURE traer_imputacion :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+
+    FIND Imputacion       OF T-Rec_header NO-LOCK.
+    ASSIGN
+        v-cdg_imputacion      = Imputacion.cdg_imputacion
+        v-dsc_imputacion      = Imputacion.dsc_imputacion.
+    
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE traer_moneda C-Win 
+PROCEDURE traer_moneda :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+
+    FIND Moneda    OF T-Rec_header   NO-LOCK.
+    ASSIGN
+        v-cdg_moneda          = Moneda.cdg_moneda
+        v-dsc_moneda          = Moneda.descripcion.
+         
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE traer_tablas C-Win 
+PROCEDURE traer_tablas :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+
+  RUN traer_condicion_impos.
+  RUN traer_imputacion.
+  RUN traer_moneda.
+  RUN traer_cliente.
+  RUN traer_domicilio.
+  RUN traer_cobrador.
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE validar_datos C-Win 
+PROCEDURE validar_datos :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+
+    DEFINE OUTPUT PARAMETER hubo_error AS LOGICAL.
+      
+    hubo_error = YES.
+
+    IF NOT CAN-FIND(FIRST T-Rec_detalle OF  T-Rec_header) AND T-Rec_header.tipo_pago = 1
+    THEN DO:
+       RUN PONMENSJ.P (INPUT "RECB008").
+       RETURN.
+    END.
+
+    IF LOOKUP(T-Rec_header.tip_comprob,"RA,RB,RC,RE,RX") = 0
+    THEN DO:
+       RUN PONMENSJ.P (INPUT "RECB015").
+       RETURN.
+    END.
+
+    IF T-Rec_header.nro_comprob = 0
+    THEN DO:
+       RUN PONMENSJ.P (INPUT "RECB016").
+       RETURN.
+    END.
+
+    IF T-Rec_header.imp_total = 0 AND T-Rec_header.tipo_pago = 2
+    THEN DO:
+       RUN PONMENSJ.P (INPUT "RECB019").
+       RETURN.
+    END.
+
+    IF T-Rec_header.imp_total < 0
+    THEN DO:
+       RUN PONMENSJ.P (INPUT "RECB024").
+       RETURN.
+    END.
+
+    IF CAN-FIND(Rec_header WHERE Rec_header.cdg_empresa = T-Rec_header.cdg_empresa
+                             AND Rec_header.tip_comprob = T-Rec_header.tip_comprob
+                             AND Rec_header.prf_comprob = T-Rec_header.prf_comprob
+                             AND Rec_header.nro_comprob = T-Rec_header.nro_comprob)
+    THEN DO:
+       RUN PONMENSJ.P (INPUT "RECB014").
+       RETURN.
+    END.
+
+    FIND FIRST Domicilio OF Cliente WHERE Domicilio.nro_domicilio = INPUT FRAME {&FRAME-NAME} v-cdg_domicilio NO-LOCK NO-ERROR.
+    IF NOT AVAILABLE Domicilio
+    THEN DO:
+         RUN PONMENSJ.P (INPUT "FACT006").
+         RETURN.
+    END.
+    ELSE DO:
+         ASSIGN
+             T-Rec_header.nro_domicilio = Domicilio.nro_domicilio
+             T-Rec_header.direccion     = Domicilio.direccion
+             T-Rec_header.cdg_provincia = Domicilio.cdg_provincia
+             T-Rec_header.localidad     = Domicilio.localidad
+             T-Rec_header.cdg_postal    = Domicilio.cdg_postal
+             T-Rec_header.cdg_zonag     = Domicilio.cdg_zonag.
+    END.
+
+    IF T-Rec_header.nro_rendicion <> 0 
+    THEN DO:
+       FIND Rendicion_hd WHERE Rendicion_hd.nro_rendicion = T-Rec_header.nro_rendicion NO-LOCK NO-ERROR.
+       IF NOT AVAILABLE Rendicion_hd
+       THEN DO:
+           RUN PONMENSJ.P (INPUT "RECB017").
+           RETURN.
+       END.
+       ELSE DO:
+           IF Rendicion_hd.cdg_empresa <> T-Rec_header.cdg_empresa
+           THEN DO:
+               RUN PONMENSJ.P (INPUT "RECB018").
+               RETURN.
+           END.
+           ELSE DO:
+               IF Rendicion_hd.nro_cobrador <> T-Rec_header.nro_cobrador
+               THEN DO:
+                   RUN PONMENSJ.P (INPUT "RECB019").
+                   RETURN.
+               END.
+               ELSE DO:
+                   IF NOT Rendicion_hd.abierta
+                   THEN DO:
+                       RUN PONMENSJ.P (INPUT "RECB020").
+                       RETURN.
+                   END.
+               END.
+           END.
+       END.
+    END.
+
+
+    {validartabla.i "Cobrador"          "cdg_cobrador"    "nom_cobrador"   "DBCR011"}
+    {validartabla.i "Condicion_impos"   "cdg_condiva"     "descripcion"    "DBCR013"}
+    {validartabla.i "Moneda"            "cdg_moneda"      "descripcion"    "DBCR012"}
+    {validartabla.i "Imputacion"        "cdg_imputacion"  "dsc_imputacion" "DBCR016"}
+
+    hubo_error = NO.
+
+    &SCOPED-DEFINE TABLA-MAESTRA  T-Rec_header
+
+    {asignartabla.i "Cobrador"          "nro_cobrador"    "nro_cobrador"     }
+    {asignartabla.i "Condicion_impos"   "cdg_condiva"     "cdg_condiva"      }
+    {asignartabla.i "Moneda"            "nro_moneda"      "nro_moneda"       }
+    {asignartabla.i "Imputacion"        "cdg_imputacion"  "cdg_imputacion"   }
+
+    &UNDEFINE TABLA-MAESTRA
+
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+

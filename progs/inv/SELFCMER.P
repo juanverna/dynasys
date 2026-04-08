@@ -1,0 +1,14 @@
+/*===========================================================================================*/
+/*                                    HELP DE FORMAS COMERCIALES                             */
+/*===========================================================================================*/
+
+&GLOBAL-DEFINE TABLA           FComercial  
+&GLOBAL-DEFINE CODIGO          cdg_fcomercial
+&GLOBAL-DEFINE FORMATO-CODIGO  "X(9)"
+&GLOBAL-DEFINE NOMBRE          dsc_fcomercial
+&GLOBAL-DEFINE TITULO-BROWSE   Seleccione la Forma Com. o ingrese nombre
+&GLOBAL-DEFINE TITULO-FRAME    Seleccion de Formas Comerciales
+&GLOBAL-DEFINE PROCESO         ACTFCOME
+&GLOBAL-DEFINE ULT_REGISTRO    ult_fcome
+
+{SELBROWS.I}

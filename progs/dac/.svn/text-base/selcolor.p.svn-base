@@ -1,0 +1,14 @@
+/*=================================================================================*/
+/*                                                                                 */
+/*                      SELECCION DE TIPOS DE SERVICIOS                            */
+/*                                                                                 */
+/*=================================================================================*/
+
+&GLOBAL-DEFINE TABLA           Tipcolor
+&GLOBAL-DEFINE CODIGO          cdg_tipoemr
+&GLOBAL-DEFINE NOMBRE          color_emr
+&GLOBAL-DEFINE OTROS-CAMPOS    dsc_tipoemr
+&GLOBAL-DEFINE TITULO-BROWSE   Tipee un nombre o seleccione de la lista
+&GLOBAL-DEFINE TITULO-FRAME    Seleccion de Colores de Servicios
+
+{SELBROWS.I}

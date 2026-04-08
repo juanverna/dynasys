@@ -1,0 +1,35 @@
+/*==========================================================================================*/
+/*     GENERA LOS PROGRAMAS (run) PARA INVOCAR CON PASE DE PARAMETROS DESDE EL MENU         */
+/*==========================================================================================*/
+
+DEFINE VARIABLE nomprograma AS CHARACTER.
+DEFINE VARIABLE valorparam  AS CHARACTER.
+
+FOR EACH Menu WHERE Menu.accion BEGINS "run":
+
+    nomprograma = SUBSTRING(Menu.accion,4).
+    nomprograma = ENTRY(1,nomprograma,".").
+
+    OUTPUT TO VALUE("c:\desa\sic\r3.1\progs\basrun\run" + nomprograma + ".p") PAGE-SIZE 0.
+    
+    PUT UNFORMATTED "/*==========================================================================================  " SKIP.
+    PUT UNFORMATTED "   EJECUTA " nomprograma + ".p" SKIP.
+    PUT UNFORMATTED "  ==========================================================================================*/" SKIP.
+    PUT UNFORMATTED "  " SKIP.
+    PUT UNFORMATTED "  " SKIP.
+
+    valorparam = "0".
+    IF INDEX("0123456789",SUBSTRING(nomprograma,LENGTH(nomprograma),1)) <> 0
+    THEN DO:
+         valorparam = SUBSTRING(nomprograma,LENGTH(nomprograma),1).
+         nomprograma = SUBSTRING(nomprograma,1,LENGTH(nomprograma) - 1).
+    END.         
+
+    PUT UNFORMATTED CAPS("RUN  " + nomprograma + ".p ( INPUT " + valorparam + " ). ") SKIP.
+
+    PUT UNFORMATTED "  " SKIP.
+    PUT UNFORMATTED "  " SKIP.
+
+    OUTPUT CLOSE.    
+
+END.    

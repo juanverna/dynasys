@@ -1,0 +1,2 @@
+SETUSERID("sysprogress","sysprogress","sic").
+RUN rundynasys-noquit.p.
